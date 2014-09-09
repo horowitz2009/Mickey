@@ -1,0 +1,33 @@
+9 1
+2 1
+1 2
+0 3
+0 6
+0 8
+1 10
+2 11 black
+9 11 gray
+
+18 5 black and gray
+18 6 same
+18 10 black
+19 12 graish
+19 12
+23 5 black
+23 11 black and gray
+24 8 black
+
+40 6
+38 12 black
+37 12 black
+
+
+WHITES
+37 9
+38 9
+21 6
+21 10
+41 13
+3 4
+3 8
+8 8
