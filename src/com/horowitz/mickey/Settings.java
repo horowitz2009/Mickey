@@ -45,7 +45,7 @@ public class Settings {
 
 		_properties.setProperty("railsHome", "5");
 		_properties.setProperty("railsHome1", "100, 105, 114, 119, 121");// maglev rail reduced with 3px
-		_properties.setProperty("railsHome2", "100, 107, 110, 115, 125");
+		_properties.setProperty("railsHome2", "100, 105, 110, 115, 125");
 		_properties.setProperty("railsHome3", "100, 107, 114, 121, 132");
 		_properties.setProperty("railsHome4", "100, 108, 116, 124, 140");
 
@@ -66,9 +66,11 @@ public class Settings {
 		_properties.setProperty("xOffset4", "32");
 
 		// dangerous zones
-		_properties.setProperty("zone1", "-576, -137, 70, 70");
-		_properties.setProperty("zone2", "-356, -137, 70, 70");
-		_properties.setProperty("zone3", "-135, -137, 70, 70");
+		_properties.setProperty("zone1", "-579, -137, 76, 70");
+		_properties.setProperty("zone2", "-359, -137, 76, 70");
+		_properties.setProperty("zone3", "-138, -137, 76, 70");
+		
+		_properties.setProperty("street1Y", "163");
 	}
 
 	public int getInt(String key) {

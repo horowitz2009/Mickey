@@ -89,7 +89,7 @@ public class ScreenScanner {
 
 	private ImageData	           _expressTrain;
 
-	private int	                 _street1Y	                    = 155;
+	private int	                 _street1Y	                    = 163;
 
 	public ScreenScanner(Settings settings) {
 		_settings = settings;
@@ -149,6 +149,7 @@ public class ScreenScanner {
 		_railsHome = _settings.getArray("railsHome" + zoom);// Locations.RAILS4A;
 		_railYOffset = _settings.getInt("railYOffset" + zoom);// Locations.RAIL_Y_OFFSET;
 		_xOffset = _settings.getInt("xOffset" + zoom);// 22;
+		_street1Y = _settings.getInt("street1Y");
 
 		_homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 

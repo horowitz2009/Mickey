@@ -54,7 +54,7 @@ public final class MainFrame extends JFrame {
 
 	private final static Logger	LOGGER	      = Logger.getLogger(MainFrame.class.getName());
 
-	private static final String	APP_TITLE	    = "Mickey v0.602";
+	private static final String	APP_TITLE	    = "Mickey v0.604";
 
 	private boolean	            _refresh	    = true;
 	private boolean	            _devMode	    = false;
@@ -979,27 +979,27 @@ public final class MainFrame extends JFrame {
 				// in case of mail hint
 				_lastPointer = new Pixel(p.x, p.y);
 				_foundPointer = false;
-//				if (!isRunning("MAIL")) {
-//					Thread myThread = new Thread(new Runnable() {
-//						@Override
-//						public void run() {
-//							if (_lastPointer != null) {
-//								try {
-//									int maxY = getMaxY(_lastPointer);
-//									LOGGER.info("Maxxed pointer is" + _lastPointer);
-//									LOGGER.info("maxY=" + maxY);
-//									_lastPointer.y = (int) (maxY + _scanner.getRailYOffset() * 2);// TODO
-//									_foundPointer = true;
-//								} catch (RobotInterruptedException e) {
-//									LOGGER.log(Level.SEVERE, "Interrupted by user3", e);
-//								}
-//							}
-//						}
-//
-//					}, "MAIL");
-//
-//					myThread.start();
-//				}
+				// if (!isRunning("MAIL")) {
+				// Thread myThread = new Thread(new Runnable() {
+				// @Override
+				// public void run() {
+				// if (_lastPointer != null) {
+				// try {
+				// int maxY = getMaxY(_lastPointer);
+				// LOGGER.info("Maxxed pointer is" + _lastPointer);
+				// LOGGER.info("maxY=" + maxY);
+				// _lastPointer.y = (int) (maxY + _scanner.getRailYOffset() * 2);// TODO
+				// _foundPointer = true;
+				// } catch (RobotInterruptedException e) {
+				// LOGGER.log(Level.SEVERE, "Interrupted by user3", e);
+				// }
+				// }
+				// }
+				//
+				// }, "MAIL");
+				//
+				// myThread.start();
+				// }
 
 				int[] rails = _scanner.getRailsHome();
 
@@ -1009,13 +1009,13 @@ public final class MainFrame extends JFrame {
 					clickCareful(p, false, false);
 				}
 				p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 2;
-				clickCareful(p, false, false);
+				clickCareful(p, true, true);
 				_mouse.delay(250);
 				checkTrainManagement();
 				_mouse.delay(250);
 				scanOtherLocations(true);
 				_mouse.delay(250);
-				
+
 				// again all rails one by one now more carefully
 				boolean stop = false;
 				for (int i = 0; i < rails.length && !stop; i++) {
@@ -1032,18 +1032,18 @@ public final class MainFrame extends JFrame {
 							stop = true;
 							break;
 						}
-//						if (_foundPointer) {
-//							LOGGER.info("lastpointer = " + _lastPointer + ",  " + _lastPointer.y + " < "
-//							        + (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset()));
-//							if (_lastPointer.y < (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset())) {
-//								// probably mail
-//
-//								clickCareful(_lastPointer, true, true);
-//								_lastPointer = null;
-//								_foundPointer = false;
-//							}
-//							// clickCareful(_lastPointer, true, true);
-//						}
+						// if (_foundPointer) {
+						// LOGGER.info("lastpointer = " + _lastPointer + ",  " + _lastPointer.y + " < "
+						// + (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset()));
+						// if (_lastPointer.y < (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset())) {
+						// // probably mail
+						//
+						// clickCareful(_lastPointer, true, true);
+						// _lastPointer = null;
+						// _foundPointer = false;
+						// }
+						// // clickCareful(_lastPointer, true, true);
+						// }
 						if (scanOtherLocations(true)) {
 							// break;
 							_mouse.saveCurrentPosition();
@@ -1358,7 +1358,7 @@ public final class MainFrame extends JFrame {
 		Rectangle zone = _scanner.getDangerousZones()[0];
 		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
 			// uh oh!!!
-			int diff = p.x - zone.x + 23;
+			int diff = p.x - zone.x + 23 + 7;
 			int x1 = _scanner.getBottomRight().x - 50;
 			int y = _scanner.getBottomRight().y - 160;
 			LOGGER.info("avoid zone [" + zone.x + " - " + (zone.x + zone.width));
@@ -1399,7 +1399,7 @@ public final class MainFrame extends JFrame {
 		zone = _scanner.getDangerousZones()[1];
 		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
 			// uh oh!!!
-			int diff = p.x - zone.x + 23;
+			int diff = p.x - zone.x + 23 + 7;
 			int x1 = _scanner.getBottomRight().x - 5;
 			int y = _scanner.getBottomRight().y - 160;
 			LOGGER.info("avoid zone2 [" + zone.x + " - " + (zone.x + zone.width));
@@ -1412,7 +1412,7 @@ public final class MainFrame extends JFrame {
 		zone = _scanner.getDangerousZones()[2];
 		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
 			// uh oh!!!
-			int diff = zone.x + zone.width - p.x + 23;
+			int diff = zone.x + zone.width - p.x - 23 - 7;
 			int x1 = _scanner.getTopLeft().x + 5;
 			int y = _scanner.getBottomRight().y - 160;
 			LOGGER.info("avoid zone1 [" + zone.x + " - " + (zone.x + zone.width));
