@@ -8,9 +8,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
@@ -54,7 +57,7 @@ public final class MainFrame extends JFrame {
 
 	private final static Logger	LOGGER	      = Logger.getLogger(MainFrame.class.getName());
 
-	private static final String	APP_TITLE	    = "Mickey v0.604";
+	private static final String	APP_TITLE	    = "Mickey v0.608";
 
 	private boolean	            _refresh	    = true;
 	private boolean	            _devMode	    = false;
@@ -64,10 +67,21 @@ public final class MainFrame extends JFrame {
 	private boolean	            _stopThread	  = false;
 	private Pixel	              _lastPointer	= null;
 	private boolean	            _foundPointer	= false;
-	private int	                _trains;
-	private int	                _refreshCount;
+	// private int _trains;
+	// private int _refreshCount;
+	private Statistics	        _stats;
 	private JLabel	            _trainsNumberLabel;
+	private JLabel	            _trainsNumberLabelA;
+	private JLabel	            _freightTrainsNumberLabel;
+	private JLabel	            _freightTrainsNumberLabelA;
+	private JLabel	            _expressTrainsNumberLabel;
+	private JLabel	            _expressTrainsNumberLabelA;
 	private JLabel	            _refreshNumberLabel;
+	private JLabel	            _refreshNumberLabelA;
+	private JLabel	            _refreshTimeLabel;
+	private JLabel	            _lastActivityLabel;
+	private JLabel	            _startedLabel;
+	
 	private MyCanvas	          _myCanvas;
 	private JButton	            _locateAction;
 	private JButton	            _resetAction;
@@ -92,7 +106,7 @@ public final class MainFrame extends JFrame {
 	public MainFrame(Boolean refresh) throws HeadlessException {
 		super();
 		_settings = new Settings();
-
+		_stats = new Statistics();
 		// _settings.setDefaults();
 		// _settings.saveSettings();
 
@@ -196,10 +210,6 @@ public final class MainFrame extends JFrame {
 	private void init() {
 		setTitle(APP_TITLE);
 
-		_trainsNumberLabel = new JLabel("Trains: 0");
-		_trainsNumberLabel.setFont(_trainsNumberLabel.getFont().deriveFont(18.0f));
-		_refreshNumberLabel = new JLabel("Refresh: " + (_refresh ? "0" : "off"));
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setAlwaysOnTop(true);
 		JPanel rootPanel = new JPanel(new BorderLayout());
@@ -214,10 +224,8 @@ public final class MainFrame extends JFrame {
 		final JTextArea outputConsole = new JTextArea(6, 25);
 
 		rootPanel.add(new JScrollPane(outputConsole), BorderLayout.CENTER);
-		Box labelsBox = Box.createHorizontalBox();
-		labelsBox.add(_trainsNumberLabel);
-		labelsBox.add(Box.createHorizontalStrut(4));
-		labelsBox.add(_refreshNumberLabel);
+
+		
 		Handler handler = new Handler() {
 
 			@Override
@@ -250,12 +258,12 @@ public final class MainFrame extends JFrame {
 
 		JToolBar frToolbar1 = new JToolBar();
 		JToolBar frToolbar2 = new JToolBar();
-		frToolbar1.add(new JLabel("Cargo      "));
+		frToolbar1.add(new JLabel("Freight     "));
 		JToolBar exToolbar1 = new JToolBar();
 		JToolBar exToolbar2 = new JToolBar();
 		exToolbar1.add(new JLabel("Express  "));
 
-		JPanel toolbars = new JPanel(new GridLayout(6, 1));
+		JPanel toolbars = new JPanel(new GridLayout(5, 1));
 		toolbars.add(mainToolbar);
 		mainToolbar.setFloatable(false);
 		frToolbar1.setFloatable(false);
@@ -270,8 +278,144 @@ public final class MainFrame extends JFrame {
 		toolbars.add(frToolbar2);
 		toolbars.add(exToolbar1);
 		toolbars.add(exToolbar2);
-		toolbars.add(labelsBox);
-		rootPanel.add(toolbars, BorderLayout.NORTH);
+		Box north = Box.createVerticalBox();
+		north.add(toolbars);
+		
+		
+		JLabel trainsNumberLabel = new JLabel("T:");
+		trainsNumberLabel.setForeground(Color.GRAY);
+		_trainsNumberLabel = new JLabel("8888");
+		_trainsNumberLabelA = new JLabel("888");
+		_trainsNumberLabelA.setForeground(Color.GRAY);
+		trainsNumberLabel.setFont(trainsNumberLabel.getFont().deriveFont(16.0f));
+		_trainsNumberLabel.setFont(_trainsNumberLabel.getFont().deriveFont(16.0f));
+		_trainsNumberLabelA.setFont(_trainsNumberLabelA.getFont().deriveFont(12.0f));
+		
+		JLabel freightTrainsNumberLabel = new JLabel("F:");
+		freightTrainsNumberLabel.setForeground(Color.GRAY);
+		_freightTrainsNumberLabel = new JLabel("8888");
+		_freightTrainsNumberLabelA = new JLabel("888");
+		_freightTrainsNumberLabelA.setForeground(Color.GRAY);
+		freightTrainsNumberLabel.setFont(freightTrainsNumberLabel.getFont().deriveFont(16.0f));
+		_freightTrainsNumberLabel.setFont(_freightTrainsNumberLabel.getFont().deriveFont(16.0f));
+		_freightTrainsNumberLabelA.setFont(_freightTrainsNumberLabelA.getFont().deriveFont(12.0f));
+		
+		JLabel expressTrainsNumberLabel = new JLabel("E:");
+		expressTrainsNumberLabel.setForeground(Color.GRAY);
+		_expressTrainsNumberLabel = new JLabel("8888");
+		_expressTrainsNumberLabelA = new JLabel("888");
+		_expressTrainsNumberLabelA.setForeground(Color.GRAY);
+		expressTrainsNumberLabel.setFont(expressTrainsNumberLabel.getFont().deriveFont(16.0f));
+		_expressTrainsNumberLabel.setFont(_expressTrainsNumberLabel.getFont().deriveFont(16.0f));
+		_expressTrainsNumberLabelA.setFont(_expressTrainsNumberLabelA.getFont().deriveFont(12.0f));
+		
+		JLabel refreshNumberLabel = new JLabel("R:");
+		refreshNumberLabel.setForeground(Color.GRAY);
+		refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(16.0f));
+		_refreshNumberLabel = new JLabel("" + (_refresh ? "88" : "off"));
+		_refreshNumberLabelA = new JLabel("88");
+		_refreshNumberLabelA.setForeground(Color.GRAY);
+		_refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(16.0f));
+		_refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(12.0f));
+		
+		JLabel lastActivityLabel = new JLabel("L:");
+		lastActivityLabel.setForeground(Color.GRAY);
+		lastActivityLabel.setFont(lastActivityLabel.getFont().deriveFont(16.0f));
+		_lastActivityLabel = new JLabel(" 88:88 ");
+		_lastActivityLabel.setFont(_lastActivityLabel.getFont().deriveFont(16.0f));
+
+		JLabel startedLabel = new JLabel("S:");
+		startedLabel.setForeground(Color.GRAY);
+		startedLabel.setFont(startedLabel.getFont().deriveFont(16.0f));
+		_startedLabel = new JLabel(" 88:88 ");
+		_startedLabel.setFont(_startedLabel.getFont().deriveFont(16.0f));
+
+		
+		JPanel labelsBox = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.ipadx = 5;
+		gbc.ipady = 5;
+		gbc.insets = new Insets(0, 4, 0, 0);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.anchor = GridBagConstraints.LAST_LINE_START;
+		gbc.weightx = 0.0;
+		labelsBox.add(trainsNumberLabel, gbc);
+		
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_trainsNumberLabel, gbc);
+
+		gbc.insets = new Insets(0, 3, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_trainsNumberLabelA, gbc);
+		
+		gbc.insets = new Insets(0, 7, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(freightTrainsNumberLabel, gbc);
+		
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_freightTrainsNumberLabel, gbc);
+
+		gbc.insets = new Insets(0, 3, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_freightTrainsNumberLabelA, gbc);
+		
+		gbc.insets = new Insets(0, 7, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(expressTrainsNumberLabel, gbc);
+		
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_expressTrainsNumberLabel, gbc);
+
+		gbc.insets = new Insets(0, 3, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_expressTrainsNumberLabelA, gbc);
+
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		gbc.weightx = 1.0;
+		labelsBox.add(new JLabel(" "), gbc);
+		
+		//second row
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.insets = new Insets(0, 4, 0, 0);
+		gbc.weightx = 0.0;
+		labelsBox.add(refreshNumberLabel, gbc);
+		
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_refreshNumberLabel, gbc);
+
+		gbc.insets = new Insets(0, 3, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(_refreshNumberLabelA, gbc);
+		
+		gbc.insets = new Insets(0, 7, 0, 0);
+		gbc.gridx++;
+		labelsBox.add(lastActivityLabel, gbc);
+		
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		gbc.gridwidth=2;
+		labelsBox.add(_lastActivityLabel, gbc);
+
+		gbc.insets = new Insets(0, 7, 0, 0);
+		gbc.gridx+=2;
+		gbc.gridwidth=1;
+		labelsBox.add(startedLabel, gbc);
+
+		gbc.insets = new Insets(0, 0, 0, 0);
+		gbc.gridx++;
+		gbc.gridwidth=2;
+		labelsBox.add(_startedLabel, gbc);
+
+		north.add(labelsBox);
+		rootPanel.add(north, BorderLayout.NORTH);
 
 		// SCAN
 		AbstractAction scanAction = new AbstractAction("Scan") {
@@ -360,14 +504,10 @@ public final class MainFrame extends JFrame {
 					Thread myThread = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							_trains = 0;
-							_trainsNumberLabel.setText("Trains: 0");
-							_trainsNumberLabel.invalidate();
-							_refreshCount = 0;
-							_refreshNumberLabel.setText("Refresh: 0");
-							_refreshNumberLabel.invalidate();
-
+							_stats.reset();
+							updateLabels();
 						}
+
 					});
 					myThread.start();
 				}
@@ -451,6 +591,20 @@ public final class MainFrame extends JFrame {
 		// timeButton2.setSelected(true);
 
 	}
+	
+	private void updateLabels() {
+		_trainsNumberLabel.setText(""+_stats.getTotalTrainCount());
+		_freightTrainsNumberLabel.setText(""+_stats.getFreightTrainCount());
+		_expressTrainsNumberLabel.setText(""+_stats.getExpressTrainCount());
+		_refreshNumberLabel.setText(""+_stats.getRefreshCount());
+		_lastActivityLabel.setText(""+_stats.getLastActivityTimeAsString());
+		_startedLabel.setText(""+_stats.getStartedTimeAsString());
+		
+		_trainsNumberLabelA.setText(_stats.getAverageTrainTimeAsString());
+		_freightTrainsNumberLabelA.setText(_stats.getAverageFreightTimeAsString());
+		_expressTrainsNumberLabelA.setText(_stats.getAverageExpressTimeAsString());
+		_refreshNumberLabelA.setText(_stats.getAverageRefreshTimeAsString());
+  }
 
 	protected void runMagic() {
 		Thread myThread = new Thread(new Runnable() {
@@ -572,7 +726,8 @@ public final class MainFrame extends JFrame {
 			}
 
 			// fixTheGame();
-			_refreshNumberLabel.setText("Refresh: " + (++_refreshCount) + "  (" + getNow() + ")");
+			_stats.registerRefresh();
+			updateLabels();
 
 			LOGGER.info("Refresh done");
 		} catch (AWTException e) {
@@ -639,7 +794,7 @@ public final class MainFrame extends JFrame {
 	public void doMagic() {
 		setTitle(APP_TITLE + " READY AND RUNNING");
 		if (_refreshClick.isSelected())
-			_refreshNumberLabel.setText("Refresh: " + _refreshCount + "  (" + getNow() + ")");
+			updateLabels();
 
 		int timeForRefresh = (getLongestTime() + 1) * 60000;
 		int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
@@ -1585,8 +1740,8 @@ public final class MainFrame extends JFrame {
 			area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 113 - 8);
 			Pixel exP = _scanner.getExpressTrain().findImage(area);
 			drawImage(area);
-
-			if (exP != null) {
+			boolean isExpress = exP != null;
+			if (isExpress) {
 				time = _expressTime;
 				LOGGER.info("EXPRESS " + time.getTime());
 			} else {
@@ -1619,11 +1774,13 @@ public final class MainFrame extends JFrame {
 
 			if (!_devMode) {
 				_mouse.click();
-				String msg = "Trains: " + (++_trains);
-				String date = getNow();
-				_trainsNumberLabel.setText(msg + "  (" + date + ")");
+				_stats.registerTrain(isExpress);
+				String msg = "Trains: " + _stats.getTotalTrainCount();
+				//String date = getNow();
+				//_trainsNumberLabel.setText(msg + "  (" + date + ")");
 				LOGGER.severe(msg);
-				_trainsNumberLabel.invalidate();
+				//_trainsNumberLabel.invalidate();
+				updateLabels();
 				boolean weredone = false;
 				int turns = 0;
 				do {
