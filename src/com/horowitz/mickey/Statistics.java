@@ -54,7 +54,7 @@ public class Statistics {
 	}
 
 	public double getAverageTrainTime() {
-		long time = _lastTrainTime - _startTime;
+		long time = _lastActivityTime - _startTime;
 		double t = (double) time / 3600000;
 		int cnt = _freightTrainCount + _expressTrainCount;
 		double value = 0;
@@ -64,7 +64,7 @@ public class Statistics {
 	}
 
 	public double getAverageFreightTime() {
-		long time = _lastFreightTime - _startTime;
+		long time = _lastActivityTime - _startTime;
 		double t = (double) time / 3600000;
 		double value = 0;
 		if (t != 0)
@@ -73,7 +73,7 @@ public class Statistics {
 	}
 
 	public double getAverageRefreshTime() {
-		long time = _lastRefreshTime - _startTime;
+		long time = _lastActivityTime - _startTime;
 		double t = (double) time / 3600000;
 		double value = 0;
 		if (t != 0)
@@ -82,7 +82,7 @@ public class Statistics {
 	}
 
 	public double getAverageExpressTime() {
-		long time = _lastExpressTime - _startTime;
+		long time = _lastActivityTime - _startTime;
 		double t = (double) time / 3600000;
 		double value = 0;
 		if (t != 0)
@@ -153,6 +153,10 @@ public class Statistics {
 		nf.setMaximumFractionDigits(2);
 		nf.setMinimumFractionDigits(0);
 		return nf.format(value);
+	}
+
+	public void updateTime() {
+		_lastActivityTime = System.currentTimeMillis();
 	}
 
 }
