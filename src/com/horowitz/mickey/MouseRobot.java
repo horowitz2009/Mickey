@@ -59,7 +59,7 @@ public class MouseRobot {
 
   public void drag(int x1, int y1, int x2, int y2) throws RobotInterruptedException {
 		Robot robot = getInstance();
-		robot.mouseMove(x1, y1);
+		mouseMove(x1, y1);
     saveCurrentPosition();
     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
 		// checkUserMovement();
@@ -76,15 +76,13 @@ public class MouseRobot {
       // case 1 - a > 0 => moving east
 			for (int i = 0; i < turns; i++) {
         x = x + (a > 0 ? step : a == 0 ? 0 : -step);
-				robot.mouseMove(x, y);
-				robot.delay(100);
-				// checkUserMovement();
+				mouseMove(x, y);
+				delay(100);
       }
 			int rest = d % step;
 			x = x + (a > 0 ? rest : a == 0 ? 0 : -rest);
-			robot.mouseMove(x, y);
-			robot.delay(100);
-			// checkUserMovement();
+			mouseMove(x, y);
+			delay(100);
     }
 
 		if (y1 != y2) {// move vertically
@@ -93,16 +91,16 @@ public class MouseRobot {
       b = b / step;
       for (int i = 0; i < Math.abs(b); i++) {
         y = y + (b > 0 ? step : b == 0 ? 0 : -step);
-				robot.mouseMove(x, y);
-				robot.delay(100);
+				mouseMove(x, y);
+				delay(100);
 				// checkUserMovement();
       }
     }
-		robot.delay(400);
+		delay(400);
     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
   }
 
-  public void doubleClick(int x, int y) {
+	public void doubleClick(int x, int y) {
     mouseMove(x, y);
     doubleClick();
   }

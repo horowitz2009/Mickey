@@ -89,6 +89,8 @@ public class ScreenScanner {
 
 	private ImageData	           _expressTrain;
 
+	private int	                 _street1Y	                    = 155;
+
 	public ScreenScanner(Settings settings) {
 		_settings = settings;
 		_comparator = new SimilarityImageComparator(0.04, 20);
@@ -498,6 +500,10 @@ public class ScreenScanner {
 
 	public ImageData getHome() {
 		return _home;
+	}
+
+	public int getStreet1Y() {
+		return _street1Y;
 	}
 
 }

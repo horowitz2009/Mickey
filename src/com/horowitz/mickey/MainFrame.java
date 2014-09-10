@@ -54,7 +54,7 @@ public final class MainFrame extends JFrame {
 
 	private final static Logger	LOGGER	      = Logger.getLogger(MainFrame.class.getName());
 
-	private static final String	APP_TITLE	    = "Mickey v0.601";
+	private static final String	APP_TITLE	    = "Mickey v0.602";
 
 	private boolean	            _refresh	    = true;
 	private boolean	            _devMode	    = false;
@@ -315,7 +315,7 @@ public final class MainFrame extends JFrame {
 							refresh();
 							runMagic();
 						} catch (RobotInterruptedException e) {
-							LOGGER.info("Interrupted by user");
+							LOGGER.log(Level.SEVERE, "Interrupted by user6", e);
 						}
 					}
 				});
@@ -337,8 +337,7 @@ public final class MainFrame extends JFrame {
 								try {
 									locate();
 								} catch (RobotInterruptedException e) {
-
-									LOGGER.info("Interrupted.");
+									LOGGER.log(Level.SEVERE, "Interrupted by user7", e);
 									e.printStackTrace();
 									_stopThread = true;
 								}
@@ -509,7 +508,8 @@ public final class MainFrame extends JFrame {
 			LOGGER.log(Level.WARNING, e1.getMessage());
 			e1.printStackTrace();
 		} catch (RobotInterruptedException e) {
-			LOGGER.info("Interrupted by user");
+			LOGGER.log(Level.SEVERE, "Interrupted by user1", e);
+			e.printStackTrace();
 		}
 
 	}
@@ -631,7 +631,7 @@ public final class MainFrame extends JFrame {
 			_mouse.click();
 			_mouse.delay(200, false);
 		} catch (RobotInterruptedException e) {
-			LOGGER.info("Interrupted by user");
+			LOGGER.log(Level.SEVERE, "Interrupted by user7", e);
 			_stopThread = true;
 		}
 	}
@@ -701,7 +701,8 @@ public final class MainFrame extends JFrame {
 				e.printStackTrace();
 				break;
 			} catch (RobotInterruptedException e) {
-				LOGGER.info("Interrupted by user");
+				LOGGER.log(Level.SEVERE, "Interrupted by user1", e);
+				// LOGGER.info("Interrupted by user");
 				setTitle(APP_TITLE + " READY");
 				_stopThread = true;
 				break;
@@ -772,7 +773,7 @@ public final class MainFrame extends JFrame {
 								}
 							}
 						} catch (RobotInterruptedException e) {
-							LOGGER.info("Interrupted.");
+							LOGGER.log(Level.SEVERE, "Interrupted by user2", e);
 							_stopThread = true;
 						}
 					} catch (Exception e1) {
@@ -963,6 +964,8 @@ public final class MainFrame extends JFrame {
 					p = p2;
 				_stopThread = true;
 				start = System.currentTimeMillis();
+				_mouse.saveCurrentPosition();
+
 				// if (clickCareful(p, true, true)) {
 				// trainHasBeenSent = true;
 				// // ok it is a train and it is sent
@@ -976,39 +979,51 @@ public final class MainFrame extends JFrame {
 				// in case of mail hint
 				_lastPointer = new Pixel(p.x, p.y);
 				_foundPointer = false;
-				if (!isRunning("MAIL")) {
-					Thread myThread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							if (_lastPointer != null) {
-								try {
-									int maxY = getMaxY(_lastPointer);
-									LOGGER.info("Maxxed pointer is" + _lastPointer);
-									LOGGER.info("maxY=" + maxY);
-									_lastPointer.y = (int) (maxY + _scanner.getRailYOffset() * 2);// TODO
-									_foundPointer = true;
-								} catch (RobotInterruptedException e) {
-								}
-							}
-						}
+//				if (!isRunning("MAIL")) {
+//					Thread myThread = new Thread(new Runnable() {
+//						@Override
+//						public void run() {
+//							if (_lastPointer != null) {
+//								try {
+//									int maxY = getMaxY(_lastPointer);
+//									LOGGER.info("Maxxed pointer is" + _lastPointer);
+//									LOGGER.info("maxY=" + maxY);
+//									_lastPointer.y = (int) (maxY + _scanner.getRailYOffset() * 2);// TODO
+//									_foundPointer = true;
+//								} catch (RobotInterruptedException e) {
+//									LOGGER.log(Level.SEVERE, "Interrupted by user3", e);
+//								}
+//							}
+//						}
+//
+//					}, "MAIL");
+//
+//					myThread.start();
+//				}
 
-					}, "MAIL");
-
-					myThread.start();
-				}
-
-				// why don't we try other rails
 				int[] rails = _scanner.getRailsHome();
+
+				// fast click all rails + street1 mainly for mail express trains
+				for (int i = 0; i < rails.length; i++) {
+					p.y = _scanner.getBottomRight().y - rails[i] - 4;
+					clickCareful(p, false, false);
+				}
+				p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 2;
+				clickCareful(p, false, false);
+				_mouse.delay(250);
+				checkTrainManagement();
+				_mouse.delay(250);
+				scanOtherLocations(true);
+				_mouse.delay(250);
+				
+				// again all rails one by one now more carefully
 				boolean stop = false;
 				for (int i = 0; i < rails.length && !stop; i++) {
 					try {
 						LOGGER.info("trying rail " + (i + 1));
 						p.y = _scanner.getBottomRight().y - rails[i] - 4;
 						clickCareful(p, false, false);
-						// _mouse.saveCurrentPosition();
 						_mouse.delay(200);
-						// _mouse.checkUserMovement();
-						_mouse.saveCurrentPosition();
 						clickCareful(p, true, false);
 						_mouse.checkUserMovement();
 
@@ -1017,18 +1032,18 @@ public final class MainFrame extends JFrame {
 							stop = true;
 							break;
 						}
-						if (_foundPointer) {
-							LOGGER.info("lastpointer = " + _lastPointer + ",  " + _lastPointer.y + " < "
-							        + (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset()));
-							if (_lastPointer.y < (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset())) {
-								// probably mail
-
-								clickCareful(_lastPointer, true, true);
-								_lastPointer = null;
-								_foundPointer = false;
-							}
-							// clickCareful(_lastPointer, true, true);
-						}
+//						if (_foundPointer) {
+//							LOGGER.info("lastpointer = " + _lastPointer + ",  " + _lastPointer.y + " < "
+//							        + (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset()));
+//							if (_lastPointer.y < (_scanner.getBottomRight().y - rails[rails.length - 1] - _scanner.getRailYOffset())) {
+//								// probably mail
+//
+//								clickCareful(_lastPointer, true, true);
+//								_lastPointer = null;
+//								_foundPointer = false;
+//							}
+//							// clickCareful(_lastPointer, true, true);
+//						}
 						if (scanOtherLocations(true)) {
 							// break;
 							_mouse.saveCurrentPosition();
@@ -1116,7 +1131,7 @@ public final class MainFrame extends JFrame {
 							} catch (AWTException | IOException e) {
 								LOGGER.info("whaaaat again?");
 							} catch (RobotInterruptedException e) {
-								LOGGER.info("interrupted by user");
+								LOGGER.log(Level.SEVERE, "Interrupted by user4", e);
 								_stopThread = true;
 							} catch (SessionTimeOutException e) {
 								LOGGER.info("session time out");
@@ -1222,6 +1237,7 @@ public final class MainFrame extends JFrame {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (RobotInterruptedException e) {
+			LOGGER.log(Level.SEVERE, "Interrupted by user5", e);
 			e.printStackTrace();
 		}
 	}
@@ -1345,7 +1361,7 @@ public final class MainFrame extends JFrame {
 			int diff = p.x - zone.x + 23;
 			int x1 = _scanner.getBottomRight().x - 50;
 			int y = _scanner.getBottomRight().y - 160;
-			LOGGER.info("avoid zone3 [" + zone.x + " - " + (zone.x + zone.width));
+			LOGGER.info("avoid zone [" + zone.x + " - " + (zone.x + zone.width));
 			LOGGER.info("drag " + diff);
 			_mouse.drag(x1, y, x1 - diff, y);
 			_mouse.saveCurrentPosition();
