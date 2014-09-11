@@ -126,8 +126,20 @@ public class Statistics {
 		return _startTime;
 	}
 
+	public long getLastTrainTime() {
+		return _lastTrainTime;
+	}
+
+	public long getLastFreightTime() {
+		return _lastFreightTime;
+	}
+
 	public long getLastExpressTime() {
 		return _lastExpressTime;
+	}
+
+	public long getLastRefreshTime() {
+		return _lastRefreshTime;
 	}
 
 	public long getLastActivityTime() {
@@ -142,10 +154,6 @@ public class Statistics {
 	public String getStartedTimeAsString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 		return sdf.format(new Date(_startTime));
-	}
-
-	public long getLastFreightTime() {
-		return _lastFreightTime;
 	}
 
 	private String getAvgAsString(double value) {

@@ -51,7 +51,7 @@ public class Settings {
 
 		_properties.setProperty("railsOut", "6");
 		_properties.setProperty("railsOut1", "100, 104, 108, 112, 116, 117");// maglev rail reduced with 3px
-		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 133");
+		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 135");
 		_properties.setProperty("railsOut3", "100, 110, 119, 129, 138, 145");
 		_properties.setProperty("railsOut4", "100, 112, 124, 136, 148, 157");
 
@@ -66,9 +66,11 @@ public class Settings {
 		_properties.setProperty("xOffset4", "32");
 
 		// dangerous zones
-		_properties.setProperty("zone1", "-579, -137, 76, 70");
-		_properties.setProperty("zone2", "-359, -137, 76, 70");
-		_properties.setProperty("zone3", "-138, -137, 76, 70");
+		_properties.setProperty("zone1", "-579, -141, 73, 73");
+		_properties.setProperty("zone2", "-359, -141, 73, 73");
+		_properties.setProperty("zone3", "-139, -141, 73, 73");
+		_properties.setProperty("zone1a", "-472, -141, 73, 73");
+		_properties.setProperty("zone2a", "-252, -141, 73, 73");
 		
 		_properties.setProperty("street1Y", "163");
 	}

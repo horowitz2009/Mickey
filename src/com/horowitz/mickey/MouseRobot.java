@@ -62,6 +62,7 @@ public class MouseRobot {
 		mouseMove(x1, y1);
     saveCurrentPosition();
     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+    delay(400);
 		// checkUserMovement();
     int x = x1;
     int y = y1;
@@ -74,13 +75,18 @@ public class MouseRobot {
 			step = d <= maxStep ? d : maxStep;
 			double turns = d / step;
       // case 1 - a > 0 => moving east
+			
+			x = x + (a > 0 ? 7 : -7);
+			mouseMove(x, y);
+			delay(200);
+			
 			for (int i = 0; i < turns; i++) {
-        x = x + (a > 0 ? step : a == 0 ? 0 : -step);
+        x = x + (a > 0 ? step : -step);
 				mouseMove(x, y);
 				delay(100);
       }
 			int rest = d % step;
-			x = x + (a > 0 ? rest : a == 0 ? 0 : -rest);
+			x = x + (a > 0 ? rest : -rest);
 			mouseMove(x, y);
 			delay(100);
     }

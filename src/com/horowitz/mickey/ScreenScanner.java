@@ -155,7 +155,8 @@ public class ScreenScanner {
 
 		_trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 100, getGameWidth(), 100);
 
-		_dangerousZones = new Rectangle[] { _settings.getArea("zone3", _br), _settings.getArea("zone2", _br), _settings.getArea("zone1", _br) };
+		_dangerousZones = new Rectangle[] { _settings.getArea("zone3", _br), _settings.getArea("zone2a", _br), _settings.getArea("zone2", _br), 
+						_settings.getArea("zone1a", _br), _settings.getArea("zone1", _br)};
 
 		area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
 		_pointerLeft = new ImageData("pointerLeft.bmp", area, _comparator, 0, 0);

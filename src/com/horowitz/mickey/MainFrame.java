@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
 	private final static Logger	LOGGER	      = Logger.getLogger(MainFrame.class.getName());
 
-	private static final String	APP_TITLE	    = "Mickey v0.609";
+	private static final String	APP_TITLE	    = "Mickey v0.610";
 
 	private boolean	            _refresh	    = true;
 	private boolean	            _devMode	    = false;
@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame {
 	private JLabel	            _refreshTimeLabel;
 	private JLabel	            _lastActivityLabel;
 	private JLabel	            _startedLabel;
-	
+
 	private MyCanvas	          _myCanvas;
 	private JButton	            _locateAction;
 	private JButton	            _resetAction;
@@ -225,7 +225,6 @@ public final class MainFrame extends JFrame {
 
 		rootPanel.add(new JScrollPane(outputConsole), BorderLayout.CENTER);
 
-		
 		Handler handler = new Handler() {
 
 			@Override
@@ -280,8 +279,7 @@ public final class MainFrame extends JFrame {
 		toolbars.add(exToolbar2);
 		Box north = Box.createVerticalBox();
 		north.add(toolbars);
-		
-		
+
 		JLabel trainsNumberLabel = new JLabel("T:");
 		trainsNumberLabel.setForeground(Color.GRAY);
 		_trainsNumberLabel = new JLabel("8888");
@@ -290,7 +288,7 @@ public final class MainFrame extends JFrame {
 		trainsNumberLabel.setFont(trainsNumberLabel.getFont().deriveFont(16.0f));
 		_trainsNumberLabel.setFont(_trainsNumberLabel.getFont().deriveFont(16.0f));
 		_trainsNumberLabelA.setFont(_trainsNumberLabelA.getFont().deriveFont(12.0f));
-		
+
 		JLabel freightTrainsNumberLabel = new JLabel("F:");
 		freightTrainsNumberLabel.setForeground(Color.GRAY);
 		_freightTrainsNumberLabel = new JLabel("8888");
@@ -299,7 +297,7 @@ public final class MainFrame extends JFrame {
 		freightTrainsNumberLabel.setFont(freightTrainsNumberLabel.getFont().deriveFont(16.0f));
 		_freightTrainsNumberLabel.setFont(_freightTrainsNumberLabel.getFont().deriveFont(16.0f));
 		_freightTrainsNumberLabelA.setFont(_freightTrainsNumberLabelA.getFont().deriveFont(12.0f));
-		
+
 		JLabel expressTrainsNumberLabel = new JLabel("E:");
 		expressTrainsNumberLabel.setForeground(Color.GRAY);
 		_expressTrainsNumberLabel = new JLabel("8888");
@@ -308,7 +306,7 @@ public final class MainFrame extends JFrame {
 		expressTrainsNumberLabel.setFont(expressTrainsNumberLabel.getFont().deriveFont(16.0f));
 		_expressTrainsNumberLabel.setFont(_expressTrainsNumberLabel.getFont().deriveFont(16.0f));
 		_expressTrainsNumberLabelA.setFont(_expressTrainsNumberLabelA.getFont().deriveFont(12.0f));
-		
+
 		JLabel refreshNumberLabel = new JLabel("R:");
 		refreshNumberLabel.setForeground(Color.GRAY);
 		refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(16.0f));
@@ -317,7 +315,7 @@ public final class MainFrame extends JFrame {
 		_refreshNumberLabelA.setForeground(Color.GRAY);
 		_refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(16.0f));
 		_refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(12.0f));
-		
+
 		JLabel lastActivityLabel = new JLabel("L:");
 		lastActivityLabel.setForeground(Color.GRAY);
 		lastActivityLabel.setFont(lastActivityLabel.getFont().deriveFont(16.0f));
@@ -330,7 +328,6 @@ public final class MainFrame extends JFrame {
 		_startedLabel = new JLabel(" 88:88 ");
 		_startedLabel.setFont(_startedLabel.getFont().deriveFont(16.0f));
 
-		
 		JPanel labelsBox = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -342,7 +339,7 @@ public final class MainFrame extends JFrame {
 		gbc.anchor = GridBagConstraints.LAST_LINE_START;
 		gbc.weightx = 0.0;
 		labelsBox.add(trainsNumberLabel, gbc);
-		
+
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_trainsNumberLabel, gbc);
@@ -350,11 +347,11 @@ public final class MainFrame extends JFrame {
 		gbc.insets = new Insets(0, 3, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_trainsNumberLabelA, gbc);
-		
+
 		gbc.insets = new Insets(0, 7, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(freightTrainsNumberLabel, gbc);
-		
+
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_freightTrainsNumberLabel, gbc);
@@ -362,11 +359,11 @@ public final class MainFrame extends JFrame {
 		gbc.insets = new Insets(0, 3, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_freightTrainsNumberLabelA, gbc);
-		
+
 		gbc.insets = new Insets(0, 7, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(expressTrainsNumberLabel, gbc);
-		
+
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_expressTrainsNumberLabel, gbc);
@@ -379,14 +376,14 @@ public final class MainFrame extends JFrame {
 		gbc.gridx++;
 		gbc.weightx = 1.0;
 		labelsBox.add(new JLabel(" "), gbc);
-		
-		//second row
+
+		// second row
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.insets = new Insets(0, 4, 0, 0);
 		gbc.weightx = 0.0;
 		labelsBox.add(refreshNumberLabel, gbc);
-		
+
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_refreshNumberLabel, gbc);
@@ -394,24 +391,24 @@ public final class MainFrame extends JFrame {
 		gbc.insets = new Insets(0, 3, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(_refreshNumberLabelA, gbc);
-		
+
 		gbc.insets = new Insets(0, 7, 0, 0);
 		gbc.gridx++;
 		labelsBox.add(lastActivityLabel, gbc);
-		
+
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
-		gbc.gridwidth=2;
+		gbc.gridwidth = 2;
 		labelsBox.add(_lastActivityLabel, gbc);
 
 		gbc.insets = new Insets(0, 7, 0, 0);
-		gbc.gridx+=2;
-		gbc.gridwidth=1;
+		gbc.gridx += 2;
+		gbc.gridwidth = 1;
 		labelsBox.add(startedLabel, gbc);
 
 		gbc.insets = new Insets(0, 0, 0, 0);
 		gbc.gridx++;
-		gbc.gridwidth=2;
+		gbc.gridwidth = 2;
 		labelsBox.add(_startedLabel, gbc);
 
 		north.add(labelsBox);
@@ -591,21 +588,21 @@ public final class MainFrame extends JFrame {
 		// timeButton2.setSelected(true);
 
 	}
-	
+
 	private void updateLabels() {
 		_stats.updateTime();
-		_trainsNumberLabel.setText(""+_stats.getTotalTrainCount());
-		_freightTrainsNumberLabel.setText(""+_stats.getFreightTrainCount());
-		_expressTrainsNumberLabel.setText(""+_stats.getExpressTrainCount());
-		_refreshNumberLabel.setText(""+_stats.getRefreshCount());
-		_lastActivityLabel.setText(""+_stats.getLastActivityTimeAsString());
-		_startedLabel.setText(""+_stats.getStartedTimeAsString());
-		
+		_trainsNumberLabel.setText("" + _stats.getTotalTrainCount());
+		_freightTrainsNumberLabel.setText("" + _stats.getFreightTrainCount());
+		_expressTrainsNumberLabel.setText("" + _stats.getExpressTrainCount());
+		_refreshNumberLabel.setText("" + _stats.getRefreshCount());
+		_lastActivityLabel.setText("" + _stats.getLastActivityTimeAsString());
+		_startedLabel.setText("" + _stats.getStartedTimeAsString());
+
 		_trainsNumberLabelA.setText(_stats.getAverageTrainTimeAsString());
 		_freightTrainsNumberLabelA.setText(_stats.getAverageFreightTimeAsString());
 		_expressTrainsNumberLabelA.setText(_stats.getAverageExpressTimeAsString());
 		_refreshNumberLabelA.setText(_stats.getAverageRefreshTimeAsString());
-  }
+	}
 
 	protected void runMagic() {
 		Thread myThread = new Thread(new Runnable() {
@@ -1117,9 +1114,9 @@ public final class MainFrame extends JFrame {
 			p = detectPointerDown();
 			if (p != null) {
 				checkDangerousZones(p);
-				Pixel p2 = detectPointerDown();
-				if (p2 != null)
-					p = p2;
+				//Pixel p2 = detectPointerDown();
+				//if (p2 != null)
+				//	p = p2;
 				_stopThread = true;
 				start = System.currentTimeMillis();
 				_mouse.saveCurrentPosition();
@@ -1256,7 +1253,7 @@ public final class MainFrame extends JFrame {
 				_mouse.drag(x1, y, x1 - diff, y);
 				// click directly to a safe zone
 				int[] rails = _scanner.getRailsOut();
-				int xx = _scanner.getBottomRight().x - 131;
+				int xx = _scanner.getBottomRight().x - 140; // safe zone
 				for (int i = 0; i < rails.length; i++) {
 					_mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
 				}
@@ -1427,6 +1424,17 @@ public final class MainFrame extends JFrame {
 
 	private void locate() throws RobotInterruptedException, AWTException, IOException {
 
+		Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
+		_mouse.mouseMove(p);
+		
+		_mouse.drag(p.x, p.y, p.x - 66, p.y);
+		_mouse.delay(2000);
+		
+		p.x = p.x - 66;
+		_mouse.mouseMove(p);
+		
+		
+		
 		// try {
 		// handlePopups();
 		//
@@ -1438,7 +1446,7 @@ public final class MainFrame extends JFrame {
 		// }
 		//
 
-		goHomeIfNeeded();
+		//goHomeIfNeeded();
 
 		// Pixel p = _scanner.getPointerDown().findImage(_scanner.getTrainArea());
 		// if (p != null) {
@@ -1510,75 +1518,68 @@ public final class MainFrame extends JFrame {
 
 	private void checkDangerousZones(Pixel p) throws RobotInterruptedException, DragFailureException {
 
-		// LOGGER.info("p.x = " + p.x);
 
-		// moving to left
-		Rectangle zone = _scanner.getDangerousZones()[0];
-		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
-			// uh oh!!!
-			int diff = p.x - zone.x + 23 + 7;
-			int x1 = _scanner.getBottomRight().x - 50;
+		// find which zone first
+		Rectangle zone = null;
+		boolean found = false;
+		for (int i = 0; i < _scanner.getDangerousZones().length && !found; ++i) {
+			zone = _scanner.getDangerousZones()[i];
+			if (p.x >= zone.x && p.x <= zone.x + zone.width) {
+				found = true;
+			}
+		}
+
+		if (found) {
+			int diff = 17;
 			int y = _scanner.getBottomRight().y - 160;
-			LOGGER.info("avoid zone [" + zone.x + " - " + (zone.x + zone.width));
+			int x1;
+			if (p.x >= zone.x && p.x <= zone.x + zone.width / 2) {
+				// left part of the zone => move left
+				diff += p.x - zone.x;
+				x1 = _scanner.getBottomRight().x - 50;
+			} else {
+				diff += zone.x + zone.width - p.x;
+				diff = -diff;
+				x1 = _scanner.getTopLeft().x + 5;
+			}
+				
+			LOGGER.info("avoid zone [" + zone.x + " - " + (zone.x + zone.width) + "]");
 			LOGGER.info("drag " + diff);
+			LOGGER.info("[1] p.x = " + p.x);
 			_mouse.drag(x1, y, x1 - diff, y);
 			_mouse.saveCurrentPosition();
-			p.x = p.x - diff;
+			p.x = p.x + diff;
+			LOGGER.info("[2] p.x = " + p.x);
+
 			Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
 			Pixel p2 = _scanner.getPointerDown().findImage(miniArea);
 			if (p2 != null)
 				p.x = p2.x;
+			LOGGER.info("[3] p.x = " + p.x);
 
-			if (!_lastDiffs.offer(diff)) {
-				// queue full
-				Iterator<Integer> it = _lastDiffs.iterator();
-				boolean same = true;
-				while (it.hasNext()) {
-					Integer d = (Integer) it.next();
-					if (Math.abs(d - diff) > 2) {
-						same = false;
-					}
-				}
-				if (same) {
-					// we have huge problem
-					// TODO throw new DragFailureException();
-
-					_lastDiffs.poll();// poll one
-					_lastDiffs.offer(diff);// add one
-
-				} else {
-					_lastDiffs.poll();// poll one
-					_lastDiffs.offer(diff);// add one
-				}
-			}
+//			if (!_lastDiffs.offer(diff)) {
+//				// queue full
+//				Iterator<Integer> it = _lastDiffs.iterator();
+//				boolean same = true;
+//				while (it.hasNext()) {
+//					Integer d = (Integer) it.next();
+//					if (Math.abs(d - diff) > 2) {
+//						same = false;
+//					}
+//				}
+//				if (same) {
+//					// we have huge problem
+//					// TODO throw new DragFailureException();
+//
+//					_lastDiffs.poll();// poll one
+//					_lastDiffs.offer(diff);// add one
+//
+//				} else {
+//					_lastDiffs.poll();// poll one
+//					_lastDiffs.offer(diff);// add one
+//				}
+//			}
 		}
-
-		// moving to left
-		zone = _scanner.getDangerousZones()[1];
-		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
-			// uh oh!!!
-			int diff = p.x - zone.x + 23 + 7;
-			int x1 = _scanner.getBottomRight().x - 5;
-			int y = _scanner.getBottomRight().y - 160;
-			LOGGER.info("avoid zone2 [" + zone.x + " - " + (zone.x + zone.width));
-			LOGGER.info("drag " + diff);
-			_mouse.drag(x1, y, x1 - diff, y);
-			p.x = p.x - diff;
-		}
-
-		// moving to right
-		zone = _scanner.getDangerousZones()[2];
-		if (p.x >= zone.x && p.x <= zone.x + zone.width) {
-			// uh oh!!!
-			int diff = zone.x + zone.width - p.x - 23 - 7;
-			int x1 = _scanner.getTopLeft().x + 5;
-			int y = _scanner.getBottomRight().y - 160;
-			LOGGER.info("avoid zone1 [" + zone.x + " - " + (zone.x + zone.width));
-			LOGGER.info("drag " + diff);
-			_mouse.drag(x1, y, x1 + diff, y);
-			p.x = p.x + diff;
-		}
-
 	}
 
 	private void moveIfNecessary() throws RobotInterruptedException {
@@ -1779,10 +1780,10 @@ public final class MainFrame extends JFrame {
 				_mouse.click();
 				_stats.registerTrain(isExpress);
 				String msg = "Trains: " + _stats.getTotalTrainCount();
-				//String date = getNow();
-				//_trainsNumberLabel.setText(msg + "  (" + date + ")");
+				// String date = getNow();
+				// _trainsNumberLabel.setText(msg + "  (" + date + ")");
 				LOGGER.severe(msg);
-				//_trainsNumberLabel.invalidate();
+				// _trainsNumberLabel.invalidate();
 				updateLabels();
 				boolean weredone = false;
 				int turns = 0;
