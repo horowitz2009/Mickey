@@ -7,9 +7,9 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 
 public class MouseRobot {
-  private int   _clickDelay;
-  private int   _doubleClickDelay;
-  private int   _delayBetweenActions;
+  private int _clickDelay;
+  private int _doubleClickDelay;
+  private int _delayBetweenActions;
   private Point _position;
   private Point _lastMousePos;
 
@@ -58,55 +58,56 @@ public class MouseRobot {
   }
 
   public void drag(int x1, int y1, int x2, int y2) throws RobotInterruptedException {
-		Robot robot = getInstance();
-		mouseMove(x1, y1);
+    Robot robot = getInstance();
+    mouseMove(x1, y1);
     saveCurrentPosition();
     robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
     delay(400);
-		// checkUserMovement();
+    // checkUserMovement();
     int x = x1;
     int y = y1;
-		int maxStep = 20;
-		int step = maxStep;
+    int maxStep = 20;
+    int step = maxStep;
 
-		if (x1 != x2) {// move horizontally with high precision
+    if (x1 != x2) {// move horizontally with high precision
       int a = x2 - x1;
-			int d = Math.abs(a);
-			step = d <= maxStep ? d : maxStep;
-			double turns = d / step;
+      int d = Math.abs(a);
+      step = d <= maxStep ? d : maxStep;
+      double turns = d / step;
       // case 1 - a > 0 => moving east
-			
-			x = x + (a > 0 ? 7 : -7);
-			mouseMove(x, y);
-			delay(200);
-			
-			for (int i = 0; i < turns; i++) {
+
+      x = x + (a > 0 ? 7 : -7);
+      mouseMove(x, y);
+      delay(200);
+
+      for (int i = 0; i < turns; i++) {
         x = x + (a > 0 ? step : -step);
-				mouseMove(x, y);
-				delay(100);
+        mouseMove(x, y);
+        delay(100);
       }
-			int rest = d % step;
-			x = x + (a > 0 ? rest : -rest);
-			mouseMove(x, y);
-			delay(100);
+      int rest = d % step;
+      x = x + (a > 0 ? rest : -rest);
+      mouseMove(x, y);
+      delay(100);
     }
 
-		if (y1 != y2) {// move vertically
+    if (y1 != y2) {// move vertically
       int b = y2 - y1;
-			step = Math.abs(b) <= maxStep ? Math.abs(b) : maxStep;
+      step = Math.abs(b) <= maxStep ? Math.abs(b) : maxStep;
       b = b / step;
       for (int i = 0; i < Math.abs(b); i++) {
         y = y + (b > 0 ? step : b == 0 ? 0 : -step);
-				mouseMove(x, y);
-				delay(100);
-				// checkUserMovement();
+        mouseMove(x, y);
+        delay(100);
+        // checkUserMovement();
       }
     }
-		delay(400);
+    delay(400);
     robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+    saveCurrentPosition();
   }
 
-	public void doubleClick(int x, int y) {
+  public void doubleClick(int x, int y) {
     mouseMove(x, y);
     doubleClick();
   }
