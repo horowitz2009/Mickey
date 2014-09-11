@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.613";
+  private static final String APP_TITLE     = "Mickey v0.615";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -881,11 +881,12 @@ public final class MainFrame extends JFrame {
 
   }
 
-  private void goHomeIfNeeded() {
+  private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
     Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 50, 60, 50);
     Pixel p = _scanner.getHome().findImage(area);
     if (p != null) {
-      _mouse.click(p.x, p.y);
+      goHome();
+      // _mouse.click(p.x, p.y);
     }
   }
 
@@ -969,8 +970,18 @@ public final class MainFrame extends JFrame {
   }
 
   private void goHome() throws AWTException, IOException, RobotInterruptedException {
+    _mouse.saveCurrentPosition();
     _mouse.click(_scanner.getTopLeft().x + 26, _scanner.getBottomRight().y - 45);
-    _mouse.delay(1500, false);
+    _mouse.delay(500, false);
+    int diff = 60;
+    // if (!_lastDiffs.isEmpty()) {
+    // diff = _lastDiffs.toArray(new Integer[0])[_lastDiffs.size() - 1];
+    // }
+    int x1 = _scanner.getBottomRight().x - 50;
+    int y = _scanner.getBottomRight().y - 160;
+    LOGGER.info("drag home: " + diff);
+    _mouse.drag(x1, y, x1 - diff, y);
+
   }
 
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
@@ -980,7 +991,7 @@ public final class MainFrame extends JFrame {
 
     // _mouse.savePosition();
     _mouse.mouseMove(_scanner.getBottomRight());
-    //first scan popups that need to be closed
+    // first scan popups that need to be closed
     Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
     drawImage(area);
 
@@ -989,17 +1000,16 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
     checkSession();
-    
+
     area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211, 81, 42);
     drawImage(area);
-    
+
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
-    
-    
-    //now check other popups that need to refresh the game
-    area = new Rectangle(_scanner.getTopLeft().x+350, _scanner.getBottomRight().y - 160, 81, 42);
+
+    // now check other popups that need to refresh the game
+    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 160, 81, 42);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
@@ -1009,7 +1019,7 @@ public final class MainFrame extends JFrame {
       refresh();
       runMagic();
     }
-    
+
     findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     long t2 = System.currentTimeMillis();
@@ -1172,16 +1182,8 @@ public final class MainFrame extends JFrame {
               break;
             }
             if (scanOtherLocations(true)) {
-              _mouse.saveCurrentPosition();
-              _mouse.delay(200);
-              int diff = 60;
-              if (!_lastDiffs.isEmpty()) {
-                diff = _lastDiffs.toArray(new Integer[0])[_lastDiffs.size() - 1];
-              }
-              int x1 = _scanner.getBottomRight().x - 50;
-              int y = _scanner.getBottomRight().y - 160;
-              LOGGER.info("drag again: " + diff);
-              _mouse.drag(x1, y, x1 - diff, y);
+              // hmm
+              p.x = _scanner.getBottomRight().x - 140;
             }
           } catch (AWTException | IOException e) {
             LOGGER.info("thread stopped");
@@ -1501,8 +1503,8 @@ public final class MainFrame extends JFrame {
       int diff;
       int y = _scanner.getBottomRight().y - 160;
       int x1;
-      if (i < 3) {
-        // first 3 zones move left, the rest move right
+      if (i < 4) {
+        // first 4 zones move left, the rest move right
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;
       } else {
