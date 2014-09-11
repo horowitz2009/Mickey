@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.612";
+  private static final String APP_TITLE     = "Mickey v0.613";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -537,75 +537,53 @@ public final class MainFrame extends JFrame {
     ((JToggleButton) exToolbar1.getComponent(4)).setSelected(true);
 
     /*
-     * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ")
-     * {
+     * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_6MIN; _expressTime = Locations.LOC_6MIN; } });
-     * bg.add(timeButton1); toolbar2.add(timeButton1);
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6MIN; _expressTime = Locations.LOC_6MIN; } }); bg.add(timeButton1);
+     * toolbar2.add(timeButton1);
      * 
-     * JToggleButton timeButton2 = new JToggleButton(new AbstractAction(" 10m ")
-     * {
+     * JToggleButton timeButton2 = new JToggleButton(new AbstractAction(" 10m ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_10MIN; _expressTime = Locations.LOC_10MIN;
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10MIN; _expressTime = Locations.LOC_10MIN;
      * 
      * } }); bg.add(timeButton2); toolbar2.add(timeButton2);
      * 
-     * JToggleButton timeButton3 = new JToggleButton(new AbstractAction(" 30m ")
-     * {
+     * JToggleButton timeButton3 = new JToggleButton(new AbstractAction(" 30m ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_30MIN; _expressTime = Locations.LOC_30MIN;
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_30MIN; _expressTime = Locations.LOC_30MIN;
      * 
      * } }); bg.add(timeButton3); toolbar2.add(timeButton3);
      * 
-     * JToggleButton timeButton4 = new JToggleButton(new AbstractAction(" 1h ")
-     * {
+     * JToggleButton timeButton4 = new JToggleButton(new AbstractAction(" 1h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_1HOUR; _expressTime = Locations.LOC_1HOUR;
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1HOUR; _expressTime = Locations.LOC_1HOUR;
      * 
      * } }); bg.add(timeButton4); toolbar2.add(timeButton4);
      * 
-     * JToggleButton timeButton5 = new JToggleButton(new AbstractAction(" 2h ")
-     * {
+     * JToggleButton timeButton5 = new JToggleButton(new AbstractAction(" 2h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_2HOURS; _expressTime = Locations.LOC_2HOURS; } });
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_2HOURS; _expressTime = Locations.LOC_2HOURS; } });
      * bg.add(timeButton5); toolbar2.add(timeButton5);
      * 
-     * { JToggleButton timeButton6 = new JToggleButton(new
-     * AbstractAction(" 3h ") {
+     * { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 3h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_3HOURS; _expressTime = Locations.LOC_3HOURS; } });
-     * bg.add(timeButton6); toolbar2.add(timeButton6); } { JToggleButton
-     * timeButton6 = new JToggleButton(new AbstractAction(" 4h ") {
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_3HOURS; _expressTime = Locations.LOC_3HOURS; } });
+     * bg.add(timeButton6); toolbar2.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 4h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_4HOURS; _expressTime = Locations.LOC_4HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton
-     * timeButton6 = new JToggleButton(new AbstractAction(" 6h ") {
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_4HOURS; _expressTime = Locations.LOC_4HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 6h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_6HOURS; _expressTime = Locations.LOC_6HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton
-     * timeButton6 = new JToggleButton(new AbstractAction(" 8h ") {
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6HOURS; _expressTime = Locations.LOC_6HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 8h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_8HOURS; _expressTime = Locations.LOC_8HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton
-     * timeButton6 = new JToggleButton(new AbstractAction(" 10h ") {
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_8HOURS; _expressTime = Locations.LOC_8HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 10h ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_10HOURS; _expressTime = Locations.LOC_10HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton
-     * timeButton6 = new JToggleButton(new AbstractAction(" 1d ") {
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10HOURS; _expressTime = Locations.LOC_10HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 1d ") {
      * 
-     * public void actionPerformed(ActionEvent e) { _freightTime =
-     * Locations.LOC_1DAY; _expressTime = Locations.LOC_1DAY; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); }
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1DAY; _expressTime = Locations.LOC_1DAY; } }); bg.add(timeButton6);
+     * toolbar3.add(timeButton6); }
      */
     // timeButton2.setSelected(true);
 
@@ -645,8 +623,7 @@ public final class MainFrame extends JFrame {
     myThread.start();
   }
 
-  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations,
-      final boolean freight) {
+  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final boolean freight) {
     for (int i = 0; i < locations.length; i++) {
       final Location l = locations[i];
       JToggleButton button = new JToggleButton(new AbstractAction(l.getName()) {
@@ -697,8 +674,7 @@ public final class MainFrame extends JFrame {
       SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hhmmss");
       String dateStr = df.format(now.getTime());
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      ImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr
-          + ".png"));
+      ImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
     } catch (HeadlessException e1) {
       e1.printStackTrace();
     } catch (IOException e1) {
@@ -945,8 +921,8 @@ public final class MainFrame extends JFrame {
               int[] rails = _scanner.getRailsOut();
               for (int ix = cp.x; ix >= xleft; ix = ix - xOff) {
                 for (int i = 0; i < railNumber; i++) {
-                  int y = (int) (fromCursor ? cp.y - i * _scanner.getRailYOffset() : _scanner.getBottomRight().y
-                      - rails[i] - _scanner.getRailYOffset());
+                  int y = (int) (fromCursor ? cp.y - i * _scanner.getRailYOffset() : _scanner.getBottomRight().y - rails[i]
+                      - _scanner.getRailYOffset());
                   if (railNumber < 4)
                     y -= (i * _scanner.getRailYOffset());
                   _mouse.click(ix, y);
@@ -968,13 +944,13 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click)
-      throws AWTException, IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
+      RobotInterruptedException {
     return findAndClick(imageName, area, xOff, yOff, click, false);
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture)
-      throws AWTException, IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture) throws AWTException,
+      IOException, RobotInterruptedException {
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
@@ -1004,27 +980,44 @@ public final class MainFrame extends JFrame {
 
     // _mouse.savePosition();
     _mouse.mouseMove(_scanner.getBottomRight());
-    Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getTopLeft().y + 380, _scanner.getGameWidth(), 190);
+    //first scan popups that need to be closed
+    Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
     drawImage(area);
 
-    findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
-    findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
-
-    // SAME area = new Rectangle(0, _scanner.getTopLeft().y + 420,
-
-    findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
+    boolean found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
     checkSession();
-
-    // _mouse.restorePosition();
+    
+    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211, 81, 42);
+    drawImage(area);
+    
+    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    
+    
+    //now check other popups that need to refresh the game
+    area = new Rectangle(_scanner.getTopLeft().x+350, _scanner.getBottomRight().y - 160, 81, 42);
+    drawImage(area);
+    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    if (found) {
+      LOGGER.info("Game probably crashed and need refresh...");
+      refresh();
+      runMagic();
+    }
+    
+    findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     long t2 = System.currentTimeMillis();
     LOGGER.fine("time: " + (t2 - t1));
   }
 
-  private boolean scanOtherLocations(boolean fast) throws AWTException, IOException, RobotInterruptedException,
-      SessionTimeOutException, DragFailureException {
+  private boolean scanOtherLocations(boolean fast) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
+      DragFailureException {
     LOGGER.info("Scanning for locations...");
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     drawImage(area);
@@ -1120,8 +1113,7 @@ public final class MainFrame extends JFrame {
     return trainHasBeenSent;
   }
 
-  private boolean clickHomeOneClick() throws AWTException, IOException, RobotInterruptedException,
-      SessionTimeOutException, DragFailureException {
+  private boolean clickHomeOneClick() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     long t1 = System.currentTimeMillis();
 
     boolean trainHasBeenSent = false;
@@ -1147,41 +1139,6 @@ public final class MainFrame extends JFrame {
         _stopThread = true;
         start = System.currentTimeMillis();
         _mouse.saveCurrentPosition();
-
-        // if (clickCareful(p, true, true)) {
-        // trainHasBeenSent = true;
-        // // ok it is a train and it is sent
-        // } else {
-        // // wait a bit and click again on the same location
-        // _mouse.delay(200);
-        // trainHasBeenSent = clickCareful(p, true, true);
-        // _mouse.delay(200);
-        // }
-
-        // in case of mail hint
-        _lastPointer = new Pixel(p.x, p.y);
-        _foundPointer = false;
-        // if (!isRunning("MAIL")) {
-        // Thread myThread = new Thread(new Runnable() {
-        // @Override
-        // public void run() {
-        // if (_lastPointer != null) {
-        // try {
-        // int maxY = getMaxY(_lastPointer);
-        // LOGGER.info("Maxxed pointer is" + _lastPointer);
-        // LOGGER.info("maxY=" + maxY);
-        // _lastPointer.y = (int) (maxY + _scanner.getRailYOffset() * 2);// TODO
-        // _foundPointer = true;
-        // } catch (RobotInterruptedException e) {
-        // LOGGER.log(Level.SEVERE, "Interrupted by user3", e);
-        // }
-        // }
-        // }
-        //
-        // }, "MAIL");
-        //
-        // myThread.start();
-        // }
 
         int[] rails = _scanner.getRailsHome();
 
@@ -1214,23 +1171,7 @@ public final class MainFrame extends JFrame {
               stop = true;
               break;
             }
-            // if (_foundPointer) {
-            // LOGGER.info("lastpointer = " + _lastPointer + ",  " +
-            // _lastPointer.y + " < "
-            // + (_scanner.getBottomRight().y - rails[rails.length - 1] -
-            // _scanner.getRailYOffset()));
-            // if (_lastPointer.y < (_scanner.getBottomRight().y -
-            // rails[rails.length - 1] - _scanner.getRailYOffset())) {
-            // // probably mail
-            //
-            // clickCareful(_lastPointer, true, true);
-            // _lastPointer = null;
-            // _foundPointer = false;
-            // }
-            // // clickCareful(_lastPointer, true, true);
-            // }
             if (scanOtherLocations(true)) {
-              // break;
               _mouse.saveCurrentPosition();
               _mouse.delay(200);
               int diff = 60;
@@ -1239,6 +1180,7 @@ public final class MainFrame extends JFrame {
               }
               int x1 = _scanner.getBottomRight().x - 50;
               int y = _scanner.getBottomRight().y - 160;
+              LOGGER.info("drag again: " + diff);
               _mouse.drag(x1, y, x1 - diff, y);
             }
           } catch (AWTException | IOException e) {
@@ -1271,8 +1213,7 @@ public final class MainFrame extends JFrame {
     return isRunning;
   }
 
-  private void loadTrains(boolean fast) throws AWTException, IOException, RobotInterruptedException,
-      SessionTimeOutException, DragFailureException {
+  private void loadTrains(boolean fast) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     // moveIfNecessary();
 
     if (isOneClick()) {
@@ -1392,8 +1333,7 @@ public final class MainFrame extends JFrame {
     goHome();
   }
 
-  private void shootInTheDark(int startX) throws AWTException, IOException, RobotInterruptedException,
-      SessionTimeOutException, DragFailureException {
+  private void shootInTheDark(int startX) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     int[] rails = _scanner.getRailsOut();
     int twoThirds = (int) (_scanner.getGameWidth() * 2 / 3);
 
@@ -1494,8 +1434,7 @@ public final class MainFrame extends JFrame {
     // }
 
     /*
-     * { Pixel p = _scanner.getLoginWIthFB().findImage(); if (p != null)
-     * _mouse.mouseMove(p); }
+     * { Pixel p = _scanner.getLoginWIthFB().findImage(); if (p != null) _mouse.mouseMove(p); }
      */
     // {
     // Pixel p = _scanner.getDailyRewards().findImage();
@@ -1529,16 +1468,13 @@ public final class MainFrame extends JFrame {
     // moveIfNecessary();
 
     /*
-     * try { loadTrains(); } catch (SessionTimeOutException e) { // TODO
-     * Auto-generated catch block e.printStackTrace(); }
+     * try { loadTrains(); } catch (SessionTimeOutException e) { // TODO Auto-generated catch block e.printStackTrace(); }
      */
 
     // checkTrainManagement();
     /*
-     * long start = System.currentTimeMillis(); Robot robot = new Robot(); long
-     * now = start; do { System.err.println("trying something");
-     * robot.delay(200); Point position =
-     * MouseInfo.getPointerInfo().getLocation();
+     * long start = System.currentTimeMillis(); Robot robot = new Robot(); long now = start; do { System.err.println("trying something");
+     * robot.delay(200); Point position = MouseInfo.getPointerInfo().getLocation();
      * 
      * LOGGER.info("mouse: " + position);
      * 
@@ -1570,7 +1506,7 @@ public final class MainFrame extends JFrame {
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;
       } else {
-        diff = zone.x + zone.width - p.x - 18;
+        diff = zone.x + zone.width - p.x - 20;
         diff = -diff;
         x1 = _scanner.getTopLeft().x + 50;
       }
@@ -1589,28 +1525,28 @@ public final class MainFrame extends JFrame {
         p.x = p2.x;
       LOGGER.info("[3] p.x = " + p.x);
 
-      // if (!_lastDiffs.offer(diff)) {
-      // // queue full
-      // Iterator<Integer> it = _lastDiffs.iterator();
-      // boolean same = true;
-      // while (it.hasNext()) {
-      // Integer d = (Integer) it.next();
-      // if (Math.abs(d - diff) > 2) {
-      // same = false;
-      // }
-      // }
-      // if (same) {
-      // // we have huge problem
-      // // TODO throw new DragFailureException();
-      //
-      // _lastDiffs.poll();// poll one
-      // _lastDiffs.offer(diff);// add one
-      //
-      // } else {
-      // _lastDiffs.poll();// poll one
-      // _lastDiffs.offer(diff);// add one
-      // }
-      // }
+      if (!_lastDiffs.offer(diff)) {
+        // queue full
+        Iterator<Integer> it = _lastDiffs.iterator();
+        boolean same = true;
+        while (it.hasNext()) {
+          Integer d = (Integer) it.next();
+          if (Math.abs(d - diff) > 2) {
+            same = false;
+          }
+        }
+        if (same) {
+          // we have huge problem
+          // TODO throw new DragFailureException();
+
+          _lastDiffs.poll();// poll one
+          _lastDiffs.offer(diff);// add one
+
+        } else {
+          _lastDiffs.poll();// poll one
+          _lastDiffs.offer(diff);// add one
+        }
+      }
     }
   }
 
@@ -1635,8 +1571,7 @@ public final class MainFrame extends JFrame {
         // _mouse.delay(500);
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
-        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 70, _scanner.getBottomRight().y - Locations.RAIL1
-            - 150, 70, 150);
+        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 70, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 70, 150);
         p = findPointerDownInt(area, pointerDown, 4);
         if (p != null) {
           int x1 = _scanner.getBottomRight().x - 5;
@@ -1683,8 +1618,7 @@ public final class MainFrame extends JFrame {
     return p;
   }
 
-  private Pixel findPointerDownInt(Rectangle area, ImageData pointerDown, int railNumber)
-      throws RobotInterruptedException {
+  private Pixel findPointerDownInt(Rectangle area, ImageData pointerDown, int railNumber) throws RobotInterruptedException {
     Pixel p = pointerDown.findImage(area);
     if (p != null) {
       LOGGER.info("FOUND Down pointer" + p);
@@ -1703,8 +1637,7 @@ public final class MainFrame extends JFrame {
     return p;
   }
 
-  private boolean clickCareful(Pixel p, boolean careful, boolean adjust) throws AWTException, IOException,
-      RobotInterruptedException {
+  private boolean clickCareful(Pixel p, boolean careful, boolean adjust) throws AWTException, IOException, RobotInterruptedException {
     if (careful) {
       if (checkTrainManagement())
         return true;
