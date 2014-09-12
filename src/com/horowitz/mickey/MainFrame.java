@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.615";
+  private static final String APP_TITLE     = "Mickey v0.616";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -992,12 +992,24 @@ public final class MainFrame extends JFrame {
     // _mouse.savePosition();
     _mouse.mouseMove(_scanner.getBottomRight());
     // first scan popups that need to be closed
-    Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
+    Rectangle area;
+    
+    area = new Rectangle(_scanner.getBottomRight().x - 32, _scanner.getTopLeft().y, 32, 55);
     drawImage(area);
-
-    boolean found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
+    if (found)
+      _mouse.delay(300);
+    
+    area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
+    drawImage(area);
+    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    
+    area = new Rectangle(_scanner.getBottomRight().x - 156, _scanner.getBottomRight().y - 516, 55, 55);
+    found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
+
 
     checkSession();
 
@@ -1396,25 +1408,25 @@ public final class MainFrame extends JFrame {
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
 
-    Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
-    _mouse.mouseMove(p);
+//    Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
+//    _mouse.mouseMove(p);
+//
+//    _mouse.drag(p.x, p.y, p.x - 66, p.y);
+//    _mouse.delay(2000);
+//
+//    p.x = p.x - 66;
+//    _mouse.mouseMove(p);
 
-    _mouse.drag(p.x, p.y, p.x - 66, p.y);
-    _mouse.delay(2000);
-
-    p.x = p.x - 66;
-    _mouse.mouseMove(p);
-
-    // try {
-    // handlePopups();
-    //
-    //
-    // // fixTheGame();
-    // } catch (SessionTimeOutException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    //
+     try {
+     handlePopups();
+    
+    
+     // fixTheGame();
+     } catch (SessionTimeOutException e) {
+     // TODO Auto-generated catch block
+     e.printStackTrace();
+     }
+    
 
     // goHomeIfNeeded();
 
