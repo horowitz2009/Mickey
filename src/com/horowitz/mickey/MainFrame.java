@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.616";
+  private static final String APP_TITLE     = "Mickey v0.617";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -1032,6 +1032,7 @@ public final class MainFrame extends JFrame {
       runMagic();
     }
 
+    area = new Rectangle(_scanner.getBottomRight().x - 428, _scanner.getBottomRight().y - 125, 76, 44);
     findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     long t2 = System.currentTimeMillis();
