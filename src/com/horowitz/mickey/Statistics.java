@@ -147,12 +147,12 @@ public class Statistics {
 	}
 
 	public String getLastActivityTimeAsString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
 		return sdf.format(new Date(_lastActivityTime));
 	}
 
 	public String getStartedTimeAsString() {
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
 		return sdf.format(new Date(_startTime));
 	}
 

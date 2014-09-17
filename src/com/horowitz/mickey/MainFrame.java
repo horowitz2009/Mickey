@@ -57,7 +57,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.618";
+  private static final String APP_TITLE     = "Mickey v0.619";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -794,7 +794,7 @@ public final class MainFrame extends JFrame {
     if (_refreshClick.isSelected())
       updateLabels();
 
-    int timeForRefresh = (getLongestTime() + 1) * 60000;
+    int timeForRefresh = (getShortestTime() + 1) * 60000;
     int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
 
     long start = System.currentTimeMillis();
@@ -811,11 +811,13 @@ public final class MainFrame extends JFrame {
                                                                    // refresh
           long now = System.currentTimeMillis();
           if (now - start >= timeForRefresh) {
+            LOGGER.info("Warning: no trains for last " + ((now-start)/60000) + " minutes");
             refresh();
             fstart = start = System.currentTimeMillis();
           }
 
           if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
+            LOGGER.info("Mandatory refresh");
             refresh();
             fstart = start = System.currentTimeMillis();
           }
@@ -890,8 +892,8 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private int getLongestTime() {
-    return _freightTime.getTime() > _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
+  private int getShortestTime() {
+    return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
   }
 
   protected void massClick(final int railNumber, final boolean fromCursor) {
@@ -931,7 +933,7 @@ public final class MainFrame extends JFrame {
                 }
               }
             } catch (RobotInterruptedException e) {
-              LOGGER.log(Level.SEVERE, "Interrupted by user2", e);
+              LOGGER.log(Level.FINE, "Interrupted by user2", e);
               _stopThread = true;
             }
           } catch (Exception e1) {
@@ -1772,14 +1774,14 @@ public final class MainFrame extends JFrame {
         int turns = 0;
         do {
           turns++;
-          LOGGER.info("Check TM again " + turns);
+          LOGGER.fine("Check TM again " + turns);
           tm = _scanner.getPointerTrainManagement().findImage();
           if (tm != null) {
             _mouse.delay(300);
           } else {
             // we're done
             weredone = true;
-            LOGGER.info("Check TM again DONE ");
+            LOGGER.fine("Check TM again DONE ");
           }
         } while (!weredone && turns < 6);
       }
