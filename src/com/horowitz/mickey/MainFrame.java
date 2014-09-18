@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.619";
+  private static final String APP_TITLE     = "Mickey v0.620";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -667,7 +668,6 @@ public final class MainFrame extends JFrame {
   }
 
   private void refresh() throws RobotInterruptedException {
-    LOGGER.info("Time to refresh...");
     _lastTime = System.currentTimeMillis();
     Calendar now = Calendar.getInstance();
     try {
@@ -683,6 +683,7 @@ public final class MainFrame extends JFrame {
     } catch (AWTException e1) {
       e1.printStackTrace();
     }
+    LOGGER.info("Time to refresh...");
     Pixel p;
     if (_scanner.isOptimized()) {
       p = _scanner.getBottomRight();
@@ -794,24 +795,29 @@ public final class MainFrame extends JFrame {
     if (_refreshClick.isSelected())
       updateLabels();
 
-    int timeForRefresh = (getShortestTime() + 1) * 60000;
+    int timeForRefresh = (getShortestTime() + 2) * 60000;
     int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
 
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
+    NumberFormat nf = NumberFormat.getNumberInstance();
+    nf.setMaximumFractionDigits(3);
+    nf.setMinimumFractionDigits(0);
     while (true) {
       try {
         updateLabels();
 
         goHomeIfNeeded();
-
         // REFRESH
         if (_refreshClick.isSelected() && timeForRefresh > 60000) {// if "0"
                                                                    // chosen no
                                                                    // refresh
           long now = System.currentTimeMillis();
+          String t = nf.format(((double) (now - start) / 60000));
+          LOGGER.info("time: " + t);
+
           if (now - start >= timeForRefresh) {
-            LOGGER.info("Warning: no trains for last " + ((now-start)/60000) + " minutes");
+            LOGGER.info("Warning: no trains for last " + t + " minutes");
             refresh();
             fstart = start = System.currentTimeMillis();
           }
@@ -995,23 +1001,22 @@ public final class MainFrame extends JFrame {
     _mouse.mouseMove(_scanner.getBottomRight());
     // first scan popups that need to be closed
     Rectangle area;
-    
+
     area = new Rectangle(_scanner.getBottomRight().x - 32, _scanner.getTopLeft().y, 32, 55);
     drawImage(area);
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
-    
+
     area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
-    
+
     area = new Rectangle(_scanner.getBottomRight().x - 156, _scanner.getBottomRight().y - 516, 55, 55);
     found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
-
 
     checkSession();
 
@@ -1173,9 +1178,9 @@ public final class MainFrame extends JFrame {
           clickCareful(p, false, false);
         }
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 2;
-        clickCareful(p, true, true);
+        trainHasBeenSent = clickCareful(p, true, true) || trainHasBeenSent;
         _mouse.delay(250);
-        checkTrainManagement();
+        trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
         _mouse.delay(250);
         scanOtherLocations(true);
         _mouse.delay(250);
@@ -1186,9 +1191,9 @@ public final class MainFrame extends JFrame {
           try {
             LOGGER.info("trying rail " + (i + 1));
             p.y = _scanner.getBottomRight().y - rails[i] - 4;
-            clickCareful(p, false, false);
+            trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
             _mouse.delay(200);
-            clickCareful(p, true, false);
+            trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
             _mouse.checkUserMovement();
 
             Pixel pp = detectPointerDown();
@@ -1411,25 +1416,23 @@ public final class MainFrame extends JFrame {
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
 
-//    Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
-//    _mouse.mouseMove(p);
-//
-//    _mouse.drag(p.x, p.y, p.x - 66, p.y);
-//    _mouse.delay(2000);
-//
-//    p.x = p.x - 66;
-//    _mouse.mouseMove(p);
+    // Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
+    // _mouse.mouseMove(p);
+    //
+    // _mouse.drag(p.x, p.y, p.x - 66, p.y);
+    // _mouse.delay(2000);
+    //
+    // p.x = p.x - 66;
+    // _mouse.mouseMove(p);
 
-     try {
-     handlePopups();
-    
-    
-     // fixTheGame();
-     } catch (SessionTimeOutException e) {
-     // TODO Auto-generated catch block
-     e.printStackTrace();
-     }
-    
+    try {
+      handlePopups();
+
+      // fixTheGame();
+    } catch (SessionTimeOutException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
     // goHomeIfNeeded();
 
