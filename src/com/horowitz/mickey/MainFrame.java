@@ -58,7 +58,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.620";
+  private static final String APP_TITLE     = "Mickey v0.621";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -66,10 +66,6 @@ public final class MainFrame extends JFrame {
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
   private boolean             _stopThread   = false;
-  private Pixel               _lastPointer  = null;
-  private boolean             _foundPointer = false;
-  // private int _trains;
-  // private int _refreshCount;
   private Statistics          _stats;
   private JLabel              _trainsNumberLabel;
   private JLabel              _trainsNumberLabelA;
@@ -632,10 +628,10 @@ public final class MainFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
           if (freight) {
             _freightTime = l;
-            LOGGER.info("selected freight: " + l.getName());
+            LOGGER.fine("selected freight: " + l.getName());
           } else {
             _expressTime = l;
-            LOGGER.info("selected express: " + l.getName());
+            LOGGER.fine("selected express: " + l.getName());
           }
         }
       });
@@ -661,7 +657,7 @@ public final class MainFrame extends JFrame {
       LOGGER.log(Level.WARNING, e1.getMessage());
       e1.printStackTrace();
     } catch (RobotInterruptedException e) {
-      LOGGER.log(Level.SEVERE, "Interrupted by user1", e);
+      LOGGER.log(Level.SEVERE, "Interrupted by user", e);
       e.printStackTrace();
     }
 
@@ -721,7 +717,7 @@ public final class MainFrame extends JFrame {
       } catch (InterruptedException e) {
         LOGGER.info("interrupted");
       } catch (SessionTimeOutException e) {
-        LOGGER.info("session time out. Stopping.");
+        LOGGER.info("Session time out. Stopping.");
       }
 
       // fixTheGame();
@@ -736,7 +732,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void handleRarePopups() throws InterruptedException, RobotInterruptedException {
-    LOGGER.info("checking for FB login and daily rewards...");
+    LOGGER.info("Checking for FB login and daily rewards...");
     _mouse.savePosition();
     _mouse.mouseMove(0, 0);
     // LOGIN
@@ -840,22 +836,16 @@ public final class MainFrame extends JFrame {
         handlePopups();
 
         // HOME
-        if (_freightTime.getTime() == 0 && _expressTime.getTime() == 0) {
-          // don't send trains
-          LOGGER.info("DON'T SEND TRAINS. WAIT 2 seconds...");
-          _mouse.saveCurrentPosition();
-          _mouse.delay(2000);
-        } else {
-          boolean flag;
-          if (_oneClick.isSelected())
-            flag = clickHomeOneClick();
-          else
-            flag = clickHome();
-          if (flag) {
-            // true means train has been sent. refresh postponed
-            start = System.currentTimeMillis();
-          }
+        boolean flag;
+        if (_oneClick.isSelected())
+          flag = clickHomeOneClick();
+        else
+          flag = clickHome();
+        if (flag) {
+          // true means train has been sent. refresh postponed
+          start = System.currentTimeMillis();
         }
+
         // OTHER LOCATIONS
         scanOtherLocations(true);// TODO only fast scenario for the moment
 
@@ -866,7 +856,7 @@ public final class MainFrame extends JFrame {
         e.printStackTrace();
         break;
       } catch (RobotInterruptedException e) {
-        LOGGER.log(Level.SEVERE, "Interrupted by user1", e);
+        LOGGER.log(Level.SEVERE, "Interrupted by user", e);
         // LOGGER.info("Interrupted by user");
         setTitle(APP_TITLE + " READY");
         _stopThread = true;
@@ -987,7 +977,7 @@ public final class MainFrame extends JFrame {
     // }
     int x1 = _scanner.getBottomRight().x - 50;
     int y = _scanner.getBottomRight().y - 160;
-    LOGGER.info("drag home: " + diff);
+    LOGGER.fine("drag home: " + diff);
     _mouse.drag(x1, y, x1 - diff, y);
 
   }
@@ -1034,7 +1024,7 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
-      LOGGER.info("Game probably crashed and need refresh...");
+      LOGGER.info("Game probably crashed and needs refresh...");
       refresh();
       runMagic();
     }
@@ -1053,7 +1043,7 @@ public final class MainFrame extends JFrame {
     drawImage(area);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
       _mouse.delay(300);
-      LOGGER.info("Going to location...");
+      LOGGER.fine("Going to location...");
 
       loadTrains(fast);
       return true;
@@ -1206,15 +1196,13 @@ public final class MainFrame extends JFrame {
               p.x = _scanner.getBottomRight().x - 140;
             }
           } catch (AWTException | IOException e) {
-            LOGGER.info("thread stopped");
+            LOGGER.log(Level.SEVERE, "Critical error occured", e);
           }
         } // for
 
       } // p != null
       _mouse.checkUserMovement();
     } while (!done && curr - start <= timeGiven);
-    _foundPointer = false;
-    _lastPointer = null;
 
     long t2 = System.currentTimeMillis();
     LOGGER.fine("time: " + (t2 - t1));
@@ -1274,7 +1262,7 @@ public final class MainFrame extends JFrame {
                 LOGGER.log(Level.SEVERE, "Interrupted by user4", e);
                 _stopThread = true;
               } catch (SessionTimeOutException e) {
-                LOGGER.info("session time out");
+                LOGGER.info("Session time out");
               } catch (DragFailureException e) {
                 handleDragFailure();
               }
@@ -1382,14 +1370,14 @@ public final class MainFrame extends JFrame {
 
   private void loadTrainsFast() throws RobotInterruptedException {
     int[] rails = _scanner.getRailsOut();
-    int xx = _scanner.getBottomRight().x - 55; // safe zone
+    int xx = _scanner.getBottomRight().x - 57; // safe zone
     for (int i = 0; i < rails.length; i++) {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
     }
 
     _mouse.delay(200);
     int diff = 30;
-    int x1 = _scanner.getBottomRight().x - 55;
+    int x1 = _scanner.getBottomRight().x - 57;
     int y = _scanner.getBottomRight().y - 160;
     _mouse.drag(x1, y, x1 - diff, y);
 
@@ -1531,19 +1519,19 @@ public final class MainFrame extends JFrame {
         x1 = _scanner.getTopLeft().x + 50;
       }
 
-      LOGGER.info("avoid zone [" + zone.x + " - " + (zone.x + zone.width) + "]");
-      LOGGER.info("drag " + diff);
-      LOGGER.info("[1] p.x = " + p.x);
+      LOGGER.fine("avoid zone [" + zone.x + " - " + (zone.x + zone.width) + "]");
+      LOGGER.fine("drag " + diff);
+      LOGGER.finest("[1] p.x = " + p.x);
       _mouse.drag(x1, y, x1 - diff, y);
       _mouse.saveCurrentPosition();
       p.x = p.x - diff;
-      LOGGER.info("[2] p.x = " + p.x);
+      LOGGER.finest("[2] p.x = " + p.x);
 
       Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
       Pixel p2 = _scanner.getPointerDown().findImage(miniArea);
       if (p2 != null)
         p.x = p2.x;
-      LOGGER.info("[3] p.x = " + p.x);
+      LOGGER.finest("[3] p.x = " + p.x);
 
       if (!_lastDiffs.offer(diff)) {
         // queue full

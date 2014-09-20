@@ -51,7 +51,7 @@ public class Settings {
 
 		_properties.setProperty("railsOut", "6");
 		_properties.setProperty("railsOut1", "100, 104, 108, 112, 116, 117");// maglev rail reduced with 3px
-		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 135");
+		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 138");//back with 3px here
 		_properties.setProperty("railsOut3", "100, 110, 119, 129, 138, 145");
 		_properties.setProperty("railsOut4", "100, 112, 124, 136, 148, 157");
 
