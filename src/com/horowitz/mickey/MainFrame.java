@@ -58,7 +58,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.621";
+  private static final String APP_TITLE     = "Mickey v0.621h";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -104,8 +104,8 @@ public final class MainFrame extends JFrame {
     super();
     _settings = new Settings();
     _stats = new Statistics();
-    // _settings.setDefaults();
-    // _settings.saveSettings();
+     //_settings.setDefaults();
+     //_settings.saveSettings();
 
     _settings.loadSettings();
     // addWindowListener(new WindowAdapter() {
@@ -805,7 +805,7 @@ public final class MainFrame extends JFrame {
 
         goHomeIfNeeded();
         // REFRESH
-        if (_refreshClick.isSelected() && timeForRefresh > 60000) {// if "0"
+        if (_refreshClick.isSelected() && timeForRefresh > 3*60000) {// if "0"
                                                                    // chosen no
                                                                    // refresh
           long now = System.currentTimeMillis();
@@ -975,11 +975,13 @@ public final class MainFrame extends JFrame {
     // if (!_lastDiffs.isEmpty()) {
     // diff = _lastDiffs.toArray(new Integer[0])[_lastDiffs.size() - 1];
     // }
+    
+    /* no drag now 
     int x1 = _scanner.getBottomRight().x - 50;
     int y = _scanner.getBottomRight().y - 160;
     LOGGER.fine("drag home: " + diff);
     _mouse.drag(x1, y, x1 - diff, y);
-
+    */
   }
 
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
@@ -1149,7 +1151,9 @@ public final class MainFrame extends JFrame {
       _stopThread = false;
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
-      // moveIfNecessary();
+      
+      moveIfNecessary();
+      
       p = detectPointerDown();
       if (p != null) {
         checkDangerousZones(p);
@@ -1193,7 +1197,7 @@ public final class MainFrame extends JFrame {
             }
             if (scanOtherLocations(true)) {
               // hmm
-              p.x = _scanner.getBottomRight().x - 140;
+              p.x = _scanner.getBottomRight().x - 80;
             }
           } catch (AWTException | IOException e) {
             LOGGER.log(Level.SEVERE, "Critical error occured", e);
@@ -1370,21 +1374,21 @@ public final class MainFrame extends JFrame {
 
   private void loadTrainsFast() throws RobotInterruptedException {
     int[] rails = _scanner.getRailsOut();
-    int xx = _scanner.getBottomRight().x - 57; // safe zone
+    int xx = _scanner.getBottomRight().x - 80; // safe zone
     for (int i = 0; i < rails.length; i++) {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
     }
 
-    _mouse.delay(200);
-    int diff = 30;
-    int x1 = _scanner.getBottomRight().x - 57;
-    int y = _scanner.getBottomRight().y - 160;
-    _mouse.drag(x1, y, x1 - diff, y);
+//    _mouse.delay(200);
+//    int diff = 30;
+//    int x1 = _scanner.getBottomRight().x - 57;
+//    int y = _scanner.getBottomRight().y - 160;
+//    _mouse.drag(x1, y, x1 - diff, y);
 
-    xx = _scanner.getBottomRight().x - 140; // safe zone
-    for (int i = 0; i < rails.length; i++) {
-      _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
-    }
+//    xx = _scanner.getBottomRight().x - 140; // safe zone
+//    for (int i = 0; i < rails.length; i++) {
+//      _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+//    }
   }
 
   protected void handleDragFailure() {
@@ -1509,7 +1513,7 @@ public final class MainFrame extends JFrame {
       int diff;
       int y = _scanner.getBottomRight().y - 160;
       int x1;
-      if (i < 4) {
+      if (i < 6) {
         // first 4 zones move left, the rest move right
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;

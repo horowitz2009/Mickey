@@ -44,14 +44,14 @@ public class Settings {
 		_properties.setProperty("zoom", "2");
 
 		_properties.setProperty("railsHome", "5");
-		_properties.setProperty("railsHome1", "100, 105, 114, 119, 121");// maglev rail reduced with 3px
-		_properties.setProperty("railsHome2", "100, 105, 110, 115, 125");
-		_properties.setProperty("railsHome3", "100, 107, 114, 121, 132");
-		_properties.setProperty("railsHome4", "100, 108, 116, 124, 140");
+		_properties.setProperty("railsHome1", "100, 105, 114, 119, 124");
+		_properties.setProperty("railsHome2", "100, 105, 111, 117, 130");
+		_properties.setProperty("railsHome3", "100, 107, 114, 121, 135");
+		_properties.setProperty("railsHome4", "100, 108, 116, 124, 143");
 
 		_properties.setProperty("railsOut", "6");
 		_properties.setProperty("railsOut1", "100, 104, 108, 112, 116, 117");// maglev rail reduced with 3px
-		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 138");//back with 3px here
+		_properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 138, 148");//back with 3px here
 		_properties.setProperty("railsOut3", "100, 110, 119, 129, 138, 145");
 		_properties.setProperty("railsOut4", "100, 112, 124, 136, 148, 157");
 
@@ -66,13 +66,16 @@ public class Settings {
 		_properties.setProperty("xOffset4", "32");
 
 		// dangerous zones
-		_properties.setProperty("zone1", "-579, -141, 73, 73");
-		_properties.setProperty("zone2", "-359, -141, 73, 73");
-		_properties.setProperty("zone3", "-139, -141, 73, 73");
-		_properties.setProperty("zone1a", "-472, -141, 73, 73");
-		_properties.setProperty("zone2a", "-252, -141, 73, 73");
+		_properties.setProperty("zone1", "-497, -52, 74, 74");
+		_properties.setProperty("zone2", "-277, -52, 74, 74");
+		_properties.setProperty("zone3", "-57, -52, 74, 74");
+    _properties.setProperty("zone1b", "-522, -118, 74, 74");
+    _properties.setProperty("zone2b", "-292, -118, 74, 74");
+    _properties.setProperty("zone3b", "-62, -118, 74, 74");
+		_properties.setProperty("zone1a", "-390, -56, 74, 74");
+		_properties.setProperty("zone2a", "-170, -56, 74, 74");
 		
-		_properties.setProperty("street1Y", "163");
+		_properties.setProperty("street1Y", "170");
 	}
 
 	public int getInt(String key) {
