@@ -94,7 +94,7 @@ public class ScreenScanner {
 
   private ImageData            _expressTrain;
 
-  private int                  _street1Y                      = 163;
+  private int                  _street1Y                      = 170;
 
   public ScreenScanner(Settings settings) {
     _settings = settings;

@@ -58,7 +58,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.621h";
+  private static final String APP_TITLE     = "Mickey v0.621j";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -994,25 +994,25 @@ public final class MainFrame extends JFrame {
     // first scan popups that need to be closed
     Rectangle area;
 
-    area = new Rectangle(_scanner.getBottomRight().x - 32, _scanner.getTopLeft().y, 32, 55);
+    area = new Rectangle(_scanner.getBottomRight().x - 32-53, _scanner.getTopLeft().y, 32+53, 55+15);
     drawImage(area);
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
 
-    area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69, _scanner.getGameWidth(), 46);
+    area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69 - 15, _scanner.getGameWidth(), 46+15);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
-    area = new Rectangle(_scanner.getBottomRight().x - 156, _scanner.getBottomRight().y - 516, 55, 55);
+    area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
     found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
 
     checkSession();
 
-    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211, 81, 42);
+    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
     drawImage(area);
 
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
@@ -1020,7 +1020,7 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
     // now check other popups that need to refresh the game
-    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 160, 81, 42);
+    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 160-15, 81, 42+15);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
@@ -1031,7 +1031,7 @@ public final class MainFrame extends JFrame {
       runMagic();
     }
 
-    area = new Rectangle(_scanner.getBottomRight().x - 428, _scanner.getBottomRight().y - 125, 76, 44);
+    area = new Rectangle(_scanner.getBottomRight().x - 428, _scanner.getBottomRight().y - 125-15, 76, 44+15);
     findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     long t2 = System.currentTimeMillis();
@@ -1171,7 +1171,7 @@ public final class MainFrame extends JFrame {
           p.y = _scanner.getBottomRight().y - rails[i] - 4;
           clickCareful(p, false, false);
         }
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 2;
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
         trainHasBeenSent = clickCareful(p, true, true) || trainHasBeenSent;
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
