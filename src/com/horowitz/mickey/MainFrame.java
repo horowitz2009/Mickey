@@ -58,7 +58,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.621j";
+  private static final String APP_TITLE     = "Mickey v0.622";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -1001,7 +1001,7 @@ public final class MainFrame extends JFrame {
     if (found)
       _mouse.delay(300);
 
-    area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 69 - 15, _scanner.getGameWidth(), 46+15);
+    area = new Rectangle(_scanner.getTopLeft().x+90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth()-180, 60);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
@@ -1011,16 +1011,20 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
 
     checkSession();
+    
+    
+    //TODO check this
+    //area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
+    //drawImage(area);
 
-    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
-    drawImage(area);
+    //found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
-    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
-
+    
+    
     // now check other popups that need to refresh the game
-    area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 160-15, 81, 42+15);
+    area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
     drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
