@@ -76,6 +76,9 @@ public class Settings {
 		_properties.setProperty("zone2a", "-170, -56, 74, 74");
 		
 		_properties.setProperty("street1Y", "170");
+		
+		_properties.setProperty("ping", "true");
+		_properties.setProperty("ping.time", "5");
 	}
 
 	public int getInt(String key) {

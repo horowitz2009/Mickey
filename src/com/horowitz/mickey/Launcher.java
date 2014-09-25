@@ -34,10 +34,17 @@ public class Launcher {
 			refresh = Boolean.parseBoolean(sr);
 		}
 
-		MainFrame frame = new MainFrame(refresh);
+		Boolean ping = null;
+		
+		String sp = argsMap.get("ping");
+		if (sp != null) {
+		  ping = Boolean.parseBoolean(sp);
+		}
+
+		MainFrame frame = new MainFrame(refresh, ping);
 
 		frame.pack();
-		frame.setSize(new Dimension(frame.getSize().width + 25, frame.getSize().height + 2));
+		frame.setSize(new Dimension(frame.getSize().width + 2, frame.getSize().height + 2));
 
 		frame.setLocationRelativeTo(null);
 

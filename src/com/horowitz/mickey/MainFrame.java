@@ -27,8 +27,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -58,10 +62,11 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.622a";
+  private static final String APP_TITLE     = "Mickey v0.623";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
+  private boolean             _ping         = true;
 
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
@@ -79,7 +84,6 @@ public final class MainFrame extends JFrame {
   private JLabel              _lastActivityLabel;
   private JLabel              _startedLabel;
 
-  private MyCanvas            _myCanvas;
   private JButton             _locateAction;
   private JButton             _resetAction;
   private JButton             _doMagicAction;
@@ -95,18 +99,24 @@ public final class MainFrame extends JFrame {
   private Settings            _settings;
 
   private JToggleButton       _refreshClick;
+  
+  private JToggleButton       _pingClick;
+  private long                _lastPingTime;
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
   }
 
-  public MainFrame(Boolean refresh) throws HeadlessException {
+  public MainFrame(Boolean refresh, Boolean ping) throws HeadlessException {
     super();
     _settings = new Settings();
     _stats = new Statistics();
-     //_settings.setDefaults();
-     //_settings.saveSettings();
+    
+    
+    //_settings.setDefaults();
+    //_settings.saveSettings();
 
+    
     _settings.loadSettings();
     // addWindowListener(new WindowAdapter() {
     // @Override
@@ -117,6 +127,7 @@ public final class MainFrame extends JFrame {
     // });
 
     _refresh = refresh != null ? refresh : Boolean.parseBoolean(_settings.getProperty("refresh", "false"));
+    _ping = ping != null ? ping : Boolean.parseBoolean(_settings.getProperty("ping", "false"));
     setupLogger();
 
     init();
@@ -212,13 +223,7 @@ public final class MainFrame extends JFrame {
     JPanel rootPanel = new JPanel(new BorderLayout());
     getContentPane().add(rootPanel, BorderLayout.CENTER);
 
-    if (_devMode) {
-      _myCanvas = new MyCanvas();
-      // myCanvas.setMinimumSize(new Dimension(500, 200));
-      rootPanel.add(_myCanvas, BorderLayout.EAST);
-    }
-
-    final JTextArea outputConsole = new JTextArea(6, 25);
+    final JTextArea outputConsole = new JTextArea(8, 14);
 
     rootPanel.add(new JScrollPane(outputConsole), BorderLayout.CENTER);
 
@@ -250,7 +255,8 @@ public final class MainFrame extends JFrame {
     LOGGER.addHandler(handler);
     _scanner.addHandler(handler);
 
-    JToolBar mainToolbar = new JToolBar();
+    JToolBar mainToolbar1 = new JToolBar();
+    JToolBar mainToolbar2 = new JToolBar();
 
     JToolBar frToolbar1 = new JToolBar();
     JToolBar frToolbar2 = new JToolBar();
@@ -259,9 +265,11 @@ public final class MainFrame extends JFrame {
     JToolBar exToolbar2 = new JToolBar();
     exToolbar1.add(new JLabel("Express  "));
 
-    JPanel toolbars = new JPanel(new GridLayout(5, 1));
-    toolbars.add(mainToolbar);
-    mainToolbar.setFloatable(false);
+    JPanel toolbars = new JPanel(new GridLayout(6, 1));
+    toolbars.add(mainToolbar1);
+    toolbars.add(mainToolbar2);
+    mainToolbar1.setFloatable(false);
+    mainToolbar2.setFloatable(false);
     frToolbar1.setFloatable(false);
     frToolbar2.setFloatable(false);
     exToolbar1.setFloatable(false);
@@ -279,51 +287,51 @@ public final class MainFrame extends JFrame {
 
     JLabel trainsNumberLabel = new JLabel("T:");
     trainsNumberLabel.setForeground(Color.GRAY);
-    _trainsNumberLabel = new JLabel("8888");
+    _trainsNumberLabel = new JLabel("888");
     _trainsNumberLabelA = new JLabel("888");
     _trainsNumberLabelA.setForeground(Color.GRAY);
-    trainsNumberLabel.setFont(trainsNumberLabel.getFont().deriveFont(16.0f));
-    _trainsNumberLabel.setFont(_trainsNumberLabel.getFont().deriveFont(16.0f));
-    _trainsNumberLabelA.setFont(_trainsNumberLabelA.getFont().deriveFont(12.0f));
+    trainsNumberLabel.setFont(trainsNumberLabel.getFont().deriveFont(14.0f));
+    _trainsNumberLabel.setFont(_trainsNumberLabel.getFont().deriveFont(14.0f));
+    _trainsNumberLabelA.setFont(_trainsNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel freightTrainsNumberLabel = new JLabel("F:");
     freightTrainsNumberLabel.setForeground(Color.GRAY);
-    _freightTrainsNumberLabel = new JLabel("8888");
+    _freightTrainsNumberLabel = new JLabel("888");
     _freightTrainsNumberLabelA = new JLabel("888");
     _freightTrainsNumberLabelA.setForeground(Color.GRAY);
-    freightTrainsNumberLabel.setFont(freightTrainsNumberLabel.getFont().deriveFont(16.0f));
-    _freightTrainsNumberLabel.setFont(_freightTrainsNumberLabel.getFont().deriveFont(16.0f));
-    _freightTrainsNumberLabelA.setFont(_freightTrainsNumberLabelA.getFont().deriveFont(12.0f));
+    freightTrainsNumberLabel.setFont(freightTrainsNumberLabel.getFont().deriveFont(14.0f));
+    _freightTrainsNumberLabel.setFont(_freightTrainsNumberLabel.getFont().deriveFont(14.0f));
+    _freightTrainsNumberLabelA.setFont(_freightTrainsNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel expressTrainsNumberLabel = new JLabel("E:");
     expressTrainsNumberLabel.setForeground(Color.GRAY);
-    _expressTrainsNumberLabel = new JLabel("8888");
+    _expressTrainsNumberLabel = new JLabel("888");
     _expressTrainsNumberLabelA = new JLabel("888");
     _expressTrainsNumberLabelA.setForeground(Color.GRAY);
-    expressTrainsNumberLabel.setFont(expressTrainsNumberLabel.getFont().deriveFont(16.0f));
-    _expressTrainsNumberLabel.setFont(_expressTrainsNumberLabel.getFont().deriveFont(16.0f));
-    _expressTrainsNumberLabelA.setFont(_expressTrainsNumberLabelA.getFont().deriveFont(12.0f));
+    expressTrainsNumberLabel.setFont(expressTrainsNumberLabel.getFont().deriveFont(14.0f));
+    _expressTrainsNumberLabel.setFont(_expressTrainsNumberLabel.getFont().deriveFont(14.0f));
+    _expressTrainsNumberLabelA.setFont(_expressTrainsNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel refreshNumberLabel = new JLabel("R:");
     refreshNumberLabel.setForeground(Color.GRAY);
-    refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(16.0f));
+    refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(14.0f));
     _refreshNumberLabel = new JLabel("" + (_refresh ? "88" : "off"));
     _refreshNumberLabelA = new JLabel("88");
     _refreshNumberLabelA.setForeground(Color.GRAY);
-    _refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(16.0f));
-    _refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(12.0f));
+    _refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(14.0f));
+    _refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel lastActivityLabel = new JLabel("L:");
     lastActivityLabel.setForeground(Color.GRAY);
-    lastActivityLabel.setFont(lastActivityLabel.getFont().deriveFont(16.0f));
+    lastActivityLabel.setFont(lastActivityLabel.getFont().deriveFont(14.0f));
     _lastActivityLabel = new JLabel(" 88:88 ");
-    _lastActivityLabel.setFont(_lastActivityLabel.getFont().deriveFont(16.0f));
+    _lastActivityLabel.setFont(_lastActivityLabel.getFont().deriveFont(14.0f));
 
     JLabel startedLabel = new JLabel("S:");
     startedLabel.setForeground(Color.GRAY);
-    startedLabel.setFont(startedLabel.getFont().deriveFont(16.0f));
+    startedLabel.setFont(startedLabel.getFont().deriveFont(14.0f));
     _startedLabel = new JLabel(" 88:88 ");
-    _startedLabel.setFont(_startedLabel.getFont().deriveFont(16.0f));
+    _startedLabel.setFont(_startedLabel.getFont().deriveFont(14.0f));
 
     JPanel labelsBox = new JPanel(new GridBagLayout());
     GridBagConstraints gbc = new GridBagConstraints();
@@ -428,7 +436,7 @@ public final class MainFrame extends JFrame {
 
       }
     };
-    mainToolbar.add(scanAction);
+    mainToolbar1.add(scanAction);
 
     // DO MAGIC
 
@@ -438,7 +446,7 @@ public final class MainFrame extends JFrame {
           runMagic();
         }
       });
-      mainToolbar.add(_doMagicAction);
+      mainToolbar1.add(_doMagicAction);
     }
 
     // REFRESH
@@ -462,7 +470,7 @@ public final class MainFrame extends JFrame {
 
       }
     };
-    mainToolbar.add(runAction);
+    mainToolbar1.add(runAction);
 
     // LOCATE
     {
@@ -489,7 +497,7 @@ public final class MainFrame extends JFrame {
           myThread.start();
         }
       });
-      mainToolbar.add(_locateAction);
+      mainToolbar1.add(_locateAction);
     }
     // RESET
     {
@@ -506,19 +514,26 @@ public final class MainFrame extends JFrame {
           myThread.start();
         }
       });
-      mainToolbar.add(_resetAction);
+      mainToolbar2.add(_resetAction);
     }
     // OC
     {
       _oneClick = new JToggleButton("OC");
       _oneClick.setSelected(true);
-      mainToolbar.add(_oneClick);
+      mainToolbar2.add(_oneClick);
     }
-    // OC
+    // Refresh
     {
-      _refreshClick = new JToggleButton("R");
+      _refreshClick = new JToggleButton("Auto refresh");
       _refreshClick.setSelected(_refresh);
-      mainToolbar.add(_refreshClick);
+      mainToolbar2.add(_refreshClick);
+    }
+    
+    // Ping
+    {
+      _pingClick = new JToggleButton("Ping");
+      _pingClick.setSelected(_ping);
+      mainToolbar2.add(_pingClick);
     }
 
     ButtonGroup bgFr = new ButtonGroup();
@@ -583,6 +598,9 @@ public final class MainFrame extends JFrame {
      * toolbar3.add(timeButton6); }
      */
     // timeButton2.setSelected(true);
+    
+    LOGGER.info("mandatory refresh time set to " + _settings.getInt("mandatoryRefresh.time") + " minutes.");
+    LOGGER.info("ping time set to " + _settings.getInt("ping.time") + " minutes.");
 
   }
 
@@ -665,12 +683,11 @@ public final class MainFrame extends JFrame {
 
   private void refresh() throws RobotInterruptedException {
     _lastTime = System.currentTimeMillis();
-    Calendar now = Calendar.getInstance();
     try {
-      SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd hhmmss");
-      String dateStr = df.format(now.getTime());
+      String dateStr = DateUtils.formatDateForFile(System.currentTimeMillis());
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       ImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
+      deleteOlder("refresh", 10);
     } catch (HeadlessException e1) {
       e1.printStackTrace();
     } catch (IOException e1) {
@@ -731,6 +748,38 @@ public final class MainFrame extends JFrame {
 
   }
 
+  private void deleteOlder(String prefix, int amountFiles) {
+    File f = new File(".");
+    File[] files = f.listFiles();
+    List<File> targetFiles = new ArrayList<File>(6);
+    int cnt = 0;
+    for (File file : files) {
+      if (!file.isDirectory() && file.getName().startsWith(prefix)) {
+        targetFiles.add(file);
+        cnt++;
+      }
+    }
+
+    if (cnt > amountFiles) {
+      // delete some files
+      Collections.sort(targetFiles, new Comparator<File>() {
+        public int compare(File o1, File o2) {
+          if (o1.lastModified() > o2.lastModified())
+            return 1;
+          else if (o1.lastModified() < o2.lastModified())
+            return -1;
+          return 0;
+        };
+      });
+
+      int c = cnt - 5;
+      for (int i = 0; i < c; i++) {
+        File fd = targetFiles.get(i);
+        fd.delete();
+      }
+    }
+  }
+
   private void handleRarePopups() throws InterruptedException, RobotInterruptedException {
     LOGGER.info("Checking for FB login and daily rewards...");
     _mouse.savePosition();
@@ -788,6 +837,8 @@ public final class MainFrame extends JFrame {
 
   public void doMagic() {
     setTitle(APP_TITLE + " READY AND RUNNING");
+    _lastPingTime = System.currentTimeMillis();
+    
     if (_refreshClick.isSelected())
       updateLabels();
 
@@ -804,13 +855,20 @@ public final class MainFrame extends JFrame {
         updateLabels();
 
         goHomeIfNeeded();
+        
+        
+        if (_pingClick.isSelected()) {
+          ping();
+        }
+
+        
         // REFRESH
         if (_refreshClick.isSelected() && timeForRefresh > 3*60000) {// if "0"
                                                                    // chosen no
                                                                    // refresh
           long now = System.currentTimeMillis();
           String t = nf.format(((double) (now - start) / 60000));
-          LOGGER.info("time: " + t);
+          LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
 
           if (now - start >= timeForRefresh) {
             LOGGER.info("Warning: no trains for last " + t + " minutes");
@@ -877,6 +935,17 @@ public final class MainFrame extends JFrame {
 
     }
 
+  }
+
+  private void ping() {
+    long now = System.currentTimeMillis();
+    long time = _settings.getInt("ping.time") * 60000; //from minutes to millseconds
+    if (now - _lastPingTime >= time) {
+      LOGGER.info("ping");
+      _scanner.captureGame("ping " + DateUtils.formatDateForFile(System.currentTimeMillis()) +  ".png");
+      deleteOlder("ping", 5);
+      _lastPingTime = System.currentTimeMillis();
+    }
   }
 
   private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
@@ -957,6 +1026,7 @@ public final class MainFrame extends JFrame {
       _mouse.delay(100);
       if (capture) {
         _scanner.captureGame();
+        deleteOlder("popup", 10);
       }
       if (click) {
         _mouse.click();
@@ -995,14 +1065,12 @@ public final class MainFrame extends JFrame {
     Rectangle area;
 
     area = new Rectangle(_scanner.getBottomRight().x - 32-53, _scanner.getTopLeft().y, 32+53, 55+15);
-    drawImage(area);
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
 
     area = new Rectangle(_scanner.getTopLeft().x+90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth()-180, 60);
-    drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
@@ -1025,7 +1093,6 @@ public final class MainFrame extends JFrame {
     
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
-    drawImage(area);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
@@ -1046,7 +1113,6 @@ public final class MainFrame extends JFrame {
       DragFailureException {
     LOGGER.info("Scanning for locations...");
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
-    drawImage(area);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
       _mouse.delay(300);
       LOGGER.fine("Going to location...");
@@ -1712,8 +1778,6 @@ public final class MainFrame extends JFrame {
   private boolean checkTrainManagement() throws AWTException, IOException, RobotInterruptedException {
     // Rectangle area = new Rectangle(_scanner.getTopLeft().x + 335,
     // _scanner.getTopLeft().y + 47, 130, 90);
-    Rectangle area = new Rectangle(_scanner.getTopLeft().x + 305, _scanner.getTopLeft().y + 47, 450 + 130, 90);
-    drawImage(area);
     // Location time = _times[getTimeIndex()];
     Location time = _freightTime;
     Pixel tm = _scanner.getPointerTrainManagement().findImage();
@@ -1725,9 +1789,8 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 113 - 8);
+      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 113 - 8);
       Pixel exP = _scanner.getExpressTrain().findImage(area);
-      drawImage(area);
       boolean isExpress = exP != null;
       if (isExpress) {
         time = _expressTime;
@@ -1804,19 +1867,6 @@ public final class MainFrame extends JFrame {
       }
     }
     return maxY;
-  }
-
-  private void drawImage(Rectangle area) {
-    if (_devMode)
-      try {
-        BufferedImage screen = new Robot().createScreenCapture(area);
-        _myCanvas.image = screen;
-        _myCanvas.repaint();
-      } catch (AWTException e) {
-        LOGGER.severe(e.getMessage());
-        e.printStackTrace();
-      }
-
   }
 
 }
