@@ -75,7 +75,7 @@ public class Settings {
 		_properties.setProperty("zone1a", "-390, -56, 74, 74");
 		_properties.setProperty("zone2a", "-170, -56, 74, 74");
 		
-		_properties.setProperty("street1Y", "170");
+		_properties.setProperty("street1Y", "150");
 		
 		_properties.setProperty("ping", "true");
 		_properties.setProperty("ping.time", "5");
@@ -135,4 +135,12 @@ public class Settings {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void main(String[] args) {
+    Settings settings = new Settings();
+    settings.setDefaults();
+    settings.saveSettings();
+    System.out.println("Settings reset to defaults");
+    
+  }
 }
