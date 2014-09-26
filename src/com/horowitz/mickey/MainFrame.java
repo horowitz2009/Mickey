@@ -60,17 +60,17 @@ import javax.swing.JToolBar;
  */
 public final class MainFrame extends JFrame {
 
-  private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
+  private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.625";
+  private static final String APP_TITLE    = "Mickey v0.626beta";
 
-  private boolean             _refresh      = true;
-  private boolean             _devMode      = false;
-  private boolean             _ping         = true;
+  private boolean             _refresh     = true;
+  private boolean             _devMode     = false;
+  private boolean             _ping        = true;
 
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
-  private boolean             _stopThread   = false;
+  private boolean             _stopThread  = false;
   private Statistics          _stats;
   private JLabel              _trainsNumberLabel;
   private JLabel              _trainsNumberLabelA;
@@ -88,18 +88,18 @@ public final class MainFrame extends JFrame {
   private JButton             _resetAction;
   private JButton             _doMagicAction;
 
-  private Location            _freightTime  = Locations.LOC_10MIN;
-  private Location            _expressTime  = Locations.LOC_30MIN;
+  private Location            _freightTime = Locations.LOC_10MIN;
+  private Location            _expressTime = Locations.LOC_30MIN;
 
   private Long                _lastTime;
-  private Queue<Integer>      _lastDiffs    = new ArrayBlockingQueue<Integer>(3);
+  private Queue<Integer>      _lastDiffs   = new ArrayBlockingQueue<Integer>(3);
 
   private JToggleButton       _oneClick;
 
   private Settings            _settings;
 
   private JToggleButton       _refreshClick;
-  
+
   private JToggleButton       _pingClick;
   private long                _lastPingTime;
 
@@ -111,12 +111,10 @@ public final class MainFrame extends JFrame {
     super();
     _settings = new Settings();
     _stats = new Statistics();
-    
-    
-    //_settings.setDefaults();
-    //_settings.saveSettings();
 
-    
+    // _settings.setDefaults();
+    // _settings.saveSettings();
+
     _settings.loadSettings();
     // addWindowListener(new WindowAdapter() {
     // @Override
@@ -528,7 +526,7 @@ public final class MainFrame extends JFrame {
       _refreshClick.setSelected(_refresh);
       mainToolbar2.add(_refreshClick);
     }
-    
+
     // Ping
     {
       _pingClick = new JToggleButton("Ping");
@@ -598,7 +596,7 @@ public final class MainFrame extends JFrame {
      * toolbar3.add(timeButton6); }
      */
     // timeButton2.setSelected(true);
-    
+
     LOGGER.info("mandatory refresh time set to " + _settings.getInt("mandatoryRefresh.time") + " minutes.");
     LOGGER.info("ping time set to " + _settings.getInt("ping.time") + " minutes.");
 
@@ -847,7 +845,7 @@ public final class MainFrame extends JFrame {
   public void doMagic() {
     setTitle(APP_TITLE + " READY AND RUNNING");
     _lastPingTime = System.currentTimeMillis();
-    
+
     if (_refreshClick.isSelected())
       updateLabels();
 
@@ -864,17 +862,15 @@ public final class MainFrame extends JFrame {
         updateLabels();
 
         goHomeIfNeeded();
-        
-        
+
         if (_pingClick.isSelected()) {
           ping();
         }
 
-        
         // REFRESH
-        if (_refreshClick.isSelected() && timeForRefresh > 3*60000) {// if "0"
-                                                                   // chosen no
-                                                                   // refresh
+        if (_refreshClick.isSelected() && timeForRefresh > 3 * 60000) {// if "0"
+          // chosen no
+          // refresh
           long now = System.currentTimeMillis();
           String t = nf.format(((double) (now - start) / 60000));
           LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
@@ -948,10 +944,10 @@ public final class MainFrame extends JFrame {
 
   private void ping() {
     long now = System.currentTimeMillis();
-    long time = _settings.getInt("ping.time") * 60000; //from minutes to millseconds
+    long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
     if (now - _lastPingTime >= time) {
       LOGGER.info("ping");
-      _scanner.captureGame("ping " + DateUtils.formatDateForFile(System.currentTimeMillis()) +  ".png");
+      _scanner.captureGame("ping " + DateUtils.formatDateForFile(System.currentTimeMillis()) + ".png");
       deleteOlder("ping", 5);
       _lastPingTime = System.currentTimeMillis();
     }
@@ -1054,13 +1050,11 @@ public final class MainFrame extends JFrame {
     // if (!_lastDiffs.isEmpty()) {
     // diff = _lastDiffs.toArray(new Integer[0])[_lastDiffs.size() - 1];
     // }
-    
-    /* no drag now 
-    int x1 = _scanner.getBottomRight().x - 50;
-    int y = _scanner.getBottomRight().y - 160;
-    LOGGER.fine("drag home: " + diff);
-    _mouse.drag(x1, y, x1 - diff, y);
-    */
+
+    /*
+     * no drag now int x1 = _scanner.getBottomRight().x - 50; int y = _scanner.getBottomRight().y - 160; LOGGER.fine("drag home: " + diff);
+     * _mouse.drag(x1, y, x1 - diff, y);
+     */
   }
 
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
@@ -1072,40 +1066,37 @@ public final class MainFrame extends JFrame {
     _mouse.click(_scanner.getBottomRight().x - 8, _scanner.getBottomRight().y - 8);
     _mouse.delay(100);
     _mouse.mouseMove(_scanner.getBottomRight());
-    
+
     // first scan popups that need to be closed
     Rectangle area;
 
-    area = new Rectangle(_scanner.getBottomRight().x - 32-53, _scanner.getTopLeft().y, 32+53, 55+15);
+    area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
 
-    area = new Rectangle(_scanner.getTopLeft().x+90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth()-180, 60);
+    area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
-    //area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
-    //found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
+    // area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
+    // found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
 
     area = new Rectangle(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getTopLeft().y + 60, _scanner.getGameWidth() / 2, 62);
     found = found || findAndClick(ScreenScanner.POINTER_PROMOX, area, 14, 14, true, true);
 
     checkSession();
-    
-    
-    //TODO check this
-    //area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
-    //drawImage(area);
 
-    //found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
-    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    // TODO check this
+    // area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
+    // drawImage(area);
 
-    
-    
+    // found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
     found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
@@ -1117,7 +1108,7 @@ public final class MainFrame extends JFrame {
       runMagic();
     }
 
-    area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125-30, _scanner.getGameWidth() - 600, 44+40);
+    area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
     findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     long t2 = System.currentTimeMillis();
@@ -1220,6 +1211,9 @@ public final class MainFrame extends JFrame {
     return trainHasBeenSent;
   }
 
+  private boolean _fastClickReady = false;
+  private boolean _tmDetected     = false;
+
   private boolean clickHomeOneClick() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     long t1 = System.currentTimeMillis();
 
@@ -1229,17 +1223,16 @@ public final class MainFrame extends JFrame {
 
     LOGGER.info("looking for pointer down...");
 
-    Pixel p = null;
     boolean done = false;
     long curr = start;
     do {
       _stopThread = false;
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
-      
+
       moveIfNecessary();
-      
-      p = detectPointerDown();
+
+      final Pixel p = detectPointerDown();
       if (p != null) {
         checkDangerousZones(p);
         // Pixel p2 = detectPointerDown();
@@ -1249,23 +1242,58 @@ public final class MainFrame extends JFrame {
         start = System.currentTimeMillis();
         _mouse.saveCurrentPosition();
 
-        int[] rails = _scanner.getRailsHome();
+        _fastClickReady = false;
+        _tmDetected = false;
+        Thread tr1 = new Thread(new Runnable() {
+          public void run() {
+            try {
+              int[] rails = _scanner.getRailsHome();
 
-        // fast click all rails + street1 mainly for mail express trains
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-        
-        for (int i = rails.length -1 ; i >= 0; i--) {
-          p.y = _scanner.getBottomRight().y - rails[i] - 4;
-          clickCareful(p, false, false);
-        }
-        for (int i = 0; i < rails.length; i++) {
-          p.y = _scanner.getBottomRight().y - rails[i] - 4;
-          clickCareful(p, false, false);
-        }
-        
-        
-        trainHasBeenSent = clickCareful(p, true, true) || trainHasBeenSent;
-        _mouse.delay(250);
+              // fast click all rails + street1 mainly for mail express trains
+              p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+              clickCareful(p, false, true);
+              _mouse.delay(250);
+
+              for (int i = rails.length - 1; i >= 0 && !_tmDetected; i--) {
+                p.y = _scanner.getBottomRight().y - rails[i] - 4;
+                clickCareful(p, false, false);
+              }
+              for (int i = 0; i < rails.length && !_tmDetected; i++) {
+                p.y = _scanner.getBottomRight().y - rails[i] - 4;
+                clickCareful(p, false, false);
+              }
+            } catch (AWTException | IOException | RobotInterruptedException e) {
+            }
+            _fastClickReady = true;
+          }
+        }, "CLICKHOME");
+        tr1.start();
+
+        Thread tr2 = new Thread(new Runnable() {
+          public void run() {
+            long start = System.currentTimeMillis();
+            long now;
+            do {
+              Pixel tm = _scanner.getPointerTrainManagement().findImage();
+              if (tm != null) {
+                _tmDetected = true;
+              }
+              now = System.currentTimeMillis();
+            } while (now - start < 2000 && !_fastClickReady);
+          }
+        }, "TM");
+        tr2.start();
+
+        long st = System.currentTimeMillis();
+        long n;
+        do {
+          try {
+            Thread.sleep(200);
+          } catch (InterruptedException e) {
+          }
+          n = System.currentTimeMillis();
+        } while (!_tmDetected || !_fastClickReady || (n - st) < 3000);
+
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
         _mouse.delay(250);
         scanOtherLocations(true);
@@ -1273,6 +1301,7 @@ public final class MainFrame extends JFrame {
 
         // again all rails one by one now more carefully
         boolean stop = false;
+        int[] rails = _scanner.getRailsHome();
         for (int i = 0; i < rails.length && !stop; i++) {
           try {
             LOGGER.info("trying rail " + (i + 1));
@@ -1472,16 +1501,16 @@ public final class MainFrame extends JFrame {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
     }
 
-//    _mouse.delay(200);
-//    int diff = 30;
-//    int x1 = _scanner.getBottomRight().x - 57;
-//    int y = _scanner.getBottomRight().y - 160;
-//    _mouse.drag(x1, y, x1 - diff, y);
+    // _mouse.delay(200);
+    // int diff = 30;
+    // int x1 = _scanner.getBottomRight().x - 57;
+    // int y = _scanner.getBottomRight().y - 160;
+    // _mouse.drag(x1, y, x1 - diff, y);
 
-//    xx = _scanner.getBottomRight().x - 140; // safe zone
-//    for (int i = 0; i < rails.length; i++) {
-//      _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
-//    }
+    // xx = _scanner.getBottomRight().x - 140; // safe zone
+    // for (int i = 0; i < rails.length; i++) {
+    // _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+    // }
   }
 
   protected void handleDragFailure() {
