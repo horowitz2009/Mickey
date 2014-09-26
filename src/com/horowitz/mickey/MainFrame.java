@@ -1298,6 +1298,8 @@ public final class MainFrame extends JFrame {
           n = System.currentTimeMillis();
         } while (_tmDetected || _fastClickReady || (n - st) < 3000);
 
+        _mouse.saveCurrentPosition();
+        
         trainHasBeenSent = checkTrainManagement();
         _mouse.delay(250);
         scanOtherLocations(true);
@@ -1321,7 +1323,6 @@ public final class MainFrame extends JFrame {
               break;
             }
             if (scanOtherLocations(true)) {
-              // hmm
               p.x = _scanner.getBottomRight().x - 80;
             }
           } catch (AWTException | IOException e) {
