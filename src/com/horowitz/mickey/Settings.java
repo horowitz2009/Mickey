@@ -44,10 +44,10 @@ public class Settings {
 		_properties.setProperty("zoom", "2");
 
 		_properties.setProperty("railsHome", "5");
-		_properties.setProperty("railsHome1", "100, 105, 114, 119, 124");
-		_properties.setProperty("railsHome2", "100, 105, 111, 117, 130");
-		_properties.setProperty("railsHome3", "100, 107, 114, 121, 135");
-		_properties.setProperty("railsHome4", "100, 108, 116, 124, 143");
+		_properties.setProperty("railsHome1", "103, 105, 114, 119, 124");
+		_properties.setProperty("railsHome2", "103, 105, 111, 117, 130");
+		_properties.setProperty("railsHome3", "103, 107, 114, 121, 135");
+		_properties.setProperty("railsHome4", "104, 108, 116, 124, 143");
 
 		_properties.setProperty("railsOut", "6");
 		_properties.setProperty("railsOut1", "100, 104, 108, 112, 116, 117");// maglev rail reduced with 3px

@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.624b";
+  private static final String APP_TITLE     = "Mickey v0.625";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -1252,11 +1252,18 @@ public final class MainFrame extends JFrame {
         int[] rails = _scanner.getRailsHome();
 
         // fast click all rails + street1 mainly for mail express trains
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+        
+        for (int i = rails.length -1 ; i >= 0; i--) {
+          p.y = _scanner.getBottomRight().y - rails[i] - 4;
+          clickCareful(p, false, false);
+        }
         for (int i = 0; i < rails.length; i++) {
           p.y = _scanner.getBottomRight().y - rails[i] - 4;
           clickCareful(p, false, false);
         }
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+        
+        
         trainHasBeenSent = clickCareful(p, true, true) || trainHasBeenSent;
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
@@ -1317,6 +1324,7 @@ public final class MainFrame extends JFrame {
 
     if (isOneClick()) {
       if (fast) {
+        _mouse.delay(300);
         loadTrainsFast();
         // that's it!
       } else {
