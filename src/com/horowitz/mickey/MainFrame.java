@@ -1270,6 +1270,8 @@ public final class MainFrame extends JFrame {
                 LOGGER.info("interrupted because TM detected...");
               }
             } catch (AWTException | IOException | RobotInterruptedException e) {
+              LOGGER.severe("WHAAAAT? " + e.getMessage());
+              e.printStackTrace();
             }
             _fastClickReady = true;
           }
@@ -1289,6 +1291,7 @@ public final class MainFrame extends JFrame {
               try {
                 Thread.sleep(150);
               } catch (InterruptedException e) {
+                e.printStackTrace();
               }
               now = System.currentTimeMillis();
             } while (now - start < 3000 && !_fastClickReady);
@@ -1302,6 +1305,7 @@ public final class MainFrame extends JFrame {
           try {
             Thread.sleep(200);
           } catch (InterruptedException e) {
+            e.printStackTrace();
           }
           n = System.currentTimeMillis();
           if ((n - st) >= 3500)
