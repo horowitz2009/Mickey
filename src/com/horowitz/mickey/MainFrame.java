@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.623";
+  private static final String APP_TITLE     = "Mickey v0.624a";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -1060,7 +1060,10 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Scanning for popups...");
 
     // _mouse.savePosition();
+    _mouse.click(_scanner.getBottomRight().x - 8, _scanner.getBottomRight().y - 8);
+    _mouse.delay(100);
     _mouse.mouseMove(_scanner.getBottomRight());
+    
     // first scan popups that need to be closed
     Rectangle area;
 
