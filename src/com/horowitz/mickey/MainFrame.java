@@ -1251,7 +1251,7 @@ public final class MainFrame extends JFrame {
 
               // fast click all rails + street1 mainly for mail express trains
               p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-              clickCareful(p, false, true);
+              clickCareful(p, false, false);
               _mouse.delay(250);
 
               for (int i = rails.length - 1; i >= 0 && !_tmDetected; i--) {
@@ -1261,6 +1261,13 @@ public final class MainFrame extends JFrame {
               for (int i = 0; i < rails.length && !_tmDetected; i++) {
                 p.y = _scanner.getBottomRight().y - rails[i] - 4;
                 clickCareful(p, false, false);
+              }
+              if (!_tmDetected) {
+                p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+                clickCareful(p, false, true);
+                _mouse.delay(250);
+              } else {
+                LOGGER.info("interrupted because TM detected...");
               }
             } catch (AWTException | IOException | RobotInterruptedException e) {
             }
@@ -1277,13 +1284,14 @@ public final class MainFrame extends JFrame {
               Pixel tm = _scanner.getPointerTrainManagement().findImage();
               if (tm != null) {
                 _tmDetected = true;
+                LOGGER.info("tm detected");
               }
               try {
                 Thread.sleep(150);
               } catch (InterruptedException e) {
               }
               now = System.currentTimeMillis();
-            } while (now - start < 2000 && !_fastClickReady);
+            } while (now - start < 3000 && !_fastClickReady);
           }
         }, "TM");
         tr2.start();
@@ -1296,7 +1304,9 @@ public final class MainFrame extends JFrame {
           } catch (InterruptedException e) {
           }
           n = System.currentTimeMillis();
-        } while (_tmDetected || _fastClickReady || (n - st) < 3000);
+          if ((n - st) >= 3500)
+            LOGGER.info("time's up!");
+        } while (_tmDetected || _fastClickReady || (n - st) < 3500);
 
         _mouse.saveCurrentPosition();
         
