@@ -1278,6 +1278,10 @@ public final class MainFrame extends JFrame {
               if (tm != null) {
                 _tmDetected = true;
               }
+              try {
+                Thread.sleep(150);
+              } catch (InterruptedException e) {
+              }
               now = System.currentTimeMillis();
             } while (now - start < 2000 && !_fastClickReady);
           }
@@ -1292,9 +1296,9 @@ public final class MainFrame extends JFrame {
           } catch (InterruptedException e) {
           }
           n = System.currentTimeMillis();
-        } while (!_tmDetected || !_fastClickReady || (n - st) < 3000);
+        } while (_tmDetected || _fastClickReady || (n - st) < 3000);
 
-        trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
+        trainHasBeenSent = checkTrainManagement();
         _mouse.delay(250);
         scanOtherLocations(true);
         _mouse.delay(250);
