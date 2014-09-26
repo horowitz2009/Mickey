@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER        = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE     = "Mickey v0.624a";
+  private static final String APP_TITLE     = "Mickey v0.624b";
 
   private boolean             _refresh      = true;
   private boolean             _devMode      = false;
@@ -803,6 +803,15 @@ public final class MainFrame extends JFrame {
       LOGGER.info("Daily rewards clicked.");
       _mouse.delay(1000);
     }
+    // PROMO
+    Pixel promo = _scanner.getPromoX().findImage();
+    if (promo != null) {
+      _mouse.mouseMove(promo);
+      _mouse.saveCurrentPosition();
+      _mouse.click();
+      LOGGER.info("Promo popup clicked.");
+      _mouse.delay(1000);
+    }
     _mouse.restorePosition();
   }
 
@@ -885,7 +894,7 @@ public final class MainFrame extends JFrame {
           // check again has refresh gone well after 3 minutes
           if (_lastTime != null && now - _lastTime >= 3 * 60 * 1000) {
             handleRarePopups();
-            _lastTime = null;
+            _lastTime = System.currentTimeMillis();
           }
         }
 
@@ -1078,8 +1087,11 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
-    area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
-    found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
+    //area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
+    //found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
+
+    area = new Rectangle(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getTopLeft().y + 60, _scanner.getGameWidth() / 2, 62);
+    found = found || findAndClick(ScreenScanner.POINTER_PROMOX, area, 14, 14, true, true);
 
     checkSession();
     
@@ -1491,11 +1503,13 @@ public final class MainFrame extends JFrame {
     // _mouse.mouseMove(p);
 
     try {
+      handleRarePopups();
       handlePopups();
 
       // fixTheGame();
     } catch (SessionTimeOutException e) {
-      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (InterruptedException e) {
       e.printStackTrace();
     }
 

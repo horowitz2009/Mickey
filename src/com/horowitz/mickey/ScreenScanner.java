@@ -44,6 +44,7 @@ public class ScreenScanner {
   public static final String   POINTER_NIGHTX                 = "nightX.bmp";
   public static final String   POINTER_DAYLIGHTX              = "daylightX.bmp";
   public static final String   POINTER_TIPSX                  = "tipsX.bmp";
+  public static final String   POINTER_PROMOX                 = "promoX.bmp";
 
   private ImageComparator      _comparator;
 
@@ -63,6 +64,7 @@ public class ScreenScanner {
   private ImageData            _pointerDownR                  = null;
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
+  private ImageData            _promoX                        = null;
 
   private ImageData            _trainManagement               = null;
 
@@ -107,6 +109,9 @@ public class ScreenScanner {
 
       area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
       _dailyRewards = new ImageData("dailyRewards.bmp", area, _comparator, 317, 2);
+      
+      area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height/2 - 88);
+      _promoX = new ImageData(POINTER_PROMOX, area, _comparator, 14, 14);
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
@@ -542,6 +547,10 @@ public class ScreenScanner {
 
   public ImageData getDaylightY() {
     return _daylightY;
+  }
+  
+  public ImageData getPromoX() {
+    return _promoX;
   }
 
 }
