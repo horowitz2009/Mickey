@@ -1063,7 +1063,7 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Scanning for popups...");
 
     // _mouse.savePosition();
-    _mouse.click(_scanner.getBottomRight().x - 8, _scanner.getBottomRight().y - 8);
+    _mouse.click(_scanner.getBottomRight().x - 8, _scanner.getBottomRight().y - 96);
     _mouse.delay(100);
     _mouse.mouseMove(_scanner.getBottomRight());
 
@@ -1218,7 +1218,7 @@ public final class MainFrame extends JFrame {
     long t1 = System.currentTimeMillis();
 
     boolean trainHasBeenSent = false;
-    int timeGiven = 3000; // 3 secs
+    int timeGiven = 2000; // 2 secs
     long start = System.currentTimeMillis();
 
     LOGGER.info("looking for pointer down...");
@@ -1308,9 +1308,9 @@ public final class MainFrame extends JFrame {
             e.printStackTrace();
           }
           n = System.currentTimeMillis();
-          if ((n - st) >= 3500)
+          if ((n - st) >= 4000)
             LOGGER.info("time's up!");
-        } while (_tmDetected || _fastClickReady || (n - st) < 3500);
+        } while (_tmDetected || _fastClickReady || (n - st) < 4000);
 
         _mouse.saveCurrentPosition();
         
