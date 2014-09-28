@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "Mickey v0.625s";
+  private static final String APP_TITLE    = "Mickey v0.625.b2";
 
   private boolean             _refresh     = true;
   private boolean             _devMode     = false;
@@ -1245,7 +1245,8 @@ public final class MainFrame extends JFrame {
 
         // fast click all rails + street1 mainly for mail express trains
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-
+        clickCareful(p, false, false);
+        
         for (int i = rails.length - 1; i >= 0; i--) {
           p.y = _scanner.getBottomRight().y - rails[i] - 4;
           clickCareful(p, false, false);
@@ -1255,7 +1256,10 @@ public final class MainFrame extends JFrame {
           clickCareful(p, false, false);
         }
 
-        trainHasBeenSent = clickCareful(p, true, true) || trainHasBeenSent;
+        //Try mail again. This time with adjusting
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
+        clickCareful(p, false, true);
+        
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
         _mouse.delay(250);
