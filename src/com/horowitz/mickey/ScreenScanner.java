@@ -108,7 +108,7 @@ public class ScreenScanner {
       _loginWIthFB = new ImageData("loginWithFB2.bmp", area, _comparator, 8, 8);
 
       area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
-      _dailyRewards = new ImageData("dailyRewards.bmp", area, _comparator, 317, 2);
+      _dailyRewards = new ImageData("dailyX.bmp", area, _comparator, 9, 9);
       
       area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height/2 - 88);
       _promoX = new ImageData(POINTER_PROMOX, area, _comparator, 14, 14);
