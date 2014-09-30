@@ -11,7 +11,7 @@
             <fileset dir="C:/Users/zhristov/Documents/GitHub/Mickey/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/zhristov/Documents/GitHub/Mickey/lib/commons-lang-2.1.jar"/>
         </jar>
-        <jar destfile="C:/Users/zhristov/Dropbox/Programs/Mickey625s.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="C:/Users/zhristov/Dropbox/Programs/Mickey625.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="com.horowitz.mickey.Launcher"/>
                 <attribute name="Class-Path" value="."/>
