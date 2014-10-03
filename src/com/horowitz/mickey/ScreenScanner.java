@@ -279,9 +279,9 @@ public class ScreenScanner {
   }
 
   public void captureGame() {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-SSS");
+    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd  HH-mm-ss-SSS");
     String date = sdf.format(Calendar.getInstance().getTime());
-    String filename = "popup_" + date + ".png";
+    String filename = "popup " + date + ".png";
     captureGame(filename);
   }
   

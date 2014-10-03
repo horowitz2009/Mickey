@@ -62,11 +62,12 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.625.b3";
+  private static final String APP_TITLE    = "v0.626";
 
   private boolean             _refresh     = true;
   private boolean             _devMode     = false;
   private boolean             _ping        = true;
+  private boolean             _resume      = true;
 
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
@@ -103,6 +104,8 @@ public final class MainFrame extends JFrame {
   private JToggleButton       _pingClick;
   private long                _lastPingTime;
 
+  private JToggleButton       _resumeClick;
+  
   private boolean isOneClick() {
     return _oneClick.isSelected();
   }
@@ -126,6 +129,7 @@ public final class MainFrame extends JFrame {
 
     _refresh = refresh != null ? refresh : Boolean.parseBoolean(_settings.getProperty("refresh", "false"));
     _ping = ping != null ? ping : Boolean.parseBoolean(_settings.getProperty("ping", "false"));
+    _resume = Boolean.parseBoolean(_settings.getProperty("resume", "false"));
     setupLogger();
 
     init();
@@ -534,6 +538,13 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_pingClick);
     }
 
+    // Resume
+    {
+      _resumeClick = new JToggleButton("Resume");
+      _resumeClick.setSelected(_resume);
+      mainToolbar2.add(_resumeClick);
+    }
+
     ButtonGroup bgFr = new ButtonGroup();
     createButtons(frToolbar1, bgFr, Locations.LOC_PAGE1, true);
     createButtons(frToolbar2, bgFr, Locations.LOC_PAGE2, true);
@@ -682,10 +693,10 @@ public final class MainFrame extends JFrame {
   private void refresh() throws RobotInterruptedException {
     _lastTime = System.currentTimeMillis();
     try {
-      String dateStr = DateUtils.formatDateForFile(System.currentTimeMillis());
+      String dateStr = DateUtils.formatDateForFile2(System.currentTimeMillis());
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       ImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
-      deleteOlder("refresh", 10);
+      deleteOlder("refresh", 5);
     } catch (HeadlessException e1) {
       e1.printStackTrace();
     } catch (IOException e1) {
@@ -947,7 +958,7 @@ public final class MainFrame extends JFrame {
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
     if (now - _lastPingTime >= time) {
       LOGGER.info("ping");
-      _scanner.captureGame("ping " + DateUtils.formatDateForFile(System.currentTimeMillis()) + ".png");
+      _scanner.captureGame("ping " + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
       deleteOlder("ping", 5);
       _lastPingTime = System.currentTimeMillis();
     }
@@ -1031,7 +1042,7 @@ public final class MainFrame extends JFrame {
       _mouse.delay(100);
       if (capture) {
         _scanner.captureGame();
-        deleteOlder("popup", 10);
+        deleteOlder("popup", 5);
       }
       if (click) {
         _mouse.click();
@@ -1106,7 +1117,7 @@ public final class MainFrame extends JFrame {
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
       refresh();
-      runMagic();
+      //runMagic();
     }
 
     area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
@@ -1130,11 +1141,25 @@ public final class MainFrame extends JFrame {
     return false;
   }
 
-  private void checkSession() throws SessionTimeOutException {
+  private void checkSession() throws SessionTimeOutException, RobotInterruptedException {
     if (_scanner.isOptimized()) {
       Pixel p = _scanner.getSessionTimeOut().findImage();
-      if (p != null)
+      if (p != null) {
+        //TODO two ways of managing session timeout popup
+        if (_resumeClick.isSelected()) {
+          LOGGER.info("Session expired, but resume is ON.");
+          int time = _settings.getInt("resume.time", 10);
+          LOGGER.info("Waiting " + time + " minutes...");
+          try {
+            Thread.sleep(time * 60000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          refresh();
+        }
+        
         throw new SessionTimeOutException();
+      }
     }
   }
 

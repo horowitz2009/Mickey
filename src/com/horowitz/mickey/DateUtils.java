@@ -66,6 +66,11 @@ public class DateUtils {
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd kk mm ss");
     return df.format(time);
   }
+  
+  public static String formatDateForFile2(long time) {
+    SimpleDateFormat df = new SimpleDateFormat("MM-dd  kk mm");
+    return df.format(time);
+  }
 
   public static void main(String[] args) {
     Calendar cal = Calendar.getInstance();

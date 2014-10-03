@@ -79,11 +79,18 @@ public class Settings {
 		
 		_properties.setProperty("ping", "true");
 		_properties.setProperty("ping.time", "5");
+		_properties.setProperty("resume", "false");
+		_properties.setProperty("resume.time", "10");
 	}
 
 	public int getInt(String key) {
 		String val = _properties.getProperty(key, "0");
 		return Integer.parseInt(val.trim());
+	}
+
+	public int getInt(String key, int defaultValue) {
+	  String val = _properties.getProperty(key, "" + defaultValue);
+	  return Integer.parseInt(val.trim());
 	}
 
 	public int[] getArray(String key) {

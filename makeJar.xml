@@ -3,7 +3,7 @@
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
     <!--ANT 1.7 is required                                        -->
     <target name="create_run_jar">
-        <jar destfile="C:/Users/Zhivko Hristov/Dropbox/Mickey625.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="C:/Users/Zhivko Hristov/Dropbox/Mickey626.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="com.horowitz.mickey.Launcher"/>
                 <attribute name="Class-Path" value="."/>
@@ -11,7 +11,7 @@
             <fileset dir="C:/Users/Zhivko Hristov/Documents/GitHub/Mickey/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Zhivko Hristov/Documents/GitHub/Mickey/lib/commons-lang-2.1.jar"/>
         </jar>
-        <jar destfile="C:/Users/Zhivko Hristov/Dropbox/Programs/Mickey625.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="C:/Users/Zhivko Hristov/Dropbox/Programs/Mickey626.jar" filesetmanifest="mergewithoutmain">
             <manifest>
                 <attribute name="Main-Class" value="com.horowitz.mickey.Launcher"/>
                 <attribute name="Class-Path" value="."/>
@@ -19,5 +19,6 @@
             <fileset dir="C:/Users/Zhivko Hristov/Documents/GitHub/Mickey/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Zhivko Hristov/Documents/GitHub/Mickey/lib/commons-lang-2.1.jar"/>
         </jar>
+    	<copy  todir="C:/Users/zhristov/Dropbox" file="mickey.properties" />
     </target>
 </project>
