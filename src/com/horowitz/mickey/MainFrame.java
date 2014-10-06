@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.626";
+  private static final String APP_TITLE    = "v0.627";
 
   private boolean             _refresh     = true;
   private boolean             _devMode     = false;
@@ -1083,13 +1083,25 @@ public final class MainFrame extends JFrame {
     Rectangle area;
 
     area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
+    
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
 
     area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
-    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    
+
+    Pixel pShop = _scanner.getShopX().findImage();
+    if (pShop != null) {
+      _mouse.mouseMove(pShop);
+      _mouse.saveCurrentPosition();
+      _mouse.click();
+      found = true;
+    }
+
+    area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
@@ -1156,9 +1168,9 @@ public final class MainFrame extends JFrame {
             e.printStackTrace();
           }
           refresh();
+        } else {
+          throw new SessionTimeOutException();
         }
-        
-        throw new SessionTimeOutException();
       }
     }
   }

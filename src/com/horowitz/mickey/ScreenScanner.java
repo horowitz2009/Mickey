@@ -33,6 +33,7 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE             = "pointerDown3.bmp";
   public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDown3l.bmp";
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDown3r.bmp";
+  public static final String   POINTER_SHOPX_IMAGE            = "shopX.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
   public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";
@@ -87,6 +88,8 @@ public class ScreenScanner {
   private ImageData            _loginWIthFB;
 
   private ImageData            _dailyRewards;
+  
+  private ImageData            _shopX;
 
   private Pixel                _topPlayersPixel;
 
@@ -109,6 +112,9 @@ public class ScreenScanner {
 
       area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
       _dailyRewards = new ImageData("dailyX.bmp", area, _comparator, 9, 9);
+      
+      area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
+      _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
       
       area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height/2 - 88);
       _promoX = new ImageData(POINTER_PROMOX, area, _comparator, 14, 14);
@@ -134,6 +140,7 @@ public class ScreenScanner {
     _close3 = new ImageData(POINTER_CLOSE3_IMAGE, null, _comparator, 23, 10);
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
+
     _pointerDown = new ImageData("pointerDown5.bmp", null, _comparator, 15, 21);
     _pointerDownL = new ImageData("pointerDown5l.bmp", null, _comparator, 18, 21);
     _pointerDownR = new ImageData("pointerDown5r.bmp", null, _comparator, 4, 21);
@@ -152,6 +159,9 @@ public class ScreenScanner {
     int yy = (getGameHeight() - 386) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + yy + 50, 275, 75); // TODO to be widen if not working
     _sessionTimeOut = new ImageData("session.bmp", area, _comparator, 0, 0);
+
+    area = new Rectangle(getGameWidth()/2, _tl.y, getGameWidth() / 2, 112);
+    _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
 
     if (getGameWidth() > 900) {
       zoom = "" + (Integer.parseInt(zoom) + 2);
@@ -551,6 +561,10 @@ public class ScreenScanner {
   
   public ImageData getPromoX() {
     return _promoX;
+  }
+
+  public ImageData getShopX() {
+    return _shopX;
   }
 
 }
