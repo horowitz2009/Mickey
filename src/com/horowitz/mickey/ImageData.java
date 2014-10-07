@@ -48,11 +48,11 @@ public class ImageData {
 	}
 
 	public Pixel findImage() {
-		return findImage(_defaultArea);
+		return findImage(null);
 	}
 
-	public Pixel findImage(Rectangle area) {
-
+	public Pixel findImage(Rectangle areaIn) {
+	  Rectangle area = areaIn != null ? areaIn : _defaultArea;
 		BufferedImage screen = _robot.createScreenCapture(area);
 		// try {
 		// ImageIO.write(screen, "PNG", new File("area.png"));
@@ -95,5 +95,9 @@ public class ImageData {
 	public void set_yOff(int _yOff) {
 		this._yOff = _yOff;
 	}
+
+  public String getName() {
+    return _filename.substring(0, _filename.length() - 5);
+  }
 
 }

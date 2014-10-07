@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.627";
+  private static final String APP_TITLE    = "v0.628";
 
   private boolean             _refresh     = true;
   private boolean             _devMode     = false;
@@ -793,37 +793,31 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Checking for FB login and daily rewards...");
     _mouse.savePosition();
     _mouse.mouseMove(0, 0);
-    // LOGIN
-    Pixel pFB = _scanner.getLoginWIthFB().findImage();
-    if (pFB != null) {
-      _mouse.mouseMove(pFB);
-      _mouse.saveCurrentPosition();
-      _mouse.click();
-      LOGGER.info("Logged through FB. Wait 5 seconds...");
+
+    // FB LOGIN
+    if (scanAndClick(_scanner.getLoginWIthFB(), null))
       _mouse.delay(5000);
-    }
 
     // DAILY
-    Pixel pDaily = _scanner.getDailyRewards().findImage();
-    if (pDaily != null) {
-      _mouse.mouseMove(pDaily);
-      _mouse.saveCurrentPosition();
-      _mouse.click();
-      LOGGER.info("Daily rewards clicked.");
+    if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(1000);
-    }
+    
     // PROMO
-    Pixel promo = _scanner.getPromoX().findImage();
-    if (promo != null) {
-      _mouse.mouseMove(promo);
-      _mouse.saveCurrentPosition();
-      _mouse.click();
-      LOGGER.info("Promo popup clicked.");
+    if (scanAndClick(_scanner.getPromoX(), null))
       _mouse.delay(1000);
-    }
     _mouse.restorePosition();
   }
 
+  private boolean scanAndClick(ImageData imageData, Rectangle area) {
+    Pixel p = imageData.findImage(area);
+    if (p != null) {
+      _mouse.mouseMove(p);
+      _mouse.click();
+      LOGGER.info(imageData.getName() + " clicked.");
+      return true;
+    }
+    return false;
+  }
   private String getNow() {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm  dd MMM");
     String date = sdf.format(Calendar.getInstance().getTime());
@@ -1038,6 +1032,7 @@ public final class MainFrame extends JFrame {
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
+      LOGGER.info("Found pointer " + imageName);
       _mouse.mouseMove(p);
       _mouse.delay(100);
       if (capture) {
@@ -1089,43 +1084,26 @@ public final class MainFrame extends JFrame {
     if (found)
       _mouse.delay(300);
 
-    area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
     
+    // NEXT LEVEL
+    found = scanAndClick(_scanner.getPromoX(), null);
 
-    Pixel pShop = _scanner.getShopX().findImage();
-    if (pShop != null) {
-      _mouse.mouseMove(pShop);
-      _mouse.saveCurrentPosition();
-      _mouse.click();
-      found = true;
-    }
+    // SHOP
+    found = found || scanAndClick(_scanner.getShopX(), null);
 
+    
     area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
-    // area = new Rectangle(_scanner.getBottomRight().x - 156-53, _scanner.getBottomRight().y - 516-15, 55+53, 55+15);
-    // found = found || findAndClick(ScreenScanner.POINTER_TIPSX, area, 15, 20, true, true);
-
-    area = new Rectangle(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getTopLeft().y + 60, _scanner.getGameWidth() / 2, 62);
-    found = found || findAndClick(ScreenScanner.POINTER_PROMOX, area, 14, 14, true, true);
-
-    checkSession();
-
-    // TODO check this
-    // area = new Rectangle(_scanner.getTopLeft().x + 350, _scanner.getBottomRight().y - 211-15, 81, 42+15);
-    // drawImage(area);
-
-    // found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
-    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    //checkSession();
 
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
-    found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    //found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    found = findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
       refresh();
@@ -1548,6 +1526,7 @@ public final class MainFrame extends JFrame {
 
       // fixTheGame();
     } catch (SessionTimeOutException e) {
+      LOGGER.info("session timeout");
       e.printStackTrace();
     } catch (InterruptedException e) {
       e.printStackTrace();

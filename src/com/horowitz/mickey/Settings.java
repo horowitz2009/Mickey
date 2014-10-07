@@ -72,8 +72,8 @@ public class Settings {
     _properties.setProperty("zone1b", "-522, -118, 74, 74");
     _properties.setProperty("zone2b", "-292, -118, 74, 74");
     _properties.setProperty("zone3b", "-62, -118, 74, 74");
-		_properties.setProperty("zone1a", "-390, -56, 74, 74");
-		_properties.setProperty("zone2a", "-170, -56, 74, 74");
+		//_properties.setProperty("zone1a", "-390, -56, 74, 74");
+		//_properties.setProperty("zone2a", "-170, -56, 74, 74");
 		
 		_properties.setProperty("street1Y", "150");
 		
