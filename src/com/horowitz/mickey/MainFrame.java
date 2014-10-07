@@ -62,7 +62,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.628";
+  private static final String APP_TITLE    = "v0.629";
 
   private boolean             _refresh     = true;
   private boolean             _devMode     = false;
@@ -1619,7 +1619,7 @@ public final class MainFrame extends JFrame {
       int diff;
       int y = _scanner.getBottomRight().y - 160;
       int x1;
-      if (i < 6) {
+      if (i < 4) {
         // first 4 zones move left, the rest move right
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;

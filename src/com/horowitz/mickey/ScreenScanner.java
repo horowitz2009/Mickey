@@ -192,10 +192,8 @@ public class ScreenScanner {
     diff = diff / 2;
     y = _br.y - diff + 1;
     Pixel brShop = new Pixel(x - 74, y - 74);
-    _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM),    _settings.getArea("zone3b", brShop), 
-                                        _settings.getArea("zone2a", brTM),   _settings.getArea("zone2", brTM), 
-                                        _settings.getArea("zone2b", brShop), _settings.getArea("zone1a", brTM), 
-                                        _settings.getArea("zone1", brTM),    _settings.getArea("zone1b", brShop) };
+    _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone3b", brShop), _settings.getArea("zone2", brTM),
+        _settings.getArea("zone2b", brShop), _settings.getArea("zone1", brTM), _settings.getArea("zone1b", brShop) };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
     _pointerLeft = new ImageData("pointerLeft.bmp", area, _comparator, 0, 0);
