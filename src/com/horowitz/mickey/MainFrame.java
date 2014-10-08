@@ -6,6 +6,7 @@ package com.horowitz.mickey;
 import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -22,7 +23,6 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -43,6 +43,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -53,6 +54,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * @author zhristov
@@ -62,12 +65,9 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.629";
+  private static final String APP_TITLE    = "v0.701a";
 
-  private boolean             _refresh     = true;
   private boolean             _devMode     = false;
-  private boolean             _ping        = true;
-  private boolean             _resume      = true;
 
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
@@ -89,6 +89,7 @@ public final class MainFrame extends JFrame {
   private JButton             _resetAction;
   private JButton             _doMagicAction;
 
+  private Location            _freeTime    = Locations.LOC_6MIN;
   private Location            _freightTime = Locations.LOC_10MIN;
   private Location            _expressTime = Locations.LOC_30MIN;
 
@@ -98,6 +99,7 @@ public final class MainFrame extends JFrame {
   private JToggleButton       _oneClick;
 
   private Settings            _settings;
+  private Settings            _commands;
 
   private JToggleButton       _refreshClick;
 
@@ -105,7 +107,15 @@ public final class MainFrame extends JFrame {
   private long                _lastPingTime;
 
   private JToggleButton       _resumeClick;
-  
+
+  private JToolBar            _frToolbar1;
+
+  private JToolBar            _frToolbar2;
+
+  private JToolBar            _exToolbar1;
+
+  private JToolBar            _exToolbar2;
+
   private boolean isOneClick() {
     return _oneClick.isSelected();
   }
@@ -113,28 +123,21 @@ public final class MainFrame extends JFrame {
   public MainFrame(Boolean refresh, Boolean ping) throws HeadlessException {
     super();
     _settings = new Settings();
+    _commands = new Settings("mickey.commands");
     _stats = new Statistics();
 
     // _settings.setDefaults();
-    // _settings.saveSettings();
+    // _settings.saveSettingsSorted();
 
     _settings.loadSettings();
-    // addWindowListener(new WindowAdapter() {
-    // @Override
-    // public void windowClosing(WindowEvent e) {
-    // super.windowClosing(e);
-    // _settings.saveSettings();
-    // }
-    // });
 
-    _refresh = refresh != null ? refresh : Boolean.parseBoolean(_settings.getProperty("refresh", "false"));
-    _ping = ping != null ? ping : Boolean.parseBoolean(_settings.getProperty("ping", "false"));
-    _resume = Boolean.parseBoolean(_settings.getProperty("resume", "false"));
     setupLogger();
 
     init();
 
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
+
+    runSettingsListener();
   }
 
   private void setupLogger() {
@@ -257,33 +260,36 @@ public final class MainFrame extends JFrame {
     LOGGER.addHandler(handler);
     _scanner.addHandler(handler);
 
+    _refreshClick = new JToggleButton("Auto refresh");
+    _refreshClick.setSelected(Boolean.parseBoolean(_settings.getProperty("refresh", "false")));
+
     JToolBar mainToolbar1 = new JToolBar();
     JToolBar mainToolbar2 = new JToolBar();
 
-    JToolBar frToolbar1 = new JToolBar();
-    JToolBar frToolbar2 = new JToolBar();
-    frToolbar1.add(new JLabel("Freight     "));
-    JToolBar exToolbar1 = new JToolBar();
-    JToolBar exToolbar2 = new JToolBar();
-    exToolbar1.add(new JLabel("Express  "));
+    _frToolbar1 = new JToolBar();
+    _frToolbar2 = new JToolBar();
+    _frToolbar1.add(new JLabel("Freight     "));
+    _exToolbar1 = new JToolBar();
+    _exToolbar2 = new JToolBar();
+    _exToolbar1.add(new JLabel("Express  "));
 
     JPanel toolbars = new JPanel(new GridLayout(6, 1));
     toolbars.add(mainToolbar1);
     toolbars.add(mainToolbar2);
     mainToolbar1.setFloatable(false);
     mainToolbar2.setFloatable(false);
-    frToolbar1.setFloatable(false);
-    frToolbar2.setFloatable(false);
-    exToolbar1.setFloatable(false);
-    exToolbar2.setFloatable(false);
-    frToolbar1.setBackground(new Color(201, 177, 133));
-    frToolbar2.setBackground(new Color(201, 177, 133));
-    exToolbar1.setBackground(new Color(153, 173, 209));
-    exToolbar2.setBackground(new Color(153, 173, 209));
-    toolbars.add(frToolbar1);
-    toolbars.add(frToolbar2);
-    toolbars.add(exToolbar1);
-    toolbars.add(exToolbar2);
+    _frToolbar1.setFloatable(false);
+    _frToolbar2.setFloatable(false);
+    _exToolbar1.setFloatable(false);
+    _exToolbar2.setFloatable(false);
+    _frToolbar1.setBackground(new Color(201, 177, 133));
+    _frToolbar2.setBackground(new Color(201, 177, 133));
+    _exToolbar1.setBackground(new Color(153, 173, 209));
+    _exToolbar2.setBackground(new Color(153, 173, 209));
+    toolbars.add(_frToolbar1);
+    toolbars.add(_frToolbar2);
+    toolbars.add(_exToolbar1);
+    toolbars.add(_exToolbar2);
     Box north = Box.createVerticalBox();
     north.add(toolbars);
 
@@ -317,7 +323,7 @@ public final class MainFrame extends JFrame {
     JLabel refreshNumberLabel = new JLabel("R:");
     refreshNumberLabel.setForeground(Color.GRAY);
     refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(14.0f));
-    _refreshNumberLabel = new JLabel("" + (_refresh ? "88" : "off"));
+    _refreshNumberLabel = new JLabel("" + (_refreshClick.isSelected() ? "88" : "off"));
     _refreshNumberLabelA = new JLabel("88");
     _refreshNumberLabelA.setForeground(Color.GRAY);
     _refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(14.0f));
@@ -526,36 +532,50 @@ public final class MainFrame extends JFrame {
     }
     // Refresh
     {
-      _refreshClick = new JToggleButton("Auto refresh");
-      _refreshClick.setSelected(_refresh);
       mainToolbar2.add(_refreshClick);
     }
 
     // Ping
     {
       _pingClick = new JToggleButton("Ping");
-      _pingClick.setSelected(_ping);
+      _pingClick.setSelected(Boolean.parseBoolean(_settings.getProperty("ping", "true")));
       mainToolbar2.add(_pingClick);
+      _pingClick.addChangeListener(new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _commands.setProperty("ping", "" + _pingClick.isSelected());
+          _commands.saveSettingsSorted();
+        }
+      });
     }
 
     // Resume
     {
       _resumeClick = new JToggleButton("Resume");
-      _resumeClick.setSelected(_resume);
+      _resumeClick.setSelected(Boolean.parseBoolean(_settings.getProperty("resume", "false")));
+      _resumeClick.addChangeListener(new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _commands.setProperty("resume", "" + _resumeClick.isSelected());
+          _commands.saveSettingsSorted();
+        }
+      });
       mainToolbar2.add(_resumeClick);
     }
 
     ButtonGroup bgFr = new ButtonGroup();
-    createButtons(frToolbar1, bgFr, Locations.LOC_PAGE1, true);
-    createButtons(frToolbar2, bgFr, Locations.LOC_PAGE2, true);
-    createButtons(frToolbar2, bgFr, Locations.LOC_PAGE3, true);
+    createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE1, true);
+    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE2, true);
+    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE3, true);
 
     ButtonGroup bgEx = new ButtonGroup();
-    createButtons(exToolbar1, bgEx, Locations.LOC_PAGE1, false);
-    createButtons(exToolbar2, bgEx, Locations.LOC_PAGE2, false);
-    createButtons(exToolbar2, bgEx, Locations.LOC_PAGE3, false);
-    ((JToggleButton) frToolbar1.getComponent(3)).setSelected(true);
-    ((JToggleButton) exToolbar1.getComponent(4)).setSelected(true);
+    createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE1, false);
+    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE2, false);
+    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
+    ((JToggleButton) _frToolbar1.getComponent(3)).setSelected(true);
+    ((JToggleButton) _exToolbar1.getComponent(4)).setSelected(true);
 
     /*
      * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ") {
@@ -613,6 +633,158 @@ public final class MainFrame extends JFrame {
 
   }
 
+  private void runSettingsListener() {
+    Thread settingsThread = new Thread(new Runnable() {
+      public void run() {
+        boolean stop = false;
+        do {
+          _settings.loadSettings();
+          _commands.loadSettings();
+          if ("close".equals(_commands.getProperty("command"))) {
+            LOGGER.info("stop everything");
+            stop = true;
+          } else {
+            reapplySettings();
+            try {
+              Thread.sleep(30000);
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+          }
+        } while (!stop);
+      }
+    }, "SETTINGS");
+
+    settingsThread.start();
+
+  }
+
+  private void reapplySettings() {
+    // LOGGER.info("applying new settings...");
+    String free = _commands.getProperty("free", "6");
+    int freight = _commands.getInt("freight", -1);
+    int express = _commands.getInt("express", -1);
+
+    if (freight >= 0) {
+      Component[] components = _frToolbar1.getComponents();
+      boolean found = false;
+      for (int i = 0; i < components.length && !found; i++) {
+        if (components[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components[i];
+          if (b.getTrainLocation().getTime() == freight) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
+        }
+      }
+      components = _frToolbar2.getComponents();
+      for (int i = 0; i < components.length && !found; i++) {
+        if (components[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components[i];
+          if (b.getTrainLocation().getTime() == freight) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
+        }
+      }
+
+      // if (found) {
+      // _commands.removeKey("freight");
+      // _commands.saveSettings();
+      // }
+    }
+    if (express >= 0) {
+      boolean found = false;
+      Component[] components = _exToolbar1.getComponents();
+      for (int i = 0; i < components.length && !found; i++) {
+        if (components[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components[i];
+          if (b.getTrainLocation().getTime() == express) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
+        }
+      }
+      components = _exToolbar2.getComponents();
+      for (int i = 0; i < components.length && !found; i++) {
+        if (components[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components[i];
+          if (b.getTrainLocation().getTime() == express) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
+        }
+      }
+      // if (found) {
+      // _commands.removeKey("express");
+      // _commands.saveSettings();
+      // }
+
+    }
+
+    boolean ping = "true".equalsIgnoreCase(_commands.getProperty("ping"));
+    boolean resume = "true".equalsIgnoreCase(_commands.getProperty("resume"));
+
+    if (ping != _pingClick.isSelected()) {
+      _pingClick.setSelected(ping);
+    }
+
+    if (resume != _resumeClick.isSelected()) {
+      _resumeClick.setSelected(resume);
+    }
+
+  }
+
+  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final boolean freight) {
+    for (int i = 0; i < locations.length; i++) {
+      final Location l = locations[i];
+      LocationToggleButton button = new LocationToggleButton(l, new AbstractAction(l.getName()) {
+
+        public void actionPerformed(ActionEvent e) {
+          if (freight) {
+            _freightTime = l;
+            LOGGER.info("selected freight: " + l.getName());
+            _commands.setProperty("freight", "" + l.getTime());
+          } else {
+            _expressTime = l;
+            _commands.setProperty("express", "" + l.getTime());
+            LOGGER.info("selected express: " + l.getName());
+          }
+          _commands.saveSettingsSorted();
+        }
+      });
+      bg.add(button);
+      toolbar.add(button);
+
+    }
+  }
+
+  private class LocationToggleButton extends JToggleButton {
+    private Location _location;
+
+    public LocationToggleButton(Location location, Action a) {
+      super(a);
+      _location = location;
+    }
+
+    public Location getTrainLocation() {
+      return _location;
+    }
+
+  }
+
   private void updateLabels() {
     _stats.updateTime();
     _trainsNumberLabel.setText("" + _stats.getTotalTrainCount());
@@ -635,37 +807,16 @@ public final class MainFrame extends JFrame {
       public void run() {
         try {
           LOGGER.info("Let's get rolling...");
-          new Robot().delay(200);
+          Thread.sleep(200);
           doMagic();
         } catch (Exception e1) {
           LOGGER.severe(e1.getMessage());
           e1.printStackTrace();
         }
       }
-    });
+    }, "MAGIC");
 
     myThread.start();
-  }
-
-  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final boolean freight) {
-    for (int i = 0; i < locations.length; i++) {
-      final Location l = locations[i];
-      JToggleButton button = new JToggleButton(new AbstractAction(l.getName()) {
-
-        public void actionPerformed(ActionEvent e) {
-          if (freight) {
-            _freightTime = l;
-            LOGGER.fine("selected freight: " + l.getName());
-          } else {
-            _expressTime = l;
-            LOGGER.fine("selected express: " + l.getName());
-          }
-        }
-      });
-      bg.add(button);
-      toolbar.add(button);
-
-    }
   }
 
   private void scan() {
@@ -712,7 +863,7 @@ public final class MainFrame extends JFrame {
       p.y = _scanner.getTopLeft().y + 100;
       p.x = _scanner.getBottomRight().x + 4;
     } else {
-      p = new Pixel(1, 347);
+      p = new Pixel(0, 110);
     }
     _mouse.click(p.x, p.y);
 
@@ -801,7 +952,7 @@ public final class MainFrame extends JFrame {
     // DAILY
     if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(1000);
-    
+
     // PROMO
     if (scanAndClick(_scanner.getPromoX(), null))
       _mouse.delay(1000);
@@ -818,6 +969,7 @@ public final class MainFrame extends JFrame {
     }
     return false;
   }
+
   private String getNow() {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm  dd MMM");
     String date = sdf.format(Calendar.getInstance().getTime());
@@ -854,15 +1006,14 @@ public final class MainFrame extends JFrame {
     if (_refreshClick.isSelected())
       updateLabels();
 
-    int timeForRefresh = (getShortestTime() + 2) * 60000;
-    int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
-
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
     NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setMaximumFractionDigits(3);
     nf.setMinimumFractionDigits(0);
     while (true) {
+      int timeForRefresh = (getShortestTime() * 60000 / 2);
+      int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
       try {
         updateLabels();
 
@@ -873,15 +1024,13 @@ public final class MainFrame extends JFrame {
         }
 
         // REFRESH
-        if (_refreshClick.isSelected() && timeForRefresh > 3 * 60000) {// if "0"
-          // chosen no
-          // refresh
+        if (_refreshClick.isSelected() && timeForRefresh > 3 * 60000) {
+          // if "0" chosen no refresh
           long now = System.currentTimeMillis();
-          String t = nf.format(((double) (now - start) / 60000));
           LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
 
           if (now - start >= timeForRefresh) {
-            LOGGER.info("Warning: no trains for last " + t + " minutes");
+            LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
             refresh();
             fstart = start = System.currentTimeMillis();
           }
@@ -952,7 +1101,9 @@ public final class MainFrame extends JFrame {
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
     if (now - _lastPingTime >= time) {
       LOGGER.info("ping");
-      _scanner.captureGame("ping " + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+          "ping " + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
       deleteOlder("ping", 5);
       _lastPingTime = System.currentTimeMillis();
     }
@@ -1078,36 +1229,34 @@ public final class MainFrame extends JFrame {
     Rectangle area;
 
     area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
-    
+
     boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
 
-    
+    checkSession();
+
     // NEXT LEVEL
     found = scanAndClick(_scanner.getPromoX(), null);
 
     // SHOP
     found = found || scanAndClick(_scanner.getShopX(), null);
 
-    
     area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
-    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
-
-    //checkSession();
+    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
 
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
-    //found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    // found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    //found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
       refresh();
-      //runMagic();
+      // runMagic();
     }
 
     area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
@@ -1135,7 +1284,7 @@ public final class MainFrame extends JFrame {
     if (_scanner.isOptimized()) {
       Pixel p = _scanner.getSessionTimeOut().findImage();
       if (p != null) {
-        //TODO two ways of managing session timeout popup
+        // TODO two ways of managing session timeout popup
         if (_resumeClick.isSelected()) {
           LOGGER.info("Session expired, but resume is ON.");
           int time = _settings.getInt("resume.time", 10);
@@ -1231,6 +1380,7 @@ public final class MainFrame extends JFrame {
     long t1 = System.currentTimeMillis();
 
     boolean trainHasBeenSent = false;
+    boolean hadOtherLocations = false;
     int timeGiven = 2000; // 2 secs
     long start = System.currentTimeMillis();
 
@@ -1240,7 +1390,6 @@ public final class MainFrame extends JFrame {
     boolean done = false;
     long curr = start;
     do {
-      _stopThread = false;
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
@@ -1252,7 +1401,6 @@ public final class MainFrame extends JFrame {
         // Pixel p2 = detectPointerDown();
         // if (p2 != null)
         // p = p2;
-        _stopThread = true;
         start = System.currentTimeMillis();
         _mouse.saveCurrentPosition();
 
@@ -1261,7 +1409,7 @@ public final class MainFrame extends JFrame {
         // fast click all rails + street1 mainly for mail express trains
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
         clickCareful(p, false, false);
-        
+
         for (int i = rails.length - 1; i >= 0; i--) {
           p.y = _scanner.getBottomRight().y - rails[i] - 4;
           clickCareful(p, false, false);
@@ -1271,14 +1419,14 @@ public final class MainFrame extends JFrame {
           clickCareful(p, false, false);
         }
 
-        //Try mail again. This time with adjusting
+        // Try mail again. This time with adjusting
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
         clickCareful(p, false, true);
-        
+
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
         _mouse.delay(250);
-        scanOtherLocations(true);
+        hadOtherLocations = scanOtherLocations(true);
         _mouse.delay(250);
 
         // again all rails one by one now more carefully
@@ -1298,7 +1446,7 @@ public final class MainFrame extends JFrame {
               break;
             }
             if (scanOtherLocations(true)) {
-              // hmm
+              hadOtherLocations = true;
               p.x = _scanner.getBottomRight().x - 80;
             }
           } catch (AWTException | IOException e) {
@@ -1313,7 +1461,7 @@ public final class MainFrame extends JFrame {
     long t2 = System.currentTimeMillis();
     LOGGER.fine("time: " + (t2 - t1));
 
-    return trainHasBeenSent;
+    return trainHasBeenSent || hadOtherLocations;
   }
 
   private boolean isRunning(String threadName) {
@@ -1825,15 +1973,22 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 113 - 8);
-      Pixel exP = _scanner.getExpressTrain().findImage(area);
-      boolean isExpress = exP != null;
-      if (isExpress) {
-        time = _expressTime;
-        LOGGER.info("EXPRESS " + time.getTime());
+      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 81);//height was 113 - 8
+      Pixel freeP = _scanner.getFreeTrain().findImage(area);
+      boolean isExpress = false;
+      if (freeP != null) {
+        time = _freeTime;
+        LOGGER.info("FREE " + time.getTime());
       } else {
-        time = _freightTime;
-        LOGGER.info("FREIGHT " + time.getTime());
+        Pixel exP = _scanner.getExpressTrain().findImage(area);
+        isExpress = exP != null;
+        if (isExpress) {
+          time = _expressTime;
+          LOGGER.info("EXPRESS " + time.getTime());
+        } else {
+          time = _freightTime;
+          LOGGER.info("FREIGHT " + time.getTime());
+        }
       }
       // 1. ensure the page
       Pixel leftArrow = new Pixel(tm.x - 292, tm.y + 302);

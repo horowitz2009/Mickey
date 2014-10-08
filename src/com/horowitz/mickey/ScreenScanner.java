@@ -98,6 +98,7 @@ public class ScreenScanner {
   private Rectangle[]          _dangerousZones;
 
   private ImageData            _expressTrain;
+  private ImageData            _freeTrain;
 
   private int                  _street1Y                      = 170;
 
@@ -145,6 +146,7 @@ public class ScreenScanner {
     _pointerDownL = new ImageData("pointerDown5l.bmp", null, _comparator, 18, 21);
     _pointerDownR = new ImageData("pointerDown5r.bmp", null, _comparator, 4, 21);
     _expressTrain = new ImageData("expressTrain.bmp", null, _comparator, 0, 0);
+    _freeTrain = new ImageData("free.bmp", null, _comparator, 0, 0);
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
@@ -527,6 +529,10 @@ public class ScreenScanner {
 
   public ImageData getExpressTrain() {
     return _expressTrain;
+  }
+
+  public ImageData getFreeTrain() {
+    return _freeTrain;
   }
 
   public ImageData getClose1() {

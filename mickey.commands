@@ -1,0 +1,7 @@
+command=start
+express=10
+free=6
+freight=10
+ping=true
+refresh=true
+resume=false
