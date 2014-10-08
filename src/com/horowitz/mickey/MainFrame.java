@@ -65,7 +65,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.701a";
+  private static final String APP_TITLE    = "v0.702";
 
   private boolean             _devMode     = false;
 
@@ -646,7 +646,7 @@ public final class MainFrame extends JFrame {
           } else {
             reapplySettings();
             try {
-              Thread.sleep(30000);
+              Thread.sleep(20000);
             } catch (InterruptedException e) {
               e.printStackTrace();
             }
@@ -660,8 +660,18 @@ public final class MainFrame extends JFrame {
   }
 
   private void reapplySettings() {
-    // LOGGER.info("applying new settings...");
-    String free = _commands.getProperty("free", "6");
+    LOGGER.info(".................");
+    int free = _commands.getInt("free", -1);
+
+    if (free >= 0) {
+      for (Location loc : Locations.ALL) {
+        if (loc.getTime() == free) {
+          _freeTime = loc;
+          break;
+        }
+      }
+    }
+
     int freight = _commands.getInt("freight", -1);
     int express = _commands.getInt("express", -1);
 
@@ -745,6 +755,57 @@ public final class MainFrame extends JFrame {
       _resumeClick.setSelected(resume);
     }
 
+    // AND NOW THE COMMAND
+    String command = _commands.getProperty("command");
+    if ("refresh".equals(command)) {
+      _commands.setProperty("command", command + "_ok");
+      _commands.saveSettingsSorted();
+      
+      stopMagic();
+      try {
+        refresh();
+        runMagic();
+      } catch (RobotInterruptedException e) {
+        e.printStackTrace();
+      }
+
+      _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
+      _commands.saveSettingsSorted();
+    } else if ("start".equals(command)) {
+      _commands.setProperty("command", command + "_ok");
+      _commands.saveSettingsSorted();
+      
+      stopMagic();
+      runMagic();
+      
+      _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
+      _commands.saveSettingsSorted();
+    } else if ("stop".equals(command)) {
+      _commands.setProperty("command", command + "_ok");
+      _commands.saveSettingsSorted();
+      
+      stopMagic();
+      
+      _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
+      _commands.saveSettingsSorted();
+    }
+  }
+
+  private void stopMagic() {
+    _stopThread = true;
+    int tries = 5;
+    boolean stillRunning = true;
+    for (int i = 0; i < tries && stillRunning; ++i) {
+      stillRunning = isRunning("MAGIC");
+      if (stillRunning) {
+        LOGGER.info("Magic still working...");
+        try {
+          Thread.sleep(3000);
+        } catch (InterruptedException e) {
+        }
+      }
+    }
+    _stopThread = false;
   }
 
   private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final boolean freight) {
@@ -1011,7 +1072,7 @@ public final class MainFrame extends JFrame {
     NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setMaximumFractionDigits(3);
     nf.setMinimumFractionDigits(0);
-    while (true) {
+    while (!_stopThread) {
       int timeForRefresh = (getShortestTime() * 60000 / 2);
       int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
       try {
@@ -1058,13 +1119,14 @@ public final class MainFrame extends JFrame {
           flag = clickHomeOneClick();
         else
           flag = clickHome();
-        if (flag) {
-          // true means train has been sent. refresh postponed
-          start = System.currentTimeMillis();
-        }
 
         // OTHER LOCATIONS
-        scanOtherLocations(true);// TODO only fast scenario for the moment
+        flag = scanOtherLocations(true) || flag;
+
+        if (flag) {
+          // true means train has been sent or other locations've been visited. Refresh postponed.
+          start = System.currentTimeMillis();
+        }
 
         _mouse.delay(200);
 
@@ -1081,6 +1143,7 @@ public final class MainFrame extends JFrame {
       } catch (SessionTimeOutException e) {
         LOGGER.info("Session time out. Stopping...");
         setTitle(APP_TITLE + " READY");
+        _stopThread = true;
         break;
       } catch (DragFailureException e) {
         handleDragFailure();
@@ -1093,7 +1156,9 @@ public final class MainFrame extends JFrame {
       }
 
     }
-
+    if (_stopThread) {
+      LOGGER.info("Mickey has being stopped");
+    }
   }
 
   private void ping() {
@@ -1973,18 +2038,18 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 81);//height was 113 - 8
-      Pixel freeP = _scanner.getFreeTrain().findImage(area);
+      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 81);// height was 113 - 8
       boolean isExpress = false;
-      if (freeP != null) {
-        time = _freeTime;
-        LOGGER.info("FREE " + time.getTime());
+      Pixel exP = _scanner.getExpressTrain().findImage(area);
+      isExpress = exP != null;
+      if (isExpress) {
+        time = _expressTime;
+        LOGGER.info("EXPRESS " + time.getTime());
       } else {
-        Pixel exP = _scanner.getExpressTrain().findImage(area);
-        isExpress = exP != null;
-        if (isExpress) {
-          time = _expressTime;
-          LOGGER.info("EXPRESS " + time.getTime());
+        Pixel freeP = _scanner.getFreeTrain().findImage(area);
+        if (freeP != null) {
+          time = _freeTime;
+          LOGGER.info("FREE " + time.getTime());
         } else {
           time = _freightTime;
           LOGGER.info("FREIGHT " + time.getTime());

@@ -108,6 +108,9 @@ public class Locations {
   public static Location[] LOC_PAGE2       = new Location[] { LOC_1HOUR, LOC_2HOURS, LOC_3HOURS, };
   public static Location[] LOC_PAGE3       = new Location[] { LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, };
   public static Location[] LOC_PAGE4       = new Location[] { LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, };
+  
+  public static Location[] ALL             = new Location[] { LOC_0MIN, LOC_6MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS, LOC_3HOURS,
+      LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, };
 
   /**
    * @deprecated
