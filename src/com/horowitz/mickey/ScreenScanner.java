@@ -74,7 +74,9 @@ public class ScreenScanner {
   private ImageData            _pointerLeft                   = null;
   private ImageData            _pointerRight                  = null;
 
-  private ImageData            _sessionTimeOut;
+  private ImageData            _sessionTimeOut                = null;
+  
+  private ImageData            _contracts                     = null;
 
   private Rectangle            _homeArea                      = null;
   private Rectangle            _trainArea                     = null;
@@ -202,6 +204,15 @@ public class ScreenScanner {
 
     area = new Rectangle(_br.x - 130, _br.y - getRailsHome()[0] - 195, 130, 195);
     _pointerRight = new ImageData("pointerRight.bmp", area, _comparator, 0, 0);
+
+    
+    xx = (getGameWidth() - 780) / 2;
+    yy = (getGameHeight() - 585) / 2;
+    xx += _tl.x;
+    yy += _tl.y;
+    
+    area = new Rectangle(xx + 30, yy + 25, 65, 20);
+    _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
 
   }
 
@@ -569,6 +580,10 @@ public class ScreenScanner {
 
   public ImageData getShopX() {
     return _shopX;
+  }
+
+  public ImageData getContracts() {
+    return _contracts;
   }
 
 }

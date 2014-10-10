@@ -80,9 +80,9 @@ public class Settings {
     _properties.setProperty("zone1", "-497, -52, 74, 74");
     _properties.setProperty("zone2", "-277, -52, 74, 74");
     _properties.setProperty("zone3", "-57, -52, 74, 74");
-    _properties.setProperty("zone1b", "-522, -118, 74, 74");
-    _properties.setProperty("zone2b", "-292, -118, 74, 74");
-    _properties.setProperty("zone3b", "-62, -118, 74, 74");
+    // _properties.setProperty("zone1b", "-522, -118, 74, 74");
+    // _properties.setProperty("zone2b", "-292, -118, 74, 74");
+    // _properties.setProperty("zone3b", "-62, -118, 74, 74");
     // _properties.setProperty("zone1a", "-390, -56, 74, 74");
     // _properties.setProperty("zone2a", "-170, -56, 74, 74");
 
@@ -92,6 +92,8 @@ public class Settings {
     _properties.setProperty("ping.time", "5");
     _properties.setProperty("resume", "false");
     _properties.setProperty("resume.time", "10");
+    
+    _properties.setProperty("contractors", "bobby, mahatma, george, otto, sam, alan, wolfgang, mizuki, lucy, giovanni");
   }
 
   public int getInt(String key) {
@@ -157,6 +159,7 @@ public class Settings {
   }
 
   public void saveSettingsSorted() {
+
     try {
       Set<Object> keySet = _properties.keySet();
       SortedSet<String> sortedKeys = new TreeSet<String>();
@@ -166,14 +169,16 @@ public class Settings {
 
       FileOutputStream fos = new FileOutputStream(new File(_filename));
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "8859_1"));
-
-      for (String key : sortedKeys) {
-        String value = _properties.getProperty(key);
-        bw.write(key + "=" + value);
-        bw.newLine();
+      try {
+        for (String key : sortedKeys) {
+          String value = _properties.getProperty(key);
+          bw.write(key + "=" + value);
+          bw.newLine();
+        }
+        bw.flush();
+      } finally {
+        bw.close();
       }
-      bw.flush();
-      bw.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
@@ -181,13 +186,6 @@ public class Settings {
     }
   }
 
-  public static void main(String[] args) {
-    Settings settings = new Settings();
-    settings.setDefaults();
-    settings.saveSettings();
-    System.out.println("Settings reset to defaults");
-
-  }
 
   public void removeKey(String key) {
     _properties.remove(key);
@@ -195,5 +193,14 @@ public class Settings {
 
   public void setProperty(String key, String value) {
     _properties.setProperty(key, value);
+  }
+  
+  
+  public static void main(String[] args) {
+    Settings settings = new Settings();
+    settings.setDefaults();
+    settings.saveSettingsSorted();
+    System.out.println("Settings reset to defaults");
+    
   }
 }

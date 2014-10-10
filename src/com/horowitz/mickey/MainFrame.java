@@ -65,7 +65,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.702";
+  private static final String APP_TITLE    = "v0.704a";
 
   private boolean             _devMode     = false;
 
@@ -645,6 +645,7 @@ public final class MainFrame extends JFrame {
             stop = true;
           } else {
             reapplySettings();
+            processCommands();
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
@@ -754,13 +755,18 @@ public final class MainFrame extends JFrame {
     if (resume != _resumeClick.isSelected()) {
       _resumeClick.setSelected(resume);
     }
+  }
 
-    // AND NOW THE COMMAND
+  private void processCommands() {
     String command = _commands.getProperty("command");
     if ("refresh".equals(command)) {
+      // try {
+      // Thread.sleep(10000);
+      // } catch (InterruptedException e1) {
+      // }
       _commands.setProperty("command", command + "_ok");
       _commands.saveSettingsSorted();
-      
+
       stopMagic();
       try {
         refresh();
@@ -774,18 +780,30 @@ public final class MainFrame extends JFrame {
     } else if ("start".equals(command)) {
       _commands.setProperty("command", command + "_ok");
       _commands.saveSettingsSorted();
-      
+
       stopMagic();
       runMagic();
-      
+
       _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
       _commands.saveSettingsSorted();
     } else if ("stop".equals(command)) {
       _commands.setProperty("command", command + "_ok");
       _commands.saveSettingsSorted();
-      
+
       stopMagic();
-      
+
+      _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
+      _commands.saveSettingsSorted();
+    } else if ("contracts".equals(command)) {
+      _commands.setProperty("command", command + "_ok");
+      _commands.saveSettingsSorted();
+      try {
+        stopMagic();
+        captureContractors(true);
+        runMagic();
+      } catch (AWTException | IOException | RobotInterruptedException | SessionTimeOutException e) {
+        e.printStackTrace();
+      }
       _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
       _commands.saveSettingsSorted();
     }
@@ -793,14 +811,14 @@ public final class MainFrame extends JFrame {
 
   private void stopMagic() {
     _stopThread = true;
-    int tries = 5;
+    int tries = 10;
     boolean stillRunning = true;
     for (int i = 0; i < tries && stillRunning; ++i) {
       stillRunning = isRunning("MAGIC");
       if (stillRunning) {
         LOGGER.info("Magic still working...");
         try {
-          Thread.sleep(3000);
+          Thread.sleep(2000);
         } catch (InterruptedException e) {
         }
       }
@@ -1064,6 +1082,8 @@ public final class MainFrame extends JFrame {
     setTitle(APP_TITLE + " RUNNING");
     _lastPingTime = System.currentTimeMillis();
 
+    _stopThread = false;
+
     if (_refreshClick.isSelected())
       updateLabels();
 
@@ -1161,14 +1181,60 @@ public final class MainFrame extends JFrame {
     }
   }
 
+  private int _pingTurn = 1;
+
   private void ping() {
     long now = System.currentTimeMillis();
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
+    String pingPrefix = "ping ";
+    int xx = (_scanner.getGameWidth() - 759) / 2;
+    int yy = (_scanner.getGameHeight() - 550) / 2;
+    xx += _scanner.getTopLeft().x;
+    yy += _scanner.getTopLeft().y;
+
     if (now - _lastPingTime >= time) {
       LOGGER.info("ping");
+      if (_pingTurn == 2) {
+        try {
+          // capture trains
+          pingPrefix += " trains ";
+          _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+          _mouse.delay(1300);
+          _mouse.click(xx + 64, yy + 101);
+          _mouse.delay(1000);
+
+        } catch (RobotInterruptedException e) {
+        }
+      } else if (_pingTurn == 3) {
+        try {
+          // capture international trains
+          pingPrefix += " int trains ";
+          _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+          _mouse.delay(1300);
+          _mouse.click(xx + 127, yy + 101);
+          _mouse.delay(1000);
+
+        } catch (RobotInterruptedException e) {
+        }
+      }
+
       final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-          "ping " + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+          pingPrefix + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+
+      if (_pingTurn == 2 || _pingTurn == 3) {
+        try {
+          // need to close trains window
+          _mouse.click(xx + 156, yy + 525);
+          _mouse.delay(500);
+        } catch (RobotInterruptedException e) {
+        }
+      }
+
+      _pingTurn++;
+      if (_pingTurn >= 4)
+        _pingTurn = 1;
+
       deleteOlder("ping", 5);
       _lastPingTime = System.currentTimeMillis();
     }
@@ -1306,7 +1372,7 @@ public final class MainFrame extends JFrame {
     found = scanAndClick(_scanner.getPromoX(), null);
 
     // SHOP
-    found = found || scanAndClick(_scanner.getShopX(), null);
+    found = scanAndClick(_scanner.getShopX(), null) || found;
 
     area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
@@ -1496,7 +1562,7 @@ public final class MainFrame extends JFrame {
 
         // again all rails one by one now more carefully
         boolean stop = false;
-        for (int i = 0; i < rails.length && !stop; i++) {
+        for (int i = 0; i < rails.length && !stop && !_stopThread; i++) {
           try {
             LOGGER.info("trying rail " + (i + 1));
             p.y = _scanner.getBottomRight().y - rails[i] - 4;
@@ -1521,7 +1587,7 @@ public final class MainFrame extends JFrame {
 
       } // p != null
       _mouse.checkUserMovement();
-    } while (!done && curr - start <= timeGiven);
+    } while (!done && curr - start <= timeGiven && !_stopThread);
 
     long t2 = System.currentTimeMillis();
     LOGGER.fine("time: " + (t2 - t1));
@@ -1722,6 +1788,79 @@ public final class MainFrame extends JFrame {
     }
   }
 
+  private void captureContractors(boolean withMaterialsStatus) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    String s = _settings.getProperty("contractors");
+    String[] contractors = s.split(",");// do not forget to trim before using
+
+    handlePopups();
+
+    // open contracts
+    _mouse.click(_scanner.getTopLeft().x + 234, _scanner.getBottomRight().y - 42);
+    _mouse.delay(1000);
+
+    Pixel p = _scanner.getContracts().findImage();
+    Rectangle area;
+    //Rectangle area = _scanner.getContracts().getDefaultArea();
+    //_scanner.writeImage(area, "bingo.png");
+
+    if (p != null) {
+      // we're on the right track
+
+      Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
+      _mouse.mouseMove(scrollerTop);
+      _mouse.click();
+
+      int track = 400;
+      area = new Rectangle(p.x, p.y + 31, 100, 484);
+      int drag = 0;
+      int n = 0;
+      for (String contractor : contractors) {
+        n++;
+        String cname = contractor.trim() + ".bmp";
+        boolean found = false;
+        if (findAndClick(cname, area, 15, 7, true, false)) {
+          found = true;
+        } else {
+          // drag until get it
+          found = false;
+          do {
+            LOGGER.info("drag from " + drag + " to " + (drag + 75));
+            _mouse.drag(scrollerTop.x, scrollerTop.y + drag, scrollerTop.x, scrollerTop.y + drag + 45);
+            found = findAndClick(cname, area, 15, 7, true, false);
+            drag += 50;
+          } while (!found && drag + 50 < track);
+        }
+        if (found) {
+          _mouse.delay(500);
+          _scanner.captureGame("status" + n + " " + contractor.trim() + ".png");
+          _mouse.delay(500);
+          if (withMaterialsStatus) {
+            // click visit
+            _mouse.click(p.x + 267, p.y + 335);
+            _mouse.delay(800);
+
+            // click materials
+            _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
+            _mouse.delay(1500);
+            _scanner.captureGame("status" + n + " " + contractor.trim() + " materials" + ".png");
+            _mouse.delay(300);
+
+            // click close
+            _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
+            _mouse.delay(600);
+
+            // click
+            _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
+            _mouse.delay(600);
+          }
+        }
+      }
+      _mouse.click(p.x + 722, p.y - 9);
+      _mouse.delay(400);
+      goHomeIfNeeded();
+    }
+  }
+
   private void locate() throws RobotInterruptedException, AWTException, IOException {
 
     // Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
@@ -1734,14 +1873,16 @@ public final class MainFrame extends JFrame {
     // _mouse.mouseMove(p);
 
     try {
-      handleRarePopups();
-      handlePopups();
+      // handleRarePopups();
+      // handlePopups();
+
+      captureContractors(true);
 
       // fixTheGame();
     } catch (SessionTimeOutException e) {
       LOGGER.info("session timeout");
       e.printStackTrace();
-    } catch (InterruptedException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
 
@@ -1832,12 +1973,12 @@ public final class MainFrame extends JFrame {
       int diff;
       int y = _scanner.getBottomRight().y - 160;
       int x1;
-      if (i < 4) {
-        // first 4 zones move left, the rest move right
+      if (i < _scanner.getDangerousZones().length - 1) {
+        // first n-1 zones move left, the rest move right
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;
       } else {
-        diff = zone.x + zone.width - p.x - 20;
+        diff = (zone.x + zone.width - p.x) + 18;
         diff = -diff;
         x1 = _scanner.getTopLeft().x + 50;
       }

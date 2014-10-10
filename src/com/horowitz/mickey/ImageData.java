@@ -100,4 +100,8 @@ public class ImageData {
     return _filename.substring(0, _filename.length() - 5);
   }
 
+  public Rectangle getDefaultArea() {
+    return _defaultArea;
+  }
+
 }
