@@ -65,7 +65,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.704a";
+  private static final String APP_TITLE    = "v0.705";
 
   private boolean             _devMode     = false;
 
@@ -1809,10 +1809,10 @@ public final class MainFrame extends JFrame {
       Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
       _mouse.mouseMove(scrollerTop);
       _mouse.click();
+      _mouse.delay(300);
 
-      int track = 400;
+      int track = 500;
       area = new Rectangle(p.x, p.y + 31, 100, 484);
-      int drag = 0;
       int n = 0;
       for (String contractor : contractors) {
         n++;
@@ -1822,27 +1822,28 @@ public final class MainFrame extends JFrame {
           found = true;
         } else {
           // drag until get it
+          int drag = 0;
           found = false;
           do {
             LOGGER.info("drag from " + drag + " to " + (drag + 75));
             _mouse.drag(scrollerTop.x, scrollerTop.y + drag, scrollerTop.x, scrollerTop.y + drag + 45);
             found = findAndClick(cname, area, 15, 7, true, false);
             drag += 50;
-          } while (!found && drag + 50 < track);
+          } while (!found && drag < track);
         }
         if (found) {
           _mouse.delay(500);
-          _scanner.captureGame("status" + n + " " + contractor.trim() + ".png");
+          _scanner.captureGame("status " + n + "A " + contractor.trim() + ".png");
           _mouse.delay(500);
           if (withMaterialsStatus) {
             // click visit
             _mouse.click(p.x + 267, p.y + 335);
-            _mouse.delay(800);
+            _mouse.delay(2000);
 
             // click materials
             _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
-            _mouse.delay(1500);
-            _scanner.captureGame("status" + n + " " + contractor.trim() + " materials" + ".png");
+            _mouse.delay(1000);
+            _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".png");
             _mouse.delay(300);
 
             // click close
@@ -1853,6 +1854,8 @@ public final class MainFrame extends JFrame {
             _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
             _mouse.delay(600);
           }
+        } else {
+          LOGGER.info("Couldn't find " + contractor);
         }
       }
       _mouse.click(p.x + 722, p.y - 9);

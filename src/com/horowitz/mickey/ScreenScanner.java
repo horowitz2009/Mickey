@@ -75,7 +75,7 @@ public class ScreenScanner {
   private ImageData            _pointerRight                  = null;
 
   private ImageData            _sessionTimeOut                = null;
-  
+
   private ImageData            _contracts                     = null;
 
   private Rectangle            _homeArea                      = null;
@@ -90,7 +90,7 @@ public class ScreenScanner {
   private ImageData            _loginWIthFB;
 
   private ImageData            _dailyRewards;
-  
+
   private ImageData            _shopX;
 
   private Pixel                _topPlayersPixel;
@@ -115,11 +115,11 @@ public class ScreenScanner {
 
       area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
       _dailyRewards = new ImageData("dailyX.bmp", area, _comparator, 9, 9);
-      
+
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
       _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
-      
-      area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height/2 - 88);
+
+      area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height / 2 - 88);
       _promoX = new ImageData(POINTER_PROMOX, area, _comparator, 14, 14);
 
       _tl = new Pixel(0, 0);
@@ -143,7 +143,6 @@ public class ScreenScanner {
     _close3 = new ImageData(POINTER_CLOSE3_IMAGE, null, _comparator, 23, 10);
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
-
     _pointerDown = new ImageData("pointerDown5.bmp", null, _comparator, 15, 21);
     _pointerDownL = new ImageData("pointerDown5l.bmp", null, _comparator, 18, 21);
     _pointerDownR = new ImageData("pointerDown5r.bmp", null, _comparator, 4, 21);
@@ -164,7 +163,7 @@ public class ScreenScanner {
     area = new Rectangle(_tl.x + xx, _tl.y + yy + 50, 275, 75); // TODO to be widen if not working
     _sessionTimeOut = new ImageData("session.bmp", area, _comparator, 0, 0);
 
-    area = new Rectangle(getGameWidth()/2, _tl.y, getGameWidth() / 2, 112);
+    area = new Rectangle(getGameWidth() / 2, _tl.y, getGameWidth() / 2, 112);
     _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
 
     if (getGameWidth() > 900) {
@@ -195,9 +194,7 @@ public class ScreenScanner {
     diff = getGameHeight() - 551;
     diff = diff / 2;
     y = _br.y - diff + 1;
-    Pixel brShop = new Pixel(x - 74, y - 74);
-    _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone3b", brShop), _settings.getArea("zone2", brTM),
-        _settings.getArea("zone2b", brShop), _settings.getArea("zone1", brTM), _settings.getArea("zone1b", brShop) };
+    _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
     _pointerLeft = new ImageData("pointerLeft.bmp", area, _comparator, 0, 0);
@@ -205,12 +202,11 @@ public class ScreenScanner {
     area = new Rectangle(_br.x - 130, _br.y - getRailsHome()[0] - 195, 130, 195);
     _pointerRight = new ImageData("pointerRight.bmp", area, _comparator, 0, 0);
 
-    
     xx = (getGameWidth() - 780) / 2;
     yy = (getGameHeight() - 585) / 2;
     xx += _tl.x;
     yy += _tl.y;
-    
+
     area = new Rectangle(xx + 30, yy + 25, 65, 20);
     _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
 
@@ -305,7 +301,7 @@ public class ScreenScanner {
     String filename = "popup " + date + ".png";
     captureGame(filename);
   }
-  
+
   public void captureGame(String filename) {
     writeImage(new Rectangle(new Point(_tl.x, _tl.y), new Dimension(getGameWidth(), getGameHeight())), filename);
   }
@@ -573,7 +569,7 @@ public class ScreenScanner {
   public ImageData getDaylightY() {
     return _daylightY;
   }
-  
+
   public ImageData getPromoX() {
     return _promoX;
   }
