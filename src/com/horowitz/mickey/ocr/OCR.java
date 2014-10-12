@@ -2,6 +2,7 @@ package com.horowitz.mickey.ocr;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.Pixel;
 
 public class OCR {
-  private Color               _foreground = Color.BLACK;
+  private Color               _foreground = new Color(34, 34, 34);
   private Color               _background = Color.WHITE;
   private Map<Integer, Color> _colors;
 
@@ -27,19 +28,31 @@ public class OCR {
     _colors.put(0, _background);
   }
 
+  private void writeImage(BufferedImage image, int n) {
+    if (false)
+      try {
+        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+  }
+
   public String scanImage(BufferedImage image) {
-    BufferedImage subimage = image.getSubimage(0, 0, image.getWidth(), image.getHeight());// a copy actually
-    BufferedImage subimage2 = image.getSubimage(0, 0, image.getWidth(), image.getHeight());// a copy actually
-    //subimage = cutEdges(subimage, _foreground);
-    String result = null;
+    BufferedImage subimage = image.getSubimage(0, 0, image.getWidth(), image.getHeight());
+    writeImage(subimage, 1);
+    subimage = cutEdges(subimage, _foreground);
+    writeImage(subimage, 2);
+    BufferedImage subimage2 = subimage.getSubimage(0, 0, subimage.getWidth(), subimage.getHeight());
+    String result = "";
 
     Masks masks = new Masks();
     int w = masks.getMaxWidth();
     int h = masks.getMaxHeight();
 
-    while (subimage.getWidth() >= w) {
+    while (subimage.getWidth() > 0) {
       // we have space to work
       subimage2 = subimage.getSubimage(0, 0, w, subimage.getHeight());
+      writeImage(subimage2, 101);
 
       Iterator<Mask> it = masks.getMasks().iterator();
       List<Mask> found = new ArrayList<Mask>();
@@ -54,22 +67,33 @@ public class OCR {
           }
         }
       }
-      
+
       if (found.size() == 1) {
         // yahoooo
         Mask m = found.get(0);
         result += m.getName();
         // cut the chunk and move forward
+        if (subimage.getWidth() - m.getWidth() <= 0) {
+          // it's over
+          break;
+        }
         subimage = subimage.getSubimage(0 + m.getWidth(), 0, subimage.getWidth() - m.getWidth(), subimage.getHeight());
+        writeImage(subimage, 102);
       } else if (found.isEmpty()) {
         int howMuchToTheRight = 1; // or w
-        subimage = subimage.getSubimage(0 + howMuchToTheRight, 0, subimage.getWidth() - howMuchToTheRight, subimage.getHeight());
+        if (subimage.getWidth() - howMuchToTheRight > w){
+          subimage = subimage.getSubimage(0 + howMuchToTheRight, 0, subimage.getWidth() - howMuchToTheRight, subimage.getHeight());
+          writeImage(subimage, 103);
+        } else {
+          //we're done
+          break;
+        }
       } else {
         // size is 2 or more -> not good!!!
         // skip for now
       }
 
-    }//while
+    }// while
 
     return result;
   }
@@ -96,14 +120,15 @@ public class OCR {
       }
     }
     subimage = image.getSubimage(0, yStart, image.getWidth(), image.getHeight() - yStart);
+    writeImage(subimage, 3);
 
     // cut south
     lineClean = true;
-    yStart = image.getHeight() - 1;
-    for (int y = image.getHeight() - 1; y >= 0; y--) {
+    yStart = subimage.getHeight() - 1;
+    for (int y = subimage.getHeight() - 1; y >= 0; y--) {
 
-      for (int x = 0; x < image.getWidth(); x++) {
-        int diff = compareTwoColors(image.getRGB(x, y), foreground.getRGB());
+      for (int x = 0; x < subimage.getWidth(); x++) {
+        int diff = compareTwoColors(subimage.getRGB(x, y), foreground.getRGB());
         if (diff <= 1100) {
           // found one, line not clean
           lineClean = false;
@@ -116,15 +141,15 @@ public class OCR {
         break;
       }
     }
-    subimage = image.getSubimage(0, 0, image.getWidth(), image.getHeight() - yStart + 1);
-
+    subimage = subimage.getSubimage(0, 0, subimage.getWidth(), yStart + 1);
+    writeImage(subimage, 4);
     // cut west
     boolean colClean = true;
     int xStart = 0;
-    for (int xx = 0; xx < image.getWidth(); xx++) {
+    for (int xx = 0; xx < subimage.getWidth(); xx++) {
 
-      for (int y = 0; y < image.getHeight(); y++) {
-        int diff = compareTwoColors(image.getRGB(xx, y), foreground.getRGB());
+      for (int y = 0; y < subimage.getHeight(); y++) {
+        int diff = compareTwoColors(subimage.getRGB(xx, y), foreground.getRGB());
         if (diff <= 1100) {
           // found one, line not clean
           colClean = false;
@@ -137,15 +162,15 @@ public class OCR {
         break;
       }
     }
-    subimage = image.getSubimage(xStart, 0, image.getWidth() - xStart, image.getHeight());
-
+    subimage = subimage.getSubimage(xStart, 0, subimage.getWidth() - xStart, subimage.getHeight());
+    writeImage(subimage, 5);
     // cut east
     colClean = true;
-    xStart = image.getWidth() - 1;
-    for (int xx = image.getWidth() - 1; xx >= 0; xx--) {
+    xStart = subimage.getWidth() - 1;
+    for (int xx = subimage.getWidth() - 1; xx >= 0; xx--) {
 
-      for (int y = 0; y < image.getHeight(); y++) {
-        int diff = compareTwoColors(image.getRGB(xx, y), foreground.getRGB());
+      for (int y = 0; y < subimage.getHeight(); y++) {
+        int diff = compareTwoColors(subimage.getRGB(xx, y), foreground.getRGB());
         if (diff <= 1100) {
           // found one, line not clean
           colClean = false;
@@ -158,20 +183,18 @@ public class OCR {
         break;
       }
     }
-    subimage = image.getSubimage(0, 0, image.getWidth() - xStart + 1, image.getHeight());
-
+    subimage = subimage.getSubimage(0, 0, xStart + 1, subimage.getHeight());
+    writeImage(subimage, 6);
     return subimage;
   }
 
   public Pixel findMask(BufferedImage screen, Mask mask) {
-    for (int i = 0; i < (screen.getWidth() - mask.getWidth()); i++) {
-      for (int j = 0; j < (screen.getHeight() - mask.getHeight()); j++) {
+    for (int i = 0; i <= (screen.getWidth() - mask.getWidth()); i++) {
+      for (int j = 0; j <= (screen.getHeight() - mask.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, mask.getWidth(), mask.getHeight());
+        writeImage(subimage, 1001);
         // public boolean compare2(BufferedImage image, Map<Integer, Color> colors, Pixel[] indices, double percentage, int diffIndex) {
         if (compare2(subimage, _colors, mask.getPixelsAsArray(), 0.05, 1100)) {
-          /*
-           * try { ImageIO.write(subimage, "PNG", new File("subimage.png")); } catch (IOException e) { e.printStackTrace(); }
-           */
           Pixel p = new Pixel(i, j);
           return p;
         }
@@ -246,10 +269,22 @@ public class OCR {
 
   public static void main(String[] args) {
     try {
-      final BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
-
       OCR ocr = new OCR();
+
+      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
       String res = ocr.scanImage(image);
+      System.out.println(res);
+      image = ImageIO.read(ImageManager.getImageURL("test2.bmp"));
+      res = ocr.scanImage(image);
+      System.out.println(res);
+      image = ImageIO.read(ImageManager.getImageURL("test3.bmp"));
+      res = ocr.scanImage(image);
+      System.out.println(res);
+      image = ImageIO.read(ImageManager.getImageURL("test4.bmp"));
+      res = ocr.scanImage(image);
+      System.out.println(res);
+      image = ImageIO.read(ImageManager.getImageURL("test5.bmp"));
+      res = ocr.scanImage(image);
       System.out.println(res);
 
     } catch (IOException e) {

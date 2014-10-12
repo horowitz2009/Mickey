@@ -23,6 +23,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -65,7 +66,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.705";
+  private static final String APP_TITLE    = "v0.706";
 
   private boolean             _devMode     = false;
 
@@ -1840,11 +1841,42 @@ public final class MainFrame extends JFrame {
             _mouse.click(p.x + 267, p.y + 335);
             _mouse.delay(2000);
 
+
             // click materials
             _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
             _mouse.delay(1000);
-            _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".png");
-            _mouse.delay(300);
+            Pixel pm = null;
+            int tries = 0;
+            do {
+              pm = _scanner.getMaterials().findImage();
+              if (pm == null) {
+                //try again after 1 second
+                try {
+                  Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+              }
+              tries++;
+            } while (pm == null && tries < 3);
+            
+            if (pm != null) {
+              //_mouse.mouseMove(pm);
+              //_mouse.delay(2000);
+              pm = new Pixel(pm.x - 313, pm.y - 31);
+              //_mouse.mouseMove(pm);
+              MaterialsScanner mscanner = new MaterialsScanner();
+              Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
+              BufferedImage materialsImage = new Robot().createScreenCapture(rect);
+              System.out.println(contractor.trim());
+              System.out.println("_________________________");
+              mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
+              System.out.println();
+              _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".png");
+              _mouse.delay(300);
+            }
+
+            
+            
 
             // click close
             _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
@@ -1880,12 +1912,9 @@ public final class MainFrame extends JFrame {
       // handlePopups();
 
       captureContractors(true);
-
+      
       // fixTheGame();
-    } catch (SessionTimeOutException e) {
-      LOGGER.info("session timeout");
-      e.printStackTrace();
-    } catch (Exception e) {
+    } catch (Throwable e) {
       e.printStackTrace();
     }
 

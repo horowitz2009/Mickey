@@ -108,9 +108,35 @@ public class Locations {
   public static Location[] LOC_PAGE2       = new Location[] { LOC_1HOUR, LOC_2HOURS, LOC_3HOURS, };
   public static Location[] LOC_PAGE3       = new Location[] { LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, };
   public static Location[] LOC_PAGE4       = new Location[] { LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, };
-  
+
   public static Location[] ALL             = new Location[] { LOC_0MIN, LOC_6MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS, LOC_3HOURS,
       LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, };
+
+  public static Material   MAT_1_1         = new Material("Gold", new Rectangle(53 + 30, 83 + 24, 100, 10), 1);
+  public static Material   MAT_1_2         = new Material("Wood", new Rectangle(216 + 30, 83 + 24, 100, 10), 1);
+  public static Material   MAT_1_3         = new Material("Nails", new Rectangle(379 + 30, 83 + 24, 100, 10), 1);
+  public static Material   MAT_1_4         = new Material("Bricks", new Rectangle(542 + 30, 83 + 24, 100, 10), 1);
+
+  public static Material   MAT_2_1         = new Material("Glass", new Rectangle(53 + 30, 188 + 24, 100, 10), 1);
+  public static Material   MAT_2_2         = new Material("Fuel", new Rectangle(216 + 30, 188 + 24, 100, 10), 1);
+  public static Material   MAT_2_3         = new Material("Steel", new Rectangle(379 + 30, 188 + 24, 100, 10), 1);
+  public static Material   MAT_2_4         = new Material("Gravel", new Rectangle(542 + 30, 188 + 24, 100, 10), 1);
+
+  public static Material   MAT_3_1         = new Material("U-235", new Rectangle(53 + 30, 293 + 24, 100, 10), 1);
+  public static Material   MAT_3_2         = new Material("Cement", new Rectangle(216 + 30, 293 + 24, 100, 10), 1);
+  public static Material   MAT_3_3         = new Material("Rubber", new Rectangle(379 + 30, 293 + 24, 100, 10), 1);
+  public static Material   MAT_3_4         = new Material("Carbon", new Rectangle(542 + 30, 293 + 24, 100, 10), 1);
+
+  public static Material   MAT_4_1         = new Material("Titanium", new Rectangle(53 + 30, 398 + 24, 100, 10), 1);
+  public static Material   MAT_4_2         = new Material("Marble", new Rectangle(216 + 30, 398 + 24, 100, 10), 1);
+  public static Material   MAT_4_3         = new Material("Wires", new Rectangle(379 + 30, 398 + 24, 100, 10), 1);
+  public static Material   MAT_4_4         = new Material("Plastics", new Rectangle(542 + 30, 398 + 24, 100, 10), 1);
+
+  public static Material   MAT_1_1_2       = new Material("Silicon", new Rectangle(53 + 30, 83 + 24, 100, 10), 2);
+
+  public static Material[] MATERIALS_1     = new Material[] { MAT_1_1, MAT_1_2, MAT_1_3, MAT_1_4, MAT_2_1, MAT_2_2, MAT_2_3, MAT_2_4, MAT_3_1,
+      MAT_3_2, MAT_3_3, MAT_3_4, MAT_4_1, MAT_4_2, MAT_4_3, MAT_4_4, };
+  public static Material[] MATERIALS_2     = new Material[] { MAT_1_1_2 };
 
   /**
    * @deprecated

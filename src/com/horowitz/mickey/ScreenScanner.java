@@ -68,6 +68,7 @@ public class ScreenScanner {
   private ImageData            _promoX                        = null;
 
   private ImageData            _trainManagement               = null;
+  private ImageData            _materials                     = null;
 
   private ImageData            _topLeftImage                  = null;
 
@@ -210,6 +211,13 @@ public class ScreenScanner {
     area = new Rectangle(xx + 30, yy + 25, 65, 20);
     _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
 
+    xx = (getGameWidth() - 760) / 2;
+    yy = (getGameHeight() - 550) / 2;
+    xx += _tl.x;
+    yy += _tl.y;
+
+    area = new Rectangle(xx + 298, yy + 27, 111, 40);
+    _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -580,6 +588,10 @@ public class ScreenScanner {
 
   public ImageData getContracts() {
     return _contracts;
+  }
+
+  public ImageData getMaterials() {
+    return _materials;
   }
 
 }
