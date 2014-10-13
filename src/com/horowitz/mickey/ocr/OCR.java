@@ -20,12 +20,14 @@ public class OCR {
   private Color               _foreground = new Color(34, 34, 34);
   private Color               _background = Color.WHITE;
   private Map<Integer, Color> _colors;
+  private String              _masksFilename;
 
-  public OCR() {
+  public OCR(String masksFilename) {
     super();
     _colors = new HashMap<>(2);
     _colors.put(1, _foreground);
     _colors.put(0, _background);
+    _masksFilename = masksFilename;
   }
 
   private void writeImage(BufferedImage image, int n) {
@@ -45,7 +47,7 @@ public class OCR {
     BufferedImage subimage2 = subimage.getSubimage(0, 0, subimage.getWidth(), subimage.getHeight());
     String result = "";
 
-    Masks masks = new Masks();
+    Masks masks = new Masks(_masksFilename);
     int w = masks.getMaxWidth();
     int wmin = masks.getMinWidth();
     int h = masks.getMaxHeight();
@@ -277,7 +279,7 @@ public class OCR {
 
   public static void main(String[] args) {
     try {
-      OCR ocr = new OCR();
+      OCR ocr = new OCR("masks.txt");
 
       BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
       String res = ocr.scanImage(image);

@@ -17,7 +17,7 @@ public class MaterialsScanner {
 
   public MaterialsScanner() {
     super();
-    _ocr = new OCR();
+    _ocr = new OCR("masks.txt");
   }
 
   public Material[] scanMaterials(BufferedImage materialsImage, MaterialLocation[] materials) {

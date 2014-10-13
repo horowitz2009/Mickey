@@ -15,6 +15,7 @@ import com.horowitz.mickey.Pixel;
 
 public class Masks {
 
+  private String     _masksFilename;
   private List<Mask> _masks;
   private int        _maxWidth;
   private int        _minWidth;
@@ -24,9 +25,10 @@ public class Masks {
     return _masks;
   }
 
-  public Masks() {
+  public Masks(String masksFilename) {
     super();
     _masks = new ArrayList<Mask>();
+    _masksFilename = masksFilename;
     loadMasks();
   }
 
@@ -34,7 +36,7 @@ public class Masks {
     _maxWidth = 0;
     _minWidth = 100;
     _maxHeight = 0;
-    final InputStream stream = OCR.class.getClassLoader().getResourceAsStream("masks.txt");
+    final InputStream stream = OCR.class.getClassLoader().getResourceAsStream(_masksFilename);
 
     // InputStreamReader reader = new InputStreamReader(stream);
     DataInputStream reader = new DataInputStream(stream);
@@ -156,7 +158,7 @@ public class Masks {
   }
 
   public static void main(String[] args) {
-    Masks masks = new Masks();
+    Masks masks = new Masks("masks.txt");
     masks.loadMasks();
     masks.printAll();
   }

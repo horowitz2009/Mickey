@@ -1841,7 +1841,7 @@ public final class MainFrame extends JFrame {
         }
         if (found) {
           _mouse.delay(500);
-          _scanner.captureGame("status " + n + "A " + contractor.trim() + ".png");
+          _scanner.captureGame("status " + n + "A " + contractor.trim() + ".bmp");
           _mouse.delay(500);
           if (withMaterialsStatus) {
             // click visit
@@ -1878,7 +1878,7 @@ public final class MainFrame extends JFrame {
               Material[] scanMaterials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
               contractors.add(new Contractor(contractor.trim(), scanMaterials));
               System.out.println();
-              _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".png");
+              _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".bmp");
               _mouse.delay(300);
             }
 

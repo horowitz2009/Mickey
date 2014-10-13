@@ -295,7 +295,7 @@ public class ScreenScanner {
 
   public void writeImage(Rectangle rect, String filename) {
     try {
-      ImageIO.write(new Robot().createScreenCapture(rect), "PNG", new File(filename));
+      ImageIO.write(new Robot().createScreenCapture(rect), filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
     } catch (IOException e) {
       e.printStackTrace();
     } catch (AWTException e) {
