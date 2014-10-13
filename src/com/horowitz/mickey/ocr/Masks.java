@@ -20,15 +20,17 @@ public class Masks {
   private int        _maxWidth;
   private int        _minWidth;
   private int        _maxHeight;
+  private int        _empty;
 
   public List<Mask> getMasks() {
     return _masks;
   }
 
-  public Masks(String masksFilename) {
+  public Masks(String masksFilename, int empty) {
     super();
     _masks = new ArrayList<Mask>();
     _masksFilename = masksFilename;
+    _empty = empty;
     loadMasks();
   }
 
@@ -115,7 +117,7 @@ public class Masks {
     for (String row : rows) {
       for (int x = 0; x < row.length(); ++x) {
         final char ch = row.charAt(x);
-        int n = 0;
+        int n = _empty;
         if (ch != ' ') {
           n = Integer.parseInt("" + ch);
         }
@@ -123,7 +125,7 @@ public class Masks {
 
       }
       for (int x = row.length(); x < width; ++x) {
-        list.add(new Pixel(x, y, 0));
+        list.add(new Pixel(x, y, _empty));
       }
       y++;
     }
@@ -158,7 +160,7 @@ public class Masks {
   }
 
   public static void main(String[] args) {
-    Masks masks = new Masks("masks.txt");
+    Masks masks = new Masks("masks.txt", 0);
     masks.loadMasks();
     masks.printAll();
   }

@@ -38,7 +38,7 @@ public class MaterialsScanner {
   
   public static void main(String[] args) {
     try {
-      BufferedImage image = ImageIO.read(ImageManager.getImageURL("wolfgangmaterials.bmp"));
+      BufferedImage image = ImageIO.read(ImageManager.getImageURL("giovannimaterials.bmp"));
       MaterialsScanner scanner = new MaterialsScanner();
       Material[] scanMaterials = scanner.scanMaterials(image, Locations.MATERIALS_1);
       System.err.println(scanMaterials);

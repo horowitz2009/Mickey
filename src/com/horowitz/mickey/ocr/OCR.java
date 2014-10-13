@@ -17,21 +17,28 @@ import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.Pixel;
 
 public class OCR {
-  private Color               _foreground = new Color(34, 34, 34);
-  private Color               _background = Color.WHITE;
+  private Color               _foreground;
   private Map<Integer, Color> _colors;
   private String              _masksFilename;
+  private int                 _masksEmpty;
+
+  public OCR(String masksFilename, int maskEmpty, Color foreground, Color background) {
+    super();
+    _masksFilename = masksFilename;
+    _masksEmpty = maskEmpty;
+    _colors = new HashMap<>(2);
+    _foreground = foreground;
+    _colors.put(1, foreground);
+    _colors.put(0, background);
+
+  }
 
   public OCR(String masksFilename) {
-    super();
-    _colors = new HashMap<>(2);
-    _colors.put(1, _foreground);
-    _colors.put(0, _background);
-    _masksFilename = masksFilename;
+    this(masksFilename, 0, new Color(34, 34, 34), Color.WHITE);
   }
 
   private void writeImage(BufferedImage image, int n) {
-    if (false)
+    if (true)
       try {
         ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
@@ -47,7 +54,7 @@ public class OCR {
     BufferedImage subimage2 = subimage.getSubimage(0, 0, subimage.getWidth(), subimage.getHeight());
     String result = "";
 
-    Masks masks = new Masks(_masksFilename);
+    Masks masks = new Masks(_masksFilename, _masksEmpty);
     int w = masks.getMaxWidth();
     int wmin = masks.getMinWidth();
     int h = masks.getMaxHeight();
@@ -92,12 +99,13 @@ public class OCR {
           subimage = subimage.getSubimage(0 + howMuchToTheRight, 0, subimage.getWidth() - howMuchToTheRight, subimage.getHeight());
           writeImage(subimage, 103);
         } else {
-          //we're done
+          // we're done
           break;
         }
       } else {
         // size is 2 or more -> not good!!!
         // skip for now
+        System.err.println("UH OH!!!");
       }
 
     }// while
@@ -244,15 +252,16 @@ public class OCR {
     int countErrors = 0;
     int possibleErrors = (int) (indices.length * percentage);
     for (int i = 0; i < indices.length; i++) {
-      final int rgb1 = colors.get(indices[i].weight).getRGB();
-      final int rgb2 = image.getRGB(indices[i].x, indices[i].y);
-      final int diff = Math.abs(((rgb1 >> 16) & 0xFF) - ((rgb2 >> 16) & 0xFF)) * Math.abs(((rgb1 >> 16) & 0xFF) - ((rgb2 >> 16) & 0xFF))
-          + Math.abs(((rgb1 >> 8) & 0xFF) - ((rgb2 >> 8) & 0xFF)) * Math.abs(((rgb1 >> 8) & 0xFF) - ((rgb2 >> 8) & 0xFF))
-          + Math.abs(((rgb1 >> 0) & 0xFF) - ((rgb2 >> 0) & 0xFF)) * Math.abs(((rgb1 >> 0) & 0xFF) - ((rgb2 >> 0) & 0xFF));
-      if (diff > diffIndex)
-        countErrors++;
-      if (countErrors > possibleErrors)
-        return false;
+      Color color = colors.get(indices[i].weight);
+      if (color != null) {
+        final int rgb1 = color.getRGB();
+        final int rgb2 = image.getRGB(indices[i].x, indices[i].y);
+        final int diff = compareTwoColors(rgb1, rgb2);
+        if (diff > diffIndex)
+          countErrors++;
+        if (countErrors > possibleErrors)
+          return false;
+      }
     }
     return true;
   }
@@ -278,27 +287,62 @@ public class OCR {
   }
 
   public static void main(String[] args) {
+//    try {
+//      OCR ocr = new OCR("masks.txt");
+//
+//      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
+//      String res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test2.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test3.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test4.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test5.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//    System.out.println();
+//    try {
+//      OCR ocr = new OCR("masksMission.txt", 3, new Color(200,1,1), new Color(245,245,245));
+//      
+//      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test10_1.bmp"));
+//      String res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test10_2.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//      image = ImageIO.read(ImageManager.getImageURL("test10_3.bmp"));
+//      res = ocr.scanImage(image);
+//      System.out.println(res);
+//      
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
     try {
-      OCR ocr = new OCR("masks.txt");
-
-      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
+      OCR ocr = new OCR("masksMission.txt", 3, new Color(103,103,103), new Color(245,245,245));
+      
+      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test10_1.bmp"));
       String res = ocr.scanImage(image);
       System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test2.bmp"));
+      image = ImageIO.read(ImageManager.getImageURL("test10_2.bmp"));
       res = ocr.scanImage(image);
       System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test3.bmp"));
+      image = ImageIO.read(ImageManager.getImageURL("test10_3.bmp"));
       res = ocr.scanImage(image);
       System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test4.bmp"));
+      image = ImageIO.read(ImageManager.getImageURL("test10_4.bmp"));
       res = ocr.scanImage(image);
       System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test5.bmp"));
-      res = ocr.scanImage(image);
-      System.out.println(res);
-
+      
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
