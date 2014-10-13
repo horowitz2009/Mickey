@@ -47,11 +47,16 @@ public class OCR {
 
     Masks masks = new Masks();
     int w = masks.getMaxWidth();
+    int wmin = masks.getMinWidth();
     int h = masks.getMaxHeight();
 
-    while (subimage.getWidth() > 0) {
+    while (subimage.getWidth() >= wmin) {
       // we have space to work
-      subimage2 = subimage.getSubimage(0, 0, w, subimage.getHeight());
+      int ww = w;
+      if (subimage.getWidth() < w) {
+        ww = subimage.getWidth();
+      }
+      subimage2 = subimage.getSubimage(0, 0, ww, subimage.getHeight());
       writeImage(subimage2, 101);
 
       Iterator<Mask> it = masks.getMasks().iterator();
@@ -81,7 +86,7 @@ public class OCR {
         writeImage(subimage, 102);
       } else if (found.isEmpty()) {
         int howMuchToTheRight = 1; // or w
-        if (subimage.getWidth() - howMuchToTheRight > w){
+        if (subimage.getWidth() - howMuchToTheRight >= wmin) {
           subimage = subimage.getSubimage(0 + howMuchToTheRight, 0, subimage.getWidth() - howMuchToTheRight, subimage.getHeight());
           writeImage(subimage, 103);
         } else {
@@ -189,6 +194,9 @@ public class OCR {
   }
 
   public Pixel findMask(BufferedImage screen, Mask mask) {
+    if (screen.getWidth() < mask.getWidth()) {
+      return null;
+    }
     for (int i = 0; i <= (screen.getWidth() - mask.getWidth()); i++) {
       for (int j = 0; j <= (screen.getHeight() - mask.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, mask.getWidth(), mask.getHeight());

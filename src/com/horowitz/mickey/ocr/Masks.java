@@ -17,6 +17,7 @@ public class Masks {
 
   private List<Mask> _masks;
   private int        _maxWidth;
+  private int        _minWidth;
   private int        _maxHeight;
 
   public List<Mask> getMasks() {
@@ -31,6 +32,7 @@ public class Masks {
 
   private void loadMasks() {
     _maxWidth = 0;
+    _minWidth = 100;
     _maxHeight = 0;
     final InputStream stream = OCR.class.getClassLoader().getResourceAsStream("masks.txt");
 
@@ -76,6 +78,10 @@ public class Masks {
               _maxHeight = mask.getHeight();
             if (mask.getWidth() > _maxWidth)
               _maxWidth = mask.getWidth();
+            
+            if (mask.getWidth() < _minWidth)
+              _minWidth = mask.getWidth();
+            
             _masks.add(mask);
 
           } else {
@@ -124,6 +130,10 @@ public class Masks {
 
   public int getMaxWidth() {
     return _maxWidth;
+  }
+
+  public int getMinWidth() {
+    return _minWidth;
   }
 
   public int getMaxHeight() {

@@ -24,8 +24,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,6 +62,9 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.horowitz.mickey.data.Contractor;
+import com.horowitz.mickey.data.Material;
+
 /**
  * @author zhristov
  * 
@@ -66,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.706";
+  private static final String APP_TITLE    = "v0.707";
 
   private boolean             _devMode     = false;
 
@@ -1791,18 +1798,18 @@ public final class MainFrame extends JFrame {
 
   private void captureContractors(boolean withMaterialsStatus) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     String s = _settings.getProperty("contractors");
-    String[] contractors = s.split(",");// do not forget to trim before using
+    String[] contractorNames = s.split(",");// do not forget to trim before using
 
     handlePopups();
-
+    List<Contractor> contractors = new ArrayList<Contractor>();
     // open contracts
     _mouse.click(_scanner.getTopLeft().x + 234, _scanner.getBottomRight().y - 42);
     _mouse.delay(1000);
 
     Pixel p = _scanner.getContracts().findImage();
     Rectangle area;
-    //Rectangle area = _scanner.getContracts().getDefaultArea();
-    //_scanner.writeImage(area, "bingo.png");
+    // Rectangle area = _scanner.getContracts().getDefaultArea();
+    // _scanner.writeImage(area, "bingo.png");
 
     if (p != null) {
       // we're on the right track
@@ -1815,7 +1822,7 @@ public final class MainFrame extends JFrame {
       int track = 500;
       area = new Rectangle(p.x, p.y + 31, 100, 484);
       int n = 0;
-      for (String contractor : contractors) {
+      for (String contractor : contractorNames) {
         n++;
         String cname = contractor.trim() + ".bmp";
         boolean found = false;
@@ -1841,7 +1848,6 @@ public final class MainFrame extends JFrame {
             _mouse.click(p.x + 267, p.y + 335);
             _mouse.delay(2000);
 
-
             // click materials
             _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
             _mouse.delay(1000);
@@ -1850,7 +1856,7 @@ public final class MainFrame extends JFrame {
             do {
               pm = _scanner.getMaterials().findImage();
               if (pm == null) {
-                //try again after 1 second
+                // try again after 1 second
                 try {
                   Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -1858,25 +1864,23 @@ public final class MainFrame extends JFrame {
               }
               tries++;
             } while (pm == null && tries < 3);
-            
+
             if (pm != null) {
-              //_mouse.mouseMove(pm);
-              //_mouse.delay(2000);
+              // _mouse.mouseMove(pm);
+              // _mouse.delay(2000);
               pm = new Pixel(pm.x - 313, pm.y - 31);
-              //_mouse.mouseMove(pm);
+              // _mouse.mouseMove(pm);
               MaterialsScanner mscanner = new MaterialsScanner();
               Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
               BufferedImage materialsImage = new Robot().createScreenCapture(rect);
               System.out.println(contractor.trim());
               System.out.println("_________________________");
-              mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
+              Material[] scanMaterials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
+              contractors.add(new Contractor(contractor.trim(), scanMaterials));
               System.out.println();
               _scanner.captureGame("status " + n + "B " + contractor.trim() + " materials" + ".png");
               _mouse.delay(300);
             }
-
-            
-            
 
             // click close
             _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
@@ -1894,6 +1898,46 @@ public final class MainFrame extends JFrame {
       _mouse.delay(400);
       goHomeIfNeeded();
     }
+
+    processContractors(contractors);
+  }
+
+  private void processContractors(List<Contractor> contractors) {
+    try {
+      File file = new File("contractors.txt");
+      FileOutputStream fos = new FileOutputStream(file);
+      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos, "8859_1"));
+
+      File file2 = new File("contractors.csv");
+      FileOutputStream fos2 = new FileOutputStream(file2);
+      BufferedWriter bw2 = new BufferedWriter(new OutputStreamWriter(fos2, "8859_1"));
+      
+      try {
+        for (Contractor contractor : contractors) {
+          bw.write(contractor.getName());
+          bw2.write(contractor.getName()+",");
+          bw.newLine();
+          Material[] materials = contractor.getMaterials();
+          for (int i = 0; i < materials.length; i++) {
+            bw.write(materials[i].getName() + ": " + materials[i].getAmount());
+            bw2.write(materials[i].getAmount() + ",");
+            bw.newLine();
+          }
+          bw.newLine();
+          bw2.newLine();
+        }
+      } finally {
+        bw.flush();
+        bw.close();
+        bw2.flush();
+        bw2.close();
+      }
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
@@ -1912,7 +1956,7 @@ public final class MainFrame extends JFrame {
       // handlePopups();
 
       captureContractors(true);
-      
+
       // fixTheGame();
     } catch (Throwable e) {
       e.printStackTrace();
