@@ -4,7 +4,8 @@ package com.horowitz.mickey.data;
 public class Contractor {
   private String     _name;
   private Material[] _materials;
-  private int        currentMissionNumber;
+  private int        _currentMissionNumber;
+  private int        _endMissionNumber;
 
   public Contractor(String name, Material[] materials) {
     super();
@@ -21,11 +22,19 @@ public class Contractor {
   }
 
   public int getCurrentMissionNumber() {
-    return currentMissionNumber;
+    return _currentMissionNumber;
+  }
+
+  public int getEndMissionNumber() {
+    return _endMissionNumber;
+  }
+
+  public void setEndMissionNumber(int endMissionNumber) {
+    _endMissionNumber = endMissionNumber;
   }
 
   public void setCurrentMissionNumber(int currentMissionNumber) {
-    this.currentMissionNumber = currentMissionNumber;
+    this._currentMissionNumber = currentMissionNumber;
   }
 
   public String getName() {

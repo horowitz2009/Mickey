@@ -36,6 +36,16 @@ public class MaterialsScanner {
     return res.toArray(new Material[0]);
   }
   
+  
+  public ImageData createMaterialImageData(String name, int xOff, int yOff) throws IOException {
+    ImageData id = new ImageData(name+".bmp", new Rectangle(0, 0, 288, 325) , new SimilarityImageComparator(0.04, 20), xOff, yOff);
+    return id;
+  }
+
+  public ImageData createMaterialImageData(String name) throws IOException {
+    return createMaterialImageData(name, 43, 0);
+  }
+  
   public static void main(String[] args) {
     try {
       BufferedImage image = ImageIO.read(ImageManager.getImageURL("giovannimaterials.bmp"));

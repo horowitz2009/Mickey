@@ -38,7 +38,7 @@ public class OCR {
   }
 
   private void writeImage(BufferedImage image, int n) {
-    if (true)
+    if (false)
       try {
         ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
@@ -173,6 +173,8 @@ public class OCR {
       }
       if (!colClean) {
         xStart = xx;
+        if (xStart > 0)
+          xStart--;
         // enough
         break;
       }
@@ -194,6 +196,8 @@ public class OCR {
       }
       if (!colClean) {
         xStart = xx;
+        if (xStart < subimage.getWidth() - 1)
+          xStart++;
         // enough
         break;
       }
@@ -287,64 +291,44 @@ public class OCR {
   }
 
   public static void main(String[] args) {
-//    try {
-//      OCR ocr = new OCR("masks.txt");
-//
-//      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test.bmp"));
-//      String res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test2.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test3.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test4.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test5.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
-//    System.out.println();
-//    try {
-//      OCR ocr = new OCR("masksMission.txt", 3, new Color(200,1,1), new Color(245,245,245));
-//      
-//      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test10_1.bmp"));
-//      String res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test10_2.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//      image = ImageIO.read(ImageManager.getImageURL("test10_3.bmp"));
-//      res = ocr.scanImage(image);
-//      System.out.println(res);
-//      
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
     try {
-      OCR ocr = new OCR("masksMission.txt", 3, new Color(103,103,103), new Color(245,245,245));
-      
-      BufferedImage image = ImageIO.read(ImageManager.getImageURL("test10_1.bmp"));
-      String res = ocr.scanImage(image);
-      System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test10_2.bmp"));
-      res = ocr.scanImage(image);
-      System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test10_3.bmp"));
-      res = ocr.scanImage(image);
-      System.out.println(res);
-      image = ImageIO.read(ImageManager.getImageURL("test10_4.bmp"));
-      res = ocr.scanImage(image);
-      System.out.println(res);
-      
+      OCR ocr = new OCR("masks.txt");
+      testImage(ocr, "test.bmp", "218250");
+      testImage(ocr, "test2.bmp", "115126");
+      testImage(ocr, "test3.bmp", "115126");
+      testImage(ocr, "test4.bmp", "775");
+      testImage(ocr, "test5.bmp", "775");
+
+      ocr = new OCR("masksMission.txt", 3, new Color(200, 1, 1), new Color(245, 245, 245));
+
+      testImage(ocr, "test10_1.bmp", "25710");
+      testImage(ocr, "test10_2.bmp", "145690");
+      testImage(ocr, "test10_3.bmp", "");
+
+      ocr = new OCR("masksMission.txt", 3, new Color(103, 103, 103), new Color(245, 245, 245));
+
+      testImage(ocr, "test10_1.bmp", "/180000");
+      testImage(ocr, "test10_2.bmp", "");
+      testImage(ocr, "test10_3.bmp", "/180000");
+      testImage(ocr, "test10_4.bmp", "/17500");
+      testImage(ocr, "test10_5.bmp", "/60");
+
+      ocr = new OCR("masksMission.txt", 3, new Color(255, 255, 255), new Color(16, 161, 246));
+      testImage(ocr, "test10_white_blue.bmp", "2/90");
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private static void testImage(OCR ocr, String filename, String expectedText) throws IOException {
+    BufferedImage image = ImageIO.read(ImageManager.getImageURL(filename));
+    String res = ocr.scanImage(image);
+    System.out.println("testing " + filename);
+    System.out.println(expectedText);
+    System.out.println(res);
+    System.out.println(expectedText.equals(res) ? "ok" : "KO");
+    System.out.println();
+
   }
 
 }
