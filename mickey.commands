@@ -1,5 +1,5 @@
-command=contracts
-command.done=10-15  12 01
+command=contracts_ok
+command.done=10-15  13 44
 express=120
 free=6
 freight=10

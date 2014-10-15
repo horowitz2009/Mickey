@@ -62,6 +62,8 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.Material;
 
@@ -73,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.708a";
+  private static final String APP_TITLE    = "v0.708b";
 
   private boolean             _devMode     = false;
 
@@ -873,8 +875,9 @@ public final class MainFrame extends JFrame {
     _captureContractors.clear();
     String s = _settings.getProperty("contractors");
     String[] contractorNames = s.split(",");// do not forget to trim before using
+    int index = 0;
     for (String c : contractorNames) {
-      _captureContractors.add(c.trim());
+      _captureContractors.add(++index + "_" + c.trim());
     }
     _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
   }
@@ -1314,8 +1317,10 @@ public final class MainFrame extends JFrame {
 
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     if (_captureContractors.size() > 0) {
-      String contractor = _captureContractors.get(0);
-
+      String[] ss
+       = _captureContractors.get(0).split("_");
+      String contractor = ss[1];
+      String index = StringUtils.leftPad(ss[0], 2, "0");
       handlePopups();
 
       // open contracts
@@ -1352,7 +1357,7 @@ public final class MainFrame extends JFrame {
         }
         if (found) {
           _mouse.delay(500);
-          _scanner.captureGame("status " + contractor + ".bmp");
+          _scanner.captureGame("status " + index + "A " + contractor + ".bmp");
           _mouse.delay(100);
           if (_withMaterials) {
             // click visit
@@ -1391,7 +1396,7 @@ public final class MainFrame extends JFrame {
               _contractors.add(new Contractor(contractor, materials));
               
               System.out.println();
-              _scanner.captureGame("status " + contractor + " materials" + ".bmp");
+              _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
             }
 
