@@ -73,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.708";
+  private static final String APP_TITLE    = "v0.708a";
 
   private boolean             _devMode     = false;
 
@@ -124,6 +124,9 @@ public final class MainFrame extends JFrame {
 
   private JToolBar            _exToolbar2;
 
+  private List<String>        _captureContractors = new ArrayList<String>();
+  private boolean             _withMaterials = false;
+  
   private boolean isOneClick() {
     return _oneClick.isSelected();
   }
@@ -515,6 +518,58 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar1.add(_locateAction);
     }
+    // CAPTURE CONTRACTS 1
+    {
+      JButton b1 = new JButton(new AbstractAction("C1") {
+        public void actionPerformed(ActionEvent e) {
+          Thread myThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+              try {
+                resetContractors();
+                _withMaterials = true;
+                if (!isRunning("MAGIC")) {
+                  runMagic();
+                }
+              } catch (Exception e1) {
+                LOGGER.log(Level.WARNING, e1.getMessage());
+                e1.printStackTrace();
+              }
+            }
+            
+          });
+          myThread.start();
+        }
+      });
+      mainToolbar1.add(b1);
+    }
+    // CAPTURE CONTRACTS 2
+    {
+      JButton b1 = new JButton(new AbstractAction("C2") {
+        public void actionPerformed(ActionEvent e) {
+          Thread myThread = new Thread(new Runnable() {
+            
+            @Override
+            public void run() {
+              try {
+                resetContractors();
+                _withMaterials = false;
+                if (!isRunning("MAGIC")) {
+                  runMagic();
+                }
+              } catch (Exception e1) {
+                LOGGER.log(Level.WARNING, e1.getMessage());
+                e1.printStackTrace();
+              }
+            }
+            
+          });
+          myThread.start();
+        }
+      });
+      mainToolbar1.add(b1);
+    }
     // RESET
     {
       _resetAction = new JButton(new AbstractAction("Reset") {
@@ -804,17 +859,24 @@ public final class MainFrame extends JFrame {
       _commands.saveSettingsSorted();
     } else if ("contracts".equals(command)) {
       _commands.setProperty("command", command + "_ok");
-      _commands.saveSettingsSorted();
-      try {
-        stopMagic();
-        captureContractors(true);
+      //_commands.saveSettingsSorted();
+      resetContractors();
+      if (!isRunning("MAGIC")) {
         runMagic();
-      } catch (AWTException | IOException | RobotInterruptedException | SessionTimeOutException e) {
-        e.printStackTrace();
       }
       _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
       _commands.saveSettingsSorted();
     }
+  }
+
+  private void resetContractors() {
+    _captureContractors.clear();
+    String s = _settings.getProperty("contractors");
+    String[] contractorNames = s.split(",");// do not forget to trim before using
+    for (String c : contractorNames) {
+      _captureContractors.add(c.trim());
+    }
+    _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
   }
 
   private void stopMagic() {
@@ -1108,6 +1170,8 @@ public final class MainFrame extends JFrame {
 
         goHomeIfNeeded();
 
+        captureContracts();
+        
         if (_pingClick.isSelected()) {
           ping();
         }
@@ -1207,9 +1271,9 @@ public final class MainFrame extends JFrame {
           // capture trains
           pingPrefix += " trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
-          _mouse.delay(1300);
+          _mouse.delay(300);
           _mouse.click(xx + 64, yy + 101);
-          _mouse.delay(1000);
+          _mouse.delay(2300);
 
         } catch (RobotInterruptedException e) {
         }
@@ -1218,9 +1282,9 @@ public final class MainFrame extends JFrame {
           // capture international trains
           pingPrefix += " int trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
-          _mouse.delay(1300);
+          _mouse.delay(300);
           _mouse.click(xx + 127, yy + 101);
-          _mouse.delay(1000);
+          _mouse.delay(2300);
 
         } catch (RobotInterruptedException e) {
         }
@@ -1248,7 +1312,112 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
+  private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    if (_captureContractors.size() > 0) {
+      String contractor = _captureContractors.get(0);
+
+      handlePopups();
+
+      // open contracts
+      _mouse.click(_scanner.getTopLeft().x + 234, _scanner.getBottomRight().y - 42);
+      _mouse.delay(1000);
+
+      Pixel p = _scanner.getContracts().findImage();
+      Rectangle area;
+
+      if (p != null) {
+        // we're on the right track
+
+        Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
+        _mouse.mouseMove(scrollerTop);
+        _mouse.click();
+        _mouse.delay(300);
+
+        int track = 500;
+        area = new Rectangle(p.x, p.y + 31, 100, 484);
+        String cname = contractor.toLowerCase() + ".bmp";
+        boolean found = false;
+        if (findAndClick(cname, area, 15, 7, true, false)) {
+          found = true;
+        } else {
+          // drag until get it
+          int drag = 0;
+          found = false;
+          do {
+            LOGGER.info("drag from " + drag + " to " + (drag + 75));
+            _mouse.drag(scrollerTop.x, scrollerTop.y + drag, scrollerTop.x, scrollerTop.y + drag + 45);
+            found = findAndClick(cname, area, 15, 7, true, false);
+            drag += 50;
+          } while (!found && drag < track);
+        }
+        if (found) {
+          _mouse.delay(500);
+          _scanner.captureGame("status " + contractor + ".bmp");
+          _mouse.delay(100);
+          if (_withMaterials) {
+            // click visit
+            _mouse.click(p.x + 267, p.y + 335);
+            _mouse.delay(2000);
+
+            // click materials
+            _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
+            _mouse.delay(1000);
+            Pixel pm = null;
+            int tries = 0;
+            do {
+              pm = _scanner.getMaterials().findImage();
+              if (pm == null) {
+                // try again after 1 second
+                try {
+                  Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                }
+              }
+              tries++;
+            } while (pm == null && tries < 3);
+
+            if (pm != null) {
+              // _mouse.mouseMove(pm);
+              // _mouse.delay(2000);
+              pm = new Pixel(pm.x - 313, pm.y - 31);
+              // _mouse.mouseMove(pm);
+              MaterialsScanner mscanner = new MaterialsScanner();
+              Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
+              BufferedImage materialsImage = new Robot().createScreenCapture(rect);
+              System.out.println(contractor.trim());
+              System.out.println("_________________________");
+              Material[] materials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
+              
+              _contractors.add(new Contractor(contractor, materials));
+              
+              System.out.println();
+              _scanner.captureGame("status " + contractor + " materials" + ".bmp");
+              _mouse.delay(300);
+            }
+
+            // click close
+            _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
+            _mouse.delay(600);
+
+            // click
+            //_mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
+            //_mouse.delay(600);
+            goHomeIfNeeded();
+          }
+        } else {
+          LOGGER.info("Couldn't find " + contractor);
+        }
+        _captureContractors.remove(0);
+      }
+    } else {
+      //all contractors captured
+      processContractors(_contractors);
+    }
+  }
+  
+  private List<Contractor> _contractors = new ArrayList<Contractor>();
+  
+private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
     Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 50, 60, 50);
     Pixel p = _scanner.getHome().findImage(area);
     if (p != null) {
