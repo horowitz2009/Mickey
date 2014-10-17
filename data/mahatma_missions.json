@@ -1,0 +1,267 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Steam",
+        "_neededAmount": 60,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 45,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Loco",
+        "_neededAmount": 15,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 46,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 500000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 80000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 80000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 47,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 1500000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 48,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 49,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Electric",
+        "_neededAmount": 60,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 50,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Titanium",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 51,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 52,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [],
+    "_number": 53,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 60,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 54,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Wood",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "d",
+        "_material": "Cement",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 55,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 56,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Bricks",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "d",
+        "_material": "Gravel",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 57,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 58,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Loco",
+        "_neededAmount": 60,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 59,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 14000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 60,
+    "_contractor": "Mahatma",
+    "_any": false
+  }
+]

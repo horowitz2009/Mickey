@@ -1,11 +1,23 @@
 package com.horowitz.mickey.data;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Contractor {
+  
   private String     _name;
+  
   private Material[] _materials;
+  
   private int        _currentMissionNumber;
+  
   private int        _endMissionNumber;
+
+  
+  
+  public Contractor() {
+    super();
+  }
 
   public Contractor(String name, Material[] materials) {
     super();
@@ -41,4 +53,8 @@ public class Contractor {
     return _name;
   }
 
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
 }

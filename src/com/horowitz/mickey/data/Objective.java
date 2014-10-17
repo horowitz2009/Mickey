@@ -5,7 +5,7 @@ public class Objective {
     DELIVER, BUILD, SEND, SELL
   }
 
-  private int    _type;
+  private String    _type;
   /**
    * if type is deliver or build, the material is one of the 17 materials, including gold. Else it could be train type, specific locomotive, wagon or
    * train set.
@@ -15,11 +15,11 @@ public class Objective {
   private int    _currentAmount;
   private int    _initialAmount;
 
-  public Objective(int type, String material) {
+  public Objective(String type, String material) {
     this(type, material, 0, 0, 0);
   }
 
-  public Objective(int type, String material, int initialAmount, int neededAmount, int currentAmount) {
+  public Objective(String type, String material, int initialAmount, int neededAmount, int currentAmount) {
     super();
     _type = type;
     _material = material;
@@ -28,11 +28,11 @@ public class Objective {
     _currentAmount = currentAmount;
   }
 
-  public int getType() {
+  public String getType() {
     return _type;
   }
 
-  public void setType(int type) {
+  public void setType(String type) {
     _type = type;
   }
   
