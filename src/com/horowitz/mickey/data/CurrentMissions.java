@@ -5,52 +5,53 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.horowitz.mickey.Settings;
+import com.sun.xml.internal.ws.util.StringUtils;
+
 public class CurrentMissions {
 
   private Mission[] _currentMissions;
 
   public CurrentMissions() {
     super();
-    readCurrentMissions();
   }
 
-  private void readCurrentMissions() {
+  private void readCurrentMissions() throws IOException {
     try {
       _currentMissions = new DataStore().readCurrentMissions();
-    } catch (FileNotFoundException e) {
-      _currentMissions = generateInitial();
+      if (_currentMissions == null) {
+        _currentMissions = generateInitial();
+        new DataStore().writeCurrentMissions(_currentMissions);
+      }
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new IOException(e);
     }
   }
 
   private Mission[] generateInitial() {
     List<Mission> currentMissions = new ArrayList<>();
-    {
-      Mission m = new Mission();
-      m.setContractor("Bobby");
-      m.setNumber(24);
-      currentMissions.add(m);
-    }
-    {
-      Mission m = new Mission();
-      m.setContractor("Mahatma");
-      m.setNumber(45);
-      currentMissions.add(m);
-    }
-    {
-      Mission m = new Mission();
-      m.setContractor("George");
-      m.setNumber(28);
-      currentMissions.add(m);
-    }
 
+    Settings settings = new Settings();
+    settings.loadSettings();
+    String[] contractors = settings.getProperty("contractors").split(",");
+    for (String c : contractors) {
+      String contractorName = StringUtils.capitalize(c.trim().toLowerCase());
+      Mission m = new Mission();
+      m.setContractor(contractorName);
+      m.setNumber(0);
+      currentMissions.add(m);
+    }
+    
     return currentMissions.toArray(new Mission[0]);
-
   }
 
   public static void main(String[] args) {
     CurrentMissions currentMissions = new CurrentMissions();
+    try {
+      currentMissions.readCurrentMissions();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
   }
 

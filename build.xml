@@ -35,8 +35,8 @@
 		<copy file="lib/gson-2.3.jar" todir="${dropbox}/${subfolder}/lib" />
 		<copy file="lib/commons-io-2.4.jar" todir="${dropbox}/${subfolder}/lib" />
 
-		<copy todir="${dropbox}/${subfolder}" file="${subfolder}/mickey.properties" />
-		<copy todir="${dropbox}/${subfolder}" file="${subfolder}/mickey.commands" />
-
+		<copy todir="${dropbox}/${subfolder}">
+			<fileset dir="${subfolder}" includes="**" />
+		</copy>
 	</target>
 </project>

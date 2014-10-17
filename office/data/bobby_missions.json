@@ -1,0 +1,303 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Diesel",
+        "_neededAmount": 50,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 24,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 25,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 50000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 26,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 220000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 300000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 27,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 550,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 28,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 140000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 29,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 30,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Carbon",
+        "_neededAmount": 150000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 31,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Titanium",
+        "_neededAmount": 180000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 32,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 150000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 75000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 33,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Electric",
+        "_neededAmount": 75,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 34,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 1000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 35,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Rubber",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 36,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 120,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 37,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Carbon",
+        "_neededAmount": 100000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 38,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Titanium",
+        "_neededAmount": 120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 39,
+    "_contractor": "Bobby",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 12000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 40,
+    "_contractor": "Bobby",
+    "_any": false
+  }
+]

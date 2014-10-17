@@ -43,11 +43,21 @@ public class DataStore {
   }
 
   public Mission[] readCurrentMissions() throws IOException {
-    String json = FileUtils.readFileToString(new File("data/current_missions.json"));
+    File file = new File("data/current_missions.json");
+    if (file.exists()) {
+      String json = FileUtils.readFileToString(file);
 
-    Mission[] missions = _gson.fromJson(json, Mission[].class);
+      Mission[] missions = _gson.fromJson(json, Mission[].class);
 
-    return missions;
+      return missions;
+    } else {
+      return null;
+    }
   }
 
+  public void writeCurrentMissions(Mission[] currentMissions) throws IOException {
+    String json = _gson.toJson(currentMissions);
+
+    FileUtils.writeStringToFile(new File("data/current_missions.json"), json);
+  }
 }

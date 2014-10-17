@@ -38,7 +38,7 @@ public class OCR {
   }
 
   private void writeImage(BufferedImage image, int n) {
-    if (false)
+    if (true)
       try {
         ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
@@ -57,7 +57,7 @@ public class OCR {
     Masks masks = new Masks(_masksFilename, _masksEmpty);
     int w = masks.getMaxWidth();
     int wmin = masks.getMinWidth();
-    int h = masks.getMaxHeight();
+    //int h = masks.getMaxHeight();
 
     while (subimage.getWidth() >= wmin) {
       // we have space to work

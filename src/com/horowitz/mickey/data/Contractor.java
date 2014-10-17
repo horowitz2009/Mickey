@@ -11,12 +11,18 @@ public class Contractor {
   
   private int        _currentMissionNumber;
   
+  private Mission    _currentMission;
+  
   private int        _endMissionNumber;
 
   
   
   public Contractor() {
     super();
+  }
+
+  public Contractor(String name) {
+    this(name, null);
   }
 
   public Contractor(String name, Material[] materials) {
@@ -51,6 +57,14 @@ public class Contractor {
 
   public String getName() {
     return _name;
+  }
+
+  public Mission getCurrentMission() {
+    return _currentMission;
+  }
+
+  public void setCurrentMission(Mission currentMission) {
+    _currentMission = currentMission;
   }
 
   @Override
