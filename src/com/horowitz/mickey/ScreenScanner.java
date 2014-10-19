@@ -125,6 +125,9 @@ public class ScreenScanner {
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
+      
+      area = new Rectangle(0, 0, 250, 87);
+      _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
     } catch (IOException e) {
       e.printStackTrace();
     }

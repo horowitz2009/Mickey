@@ -1,11 +1,14 @@
 package com.horowitz.mickey.data;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class Objective {
   public static enum Type {
     DELIVER, BUILD, SEND, SELL
   }
 
-  private String    _type;
+  private String _type;
   /**
    * if type is deliver or build, the material is one of the 17 materials, including gold. Else it could be train type, specific locomotive, wagon or
    * train set.
@@ -35,7 +38,7 @@ public class Objective {
   public void setType(String type) {
     _type = type;
   }
-  
+
   public String getMaterial() {
     return _material;
   }
@@ -68,4 +71,8 @@ public class Objective {
     _initialAmount = initialAmount;
   }
 
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
 }

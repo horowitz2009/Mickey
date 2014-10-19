@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -54,6 +55,7 @@ public class ImageData {
     for (int i = 0; i < (screen.getWidth() - _image.getWidth()); i++) {
       for (int j = 0; j < (screen.getHeight() - _image.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, _image.getWidth(), _image.getHeight());
+        writeImage(subimage, 201);
         if (_comparator.compare(_image, subimage, _colors, _mask)) {
           Pixel p = new Pixel(i, j);
           Pixel resultPixel = new Pixel(p.x + _xOff, p.y + _yOff);
@@ -63,6 +65,16 @@ public class ImageData {
     }
     return null;
   }
+  
+  private void writeImage(BufferedImage image, int n) {
+    if (false)
+      try {
+        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+  }
+
 
   public Pixel findImage(Rectangle areaIn) {
     Rectangle area = areaIn != null ? areaIn : _defaultArea;

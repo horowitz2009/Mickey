@@ -3,6 +3,9 @@ package com.horowitz.mickey.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class Mission {
   private List<Objective> _objectives;
 
@@ -51,7 +54,10 @@ public class Mission {
     _any = any;
   }
   
-  
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
   
   
 

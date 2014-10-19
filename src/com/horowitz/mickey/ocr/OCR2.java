@@ -16,31 +16,63 @@ import javax.imageio.ImageIO;
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.Pixel;
 
-public class OCR {
-  private Color               _foreground;
+public class OCR2 {
   private Map<Integer, Color> _colors;
   private String              _masksFilename;
   private int                 _masksEmpty;
+  private int                 _colorThreshold;
 
-  public OCR(String masksFilename, int maskEmpty, Color foreground, Color background) {
+  public OCR2(String masksFilename, int maskEmpty, int colorThreshold, Color[] foregrounds) {
     super();
     _masksFilename = masksFilename;
     _masksEmpty = maskEmpty;
+    _colorThreshold = colorThreshold;
     _colors = new HashMap<>(2);
-    _foreground = foreground;
-    _colors.put(1, foreground);
-    _colors.put(0, background);
+    _colors.put(0, foregrounds[0]);
+    _colors.put(1, foregrounds[1]);
+    _colors.put(2, foregrounds[2]);
+    _colors.put(3, foregrounds[3]);
+    _colors.put(4, foregrounds[4]);
 
   }
 
-  public OCR(String masksFilename) {
-    this(masksFilename, 0, new Color(34, 34, 34), Color.WHITE);
+  public static OCR2 createRed() {
+    return new OCR2("masksMissionNEW.txt", 9, 5000, new Color[] { new Color(200, 1, 1), new Color(200, 1, 1), new Color(203, 30, 30),
+        new Color(215, 88, 88), new Color(229, 158, 158) });
+  }
+  public static OCR2 createRed8() {
+    return new OCR2("masksGray.txt", 9, 5000, new Color[] { new Color(200, 1, 1), new Color(200, 1, 1), new Color(203, 30, 30),
+        new Color(215, 88, 88), new Color(229, 158, 158) });
+  }
+
+  public static OCR2 createGray() {
+    return new OCR2("masksMissionNEW.txt", 9, 2500, new Color[] { new Color(103, 103, 103), new Color(103, 103, 103), new Color(125, 125, 125),
+        new Color(188, 188, 188), new Color(207, 207, 207) });
+  }
+
+  public static OCR2 createGray8() {
+    return new OCR2("masksGray.txt", 0, 2500, new Color[] { new Color(103, 103, 103), new Color(103, 103, 103), new Color(125, 125, 125),
+        new Color(188, 188, 188), new Color(207, 207, 207) });
+  }
+
+  public static OCR2 createBlue() {
+    return new OCR2("masksMissionNEW2.txt", 9, 9000, new Color[] { new Color(255, 255, 255), new Color(255, 255, 255), new Color(236, 248, 255),
+        new Color(200, 234, 254), new Color(185, 229, 254), });
+  }
+
+  /**
+   * @deprecated
+   * @param masksFilename
+   */
+  public OCR2(String masksFilename) {
+    this(masksFilename, 0, 1500, new Color[] { new Color(34, 34, 34), new Color(34, 34, 34), new Color(34, 34, 34), new Color(34, 34, 34),
+        new Color(34, 34, 34) });
   }
 
   private void writeImage(BufferedImage image, int n) {
-    if (false)
+    if (System.getenv("DEBUG") != null)
       try {
-        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+        ImageIO.write(image, "BMP", new File("subimage" + n + ".bmp"));
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -49,7 +81,7 @@ public class OCR {
   public String scanImage(BufferedImage image) {
     BufferedImage subimage = image.getSubimage(0, 0, image.getWidth(), image.getHeight());
     writeImage(subimage, 1);
-    //subimage = cutEdges(subimage, _foreground);
+    subimage = cutEdges(subimage);
     writeImage(subimage, 2);
     BufferedImage subimage2 = subimage.getSubimage(0, 0, subimage.getWidth(), subimage.getHeight());
     String result = "";
@@ -57,7 +89,6 @@ public class OCR {
     Masks masks = new Masks(_masksFilename, _masksEmpty);
     int w = masks.getMaxWidth();
     int wmin = masks.getMinWidth();
-    // int h = masks.getMaxHeight();
 
     while (subimage.getWidth() >= wmin) {
       // we have space to work
@@ -126,7 +157,12 @@ public class OCR {
           subimage = subimage.getSubimage(0 + m.getWidth(), 0, subimage.getWidth() - m.getWidth(), subimage.getHeight());
           writeImage(subimage, 102);
         } else {
-          System.out.println("UH OH!!!");
+          System.err.println("UH OH!!!");
+          for (Mask mask : found) {
+            System.err.print(mask.getName());
+          }
+          System.err.println();
+
           break;
         }
       }
@@ -136,7 +172,15 @@ public class OCR {
     return result;
   }
 
-  private BufferedImage cutEdges(BufferedImage image, Color foreground) {
+  private boolean lineHasOne(int rgb) {
+    int diff1 = compareTwoColors(rgb, _colors.get(1).getRGB());
+    int diff2 = compareTwoColors(rgb, _colors.get(2).getRGB());
+    int diff3 = compareTwoColors(rgb, _colors.get(3).getRGB());
+    int diff4 = compareTwoColors(rgb, _colors.get(4).getRGB());
+    return (diff1 <= 1100 || diff2 <= 1100 || diff3 <= 1100 || diff4 <= 4);
+  }
+
+  private BufferedImage cutEdges(BufferedImage image) {
     BufferedImage subimage;
     // cut north
     boolean lineClean = true;
@@ -144,9 +188,7 @@ public class OCR {
     for (int y = 0; y < image.getHeight(); y++) {
 
       for (int x = 0; x < image.getWidth(); x++) {
-        int diff = compareTwoColors(image.getRGB(x, y), foreground.getRGB());
-        if (diff <= 1100) {
-          // found one, line not clean
+        if (lineHasOne(image.getRGB(x, y))) {
           lineClean = false;
           break;
         }
@@ -166,9 +208,7 @@ public class OCR {
     for (int y = subimage.getHeight() - 1; y >= 0; y--) {
 
       for (int x = 0; x < subimage.getWidth(); x++) {
-        int diff = compareTwoColors(subimage.getRGB(x, y), foreground.getRGB());
-        if (diff <= 1100) {
-          // found one, line not clean
+        if (lineHasOne(image.getRGB(x, y))) {
           lineClean = false;
           break;
         }
@@ -187,10 +227,8 @@ public class OCR {
     for (int xx = 0; xx < subimage.getWidth(); xx++) {
 
       for (int y = 0; y < subimage.getHeight(); y++) {
-        int diff = compareTwoColors(subimage.getRGB(xx, y), foreground.getRGB());
-        if (diff <= 1100) {
-          // found one, line not clean
-          colClean = false;
+        if (lineHasOne(image.getRGB(xx, y))) {
+          lineClean = false;
           break;
         }
       }
@@ -210,10 +248,8 @@ public class OCR {
     for (int xx = subimage.getWidth() - 1; xx >= 0; xx--) {
 
       for (int y = 0; y < subimage.getHeight(); y++) {
-        int diff = compareTwoColors(subimage.getRGB(xx, y), foreground.getRGB());
-        if (diff <= 1100) {
-          // found one, line not clean
-          colClean = false;
+        if (lineHasOne(image.getRGB(xx, y))) {
+          lineClean = false;
           break;
         }
       }
@@ -237,11 +273,13 @@ public class OCR {
     for (int i = 0; i <= (screen.getWidth() - mask.getWidth()); i++) {
       for (int j = 0; j <= (screen.getHeight() - mask.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, mask.getWidth(), mask.getHeight());
-        writeImage(subimage, 1001);
         // public boolean compare2(BufferedImage image, Map<Integer, Color> colors, Pixel[] indices, double percentage, int diffIndex) {
-        if (compare2(subimage, _colors, mask.getPixelsAsArray(), 0.05, 1200)) {
+        if (compare4(subimage, _colors, mask.getPixelsAsArray(), 0.05, _colorThreshold)) {
           Pixel p = new Pixel(i, j);
           return p;
+        } else {
+          if (mask.getName().equals("3"))
+            writeImage(subimage, 9000);
         }
       }
     }
@@ -268,6 +306,84 @@ public class OCR {
             countErrors++;
 
           if (countErrors > 4) // this color is bad and that's enough
+            return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  /**
+   * This method skips pixel with index 4 and over and treats index 0 as opposite 1, 2 and 3.
+   * 
+   * @param image
+   * @param colors
+   * @param indices
+   * @param percentage
+   * @param diffIndex
+   * @return
+   */
+  public boolean compare3(BufferedImage image, Map<Integer, Color> colors, Pixel[] indices, double percentage, int diffIndex) {
+    int countErrors = 0;
+    int possibleErrors = (int) (indices.length * percentage);
+    List<Pixel> errorsW = new ArrayList<>();
+    List<Pixel> errors = new ArrayList<>();
+    for (int i = 0; i < indices.length; i++) {
+      if (indices[i].weight < 3) {
+        Color color = colors.get(indices[i].weight);
+        if (color != null) {
+          final int rgb1 = color.getRGB();
+          final int rgb2 = image.getRGB(indices[i].x, indices[i].y);
+          final int diff = compareTwoColors(rgb1, rgb2);
+          int w = indices[i].weight;
+          if (w == 0 && diff <= diffIndex) {
+            errorsW.add(indices[i]);
+            countErrors++;
+          }
+          if (w != 0 && diff > diffIndex) {
+            countErrors++;
+            errors.add(indices[i]);
+          }
+          // if (countErrors > possibleErrors)
+          // return false;
+        }
+      }
+    }
+    // if (countErrors >= possibleErrors) {
+    // System.err.println("errorsW: " + errorsW);
+    // System.err.println("errors: " + errors);
+    // }
+    return countErrors < possibleErrors;
+  }
+
+  /**
+   * This method skips pixel with index 3 and 4 and over and treats index 0 as opposite 1 and 2.
+   * 
+   * @param image
+   * @param colors
+   * @param indices
+   * @param percentage
+   * @param diffIndex
+   * @return
+   */
+  public boolean compare4(BufferedImage image, Map<Integer, Color> colors, Pixel[] indices, double percentage, int diffIndex) {
+    int countErrors = 0;
+    int possibleErrors = (int) (indices.length * percentage);
+    for (int i = 0; i < indices.length; i++) {
+      if (indices[i].weight < 3) {
+        Color color = colors.get(indices[i].weight);
+        if (color != null) {
+          final int rgb1 = color.getRGB();
+          final int rgb2 = image.getRGB(indices[i].x, indices[i].y);
+          final int diff = compareTwoColors(rgb1, rgb2);
+          int w = indices[i].weight;
+          if (w == 0 && diff <= diffIndex) {
+            countErrors++;
+          }
+          if (w != 0 && diff > diffIndex) {
+            countErrors++;
+          }
+          if (countErrors > possibleErrors)
             return false;
         }
       }
@@ -315,35 +431,75 @@ public class OCR {
 
   public static void main(String[] args) {
     try {
-      OCR ocr = new OCR("masks.txt");
-      testImage(ocr, "test.bmp", "218250");
-      testImage(ocr, "test2.bmp", "115126");
-      testImage(ocr, "test3.bmp", "115126");
-      testImage(ocr, "test4.bmp", "775");
-      testImage(ocr, "test5.bmp", "775");
+      // OCR2 ocr = new OCR2("masks.txt");
+      // testImage(ocr, "test/test.bmp", "218250");
+      // testImage(ocr, "test/test2.bmp", "115126");
+      // testImage(ocr, "test/test3.bmp", "115126");
+      // testImage(ocr, "test/test4.bmp", "775");
+      // testImage(ocr, "test/test5.bmp", "775");
 
-      ocr = new OCR("masksMission.txt", 3, new Color(200, 1, 1), new Color(245, 245, 245));
+      OCR2 ocr = new OCR2("masksMissionNEW.txt", 9, 5500, new Color[] { new Color(200, 1, 1), new Color(200, 1, 1), new Color(213, 72, 72),
+          new Color(221, 115, 115), new Color(229, 158, 158) });
 
-      testImage(ocr, "test10_1.bmp", "25710");
-      testImage(ocr, "test10_2.bmp", "145690");
-      testImage(ocr, "test10_3.bmp", "");
+      // testImage(ocr, "test/test10_1.bmp", "25710");
+      // testImage(ocr, "test/test10_2.bmp", "145690");
+      // testImage(ocr, "test/test10_3.bmp", "");
+      // testImage(ocr, "test/test10_14.bmp", "49224");
 
-      ocr = new OCR("masksMission.txt", 3, new Color(103, 103, 103), new Color(245, 245, 245));
+      ocr = new OCR2("masksMissionNEW.txt", 9, 2500, new Color[] { new Color(103, 103, 103), new Color(103, 103, 103), new Color(125, 125, 125),
+          new Color(153, 153, 153), new Color(207, 207, 207) });
 
-      testImage(ocr, "test10_1.bmp", "/180000");
-      testImage(ocr, "test10_2.bmp", "");
-      testImage(ocr, "test10_3.bmp", "/180000");
-      testImage(ocr, "test10_4.bmp", "/17500");
-      testImage(ocr, "test10_5.bmp", "/60");
+      testImage(ocr, "test/test10_1.bmp", "/180000");
+      testImage(ocr, "test/test10_2.bmp", "");
+      testImage(ocr, "test/test10_3.bmp", "/180000");
+      testImage(ocr, "test/test10_4.bmp", "/17500");
+      testImage(ocr, "test/test10_5.bmp", "/60");
+      testImage(ocr, "test/test10_10.bmp", "/50");
+      testImage(ocr, "test/test10_11.bmp", "/60");
+      testImage(ocr, "test/test10_12.bmp", "/50000");
+      testImage(ocr, "test/test10_13.bmp", "300000/300000");
+      testImage(ocr, "test/test10_14.bmp", "/65000");
+      testImage(ocr, "test/test10_15.bmp", "65000/65000");
+      testImage(ocr, "test/test10_16.bmp", "65000/65000");
+      testImage(ocr, "test/test10_17.bmp", "/285000");
+      testImage(ocr, "test/test10_18.bmp", "/60000");
+      testImage(ocr, "test/test10_19.bmp", "/28000");
+      testImage(ocr, "test/test10_20.bmp", "45000/45000");
 
-      ocr = new OCR("masksMission.txt", 3, new Color(255, 255, 255), new Color(16, 161, 246));
-      testImage(ocr, "test10_white_blue.bmp", "2/90");
+      // ocr = new OCR2("masksMissionNEW2.txt", 9, 9000,
+      // new Color[]{new Color(255, 255, 255), new Color(255, 255, 255),
+      // new Color(236, 248, 255),new Color(200, 234, 254),new Color(185, 229, 254),});
+      // testImage(ocr, "test/test10_white_blue.bmp", "2/90");
+      // testImage(ocr, "test/test_blue1.bmp", "18/90");
+      // testImage(ocr, "test/test_blue2.bmp", "25/60");
+      // testImage(ocr, "test/test_blue3.bmp", "29/40");
+      // testImage(ocr, "test/test_blue4.bmp", "28/40");
+      // testImage(ocr, "test/test_blue5.bmp", "45/60");
+      // testImage(ocr, "test/test_blue6.bmp", "24/40");
+      // testImage(ocr, "test/test_blue7.bmp", "4/60");
+      // testImage(ocr, "test/test_blue8.bmp", "11/90");
+      // testImage(ocr, "test/test_blue9.bmp", "1/100");
+      
+      
+      ocr = createGray8();
+      
+      testImage(ocr, "test/test81.bmp", "/90000");
+      testImage(ocr, "test/test82.bmp", "/90000");
+      testImage(ocr, "test/test83.bmp", "60134/45000");
+      testImage(ocr, "test/test84.bmp", "/150");
+      testImage(ocr, "test/test85.bmp", "121/150");
+
+      ocr = createRed8();
+      
+      testImage(ocr, "test/test81.bmp", "0");
+      testImage(ocr, "test/test82.bmp", "12141");
+      testImage(ocr, "test/test84.bmp", "71");
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-  private static void testImage(OCR ocr, String filename, String expectedText) throws IOException {
+  private static void testImage(OCR2 ocr, String filename, String expectedText) throws IOException {
     BufferedImage image = ImageIO.read(ImageManager.getImageURL(filename));
     String res = ocr.scanImage(image);
     System.out.println("testing " + filename);

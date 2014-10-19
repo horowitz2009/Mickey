@@ -38,7 +38,7 @@ public class Masks {
     _maxWidth = 0;
     _minWidth = 100;
     _maxHeight = 0;
-    final InputStream stream = OCR.class.getClassLoader().getResourceAsStream(_masksFilename);
+    final InputStream stream = Masks.class.getClassLoader().getResourceAsStream(_masksFilename);
 
     // InputStreamReader reader = new InputStreamReader(stream);
     DataInputStream reader = new DataInputStream(stream);
