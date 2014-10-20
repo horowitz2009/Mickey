@@ -1,7 +1,8 @@
 command=none
-express=120
+contractor.scan=idle
+express=240
 free=6
-freight=30
+freight=10
 ping=true
 refresh=true
 resume=false

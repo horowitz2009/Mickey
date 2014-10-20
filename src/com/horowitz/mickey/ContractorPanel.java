@@ -166,7 +166,7 @@ public class ContractorPanel extends JPanel {
             ImageIcon icon = ImageManager.getImage("contracts/"+mat+"24.png");
             System.err.println(icon);
             JLabel objLabel = new JLabel(icon);
-            objLabel.setText("DAMN");
+            objLabel.setText("" + objective.getCurrentAmount() + " / " + objective.getNeededAmount());
             _objectivesPanel.add(objLabel);
             _objectivesPanel.revalidate();
           }
@@ -209,11 +209,16 @@ public class ContractorPanel extends JPanel {
     try {
       JFrame frame = new JFrame("Contractor Assistant");
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      Mission[] missions = new DataStore().readMissions("mahatma");
+      Mission[] missions = new DataStore().readMissions("george");
+      for (Mission mission : missions) {
+        if (mission.getNumber() == 30) {
+          frame.getContentPane().add(new ContractorPanel(mission), BorderLayout.CENTER);
+          break;
+        }
+      }
       
-      frame.getContentPane().add(new ContractorPanel(missions[3]), BorderLayout.CENTER);
       frame.pack();
-      frame.setSize(new Dimension(frame.getSize().width + 2, frame.getSize().height + 2));
+      frame.setSize(new Dimension(frame.getSize().width + 3, frame.getSize().height + 2));
 
       frame.setLocationRelativeTo(null);
 
