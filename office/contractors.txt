@@ -1,0 +1,18 @@
+mahatma
+Gold: 0
+Wood: 0
+Nails: 0
+Bricks: 0
+Glass: 0
+Fuel: 0
+Steel: 0
+Gravel: 0
+U-235: 0
+Cement: 0
+Rubber: 0
+Carbon: 0
+Titanium: 0
+Marble: 0
+Wires: 0
+Plastics: 0
+

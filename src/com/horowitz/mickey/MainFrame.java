@@ -75,15 +75,15 @@ import com.horowitz.mickey.data.Mission;
  */
 public final class MainFrame extends JFrame {
 
-  private final static Logger LOGGER       = Logger.getLogger(MainFrame.class.getName());
+  private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE    = "v0.710";
+  private static final String APP_TITLE           = "v0.801c";
 
-  private boolean             _devMode     = false;
+  private boolean             _devMode            = false;
 
   private ScreenScanner       _scanner;
   private MouseRobot          _mouse;
-  private boolean             _stopThread  = false;
+  private boolean             _stopThread         = false;
   private Statistics          _stats;
   private JLabel              _trainsNumberLabel;
   private JLabel              _trainsNumberLabelA;
@@ -101,12 +101,12 @@ public final class MainFrame extends JFrame {
   private JButton             _resetAction;
   private JButton             _doMagicAction;
 
-  private Location            _freeTime    = Locations.LOC_6MIN;
-  private Location            _freightTime = Locations.LOC_10MIN;
-  private Location            _expressTime = Locations.LOC_30MIN;
+  private Location            _freeTime           = Locations.LOC_6MIN;
+  private Location            _freightTime        = Locations.LOC_10MIN;
+  private Location            _expressTime        = Locations.LOC_30MIN;
 
   private Long                _lastTime;
-  private Queue<Integer>      _lastDiffs   = new ArrayBlockingQueue<Integer>(3);
+  private Queue<Integer>      _lastDiffs          = new ArrayBlockingQueue<Integer>(3);
 
   private JToggleButton       _oneClick;
 
@@ -129,8 +129,8 @@ public final class MainFrame extends JFrame {
   private JToolBar            _exToolbar2;
 
   private List<String>        _captureContractors = new ArrayList<String>();
-  private boolean             _withMaterials = false;
-  
+  private boolean             _withMaterials      = false;
+
   private boolean isOneClick() {
     return _oneClick.isSelected();
   }
@@ -541,7 +541,7 @@ public final class MainFrame extends JFrame {
                 e1.printStackTrace();
               }
             }
-            
+
           });
           myThread.start();
         }
@@ -553,7 +553,7 @@ public final class MainFrame extends JFrame {
       JButton b1 = new JButton(new AbstractAction("C2") {
         public void actionPerformed(ActionEvent e) {
           Thread myThread = new Thread(new Runnable() {
-            
+
             @Override
             public void run() {
               try {
@@ -567,7 +567,7 @@ public final class MainFrame extends JFrame {
                 e1.printStackTrace();
               }
             }
-            
+
           });
           myThread.start();
         }
@@ -863,8 +863,18 @@ public final class MainFrame extends JFrame {
       _commands.saveSettingsSorted();
     } else if ("contracts".equals(command)) {
       _commands.setProperty("command", command + "_ok");
-      //_commands.saveSettingsSorted();
+      // _commands.saveSettingsSorted();
       resetContractors();
+      if (!isRunning("MAGIC")) {
+        runMagic();
+      }
+      _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
+      _commands.saveSettingsSorted();
+    } else if ("contractor".equals(command)) {
+      _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
+      _commands.setProperty("command", command + "_ok");
+      String contractor = _commands.getProperty("contractor");
+      rescanContractor(contractor);
       if (!isRunning("MAGIC")) {
         runMagic();
       }
@@ -1176,7 +1186,7 @@ public final class MainFrame extends JFrame {
         goHomeIfNeeded();
 
         captureContracts();
-        
+
         if (_pingClick.isSelected()) {
           ping();
         }
@@ -1318,9 +1328,11 @@ public final class MainFrame extends JFrame {
   }
 
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    _commands.setProperty("contractor.scan", "idle");
+    _commands.saveSettingsSorted();
+
     if (_captureContractors.size() > 0) {
-      String[] ss
-       = _captureContractors.get(0).split("_");
+      String[] ss = _captureContractors.get(0).split("_");
       String contractor = ss[1];
       String index = StringUtils.leftPad(ss[0], 2, "0");
       handlePopups();
@@ -1334,11 +1346,14 @@ public final class MainFrame extends JFrame {
 
       if (p != null) {
         // we're on the right track
+        _commands.setProperty("contractor.scan", "running");
+        _commands.saveSettingsSorted();
+
 
         Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
-        _mouse.mouseMove(scrollerTop);
-        _mouse.click();
-        _mouse.delay(300);
+//        _mouse.mouseMove(scrollerTop);
+//        _mouse.click();
+//        _mouse.delay(300);
 
         int track = 500;
         area = new Rectangle(p.x, p.y + 31, 100, 484);
@@ -1347,6 +1362,18 @@ public final class MainFrame extends JFrame {
         if (findAndClick(cname, area, 15, 7, true, false)) {
           found = true;
         } else {
+          _mouse.mouseMove(scrollerTop);
+          _mouse.click();
+          _mouse.delay(300);
+        }
+        
+        if (findAndClick(cname, area, 15, 7, true, false)) {
+          found = true;
+        } else {
+          _mouse.mouseMove(scrollerTop);
+          _mouse.click();
+          _mouse.delay(300);
+
           // drag until get it
           int drag = 0;
           found = false;
@@ -1359,6 +1386,10 @@ public final class MainFrame extends JFrame {
         }
         if (found) {
           _mouse.delay(500);
+          _scanner.writeImage(new Rectangle(p.x - 38, p.y - 28, 780, 585), contractor + "_mission.bmp");
+          _scanner.writeImage(new Rectangle(p.x - 38 + 376, p.y - 28 + 388, 71, 21), contractor + "_missionNumber.bmp");
+          _scanner.writeImage(new Rectangle(p.x - 38 + 456, p.y - 28 + 60 + 93, 291, 262), contractor + "_objectives.bmp");
+
           _scanner.captureGame("status " + index + "A " + contractor + ".bmp");
           _mouse.delay(100);
           if (_withMaterials) {
@@ -1391,13 +1422,11 @@ public final class MainFrame extends JFrame {
               MaterialsScanner mscanner = new MaterialsScanner();
               Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
               BufferedImage materialsImage = new Robot().createScreenCapture(rect);
-              System.out.println(contractor.trim());
-              System.out.println("_________________________");
               Material[] materials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
-              
+
               _contractors.add(new Contractor(contractor, materials));
-              
-              System.out.println();
+
+              _scanner.writeImage(rect, contractor + "_materials.bmp");
               _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
             }
@@ -1407,8 +1436,8 @@ public final class MainFrame extends JFrame {
             _mouse.delay(600);
 
             // click
-            //_mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
-            //_mouse.delay(600);
+            // _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
+            // _mouse.delay(600);
             goHomeIfNeeded();
           }
         } else {
@@ -1416,15 +1445,18 @@ public final class MainFrame extends JFrame {
         }
         _captureContractors.remove(0);
       }
+      
+      _commands.setProperty("contractor.scan", "done");
+      _commands.saveSettingsSorted();
     } else {
-      //all contractors captured
+      // all contractors captured
       processContractors(_contractors);
     }
   }
-  
+
   private List<Contractor> _contractors = new ArrayList<Contractor>();
-  
-private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
+
+  private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
     Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 50, 60, 50);
     Pixel p = _scanner.getHome().findImage(area);
     if (p != null) {
@@ -1973,6 +2005,8 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
   }
 
   private void captureContractors(boolean withMaterialsStatus) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    _commands.setProperty("contractor.scan", "idle");
+    _commands.saveSettingsSorted();
     String s = _settings.getProperty("contractors");
     String[] contractorNames = s.split(",");// do not forget to trim before using
 
@@ -1989,6 +2023,8 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
 
     if (p != null) {
       // we're on the right track
+      _commands.setProperty("contractor.scan", "running");
+      _commands.saveSettingsSorted();
 
       Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
       _mouse.mouseMove(scrollerTop);
@@ -2018,21 +2054,29 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
         if (found) {
           _mouse.delay(500);
           _scanner.captureGame("status " + n + "A " + cname.trim() + ".bmp");
+
+          _scanner.writeImage(new Rectangle(p.x - 38, p.y - 28, 780, 585), cname.trim() + "_mission.bmp");
+          _scanner.writeImage(new Rectangle(p.x - 38 + 376, p.y - 28 + 288, 71, 21), cname.trim() + "_missionNumber.bmp");
+          _scanner.writeImage(new Rectangle(p.x - 38 + 456, p.y - 28 + 60 + 93, 291, 262), cname.trim() + "_objectives.bmp");
           _mouse.delay(500);
-          
-          ////1
-          MissionScanner missionScanner = new MissionScanner();
-          Rectangle rect = new Rectangle(p.x-38, p.y-28, 760, 550);
-          BufferedImage contractorImage = new Robot().createScreenCapture(rect);
-          Mission mission = missionScanner.scanCurrentMission(contractorImage);
-          Contractor contractor = new Contractor(StringUtils.capitalize(cname.trim()));
-          contractor.setCurrentMission(mission);
-          contractors.add(contractor);
-          
-          ////
-          
-          
-          
+
+          // //1
+          Rectangle rect;
+          Contractor contractor = null;
+          try {
+            MissionScanner missionScanner = new MissionScanner();
+            rect = new Rectangle(p.x - 38, p.y - 28, 760, 550);
+            BufferedImage contractorImage = new Robot().createScreenCapture(rect);
+            Mission mission = missionScanner.scanCurrentMission(contractorImage);
+            contractor = new Contractor(StringUtils.capitalize(cname.trim()));
+            contractor.setCurrentMission(mission);
+            contractors.add(contractor);
+          } catch (Exception e1) {
+            e1.printStackTrace();
+          }
+
+          // //
+
           if (withMaterialsStatus) {
             // click visit
             _mouse.click(p.x + 267, p.y + 335);
@@ -2060,15 +2104,22 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
               // _mouse.delay(2000);
               pm = new Pixel(pm.x - 313, pm.y - 31);
               // _mouse.mouseMove(pm);
-              
-              ////2
-              MaterialsScanner mscanner = new MaterialsScanner();
-              rect = new Rectangle(pm.x, pm.y, 760, 550);
-              BufferedImage materialsImage = new Robot().createScreenCapture(rect);
-              Material[] scanMaterials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
-              contractor.setMaterials(scanMaterials);
-              ////
-              
+
+              // //2
+              try {
+                if (contractor != null) {
+                  MaterialsScanner mscanner = new MaterialsScanner();
+                  rect = new Rectangle(pm.x, pm.y, 760, 550);
+                  _scanner.writeImage(rect, cname.trim() + "_materials.bmp");
+                  BufferedImage materialsImage = new Robot().createScreenCapture(rect);
+                  Material[] scanMaterials = mscanner.scanMaterials(materialsImage, Locations.MATERIALS_1);
+                  contractor.setMaterials(scanMaterials);
+                }
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+              // //
+
               _scanner.captureGame("status " + n + "B " + cname.trim() + " materials" + ".bmp");
               _mouse.delay(300);
             }
@@ -2081,6 +2132,10 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
             _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
             _mouse.delay(600);
           }
+          
+          _commands.setProperty("contractor.scan", "done");
+          _commands.saveSettingsSorted();
+
         } else {
           LOGGER.info("Couldn't find " + cname);
         }
@@ -2094,24 +2149,24 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
   }
 
   private void processContractors(List<Contractor> contractors) {
-    try {
-      DataStore dataStore = new DataStore();
-      
-      ////perhaps not necessary
-      Contractor[] readContractors = dataStore.readContractors();
-      for (Contractor contractorOld : readContractors) {
-        Contractor contractorNew = findContractor(contractorOld.getName(), contractors);
-        if (contractorNew.getCurrentMissionNumber() == 0) {
-          contractorNew.setCurrentMissionNumber(contractorOld.getCurrentMissionNumber());
-        }
-      }
-      ////
-      
-      dataStore.writeContractors(contractors.toArray(new Contractor[0]));
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
-    
+    // try {
+    // DataStore dataStore = new DataStore();
+    //
+    // ////perhaps not necessary
+    // Contractor[] readContractors = dataStore.readContractors();
+    // for (Contractor contractorOld : readContractors) {
+    // Contractor contractorNew = findContractor(contractorOld.getName(), contractors);
+    // if (contractorNew.getCurrentMissionNumber() == 0) {
+    // contractorNew.setCurrentMissionNumber(contractorOld.getCurrentMissionNumber());
+    // }
+    // }
+    // ////
+    //
+    // dataStore.writeContractors(contractors.toArray(new Contractor[0]));
+    // } catch (IOException e1) {
+    // e1.printStackTrace();
+    // }
+
     try {
       File file = new File("contractors.txt");
       FileOutputStream fos = new FileOutputStream(file);
@@ -2120,11 +2175,11 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
       File file2 = new File("contractors.csv");
       FileOutputStream fos2 = new FileOutputStream(file2);
       BufferedWriter bw2 = new BufferedWriter(new OutputStreamWriter(fos2, "8859_1"));
-      
+
       try {
         for (Contractor contractor : contractors) {
           bw.write(contractor.getName());
-          bw2.write(contractor.getName()+",");
+          bw2.write(contractor.getName() + ",");
           bw.newLine();
           Material[] materials = contractor.getMaterials();
           for (int i = 0; i < materials.length; i++) {
@@ -2558,6 +2613,11 @@ private void goHomeIfNeeded() throws AWTException, IOException, RobotInterrupted
       }
     }
     return maxY;
+  }
+
+  public void rescanContractor(String contractor) {
+    _captureContractors.clear();
+    _captureContractors.add(contractor);
   }
 
 }

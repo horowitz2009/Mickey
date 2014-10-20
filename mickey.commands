@@ -1,7 +1,7 @@
 command=none
 express=120
 free=6
-freight=10
+freight=30
 ping=true
 refresh=true
 resume=false

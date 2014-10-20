@@ -488,6 +488,11 @@ public class OCR2 {
       testImage(ocr, "test/test83.bmp", "60134/45000");
       testImage(ocr, "test/test84.bmp", "/150");
       testImage(ocr, "test/test85.bmp", "121/150");
+      testImage(ocr, "test/test86.bmp", "2923803/100000");
+      testImage(ocr, "test/test87.bmp", "144684/6800");
+      testImage(ocr, "test/test88.bmp", "/6200");
+      testImage(ocr, "test/test89.bmp", "2923803/72000");
+      testImage(ocr, "test/test810.bmp", "92655/6600");
 
       ocr = createRed8();
       
@@ -500,7 +505,7 @@ public class OCR2 {
   }
 
   private static void testImage(OCR2 ocr, String filename, String expectedText) throws IOException {
-    BufferedImage image = ImageIO.read(ImageManager.getImageURL(filename));
+    BufferedImage image = ImageIO.read(new File(filename));
     String res = ocr.scanImage(image);
     System.out.println("testing " + filename);
     System.out.println(expectedText);

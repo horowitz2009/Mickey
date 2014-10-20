@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -28,6 +27,12 @@ public class Settings {
     super();
     _properties = new Properties();
     _filename = filename;
+  }
+
+  public static Settings createCommands() {
+    Settings c = new Settings("mickey.commands");
+    c.loadSettings();
+    return c;
   }
 
   public void loadSettings() {
@@ -92,7 +97,7 @@ public class Settings {
     _properties.setProperty("ping.time", "5");
     _properties.setProperty("resume", "false");
     _properties.setProperty("resume.time", "10");
-    
+
     _properties.setProperty("contractors", "bobby, mahatma, george, otto, sam, alan, wolfgang, mizuki, lucy, giovanni");
   }
 
@@ -186,7 +191,6 @@ public class Settings {
     }
   }
 
-
   public void removeKey(String key) {
     _properties.remove(key);
   }
@@ -194,13 +198,12 @@ public class Settings {
   public void setProperty(String key, String value) {
     _properties.setProperty(key, value);
   }
-  
-  
+
   public static void main(String[] args) {
     Settings settings = new Settings();
     settings.setDefaults();
     settings.saveSettingsSorted();
     System.out.println("Settings reset to defaults");
-    
+
   }
 }

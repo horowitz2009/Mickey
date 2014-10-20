@@ -1533,7 +1533,15 @@
     "_any": false
   },
   {
-    "_objectives": [],
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "n/a",
+        "_neededAmount": 1,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
     "_number": 93,
     "_contractor": "Giovanni",
     "_any": false

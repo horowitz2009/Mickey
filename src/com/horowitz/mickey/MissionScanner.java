@@ -22,22 +22,27 @@ public class MissionScanner {
 
   private static final ImageComparator COMPARATOR  = new SimilarityImageComparator(0.04, 20);
 
-  private List<ImageDataExt>           _objectives = new ArrayList<>();
+  private List<ImageDataExt>           _objectives10 = new ArrayList<>();
+  private List<ImageDataExt>           _objectives8 = new ArrayList<>();
 
   public MissionScanner() {
     super();
     _ocr = new OCR("masks.txt");// TODO
     try {
       // Steam
-      _objectives.add(new ImageDataExt(new ImageData("ocr/steamTrains.bmp", null, COMPARATOR, 0, 0), "Steam", new Rectangle(-13, 53, 100, 22)));
+      _objectives10.add(new ImageDataExt(new ImageData("ocr/steamTrains.bmp", null, COMPARATOR, 0, 0), "Steam", new Rectangle(-13, 53, 100, 22)));
       // Diesel
-      _objectives.add(new ImageDataExt(new ImageData("ocr/dieselTrains.bmp", null, COMPARATOR, 0, 0), "Diesel", new Rectangle(-13, 53, 100, 22)));
+      _objectives10.add(new ImageDataExt(new ImageData("ocr/dieselTrains.bmp", null, COMPARATOR, 0, 0), "Diesel", new Rectangle(-13, 53, 100, 22)));
 
       // Electric
       // TODO
 
       // Maglev
       // TODO
+      
+      //Something else
+      _objectives10.add(new ImageDataExt(null, "n/a", null));
+
     } catch (IOException e) {
     }
 
@@ -64,20 +69,19 @@ public class MissionScanner {
 
   private void addObjectives(String name) {
     try {
-      _objectives.add(new ImageDataExt(new ImageData("ocr/" + name + "10.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(40, -15, 165, 55)));
+      _objectives10.add(new ImageDataExt(new ImageData("ocr/" + name + "10.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(40, -15, 165, 55)));
     } catch (Exception e) {
       //System.err.println(e.getMessage());
     }
 
     try {
-      _objectives.add(new ImageDataExt(new ImageData("ocr/" + name + "8.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(20, -10, 140, 22)));
+      _objectives8.add(new ImageDataExt(new ImageData("ocr/" + name + "8.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(20, -10, 140, 22)));
     } catch (Exception e) {
       //System.err.println(e.getMessage());
     }
   }
-
-  public int[] scanMissionNumbers(BufferedImage contractorImage) {
-    BufferedImage subimage = contractorImage.getSubimage(376, 388, 71, 21);
+  
+  public int[] scanMissionNumbersDirect(BufferedImage subimage) {
     OCR2 ocr = OCR2.createBlue();
 
     String res = ocr.scanImage(subimage);
@@ -96,6 +100,11 @@ public class MissionScanner {
     }
     return null;
   }
+  
+  public int[] scanMissionNumbers(BufferedImage contractorImage) {
+    BufferedImage subimage = contractorImage.getSubimage(376, 388, 71, 21);
+    return scanMissionNumbersDirect(subimage);
+  }
 
   private void writeImage(BufferedImage image, int n) {
     if (System.getenv("DEBUG") != null)
@@ -109,7 +118,7 @@ public class MissionScanner {
   public void scanCurrentMission(BufferedImage contractorImage, Mission mission) {
     // this is the Objectives area without the description part
     writeImage(contractorImage, 2001);
-    BufferedImage objArea = contractorImage.getSubimage(456, 60 + 93, 288, 262);
+    BufferedImage objArea = contractorImage.getSubimage(456, 60 + 93, 291, 262);
     writeImage(objArea, 2002);
     BufferedImage subimage = objArea.getSubimage(0, 0, objArea.getWidth(), objArea.getHeight());
     writeImage(subimage, 2003);
@@ -118,27 +127,45 @@ public class MissionScanner {
       String what = o.getMaterial();
 
       ImageDataExt theIDE = null;
-      for (ImageDataExt ide : _objectives) {
+      List<ImageDataExt> objectives;
+      OCR2 ocrRed;
+      OCR2 ocrGray;
+      if (o.getType().equals("b")) {
+        objectives = _objectives8;
+        ocrRed = OCR2.createRed8();
+        ocrGray = OCR2.createGray8();
+      } else {
+        objectives = _objectives10;
+        ocrRed = OCR2.createRed();
+        ocrGray = OCR2.createGray();
+      }
+      for (ImageDataExt ide : objectives) {
         if (ide._name.equals(what)) {
           theIDE = ide;
           break;
         }
       }
       if (theIDE != null) {
-        OCR2 ocrRed = OCR2.createRed();
-        OCR2 ocrGray = OCR2.createGray();
-        Pixel p = theIDE._imageData.findImage(subimage);
+        Pixel p;
+        if (theIDE._imageData != null) {
+          p = theIDE._imageData.findImage(subimage);
+        } else {
+          p = new Pixel(0, 0);
+        }
         if (p != null) {
           // found the resource. Now let's scan the numbers
-          BufferedImage textImage = subimage.getSubimage(p.x + theIDE._correspondingArea.x, p.y + theIDE._correspondingArea.y,
+          BufferedImage textImage = subimage;
+          if (theIDE._correspondingArea != null) {
+            textImage = subimage.getSubimage(p.x + theIDE._correspondingArea.x, p.y + theIDE._correspondingArea.y,
+                subimage.getWidth() - p.x - theIDE._correspondingArea.x, theIDE._correspondingArea.height);
+          }
 
-          subimage.getWidth() - p.x - theIDE._correspondingArea.x, theIDE._correspondingArea.height);
           writeImage(textImage, 203);
           String resRed = ocrRed.scanImage(textImage);
           String resGray = ocrGray.scanImage(textImage);
 
           String res = resRed != null && resRed.length() > 0 ? resRed + resGray : resGray;
-          if (res != null) {
+          if (res != null && res.length() > 2) {
             // set values to the existing objective
             String[] ss = res.split("/");
             o.setCurrentAmount(Integer.parseInt(ss[0]));
@@ -171,23 +198,35 @@ public class MissionScanner {
 //    testContractor("1/status 08A mizuki.bmp", "Mizuki");
 //    testContractor("1/status 09A lucy.bmp", "Lucy");
 //    testContractor("1/status 10A giovanni.bmp", "Giovanni");
-    testContractor("2/status 01A bobby.bmp", "Bobby");
-    testContractor("2/status 02A mahatma.bmp", "Mahatma");
-    testContractor("2/status 03A george.bmp", "George");
-    testContractor("2/status 04A otto.bmp", "Otto");
-    testContractor("2/status 05A sam.bmp", "Sam");
-    testContractor("2/status 06A alan.bmp", "Alan");
-    testContractor("2/status 07A wolfgang.bmp", "Wolfgang");
+//    testContractor("2/status 01A bobby.bmp", "Bobby");
+//    testContractor("2/status 02A mahatma.bmp", "Mahatma");
+//    testContractor("2/status 03A george.bmp", "George");
+//    testContractor("2/status 04A otto.bmp", "Otto");
+//    testContractor("2/status 05A sam.bmp", "Sam");
+//    testContractor("2/status 06A alan.bmp", "Alan");
+//    testContractor("2/status 07A wolfgang.bmp", "Wolfgang");
+    testContractor("1/status 08A mizuki.bmp", "Mizuki");
     testContractor("2/status 08A mizuki.bmp", "Mizuki");
-    testContractor("2/status 09A lucy.bmp", "Lucy");
-    testContractor("2/status 10A giovanni.bmp", "Giovanni");
+//    testContractor("2/status 09A lucy.bmp", "Lucy");
+//    testContractor("2/status 10A giovanni.bmp", "Giovanni");
+//
+//    testContractor("4/status 01A bobby.bmp", "Bobby");
+//    testContractor("4/status 02A mahatma.bmp", "Mahatma");
+//    testContractor("4/status 03A george.bmp", "George");
+//    testContractor("4/status 04A otto.bmp", "Otto");
+//    testContractor("4/status 05A sam.bmp", "Sam");
+//    testContractor("4/status 06A alan.bmp", "Alan");
+//    testContractor("4/status 07A wolfgang.bmp", "Wolfgang");
+    testContractor("4/status 08A mizuki.bmp", "Mizuki");
+    testContractor("4/status 09A lucy.bmp", "Lucy");
+//    testContractor("4/status 10A giovanni.bmp", "Giovanni");
 
   }
 
   private static void testContractor(String image1, String cont1) {
     System.out.println("Testing " + cont1);
     try {
-      BufferedImage image = ImageIO.read(ImageManager.getImageURL(image1));
+      BufferedImage image = ImageIO.read(new File(image1));
       Settings settings = new Settings();
       settings.loadSettings();
       ScreenScanner sscanner = new ScreenScanner(settings);
@@ -197,7 +236,6 @@ public class MissionScanner {
         image = image.getSubimage(p.x - 38, p.y - 28, 779, 584);
         MissionScanner scanner = new MissionScanner();
         int[] numbers = scanner.scanMissionNumbers(image);
-        System.err.println(numbers);
         if (numbers != null) {
           int number = numbers[0];
           Mission[] readMissions = new DataStore().readMissions(cont1);
