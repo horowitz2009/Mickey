@@ -115,11 +115,7 @@ public class MissionScanner {
       }
   }
 
-  public void scanCurrentMission(BufferedImage contractorImage, Mission mission) {
-    // this is the Objectives area without the description part
-    writeImage(contractorImage, 2001);
-    BufferedImage objArea = contractorImage.getSubimage(456, 60 + 93, 291, 262);
-    writeImage(objArea, 2002);
+  public void scanCurrentMissionDirect(BufferedImage objArea, Mission mission) {
     BufferedImage subimage = objArea.getSubimage(0, 0, objArea.getWidth(), objArea.getHeight());
     writeImage(subimage, 2003);
 
@@ -175,6 +171,15 @@ public class MissionScanner {
       }// if
 
     }// for
+    
+  }
+
+  public void scanCurrentMission(BufferedImage contractorImage, Mission mission) {
+    // this is the Objectives area without the description part
+    writeImage(contractorImage, 2001);
+    BufferedImage objArea = contractorImage.getSubimage(456, 60 + 93, 291, 262);
+    writeImage(objArea, 2002);
+    scanCurrentMissionDirect(objArea, mission);
   }
 
   public static void main(String[] args) {
@@ -268,10 +273,4 @@ public class MissionScanner {
     }
 
   }
-
-  public Mission scanCurrentMission(BufferedImage contractorImage) {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
 }

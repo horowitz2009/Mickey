@@ -14,15 +14,15 @@ public class Objective {
    * train set.
    */
   private String _material;
-  private int    _neededAmount;
-  private int    _currentAmount;
-  private int    _initialAmount;
+  private long    _neededAmount;
+  private long    _currentAmount;
+  private long    _initialAmount;
 
   public Objective(String type, String material) {
     this(type, material, 0, 0, 0);
   }
 
-  public Objective(String type, String material, int initialAmount, int neededAmount, int currentAmount) {
+  public Objective(String type, String material, long initialAmount, long neededAmount, long currentAmount) {
     super();
     _type = type;
     _material = material;
@@ -47,32 +47,42 @@ public class Objective {
     _material = material;
   }
 
-  public int getNeededAmount() {
+  public long getNeededAmount() {
     return _neededAmount;
   }
 
-  public void setNeededAmount(int neededAmount) {
+  public void setNeededAmount(long neededAmount) {
     _neededAmount = neededAmount;
   }
 
-  public int getCurrentAmount() {
+  public long getCurrentAmount() {
     return _currentAmount;
   }
 
-  public void setCurrentAmount(int currentAmount) {
+  public void setCurrentAmount(long currentAmount) {
     _currentAmount = currentAmount;
   }
 
-  public int getInitialAmount() {
+  public long getInitialAmount() {
     return _initialAmount;
   }
 
-  public void setInitialAmount(int initialAmount) {
+  public void setInitialAmount(long initialAmount) {
     _initialAmount = initialAmount;
   }
 
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
+
+  public Objective copy() {
+    Objective copy = new Objective(_type, _material, _initialAmount, _neededAmount, _currentAmount);
+    return copy;
+  }
+
+  public Objective copyNeeded() {
+    Objective copy = new Objective(_type, _material, 0, _neededAmount, 0);
+    return copy;
   }
 }

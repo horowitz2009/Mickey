@@ -35,6 +35,12 @@ public class Settings {
     return c;
   }
 
+  public static Settings createDefaultSettings() {
+    Settings s = new Settings();
+    s.loadSettings();
+    return s;
+  }
+
   public void loadSettings() {
 
     try {

@@ -67,36 +67,36 @@
       {
         "_type": "b",
         "_material": "Wood",
-        "_neededAmount": 50000,
-        "_currentAmount": 0,
+        "_neededAmount": 58000,
+        "_currentAmount": 119233,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Nails",
         "_neededAmount": 30000,
-        "_currentAmount": 0,
+        "_currentAmount": 9700,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Glass",
         "_neededAmount": 72000,
-        "_currentAmount": 0,
+        "_currentAmount": 126349,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Steel",
         "_neededAmount": 42000,
-        "_currentAmount": 0,
+        "_currentAmount": 93053,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Wires",
-        "_neededAmount": 33661,
-        "_currentAmount": 0,
+        "_neededAmount": 30000,
+        "_currentAmount": 34272,
         "_initialAmount": 0
       }
     ],

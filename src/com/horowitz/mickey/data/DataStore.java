@@ -42,6 +42,19 @@ public class DataStore {
     FileUtils.writeStringToFile(new File("data/" + contractor + "_missions.json"), json);
   }
 
+  public void writeMission(Mission newMission) throws IOException {
+    Mission[] missions = readMissions(newMission.getContractor().toLowerCase());
+    for (Mission m : missions) {
+      if (m.getContractor().equals(newMission.getContractor())) {
+        m.setAny(newMission.isAny());
+        m.setNumber(newMission.getNumber());
+        m.setObjectives(newMission.getObjectives());
+        break;
+      }
+    }
+    writeMissions(newMission.getContractor().toLowerCase(), missions);
+  }
+
   public Mission[] readCurrentMissions() throws IOException {
     File file = new File("data/current_missions.json");
     if (file.exists()) {
@@ -60,4 +73,18 @@ public class DataStore {
 
     FileUtils.writeStringToFile(new File("data/current_missions.json"), json);
   }
+
+  public void writeCurrentMission(Mission currentMission) throws IOException {
+    Mission[] missions = readCurrentMissions();
+    for (Mission mission : missions) {
+      if (mission.getContractor().equals(currentMission.getContractor())) {
+        mission.setAny(currentMission.isAny());
+        mission.setNumber(currentMission.getNumber());
+        mission.setObjectives(currentMission.getObjectives());
+        break;
+      }
+    }
+    writeCurrentMissions(missions);
+  }
+  
 }

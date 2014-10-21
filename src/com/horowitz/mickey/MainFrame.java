@@ -77,7 +77,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.801c";
+  private static final String APP_TITLE           = "v0.801d";
 
   private boolean             _devMode            = false;
 
@@ -2067,9 +2067,9 @@ public final class MainFrame extends JFrame {
             MissionScanner missionScanner = new MissionScanner();
             rect = new Rectangle(p.x - 38, p.y - 28, 760, 550);
             BufferedImage contractorImage = new Robot().createScreenCapture(rect);
-            Mission mission = missionScanner.scanCurrentMission(contractorImage);
+            //Mission mission = missionScanner.scanCurrentMission(contractorImage);
             contractor = new Contractor(StringUtils.capitalize(cname.trim()));
-            contractor.setCurrentMission(mission);
+            //contractor.setCurrentMission(mission);
             contractors.add(contractor);
           } catch (Exception e1) {
             e1.printStackTrace();

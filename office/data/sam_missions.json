@@ -131,21 +131,21 @@
         "_type": "b",
         "_material": "Gold",
         "_neededAmount": 210000,
-        "_currentAmount": 0,
+        "_currentAmount": 1167167,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Bricks",
         "_neededAmount": 17850,
-        "_currentAmount": 0,
+        "_currentAmount": 47373,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Glass",
         "_neededAmount": 53100,
-        "_currentAmount": 0,
+        "_currentAmount": 9210,
         "_initialAmount": 0
       }
     ],
