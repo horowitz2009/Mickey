@@ -1,6 +1,7 @@
 package com.horowitz.mickey;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,12 @@ class TableModel extends AbstractTableModel {
 
   Map<String, Map<String, Need>> _map;
 
-  private Contractor[]                   _contractors;
+  private Contractor[]           _contractors;
 
-  private Material[]                     _allmats;
+  private Material[]             _allmats;
 
-  private String[]                       _other;
-  private String[]                       _rows;
+  private String[]               _other;
+  private String[]               _rows;
 
   public TableModel(Map<String, Map<String, Need>> map) {
     super();
@@ -44,7 +45,7 @@ class TableModel extends AbstractTableModel {
 
       _rows = rows.toArray(new String[0]);
     }
-    
+
     try {
       _contractors = new DataStore().readContractors();
     } catch (IOException e) {
@@ -72,7 +73,7 @@ class TableModel extends AbstractTableModel {
     Object value = null;
     if (_rows == null || _contractors == null || _map == null)
       return value;
-    
+
     String mat = _rows[rowIndex];
     if (columnIndex == 0) {
       value = mat;
@@ -84,6 +85,23 @@ class TableModel extends AbstractTableModel {
       if (need != null) {
         Objective o = need.getObjective();
         value = (o.getNeededAmount() - o.getCurrentAmount());
+        NumberFormat nf = NumberFormat.getIntegerInstance();
+        value = nf.format(value);
+      } else {
+        Long secondV = null;
+        if (contractor.getMaterialsMore() != null) {
+          for (Material mm : contractor.getMaterialsMore()) {
+            if (mm.getName().equals(mat)) {
+              secondV = -mm.getAmount();
+              break;
+            }
+          }
+          if (secondV != null) {
+            NumberFormat nf = NumberFormat.getIntegerInstance();
+            String sv = nf.format(secondV);
+            value = sv;
+          }
+        }
       }
     }
     return value;

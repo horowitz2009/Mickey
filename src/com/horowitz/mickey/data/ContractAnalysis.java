@@ -11,12 +11,17 @@ public class ContractAnalysis {
   public ContractAnalysis() {
   }
 
-  public Map<String, Map<String, Need>> calcALLNeeds() {
-    Map<String, Map<String, Need>> map = collectCurrentNeeds();
+  public static void main(String[] args) {
+    new ContractAnalysis().calcALLNeeds();
+  }
+
+  public void calcALLNeeds() {
     try {
       DataStore ds = new DataStore();
       Contractor[] contractors = ds.readContractors();
-      
+      Mission[] currentMissions = ds.readCurrentMissions();
+      ds.mergeCurrentWithDB(currentMissions);
+
       for (int i = 0; i < contractors.length; i++) {
         Contractor contractor = contractors[i];
         System.err.println();
@@ -24,27 +29,35 @@ public class ContractAnalysis {
         System.err.println();
         System.err.println(contractor.getName());
         System.err.println("=============================");
-        
-        Mission currentMission = ds.getCurrentMission(contractor.getName(), contractor.getCurrentMissionNumber());
-        
+        Mission currentMission = null;
+        for (Mission cm : currentMissions) {
+          if (cm.getContractor().equalsIgnoreCase(contractor.getName())) {
+            currentMission = cm;
+            break;
+          }
+        }
+
         Mission[] missions = ds.readMissions(contractor.getName());
-        
+
         Material[] materials = Material.createArray();
-        
+
         Material[] initialMaterials = contractor.getMaterials();
-        
+
+        List<Material> matMoreList = new ArrayList<>();
+
         for (int j = 0; j < materials.length; j++) {
           Material material = materials[j];
           String matName = material.getName();
-          Long S = 0l; Long Sadd = 0l;
-          
-          //you have everything - initial materials
-          
+          Long S = 0l;
+          Long Sadd = 0l;
+
+          // you have everything - initial materials
+
           Material m = extractMat(matName, initialMaterials);
-          //this is what contractor has at this point
-          S = m.getAmount();
-          
-          //let's see the progress of the current mission
+          // this is what contractor has at this point
+          S = (m != null) ? m.getAmount() : 0l;
+
+          // let's see the progress of the current mission
           Objective o = getObjective(currentMission, matName);
           if (o != null) {
             if (o.getType().equals("b")) {
@@ -57,8 +70,8 @@ public class ContractAnalysis {
               S = S + o.getNeededAmount() - o.getCurrentAmount();
             }
           }
-          
-          //now let's check the future missions
+
+          // now let's check the future missions
           for (int k = 0; k < missions.length; k++) {
             Mission mm = missions[k];
             if (mm.getNumber() > currentMission.getNumber()) {
@@ -67,41 +80,36 @@ public class ContractAnalysis {
                 if (o.getType().equals("b")) {
                   S = S - o.getNeededAmount();
                   if (S < 0) {
-                    S = 0l;
                     Sadd += (-S);
+                    S = 0l;
                   }
                 } else {
                   S += o.getNeededAmount();
                 }
               }
-              
+
             }
           }
-          
+
           System.err.println("S(" + matName + ") = " + S);
-          System.err.println("Sadd(" + matName + ") = " + S);
-        } //material
-        
-      }//contractor
+          System.err.println("Sadd(" + matName + ") = " + Sadd);
+          matMoreList.add(new Material(matName, Sadd));
+        } // material
+
+        contractor.setMaterialsMore(matMoreList.toArray(new Material[0]));
+
+      } // contractor
+
+      ds.writeContractors(contractors);
       
-      Mission[] currentMissions = ds.readCurrentMissions();
-      ds.mergeCurrentWithDB(currentMissions);
-    
-    
-    
-    
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-    
-    
-    
-    return map;
   }
-  
+
   private Objective getObjective(Mission mission, String mat) {
-    for(Objective o : mission.getObjectives()) {
+    for (Objective o : mission.getObjectives()) {
       if (o.getMaterial().equals(mat)) {
         return o;
       }
