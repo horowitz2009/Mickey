@@ -1,12 +1,13 @@
 package com.horowitz.mickey;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -26,6 +27,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
@@ -34,7 +36,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
 import com.horowitz.mickey.data.Contractor;
@@ -44,10 +45,10 @@ import com.horowitz.mickey.data.Mission;
 import com.horowitz.mickey.data.Objective;
 
 public final class ContractorPanel extends JPanel implements PropertyChangeListener {
-  private JToolBar _toolbar;
-  private CCanvas  _canvas;
+  private JPanel  _toolbar;
+  private CCanvas _canvas;
 
-  private String   _contractorName;
+  private String  _contractorName;
 
   public String getContractorName() {
     return _contractorName;
@@ -57,6 +58,8 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   private Mission    _currentMission;
   private Mission    _missionDB;
   private JPanel     _objectivesPanel;
+  private JTextField _missionNumberTF;
+  private JLabel     _missionNumberLabel;
 
   public ContractorPanel(String contractorName) {
     super();
@@ -87,7 +90,19 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   private void initToolbar() {
-    _toolbar = new JToolBar();
+    setLayout(new BorderLayout());
+    _toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+
+    // _toolbar.add(new JLabel("Mission: "));
+    _missionNumberLabel = new JLabel();
+    _toolbar.add(_missionNumberLabel);
+
+    _missionNumberTF = new JTextField(2);
+    // _missionNumberTF.setPreferredSize(new Dimension(30,30));
+    _missionNumberTF.setFont(_missionNumberTF.getFont().deriveFont(15f));
+    // _missionNumberTF.setForeground(Color.RED);
+    // _missionNumberTF.setMinimumSize(new Dimension(20, 20));
+    _toolbar.add(_missionNumberTF);
 
     JButton requestScan = new JButton(new AbstractAction("Request scan") {
 
@@ -136,10 +151,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         t.start();
       }
     });
+
+    // _toolbar.add(Box.createHorizontalStrut(4));
     _toolbar.add(reloadButton);
-    
-    JButton scanOffline = new JButton(new AbstractAction("Rescan") {
-      
+
+    JButton rescanButton = new JButton(new AbstractAction("Rescan") {
+
       @Override
       public void actionPerformed(ActionEvent e) {
         Thread t = new Thread(new Runnable() {
@@ -150,9 +167,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         t.start();
       }
     });
-    _toolbar.add(scanOffline);
 
-    setLayout(new BorderLayout());
+    // _toolbar.add(Box.createHorizontalStrut(4));
+    _toolbar.add(rescanButton);
+
+    // _toolbar.add(Box.createGlue());
+
     add(_toolbar, BorderLayout.NORTH);
   }
 
@@ -197,6 +217,24 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   public void updateView() {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
+        if (_contractor != null) {
+          try {
+            File f = new File(_contractor.getName().toLowerCase() + "_missionNumber.bmp");
+            if (f.exists()) {
+              BufferedImage image = ImageIO.read(f);
+              Icon icon = new ImageIcon(image);
+              _missionNumberLabel.setIcon(icon);
+              // _missionNumberLabel.setPreferredSize(new Dimension(100,22));
+              _missionNumberLabel.repaint();
+
+              _missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
+            }
+          } catch (IOException e1) {
+            e1.printStackTrace();
+          }
+
+        }
+
         if (_currentMission != null && _missionDB != null) {
           try {
             clear();
@@ -267,7 +305,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             JLabel fake = new JLabel(" ");
             _objectivesPanel.add(fake, gbc);
 
-            _objectivesPanel.revalidate();
+            _objectivesPanel.invalidate();
 
           } catch (IOException e) {
             e.printStackTrace();
@@ -289,6 +327,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
           }
         }
         _objectivesPanel.removeAll();
+        _objectivesPanel.repaint();
       }
     });
 
@@ -408,23 +447,42 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
         MissionScanner mscanner = new MissionScanner();
         Integer number = mscanner.scanMissionNumber(image);
-        _contractor.setCurrentMissionNumber(number);
 
-        _missionDB = ds.getMission(cname, number);
-        if (_missionDB != null) {
-          _currentMission = _missionDB.copy();
-          updateImage();
-          mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
+        if (number == null) {
+          _missionNumberTF.setForeground(Color.RED);
+          //_missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
+          try {
+            number = Integer.parseInt(_missionNumberTF.getText());
+          } catch (NumberFormatException e) {
+          }
+        } else {
+          _missionNumberTF.setForeground(Color.BLACK);
+        }
 
-          MaterialsScanner matscanner = new MaterialsScanner();
-          // mscanner.scanMaterials(materialsImage, materials)
-          f = new File(cname + "_materials.bmp");
-          image = ImageIO.read(f);
-          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
-          _contractor.setMaterials(materials);
+        if (number != null) {
+          _contractor.setCurrentMissionNumber(number);
 
-          save();
-          
+          _missionDB = ds.getMission(cname, number);
+          if (_missionDB != null) {
+            _currentMission = _missionDB.copy();
+            updateImage();
+            mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
+
+            MaterialsScanner matscanner = new MaterialsScanner();
+            // mscanner.scanMaterials(materialsImage, materials)
+            f = new File(cname + "_materials.bmp");
+            image = ImageIO.read(f);
+            Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
+            _contractor.setMaterials(materials);
+
+            save();
+
+            updateView();
+          }
+        } else {
+          // failed to scan mission number
+          _missionDB = null;
+          _currentMission = null;
           updateView();
         }
       }

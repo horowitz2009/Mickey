@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -88,6 +90,24 @@ public class Mission {
     copy._objectives = copyObj;
     
     return copy;
+  }
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
+  
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  public void mergeWithDB(Mission mdb) {
+    for (Objective o : _objectives) {
+      for (Objective odb : mdb.getObjectives()) {
+        if (o.getMaterial().equals(odb.getMaterial()))
+          o.setNeededAmount(odb.getNeededAmount());
+      }
+    }
   }
 
 }

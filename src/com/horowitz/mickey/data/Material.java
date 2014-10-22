@@ -1,5 +1,8 @@
 package com.horowitz.mickey.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 public class Material {
 
   public static enum NAMES {
@@ -13,25 +16,27 @@ public class Material {
         new Material("Silicon"), };
   }
 
-  public static final Material[] ALL = createArray();
+  public static String[]         OTHER = new String[] { "Steam", "Diesel", "Electric", "Maglev", "Wagon", "XP", "TS", "TSany", };
+
+  public static final Material[] ALL   = createArray();
 
   private String                 _name;
-  private int                    _amount;
+  private long                   _amount;
 
   public Material(String name) {
-    this(name, 0);
+    this(name, 0l);
   }
 
-  public Material(String name, int amount) {
+  public Material(String name, long amount) {
     _name = name;
     _amount = amount;
   }
 
-  public int getAmount() {
+  public long getAmount() {
     return _amount;
   }
 
-  public void setAmount(int amount) {
+  public void setAmount(long amount) {
     _amount = amount;
   }
 
@@ -42,6 +47,16 @@ public class Material {
   @Override
   public String toString() {
     return _name + ":" + _amount;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
 }

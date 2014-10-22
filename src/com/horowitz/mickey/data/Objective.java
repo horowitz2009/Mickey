@@ -1,5 +1,7 @@
 package com.horowitz.mickey.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -14,9 +16,9 @@ public class Objective {
    * train set.
    */
   private String _material;
-  private long    _neededAmount;
-  private long    _currentAmount;
-  private long    _initialAmount;
+  private long   _neededAmount;
+  private long   _currentAmount;
+  private long   _initialAmount;
 
   public Objective(String type, String material) {
     this(type, material, 0, 0, 0);
@@ -85,4 +87,15 @@ public class Objective {
     Objective copy = new Objective(_type, _material, 0, _neededAmount, 0);
     return copy;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
+  }
+
 }

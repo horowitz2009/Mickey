@@ -77,7 +77,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.801d";
+  private static final String APP_TITLE           = "v0.802a";
 
   private boolean             _devMode            = false;
 
@@ -2416,6 +2416,8 @@ public final class MainFrame extends JFrame {
   private Pixel detectPointerDown() throws RobotInterruptedException {
     ImageData pointerDown = _scanner.getPointerDown();
     Pixel p = pointerDown.findImage(_scanner.getTrainArea());
+    if (p != null && p.x >= 2) 
+      p.x -= 2;//DOUBLE LOCO problem
     return p;
   }
 

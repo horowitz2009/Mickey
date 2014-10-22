@@ -109,6 +109,16 @@ public class DataStore {
     }
   }
 
+  public void mergeCurrentWithDB(Mission[] currentMissions) throws IOException {
+    for (int i = 0; i < currentMissions.length; i++) {
+      Mission cm = currentMissions[i];
+      Mission mdb = getMission(cm.getContractor(), cm.getNumber());
+      cm.mergeWithDB(mdb);
+    }
+  }
+  
+  
+  
   public void writeCurrentMissions(Mission[] currentMissions) throws IOException {
     String json = _gson.toJson(currentMissions);
 

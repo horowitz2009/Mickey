@@ -1,20 +1,20 @@
 package com.horowitz.mickey.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 public class Contractor {
-  
+
   private String     _name;
-  
+
   private Material[] _materials;
-  
+
   private int        _currentMissionNumber;
-  
+
   private int        _endMissionNumber;
 
-  
-  
   public Contractor() {
     super();
   }
@@ -60,6 +60,16 @@ public class Contractor {
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
   }
 
   public void extract(Contractor contractor) {
