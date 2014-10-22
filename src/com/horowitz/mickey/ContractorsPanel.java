@@ -10,8 +10,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -29,7 +27,6 @@ import javax.swing.event.ChangeListener;
 
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
-import com.horowitz.mickey.data.Mission;
 
 public class ContractorsPanel extends JPanel {
 
@@ -66,39 +63,7 @@ public class ContractorsPanel extends JPanel {
     mainToolbar.add(new AbstractAction("Rescan all") {
       @Override
       public void actionPerformed(ActionEvent e) {
-        Thread scanThread = new Thread(new Runnable() {
-          public void run() {
-            _progressBar.setValue(0);
-            _progressBar.setVisible(true);
-            int n = 0;
-            List<Mission> currentMissions = new ArrayList<>();
-            Component[] components = _cardPanel.getComponents();
-            for (Component component : components) {
-              if (component instanceof ContractorPanel) {
-                ContractorPanel conPanel = (ContractorPanel) component;
-                conPanel.scanContractorFromImage();
-                currentMissions.add(conPanel.getMission());
-                _progressBar.setValue(++n);
-              }
-            }
-
-            // SAVE CURRENT MISSIONS
-            try {
-              new DataStore().writeCurrentMissions((Mission[]) currentMissions.toArray(new Mission[currentMissions.size()]));
-            } catch (IOException e1) {
-              // TODO Auto-generated catch block
-              e1.printStackTrace();
-            }
-            _progressBar.setValue(++n);
-
-            try {
-              Thread.sleep(200);
-            } catch (InterruptedException e) {
-            }
-            _progressBar.setVisible(false);
-          }
-        });
-        scanThread.start();
+        rescanAll();
       }
     });
 
@@ -117,7 +82,7 @@ public class ContractorsPanel extends JPanel {
     add(sp, BorderLayout.WEST);
     JToggleButton firstButton = null;
     for (Contractor contractor : _contractors) {
-      ContractorPanel cp = new ContractorPanel(contractor.getName().toLowerCase());
+      ContractorPanel cp = new ContractorPanel(contractor.getName());
       _cardPanel.add(cp, contractor.getName());
 
       JToggleButton button = createContractorButton(contractor.getName());
@@ -133,35 +98,60 @@ public class ContractorsPanel extends JPanel {
     }
   }
 
+  public void rescanAll() {
+    Thread scanThread = new Thread(new Runnable() {
+      public void run() {
+        _progressBar.setValue(0);
+        _progressBar.setVisible(true);
+        int n = 0;
+        //List<Mission> currentMissions = new ArrayList<>();
+        Component[] components = _cardPanel.getComponents();
+        for (Component component : components) {
+          if (component instanceof ContractorPanel) {
+            ContractorPanel conPanel = (ContractorPanel) component;
+            conPanel.rescan();
+            //currentMissions.add(conPanel.getCurrentMission());
+            //TODO conPanel.getMaterialStatus -> getContractor() updated
+            _progressBar.setValue(++n);
+          }
+        }
+
+//        // SAVE CURRENT MISSIONS
+//        try {
+//          new DataStore().writeCurrentMissions((Mission[]) currentMissions.toArray(new Mission[currentMissions.size()]));
+//        } catch (IOException e1) {
+//          // TODO Auto-generated catch block
+//          e1.printStackTrace();
+//        }
+        _progressBar.setValue(++n);
+
+        try {
+          Thread.sleep(200);
+        } catch (InterruptedException e) {
+        }
+        _progressBar.setVisible(false);
+      }
+    });
+    scanThread.start();
+  }
+
   public void reloadAll() {
     Thread scanThread = new Thread(new Runnable() {
       public void run() {
-        try {
-          _progressBar.setValue(0);
-          _progressBar.setVisible(true);
-          Mission[] currentMissions = new DataStore().readCurrentMissions();
-
-          int n = 0;
-          Component[] components = _cardPanel.getComponents();
-          for (Component component : components) {
-            if (component instanceof ContractorPanel) {
-              ContractorPanel conPanel = (ContractorPanel) component;
-              for (Mission mission : currentMissions) {
-                if (conPanel.getContractor().equalsIgnoreCase(mission.getContractor())) {
-                  conPanel.setMission(mission);
-                }
-                ;
-              }
-              _progressBar.setValue(++n);
-            }
+        _progressBar.setValue(0);
+        _progressBar.setVisible(true);
+        int n = 0;
+        Component[] components = _cardPanel.getComponents();
+        for (Component component : components) {
+          if (component instanceof ContractorPanel) {
+            ContractorPanel conPanel = (ContractorPanel) component;
+            conPanel.reload();
+            _progressBar.setValue(++n);
           }
-
-          _progressBar.setValue(++n);
-          _progressBar.setVisible(false);
-        } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
         }
+
+        _progressBar.setValue(++n);
+        _progressBar.setVisible(false);
       }
     });
     scanThread.start();

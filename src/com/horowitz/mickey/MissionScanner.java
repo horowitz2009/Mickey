@@ -20,10 +20,10 @@ public class MissionScanner {
 
   private OCR                          _ocr;
 
-  private static final ImageComparator COMPARATOR  = new SimilarityImageComparator(0.04, 20);
+  private static final ImageComparator COMPARATOR    = new SimilarityImageComparator(0.04, 20);
 
   private List<ImageDataExt>           _objectives10 = new ArrayList<>();
-  private List<ImageDataExt>           _objectives8 = new ArrayList<>();
+  private List<ImageDataExt>           _objectives8  = new ArrayList<>();
 
   public MissionScanner() {
     super();
@@ -39,8 +39,8 @@ public class MissionScanner {
 
       // Maglev
       // TODO
-      
-      //Something else
+
+      // Something else
       _objectives10.add(new ImageDataExt(null, "n/a", null));
 
     } catch (IOException e) {
@@ -71,16 +71,21 @@ public class MissionScanner {
     try {
       _objectives10.add(new ImageDataExt(new ImageData("ocr/" + name + "10.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(40, -15, 165, 55)));
     } catch (Exception e) {
-      //System.err.println(e.getMessage());
+      // System.err.println(e.getMessage());
     }
 
     try {
       _objectives8.add(new ImageDataExt(new ImageData("ocr/" + name + "8.bmp", null, COMPARATOR, 0, 0), name, new Rectangle(20, -10, 140, 22)));
     } catch (Exception e) {
-      //System.err.println(e.getMessage());
+      // System.err.println(e.getMessage());
     }
   }
-  
+
+  public Integer scanMissionNumber(BufferedImage subimage) {
+    int[] res = scanMissionNumbersDirect(subimage);
+    return res != null ? res[0] : null;
+  }
+
   public int[] scanMissionNumbersDirect(BufferedImage subimage) {
     OCR2 ocr = OCR2.createBlue();
 
@@ -100,7 +105,7 @@ public class MissionScanner {
     }
     return null;
   }
-  
+
   public int[] scanMissionNumbers(BufferedImage contractorImage) {
     BufferedImage subimage = contractorImage.getSubimage(376, 388, 71, 21);
     return scanMissionNumbersDirect(subimage);
@@ -152,8 +157,8 @@ public class MissionScanner {
           // found the resource. Now let's scan the numbers
           BufferedImage textImage = subimage;
           if (theIDE._correspondingArea != null) {
-            textImage = subimage.getSubimage(p.x + theIDE._correspondingArea.x, p.y + theIDE._correspondingArea.y,
-                subimage.getWidth() - p.x - theIDE._correspondingArea.x, theIDE._correspondingArea.height);
+            textImage = subimage.getSubimage(p.x + theIDE._correspondingArea.x, p.y + theIDE._correspondingArea.y, subimage.getWidth() - p.x
+                - theIDE._correspondingArea.x, theIDE._correspondingArea.height);
           }
 
           writeImage(textImage, 203);
@@ -171,7 +176,7 @@ public class MissionScanner {
       }// if
 
     }// for
-    
+
   }
 
   public void scanCurrentMission(BufferedImage contractorImage, Mission mission) {
@@ -183,48 +188,48 @@ public class MissionScanner {
   }
 
   public static void main(String[] args) {
-//    testContractor("bobbymaterials.bmp", "Bobby");
-//    testContractor("status 02A mahatma.bmp", "Mahatma");
-//    testContractor("status 03A george.bmp", "George");
-//    testContractor("status 04A otto.bmp", "Otto");
-//    testContractor("status 05A sam.bmp", "Sam");
-//    testContractor("status 06A alan.bmp", "Alan");
-//    testContractor("status 07A wolfgang.bmp", "Wolfgang");
-//    testContractor("status 08A mizuki.bmp", "Mizuki");
-//    testContractor("status 09A lucy.bmp", "Lucy");
-//    testContractor("status 10A giovanni.bmp", "Giovanni");
-//    testContractor("1/status 01A bobby.bmp", "Bobby");
-//    testContractor("1/status 02A mahatma.bmp", "Mahatma");
-//    testContractor("1/status 03A george.bmp", "George");
-//    testContractor("1/status 04A otto.bmp", "Otto");
-//    testContractor("1/status 05A sam.bmp", "Sam");
-//    testContractor("1/status 06A alan.bmp", "Alan");
-//    testContractor("1/status 07A wolfgang.bmp", "Wolfgang");
-//    testContractor("1/status 08A mizuki.bmp", "Mizuki");
-//    testContractor("1/status 09A lucy.bmp", "Lucy");
-//    testContractor("1/status 10A giovanni.bmp", "Giovanni");
-//    testContractor("2/status 01A bobby.bmp", "Bobby");
-//    testContractor("2/status 02A mahatma.bmp", "Mahatma");
-//    testContractor("2/status 03A george.bmp", "George");
-//    testContractor("2/status 04A otto.bmp", "Otto");
-//    testContractor("2/status 05A sam.bmp", "Sam");
-//    testContractor("2/status 06A alan.bmp", "Alan");
-//    testContractor("2/status 07A wolfgang.bmp", "Wolfgang");
+    // testContractor("bobbymaterials.bmp", "Bobby");
+    // testContractor("status 02A mahatma.bmp", "Mahatma");
+    // testContractor("status 03A george.bmp", "George");
+    // testContractor("status 04A otto.bmp", "Otto");
+    // testContractor("status 05A sam.bmp", "Sam");
+    // testContractor("status 06A alan.bmp", "Alan");
+    // testContractor("status 07A wolfgang.bmp", "Wolfgang");
+    // testContractor("status 08A mizuki.bmp", "Mizuki");
+    // testContractor("status 09A lucy.bmp", "Lucy");
+    // testContractor("status 10A giovanni.bmp", "Giovanni");
+    // testContractor("1/status 01A bobby.bmp", "Bobby");
+    // testContractor("1/status 02A mahatma.bmp", "Mahatma");
+    // testContractor("1/status 03A george.bmp", "George");
+    // testContractor("1/status 04A otto.bmp", "Otto");
+    // testContractor("1/status 05A sam.bmp", "Sam");
+    // testContractor("1/status 06A alan.bmp", "Alan");
+    // testContractor("1/status 07A wolfgang.bmp", "Wolfgang");
+    // testContractor("1/status 08A mizuki.bmp", "Mizuki");
+    // testContractor("1/status 09A lucy.bmp", "Lucy");
+    // testContractor("1/status 10A giovanni.bmp", "Giovanni");
+    // testContractor("2/status 01A bobby.bmp", "Bobby");
+    // testContractor("2/status 02A mahatma.bmp", "Mahatma");
+    // testContractor("2/status 03A george.bmp", "George");
+    // testContractor("2/status 04A otto.bmp", "Otto");
+    // testContractor("2/status 05A sam.bmp", "Sam");
+    // testContractor("2/status 06A alan.bmp", "Alan");
+    // testContractor("2/status 07A wolfgang.bmp", "Wolfgang");
     testContractor("1/status 08A mizuki.bmp", "Mizuki");
     testContractor("2/status 08A mizuki.bmp", "Mizuki");
-//    testContractor("2/status 09A lucy.bmp", "Lucy");
-//    testContractor("2/status 10A giovanni.bmp", "Giovanni");
-//
-//    testContractor("4/status 01A bobby.bmp", "Bobby");
-//    testContractor("4/status 02A mahatma.bmp", "Mahatma");
-//    testContractor("4/status 03A george.bmp", "George");
-//    testContractor("4/status 04A otto.bmp", "Otto");
-//    testContractor("4/status 05A sam.bmp", "Sam");
-//    testContractor("4/status 06A alan.bmp", "Alan");
-//    testContractor("4/status 07A wolfgang.bmp", "Wolfgang");
+    // testContractor("2/status 09A lucy.bmp", "Lucy");
+    // testContractor("2/status 10A giovanni.bmp", "Giovanni");
+    //
+    // testContractor("4/status 01A bobby.bmp", "Bobby");
+    // testContractor("4/status 02A mahatma.bmp", "Mahatma");
+    // testContractor("4/status 03A george.bmp", "George");
+    // testContractor("4/status 04A otto.bmp", "Otto");
+    // testContractor("4/status 05A sam.bmp", "Sam");
+    // testContractor("4/status 06A alan.bmp", "Alan");
+    // testContractor("4/status 07A wolfgang.bmp", "Wolfgang");
     testContractor("4/status 08A mizuki.bmp", "Mizuki");
     testContractor("4/status 09A lucy.bmp", "Lucy");
-//    testContractor("4/status 10A giovanni.bmp", "Giovanni");
+    // testContractor("4/status 10A giovanni.bmp", "Giovanni");
 
   }
 
@@ -243,14 +248,10 @@ public class MissionScanner {
         int[] numbers = scanner.scanMissionNumbers(image);
         if (numbers != null) {
           int number = numbers[0];
-          Mission[] readMissions = new DataStore().readMissions(cont1);
-          for (Mission m : readMissions) {
-            if (m.getNumber() == number) {
-              scanner.scanCurrentMission(image, m);
-              System.out.println(cont1 + " " + m);
-              break;
-            }
-          }
+
+          Mission m = new DataStore().getMission(cont1, number);
+          scanner.scanCurrentMission(image, m);
+          System.out.println(cont1 + " " + m);
         }
       }
 

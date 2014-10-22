@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -36,7 +37,9 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
+import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.data.Mission;
 import com.horowitz.mickey.data.Objective;
 
@@ -44,41 +47,55 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   private JToolBar _toolbar;
   private CCanvas  _canvas;
 
-  private String   _contractor;
-  private Mission  _mission;
-  private JPanel   _objectivesPanel;
+  private String   _contractorName;
 
-  public ContractorPanel(String contractor) {
+  public String getContractorName() {
+    return _contractorName;
+  }
+
+  private Contractor _contractor;
+  private Mission    _currentMission;
+  private Mission    _missionDB;
+  private JPanel     _objectivesPanel;
+
+  public ContractorPanel(String contractorName) {
     super();
-    _contractor = contractor;
-    _mission = null;
+    _contractorName = contractorName;
+
+    _contractor = null;
+    _currentMission = null;
+    _missionDB = null;
+
     initToolbar();
     initForm();
   }
 
-  public String getContractor() {
-    return _contractor;
-  }
+  public static void main(String[] args) {
+    JFrame frame = new JFrame("Contractor Assistant");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-  public Mission getMission() {
-    return _mission;
-  }
+    ContractorPanel cp = new ContractorPanel("mahatma");
 
-  public void setMission(Mission mission) {
-    _mission = mission;
-    updateView();
+    frame.getContentPane().add(cp, BorderLayout.CENTER);
+
+    frame.setSize(new Dimension(600, 350));
+
+    frame.setLocationRelativeTo(null);
+
+    frame.setVisible(true);
+
   }
 
   private void initToolbar() {
     _toolbar = new JToolBar();
 
-    JButton scanNow = new JButton(new AbstractAction("Scan now") {
+    JButton requestScan = new JButton(new AbstractAction("Request scan") {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (!isRunning("CSTHREAD")) {
+        if (_contractor != null && !isRunning("CSTHREAD")) {
           final Settings commands = Settings.createCommands();
-          commands.setProperty("contractor", _contractor);
+          commands.setProperty("contractor", _contractor.getName());
           commands.setProperty("command", "contractor");
           Thread csThread = new Thread(new Runnable() {
 
@@ -95,7 +112,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
                 if ("done".equals(status)) {
                   // we're done
                   weredone = true;
-                  scanContractorFromImage();
+                  rescan();
                 }
                 now = System.currentTimeMillis();
               } while (!weredone && now - start < 1000 * 120); // 2 minutes
@@ -105,15 +122,29 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         }
       }
     });
-    _toolbar.add(scanNow);
+    // _toolbar.add(requestScan);
 
-    JButton scanOffline = new JButton(new AbstractAction("Scan offline") {
+    JButton reloadButton = new JButton(new AbstractAction("Reload") {
 
       @Override
       public void actionPerformed(ActionEvent e) {
         Thread t = new Thread(new Runnable() {
           public void run() {
-            scanContractorFromImage();
+            reload();
+          }
+        });
+        t.start();
+      }
+    });
+    _toolbar.add(reloadButton);
+    
+    JButton scanOffline = new JButton(new AbstractAction("Rescan") {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Thread t = new Thread(new Runnable() {
+          public void run() {
+            rescan();
           }
         });
         t.start();
@@ -132,7 +163,6 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     _objectivesPanel = new JPanel();
     formPanel.add(new JScrollPane(_objectivesPanel));
 
-    
     JButton saveButton = new JButton(new AbstractAction("Save") {
 
       @Override
@@ -145,9 +175,9 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         t.start();
       }
     });
-    
+
     Box saveBox = Box.createHorizontalBox();
-    
+
     saveBox.add(Box.createHorizontalGlue());
     saveBox.add(saveButton);
     saveBox.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -156,73 +186,41 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     add(formPanel);// to the center of the main panel
     updateView();
   }
-  
-  
 
-  public void scanContractorFromImage() {
-    try {
-      File f = new File(_contractor + "_missionNumber.bmp");
-      BufferedImage image = ImageIO.read(f);
-
-      MissionScanner mscanner = new MissionScanner();
-      int[] numbers = mscanner.scanMissionNumbersDirect(image);
-      if (numbers != null) {
-        Mission[] missions = new DataStore().readMissions(_contractor);
-        for (Mission mission : missions) {
-          if (mission.getNumber() == numbers[0]) {
-            updateImage();
-            _mission = mission;
-            mscanner.scanCurrentMissionDirect(_canvas._image, _mission);
-            updateView();
-          }
-        }
-      }
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-
-  }
-
-  private void save() {
-    if (_mission != null) {
-      try {
-        DataStore dataStore = new DataStore();
-        dataStore.writeCurrentMission(_mission.copy());
-        dataStore.writeMission(_mission.copyNeeded());
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-      }
-    }
-  }
-  
   private void updateImage() throws IOException {
-    File f = new File(_contractor + "_objectives.bmp");
+    File f = new File(_contractor.getName().toLowerCase() + "_objectives.bmp");
     BufferedImage image = ImageIO.read(f);
     _canvas._image = image;
     _canvas.revalidate();
   }
 
-  private void updateView() {
+  public void updateView() {
     SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-        if (_mission != null) {
+        if (_currentMission != null && _missionDB != null) {
           try {
             clear();
 
             updateImage();
 
             _objectivesPanel.setLayout(new GridBagLayout());
-            List<Objective> objectives = _mission.getObjectives();
+            List<Objective> objectivesC = _currentMission.getObjectives();
+            List<Objective> objectivesDB = _missionDB.getObjectives();
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(10, 10, 5, 5);
             NumberFormat nf = NumberFormat.getIntegerInstance();
 
-            for (Objective objective : objectives) {
-              String mat = objective.getMaterial().toLowerCase();
+            for (Objective objectiveC : objectivesC) {
+              Objective objectiveDBFound = null;
+              for (Objective objectiveDB : objectivesDB) {
+                if (objectiveDB.getMaterial().equals(objectiveC.getMaterial())) {
+                  objectiveDBFound = objectiveDB;
+                  break;
+                }
+              }
+              String mat = objectiveC.getMaterial().toLowerCase();
               System.err.println(mat);
               ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
               if (icon == null) {
@@ -237,7 +235,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
               tf1.setColumns(7);
               tf1.setName(mat + "_currentAmount");
               tf1.setHorizontalAlignment(JTextField.RIGHT);
-              tf1.setValue(objective.getCurrentAmount());
+              tf1.setValue(objectiveC.getCurrentAmount());
               tf1.addPropertyChangeListener("value", ContractorPanel.this);
 
               FocusTextField tf2 = new FocusTextField(nf);
@@ -245,7 +243,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
               tf2.setColumns(7);
               tf2.setName(mat + "_neededAmount");
               tf2.setHorizontalAlignment(JTextField.RIGHT);
-              tf2.setValue(objective.getNeededAmount());
+              tf2.setValue(objectiveDBFound.getNeededAmount());
               tf2.addPropertyChangeListener("value", ContractorPanel.this);
 
               Box box = Box.createHorizontalBox();
@@ -312,20 +310,24 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     JFormattedTextField tf = (JFormattedTextField) evt.getSource();
-    List<Objective> objectives = _mission.getObjectives();
-    for (Objective o : objectives) {
-      if (tf.getName().startsWith(o.getMaterial().toLowerCase())) {
-        String[] ss = tf.getName().split("_");
-        if (ss[1].equals("neededAmount")) {
-          o.setNeededAmount((Long) tf.getValue());
-        }
-        if (ss[1].equals("currentAmount")) {
+    String[] ss = tf.getName().split("_");
+
+    if (ss[1].equals("currentAmount")) {
+      List<Objective> objectives = _currentMission.getObjectives();
+      for (Objective o : objectives) {
+        if (tf.getName().startsWith(o.getMaterial().toLowerCase())) {
           o.setCurrentAmount((Long) tf.getValue());
         }
-        System.err.println(o);
+      }
+    } else {
+      // rarely but sometimes DB needs to be amended
+      List<Objective> objectives = _missionDB.getObjectives();
+      for (Objective o : objectives) {
+        if (tf.getName().startsWith(o.getMaterial().toLowerCase())) {
+          o.setNeededAmount((Long) tf.getValue());
+        }
       }
     }
-  
   }
 
   class CCanvas extends JPanel {
@@ -354,11 +356,11 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   static class FocusTextField extends JFormattedTextField {
-  
+
     public FocusTextField(Format format) {
       super(format);
       addFocusListener(new FocusListener() {
-  
+
         @Override
         public void focusGained(FocusEvent e) {
           SwingUtilities.invokeLater(new Runnable() {
@@ -366,9 +368,9 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
               FocusTextField.this.selectAll();
             }
           });
-          
+
         }
-  
+
         @Override
         public void focusLost(FocusEvent e) {
           SwingUtilities.invokeLater(new Runnable() {
@@ -379,19 +381,84 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         }
       });
     }
-  
+
   }
 
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("Contractor Assistant");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.getContentPane().add(new ContractorPanel("mahatma"), BorderLayout.CENTER);
-  
-    frame.setSize(new Dimension(600, 350));
-  
-    frame.setLocationRelativeTo(null);
-  
-    frame.setVisible(true);
-  
+  public void reload() {
+    try {
+      DataStore ds = new DataStore();
+      _contractor = ds.getContractor(_contractorName);
+      _currentMission = ds.getCurrentMission(_contractorName, _contractor.getCurrentMissionNumber());
+      _missionDB = ds.getMission(_contractorName, _contractor.getCurrentMissionNumber());
+      updateView();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
+
+  public void rescan() {
+    try {
+      DataStore ds = new DataStore();
+      _contractor = ds.getContractor(_contractorName);
+      if (_contractor != null) {
+        String cname = _contractor.getName().toLowerCase();
+        File f = new File(cname + "_missionNumber.bmp");
+        BufferedImage image = ImageIO.read(f);
+
+        MissionScanner mscanner = new MissionScanner();
+        Integer number = mscanner.scanMissionNumber(image);
+        _contractor.setCurrentMissionNumber(number);
+
+        _missionDB = ds.getMission(cname, number);
+        if (_missionDB != null) {
+          _currentMission = _missionDB.copy();
+          updateImage();
+          mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
+
+          MaterialsScanner matscanner = new MaterialsScanner();
+          // mscanner.scanMaterials(materialsImage, materials)
+          f = new File(cname + "_materials.bmp");
+          image = ImageIO.read(f);
+          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
+          _contractor.setMaterials(materials);
+
+          save();
+          
+          updateView();
+        }
+      }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+
+  }
+
+  private void save() {
+    if (_currentMission != null && _missionDB != null) {
+      try {
+        DataStore dataStore = new DataStore();
+        dataStore.saveContractor(_contractor);
+        dataStore.writeCurrentMission(_currentMission);
+        dataStore.writeMission(_missionDB);
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public Contractor getContractor() {
+    return _contractor;
+  }
+
+  public Mission getCurrentMission() {
+    return _currentMission;
+  }
+
+  public Mission getMissionDB() {
+    return _missionDB;
+  }
+
 }

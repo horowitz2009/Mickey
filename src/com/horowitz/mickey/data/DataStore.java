@@ -20,6 +20,27 @@ public class DataStore {
     return contractors;
   }
 
+  public Contractor getContractor(String name) throws IOException {
+    Contractor[] contractors = readContractors();
+    for (Contractor c : contractors) {
+      if (c.getName().equalsIgnoreCase(name)) {
+        return c;
+      }
+    }
+    return null;
+  }
+
+  public void saveContractor(Contractor contractor) throws IOException {
+    Contractor[] contractors = readContractors();
+    for (Contractor c : contractors) {
+      if (c.getName().equalsIgnoreCase(contractor.getName())) {
+        c.extract(contractor);
+        break;
+      }
+    }
+    writeContractors(contractors);
+  }
+
   public void writeContractors(Contractor[] contractors) throws IOException {
 
     String json = _gson.toJson(contractors);
@@ -33,6 +54,26 @@ public class DataStore {
     Mission[] missions = _gson.fromJson(json, Mission[].class);
 
     return missions;
+  }
+
+  public Mission getMission(String contractor, int number) throws IOException {
+    Mission[] missions = readMissions(contractor);
+    for (Mission mission : missions) {
+      if (mission.getNumber() == number) {
+        return mission;
+      }
+    }
+    return null;
+  }
+
+  public Mission getCurrentMission(String contractor, int number) throws IOException {
+    Mission[] missions = readCurrentMissions();
+    for (Mission mission : missions) {
+      if (mission.getContractor().equalsIgnoreCase(contractor)) {
+        return mission;
+      }
+    }
+    return null;
   }
 
   public void writeMissions(String contractor, Mission[] missions) throws IOException {
@@ -86,5 +127,5 @@ public class DataStore {
     }
     writeCurrentMissions(missions);
   }
-  
+
 }

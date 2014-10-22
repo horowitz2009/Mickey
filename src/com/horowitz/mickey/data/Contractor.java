@@ -11,8 +11,6 @@ public class Contractor {
   
   private int        _currentMissionNumber;
   
-  private Mission    _currentMission;
-  
   private int        _endMissionNumber;
 
   
@@ -59,16 +57,15 @@ public class Contractor {
     return _name;
   }
 
-  public Mission getCurrentMission() {
-    return _currentMission;
-  }
-
-  public void setCurrentMission(Mission currentMission) {
-    _currentMission = currentMission;
-  }
-
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+  }
+
+  public void extract(Contractor contractor) {
+    _name = contractor._name;
+    _currentMissionNumber = contractor._currentMissionNumber;
+    _endMissionNumber = contractor._endMissionNumber;
+    _materials = contractor._materials;
   }
 }
