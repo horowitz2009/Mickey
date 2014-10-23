@@ -172,8 +172,12 @@ public class MissionScanner {
           if (res != null && res.length() > 2) {
             // set values to the existing objective
             String[] ss = res.split("/");
-            o.setCurrentAmount(Integer.parseInt(ss[0]));
-            o.setNeededAmount(Integer.parseInt(ss[1]));
+            try {
+              o.setCurrentAmount(Integer.parseInt(ss[0]));
+              o.setNeededAmount(Integer.parseInt(ss[1]));
+            } catch (NumberFormatException e) {
+              e.printStackTrace();
+            }
           }
         }
       }// if

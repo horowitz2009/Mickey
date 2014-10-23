@@ -259,6 +259,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
                   break;
                 }
               }
+              
               String mat = objectiveC.getMaterial();
               System.err.println(mat);
               ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
@@ -428,8 +429,17 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     try {
       DataStore ds = new DataStore();
       _contractor = ds.getContractor(_contractorName);
-      _currentMission = ds.getCurrentMission(_contractorName, _contractor.getCurrentMissionNumber());
-      _missionDB = ds.getMission(_contractorName, _contractor.getCurrentMissionNumber());
+      int mni = _contractor.getCurrentMissionNumber();
+      String mn = _missionNumberTF.getText();
+      if (mn != null && mn.length() > 0) {
+        mni = Integer.parseInt(mn);
+      }
+      _currentMission = ds.getCurrentMission(_contractorName, mni);
+      _missionDB = ds.getMission(_contractorName, mni);
+
+      if (_currentMission != null && _currentMission.getNumber() != _missionDB.getNumber()) {
+        _currentMission = _missionDB.copy();
+      }
       updateView();
     } catch (IOException e) {
       // TODO Auto-generated catch block
