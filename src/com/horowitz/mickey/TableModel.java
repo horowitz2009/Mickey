@@ -80,6 +80,7 @@ class TableModel extends AbstractTableModel {
     } else {
       Contractor contractor = _contractors[columnIndex - 1];
       Map<String, Need> innerMap = _map.get(mat);
+      Long secondV = null;
 
       Need need = innerMap.get(contractor.getName());
       if (need != null) {
@@ -87,22 +88,25 @@ class TableModel extends AbstractTableModel {
         value = (o.getNeededAmount() - o.getCurrentAmount());
         NumberFormat nf = NumberFormat.getIntegerInstance();
         value = nf.format(value);
-      } else {
-        Long secondV = null;
-        if (contractor.getMaterialsMore() != null) {
-          for (Material mm : contractor.getMaterialsMore()) {
-            if (mm.getName().equals(mat)) {
-              secondV = -mm.getAmount();
-              break;
-            }
-          }
-          if (secondV != null) {
-            NumberFormat nf = NumberFormat.getIntegerInstance();
-            String sv = nf.format(secondV);
-            value = sv;
+      }
+      if (contractor.getMaterialsMore() != null) {
+        for (Material mm : contractor.getMaterialsMore()) {
+          if (mm.getName().equals(mat)) {
+            secondV = mm.getAmount();
+            break;
           }
         }
       }
+
+      if (value == null)
+        value = 0l;
+      if (secondV == null) {
+        secondV = 0l;
+      }
+      NumberFormat nf = NumberFormat.getIntegerInstance();
+      String sv = nf.format(secondV);
+
+      value = value + ":" + sv;
     }
     return value;
   }

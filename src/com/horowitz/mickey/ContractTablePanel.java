@@ -39,6 +39,27 @@ public class ContractTablePanel extends JPanel {
 
 
         String t = (String) value;
+        if (t != null && t.indexOf(":") > 0){
+          String[] ss = t.split(":");
+         if (ss[0].equals("0")) ss[0] = "";
+         if (ss[1].equals("0")) ss[1] = "";
+         String red = ss[0];
+         String gray = ss[1];
+         if (red.length()>0){
+           label.setForeground(Color.RED);
+           if (gray.length() > 0)
+             red = red + "  (" + gray + ")";
+           label.setText(red);
+           label.setFont(label.getFont().deriveFont(12f));
+         } else {
+           label.setText(gray);
+           label.setFont(label.getFont().deriveFont(12f));
+           label.setFont(label.getFont().deriveFont(9f));
+           label.setForeground(Color.GRAY);
+         }
+        }
+/*        
+        
         if (t != null && t.startsWith("-")) {
           t = t.substring(1);
           label.setText(t);
@@ -51,7 +72,7 @@ public class ContractTablePanel extends JPanel {
             label.setText(t);
           }
         }
-        
+  */      
         label.setHorizontalAlignment(JLabel.RIGHT);
         label.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 6));
         
