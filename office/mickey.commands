@@ -1,10 +1,7 @@
-command=contractor_ok
-command.done=10-20  16 37
-contractor=1_mahatma
-contractor.scan=done
-express=180
+command=none
+express=240
 free=6
-freight=30
+freight=10
 ping=true
 refresh=true
 resume=false

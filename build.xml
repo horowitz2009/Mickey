@@ -2,7 +2,7 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project Mickey2">
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-	<property name="versionNumber" value="802a" />
+	<property name="versionNumber" value="804" />
 
 	<property name="jarname" value="Mickey${versionNumber}.jar" description="" />
 
@@ -35,8 +35,10 @@
 		<copy file="lib/gson-2.3.jar" todir="${dropbox}/${subfolder}/lib" />
 		<copy file="lib/commons-io-2.4.jar" todir="${dropbox}/${subfolder}/lib" />
 
+		<!--
 		<copy todir="${dropbox}/${subfolder}">
 			<fileset dir="${subfolder}" includes="**" />
 		</copy>
+		-->
 	</target>
 </project>

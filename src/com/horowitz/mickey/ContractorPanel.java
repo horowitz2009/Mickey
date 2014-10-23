@@ -208,7 +208,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   private void updateImage() throws IOException {
-    File f = new File(_contractor.getName().toLowerCase() + "_objectives.bmp");
+    File f = new File("data/" + _contractor.getName().toLowerCase() + "_objectives.bmp");
     BufferedImage image = ImageIO.read(f);
     _canvas._image = image;
     _canvas.revalidate();
@@ -442,7 +442,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       _contractor = ds.getContractor(_contractorName);
       if (_contractor != null) {
         String cname = _contractor.getName().toLowerCase();
-        File f = new File(cname + "_missionNumber.bmp");
+        File f = new File("data/"+ cname + "_missionNumber.bmp");
         BufferedImage image = ImageIO.read(f);
 
         MissionScanner mscanner = new MissionScanner();
@@ -470,7 +470,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
             MaterialsScanner matscanner = new MaterialsScanner();
             // mscanner.scanMaterials(materialsImage, materials)
-            f = new File(cname + "_materials.bmp");
+            f = new File("data/"+ cname + "_materials.bmp");
             image = ImageIO.read(f);
             Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
             _contractor.setMaterials(materials);

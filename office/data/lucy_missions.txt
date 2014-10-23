@@ -1,0 +1,80 @@
+11,d, 1200000 money, 25220 bricks, 50000 marble
+12,b, 172000 money, 6800 fuel, 6600 steel, 12800 rubber
+13,d, 60000 rubber, 60000 titanium, 60000 wires
+14,d, 1600000 money
+15,s, 24 xp
+16,s, 8 xp
+17,s, 10 loco
+18,s1, 10 loco, 220000 cement
+19,b, 120000 glass, 120000 rubber, 120000 titanium
+20,d, 2550000 money
+21,d, 85000 bricks, 85000 fuel
+22,d, 85000 glass, 85000 fuel
+23,d, 85000 fuel, 85000 marble
+24,d1, 6000000 money, 170000 bricks
+25,d1, 6000000 money, 170000 glass
+26,d1, 6000000 money, 170000 marble
+27,s, 60 loco
+28,d, 100000 cement, 100000 rubber, 50000 silicon
+29,b, 3500000 money, 255000 carbon, 195000 wires
+30,d, 135000 carbon, 135000 wires
+31,d, 165000 steel, 165000 titanium
+32,s, 14 ts
+33,b, 16000 fuel, 15000 rubber, 14500 wires
+34,b
+35,b, 510000 bricks, 150000 steel, 450000 gravel, 250000 cement, 150000 plastics
+36,d, 220000 glass, 180000 carbon
+37,b, 350000 fuel, 300000 marble, 200000 silicon
+38,d1, 20000000 money, 500000 u-235
+39,d, 275000 wires, 275000 silicon
+40,d, 23000000 money, 550000 plastics
+41,d, 200000 u-235, 200000 cement, 200000 carbon
+42,s1, 30 loco, 27500000 money
+43,b, 600000 money, 30000 wood, 30000 wires
+44,d, 300000 wood, 300000 steel
+45,d, 300000 fuel, 300000 plastics
+46,d, 300000 rubber, 300000 wires
+47,s, 35 wagon, 24255 steel
+48,s, 35 wagon, 24255 fuel
+49,s, 500 wagon, 181125 wires
+50,s, 125 loco
+51,d, 200000 gravel, 200000 titanium, 200000 silicon
+52,d, 22000000 money, 175000 glass
+53,d1, 350000 carbon, 350000 marble
+54,d1, 350000 carbon, 350000 titanium
+55,d1, 350000 steel, 350000 gravel
+56,d1, 30000000 money, 350000 plastics
+57,d1, 350000 marble, 350000 silicon
+58,b, 7850000 money, 550000 fuel, 550000 plastics
+59,s, 185 loco
+60,b, 1500000 money, 350000 steel, 350000 wires
+61,d, 28000000 money
+62,d, 200000 fuel, 200000 gravel
+63,d, 25000000 money, 200000 gravel
+64,s1, 22 loco, 350000 steel
+65,d, 225000 wood, 225000 nails, 225000 cement
+66,d, 250000 rubber, 250000 wires
+67,d, 250000 bricks, 250000 rubber
+68,s1, 25 loco, 30000000 money
+69,b, 250000 wood, 550000 u-235, 550000 marble
+70,s, 45 maglev
+71,b, 550000 carbon, 450000 wires, 600000 plastics
+72,d, 200000 steel, 200000 carbon, 150000 silicon
+73,d, 27000000 money, 250000 plastics
+74,b, 7000000 money, 480000 nails, 300000 gravel, 480000 rubber, 450000 wires, 450000 silicon
+75,s1, 115 wagon, 375000 titanium
+76,d, 185000 nails, 185000 glass, 185000 rubber
+77,d1, 32500000 money, 500000 fuel
+78,d, 220000 wood, 220000 bricks, 140000 u-235
+79,s, 20 loco
+80,s, 20 loco
+81,s, 800 wagon, 214200 wood, 214200 wires
+82,b, 550000 bricks, 450000 glass, 300000 cement
+83,s, 150 xp
+84,d, 25000000 money, 250000 rubber, 250000 plastics
+85,b, 200000 u-235, 300000 cement, 200000 rubber
+86,d, 285000 glass, 285000 marble
+87,b, 600000 money, 125000 wood, 400000 marble
+88,d, 235000 wood, 200000 cement
+89,d, 30000000 money, 300000 u-235
+90,s, 133 steam, 133 diesel, 133 electric

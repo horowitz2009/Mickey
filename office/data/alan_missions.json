@@ -3,20 +3,20 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 45000,
+        "_material": "Gold",
+        "_neededAmount": 3200000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Marble",
-        "_neededAmount": 28000,
+        "_material": "Fuel",
+        "_neededAmount": 100000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 18,
+    "_number": 23,
     "_contractor": "Alan",
     "_any": false
   },

@@ -3,27 +3,27 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 1200000,
+        "_material": "Rubber",
+        "_neededAmount": 60000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Bricks",
-        "_neededAmount": 25220,
+        "_material": "Titanium",
+        "_neededAmount": 60000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Marble",
-        "_neededAmount": 50000,
+        "_material": "Wires",
+        "_neededAmount": 60000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 11,
+    "_number": 13,
     "_contractor": "Lucy",
     "_any": false
   },

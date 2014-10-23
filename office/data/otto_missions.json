@@ -4,26 +4,19 @@
       {
         "_type": "d",
         "_material": "Bricks",
-        "_neededAmount": 31370,
+        "_neededAmount": 85000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Steel",
-        "_neededAmount": 65000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Gravel",
-        "_neededAmount": 65000,
+        "_material": "Glass",
+        "_neededAmount": 85000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 29,
+    "_number": 30,
     "_contractor": "Otto",
     "_any": false
   },

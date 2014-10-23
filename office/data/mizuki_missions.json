@@ -3,20 +3,13 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 65000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 55000,
+        "_material": "Gold",
+        "_neededAmount": 1575000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 3,
+    "_number": 6,
     "_contractor": "Mizuki",
     "_any": false
   },

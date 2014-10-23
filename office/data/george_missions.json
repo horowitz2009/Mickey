@@ -2,21 +2,14 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 300000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Bricks",
-        "_neededAmount": 21680,
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 225,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 28,
+    "_number": 32,
     "_contractor": "George",
     "_any": false
   },

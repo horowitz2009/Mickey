@@ -1,0 +1,73 @@
+18,d, 45000 titanium, 28000 marble
+19,d, 45000 carbon, 28000 wires
+20,s1, 155 wagon, 78500 fuel
+21,b, 50000 wood, 30000 nails, 72000 glass, 42000 steel, 33661 wires
+22,b, 710000 money, 72000 cement, 60000 carbon
+23,d, 3200000 money, 100000 fuel
+24,d, 3500000 money, 110000 carbon
+25,d, 3700000 money, 120000 marble
+26,d, 3900000 money, 130000 gravel
+27,d, 75000 wood, 75000 nails
+28,s, 75 electric
+29,b, 37000 u-235, 85000 carbon, 37000 plastics
+30,b, 53000 rubber, 51000 marble, 40000 silicon
+31,s, 55 wagon
+32,s, 80 xp
+33,d, 85000 titanium, 45000 wires
+34,s, 15 ts
+35,s1, 195 wagon, 100000 cement
+36,s1, 195 wagon, 100000 plastics
+37,s, 170 loco
+38,b, 2500000 money, 75000 glass, 90000 steel, 75000 rubber, 75000 titanium, 70000 plastics
+39,b, 108000 bricks, 68000 titanium, 68000 marble
+40,d, 120000 bricks, 75000 fuel, 60000 silicon
+41,s, 95 diesel
+42,d, 110000 silicon
+43,b
+44,d, 250000 plastics
+45,d, 112500 wires
+46,s, 15 loco
+47,s1, 215 wagon, 135000 steel
+48,d, 60000 u-235, 60000 wires, 40000 silicon
+49,s, 16 maglev, 185000 u-235
+50,d, 750000 money, 60000 cement
+51,d, 65000 bricks, 65000 rubber
+52,s, 100 wagon
+53,s1, 235 xp, 175000 gravel
+54,s1, 235 wagon, 4100000 money
+55,d, 85000 glass, 45000 titanium, 45000 marble
+56,s, 250 wagon
+57,s1, 35 xp, 335000 carbon
+58,d, 1350000 money
+59,d1, 90000 titanium, 90000 silicon
+60,s, 15 ts
+61,s, 60 xp
+62,s, 22 wagon
+63,b, 400000 gravel, 400000 carbon, 400000 plastics
+64,s, 5 ts
+65,s, 3 loco
+66,d, 77500 bricks, 75000 plastics, 75000 silicon
+67,d, 1500000 money
+68,s, 45 xp
+69,d, 115000 titanium, 115000 plastics
+70,d, 115000 fuel, 115000 plastics
+71,d, 115000 fuel, 115000 rubber
+72,d, 125000 carbon, 125000 titanium
+73,d1, 4150000 money, 200000 fuel
+74,s, 12 ts
+75,d, 260000 steel
+76,d, 260000 fuel
+77,b, 300000 u-235, 400000 titanium, 300000 wires
+78,d, 260000 plastics
+79,b, 100000 fuel, 100000 gravel, 200000 cement
+80,d, 275000 wires
+81,d, 3000000 money
+82,s, 15 ts
+83,s, 35 wagon
+84,s, 90 xp
+85,d, 150000 wires, 150000 silicon
+86,s, 35 wagon
+87,d, 285000 wires
+88,s1, 275 wagon, 245000 plastics
+89,s, 20 ts
+90,d, 46000000 money

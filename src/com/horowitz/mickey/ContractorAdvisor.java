@@ -37,7 +37,7 @@ public class ContractorAdvisor extends JPanel {
   }
 
   public static void main(String[] args) {
-    JFrame frame = new JFrame("Contractor Assistant");
+    JFrame frame = new JFrame("Contract Advisor v.102");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final ContractorAdvisor advisor = new ContractorAdvisor();
     frame.getContentPane().add(advisor, BorderLayout.CENTER);

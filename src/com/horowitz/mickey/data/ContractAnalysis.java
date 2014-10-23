@@ -42,7 +42,8 @@ public class ContractAnalysis {
           
           Material m = extractMat(matName, initialMaterials);
           //this is what contractor has at this point
-          S = m.getAmount();
+          if (m != null)
+            S = m.getAmount();
           
           //let's see the progress of the current mission
           Objective o = getObjective(currentMission, matName);
