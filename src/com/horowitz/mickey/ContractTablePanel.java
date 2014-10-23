@@ -80,6 +80,8 @@ public class ContractTablePanel extends JPanel {
         t.start();
       }
     });
+    
+    add(toolbar, BorderLayout.NORTH);
   }
 
   public void setMap(Map<String, Map<String, Need>> map) {

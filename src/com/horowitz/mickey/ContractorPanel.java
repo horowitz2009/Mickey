@@ -219,7 +219,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       public void run() {
         if (_contractor != null) {
           try {
-            File f = new File(_contractor.getName().toLowerCase() + "_missionNumber.bmp");
+            File f = new File("data/" + _contractor.getName().toLowerCase() + "_missionNumber.bmp");
             if (f.exists()) {
               BufferedImage image = ImageIO.read(f);
               Icon icon = new ImageIcon(image);
