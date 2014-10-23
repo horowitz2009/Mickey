@@ -1,6 +1,8 @@
 [
   {
     "_name": "Bobby",
+    "_scanMaterials2": false,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -67,11 +69,83 @@
         "_amount": 0
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 428910
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 70449
+      },
+      {
+        "_name": "Glass",
+        "_amount": 168229
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 287960
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 0
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 0
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 614102
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 0
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 0
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 24,
     "_endMissionNumber": 0
   },
   {
     "_name": "Mahatma",
+    "_scanMaterials2": false,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -138,11 +212,83 @@
         "_amount": 0
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 210277
+      },
+      {
+        "_name": "Glass",
+        "_amount": 127831
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 162911
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 40677
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 0
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 0
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 45,
     "_endMissionNumber": 0
   },
   {
     "_name": "George",
+    "_scanMaterials2": false,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -209,11 +355,83 @@
         "_amount": 0
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 62387
+      },
+      {
+        "_name": "Glass",
+        "_amount": 0
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 0
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 0
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 0
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 0
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 32,
     "_endMissionNumber": 0
   },
   {
     "_name": "Otto",
+    "_scanMaterials2": false,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -280,11 +498,83 @@
         "_amount": 0
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 162172
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 0
+      },
+      {
+        "_name": "Glass",
+        "_amount": 110472
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 19502
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 248758
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 0
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 0
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 30,
     "_endMissionNumber": 0
   },
   {
     "_name": "Sam",
+    "_scanMaterials2": false,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -351,11 +641,83 @@
         "_amount": 0
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 8166
+      },
+      {
+        "_name": "Glass",
+        "_amount": 0
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 98851
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 39311
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 0
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 0
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 27,
     "_endMissionNumber": 0
   },
   {
     "_name": "Alan",
+    "_scanMaterials2": true,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -422,11 +784,83 @@
         "_amount": 7788
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 7353
+      },
+      {
+        "_name": "Glass",
+        "_amount": 844
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 21388
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 117388
+      },
+      {
+        "_name": "U-235",
+        "_amount": 78266
+      },
+      {
+        "_name": "Cement",
+        "_amount": 32614
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 124898
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 39821
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 78228
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 149212
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 40000
+      }
+    ],
     "_currentMissionNumber": 23,
     "_endMissionNumber": 0
   },
   {
     "_name": "Wolfgang",
+    "_scanMaterials2": true,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -493,11 +927,83 @@
         "_amount": 6960
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 23543
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 0
+      },
+      {
+        "_name": "Glass",
+        "_amount": 0
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 0
+      },
+      {
+        "_name": "Steel",
+        "_amount": 17314
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 0
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 0
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 50000
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 0
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 43040
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 0
+      }
+    ],
     "_currentMissionNumber": 12,
     "_endMissionNumber": 0
   },
   {
     "_name": "Mizuki",
+    "_scanMaterials2": true,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -564,11 +1070,83 @@
         "_amount": 8660
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 168213
+      },
+      {
+        "_name": "Glass",
+        "_amount": 0
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 593500
+      },
+      {
+        "_name": "Steel",
+        "_amount": 39009
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 390448
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 0
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 318667
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 100000
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 76247
+      },
+      {
+        "_name": "Marble",
+        "_amount": 117044
+      },
+      {
+        "_name": "Wires",
+        "_amount": 69312
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 271340
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 335000
+      }
+    ],
     "_currentMissionNumber": 6,
     "_endMissionNumber": 0
   },
   {
     "_name": "Lucy",
+    "_scanMaterials2": true,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -635,11 +1213,83 @@
         "_amount": 8660
       }
     ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 120652
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 233589
+      },
+      {
+        "_name": "Glass",
+        "_amount": 6778
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 198861
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 396685
+      },
+      {
+        "_name": "U-235",
+        "_amount": 0
+      },
+      {
+        "_name": "Cement",
+        "_amount": 88321
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 59933
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 255000
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 60000
+      },
+      {
+        "_name": "Marble",
+        "_amount": 0
+      },
+      {
+        "_name": "Wires",
+        "_amount": 275968
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 141340
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 150000
+      }
+    ],
     "_currentMissionNumber": 13,
     "_endMissionNumber": 0
   },
   {
     "_name": "Giovanni",
+    "_scanMaterials2": true,
+    "_active": true,
     "_materials": [
       {
         "_name": "Gold",
@@ -704,6 +1354,76 @@
       {
         "_name": "Plastics",
         "_amount": 7788
+      }
+    ],
+    "_materialsMore": [
+      {
+        "_name": "Gold",
+        "_amount": 0
+      },
+      {
+        "_name": "Wood",
+        "_amount": 0
+      },
+      {
+        "_name": "Nails",
+        "_amount": 0
+      },
+      {
+        "_name": "Bricks",
+        "_amount": 2743111
+      },
+      {
+        "_name": "Glass",
+        "_amount": 2346098
+      },
+      {
+        "_name": "Fuel",
+        "_amount": 2500000
+      },
+      {
+        "_name": "Steel",
+        "_amount": 0
+      },
+      {
+        "_name": "Gravel",
+        "_amount": 0
+      },
+      {
+        "_name": "U-235",
+        "_amount": 1382407
+      },
+      {
+        "_name": "Cement",
+        "_amount": 84795
+      },
+      {
+        "_name": "Rubber",
+        "_amount": 0
+      },
+      {
+        "_name": "Carbon",
+        "_amount": 2943300
+      },
+      {
+        "_name": "Titanium",
+        "_amount": 2930301
+      },
+      {
+        "_name": "Marble",
+        "_amount": 50000
+      },
+      {
+        "_name": "Wires",
+        "_amount": 0
+      },
+      {
+        "_name": "Plastics",
+        "_amount": 1784412
+      },
+      {
+        "_name": "Silicon",
+        "_amount": 2592450
       }
     ],
     "_currentMissionNumber": 1,

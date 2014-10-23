@@ -63,6 +63,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.horowitz.mickey.data.Contractor;
+import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
 
 /**
@@ -880,14 +881,12 @@ public final class MainFrame extends JFrame {
   }
 
   private void resetContractors() {
-    _captureContractors.clear();
-    String s = _settings.getProperty("contractors");
-    String[] contractorNames = s.split(",");// do not forget to trim before using
-    int index = 0;
-    for (String c : contractorNames) {
-      _captureContractors.add(++index + "_" + c.trim());
+    try {
+      _captureContractors = new DataStore().getActiveContractorNames();
+      //_withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-    _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
   }
 
   private void stopMagic() {
@@ -1335,9 +1334,8 @@ public final class MainFrame extends JFrame {
     // _commands.saveSettingsSorted();
 
     if (_captureContractors.size() > 0) {
-      String[] ss = _captureContractors.get(0).split("_");
-      String contractor = ss[1];
-      String fname = "data/" + contractor;
+      String contractorName = _captureContractors.get(0);
+      String fname = "data/" + contractorName;
       // String index = StringUtils.leftPad(ss[0], 2, "0");
       handlePopups();
 
@@ -1360,7 +1358,7 @@ public final class MainFrame extends JFrame {
 
         int track = 500;
         area = new Rectangle(p.x, p.y + 31, 100, 484);
-        String cname = contractor.toLowerCase() + ".bmp";
+        String cname = contractorName + ".bmp";
         boolean found = false;
         if (findAndClick(cname, area, 15, 7, true, false)) {
           found = true;
@@ -1395,7 +1393,7 @@ public final class MainFrame extends JFrame {
 
           // _scanner.captureGame("status " + index + "A " + contractor + ".bmp");
           _mouse.delay(100);
-          if (_withMaterials) {
+          if (true) {//_withMaterials
             // click visit
             _mouse.click(p.x + 267, p.y + 335);
             _mouse.delay(2000);
@@ -1427,6 +1425,16 @@ public final class MainFrame extends JFrame {
               _scanner.writeImage(rect, fname + "_materials.bmp");
               // _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
+              
+              if (new DataStore().getContractor(contractorName).isScanMaterials2()) {
+                // click next page of materials
+                _mouse.click(pm.x + 724, pm.y + 292);
+                _mouse.delay(500);
+                _scanner.writeImage(rect, fname + "_materials2.bmp");
+                // _scanner.captureGame("status " + index + "C " + contractor + " materials" + ".bmp");
+                _mouse.delay(300);
+                
+              }
             }
 
             // click close
@@ -1439,7 +1447,7 @@ public final class MainFrame extends JFrame {
             goHomeIfNeeded();
           }
         } else {
-          LOGGER.info("Couldn't find " + contractor);
+          LOGGER.info("Couldn't find " + contractorName);
         }
         _captureContractors.remove(0);
       }

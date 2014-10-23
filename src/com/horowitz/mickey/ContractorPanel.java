@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.Format;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -474,6 +475,17 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             image = ImageIO.read(f);
             Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
             _contractor.setMaterials(materials);
+
+            f = new File("data/"+ cname + "_materials2.bmp");
+            if (f.exists()) {
+              image = ImageIO.read(f);
+              Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2);
+              List<Material> old = new ArrayList<>();
+              for (Material material : materials2) {
+                old.add(material);
+              }
+              _contractor.setMaterials(old.toArray(new Material[0]));
+            }
 
             save();
 

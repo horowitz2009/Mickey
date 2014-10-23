@@ -82,15 +82,17 @@ public class ContractorsPanel extends JPanel {
     add(sp, BorderLayout.WEST);
     JToggleButton firstButton = null;
     for (Contractor contractor : _contractors) {
-      ContractorPanel cp = new ContractorPanel(contractor.getName());
-      _cardPanel.add(cp, contractor.getName());
+      if (contractor.isActive()) {
+        ContractorPanel cp = new ContractorPanel(contractor.getName());
+        _cardPanel.add(cp, contractor.getName());
 
-      JToggleButton button = createContractorButton(contractor.getName());
-      if (firstButton == null) {
-        firstButton = button;
+        JToggleButton button = createContractorButton(contractor.getName());
+        if (firstButton == null) {
+          firstButton = button;
+        }
+        bg.add(button);
+        box.add(button);
       }
-      bg.add(button);
-      box.add(button);
     }
 
     if (firstButton != null) {
@@ -104,25 +106,25 @@ public class ContractorsPanel extends JPanel {
         _progressBar.setValue(0);
         _progressBar.setVisible(true);
         int n = 0;
-        //List<Mission> currentMissions = new ArrayList<>();
+        // List<Mission> currentMissions = new ArrayList<>();
         Component[] components = _cardPanel.getComponents();
         for (Component component : components) {
           if (component instanceof ContractorPanel) {
             ContractorPanel conPanel = (ContractorPanel) component;
             conPanel.rescan();
-            //currentMissions.add(conPanel.getCurrentMission());
-            //TODO conPanel.getMaterialStatus -> getContractor() updated
+            // currentMissions.add(conPanel.getCurrentMission());
+            // TODO conPanel.getMaterialStatus -> getContractor() updated
             _progressBar.setValue(++n);
           }
         }
 
-//        // SAVE CURRENT MISSIONS
-//        try {
-//          new DataStore().writeCurrentMissions((Mission[]) currentMissions.toArray(new Mission[currentMissions.size()]));
-//        } catch (IOException e1) {
-//          // TODO Auto-generated catch block
-//          e1.printStackTrace();
-//        }
+        // // SAVE CURRENT MISSIONS
+        // try {
+        // new DataStore().writeCurrentMissions((Mission[]) currentMissions.toArray(new Mission[currentMissions.size()]));
+        // } catch (IOException e1) {
+        // // TODO Auto-generated catch block
+        // e1.printStackTrace();
+        // }
         _progressBar.setValue(++n);
 
         try {

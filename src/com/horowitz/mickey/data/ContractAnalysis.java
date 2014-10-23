@@ -2,9 +2,11 @@ package com.horowitz.mickey.data;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ContractAnalysis {
 
@@ -24,11 +26,26 @@ public class ContractAnalysis {
 
       for (int i = 0; i < contractors.length; i++) {
         Contractor contractor = contractors[i];
-        System.err.println();
-        System.err.println();
-        System.err.println();
-        System.err.println(contractor.getName());
-        System.err.println("=============================");
+        Set<String> silicons = new HashSet<>();
+        silicons.add("Alan");
+        silicons.add("Wolfgang");
+        silicons.add("Mizuki");
+        silicons.add("Lucy");
+        silicons.add("Giovanni");
+        contractor.setScanMaterials2(silicons.contains(contractor.getName()));
+        
+        silicons.add("Bobby");
+        silicons.add("Mahatma");
+        silicons.add("George");
+        silicons.add("Otto");
+        silicons.add("Sam");
+        contractor.setActive(silicons.contains(contractor.getName()));
+
+//        System.err.println();
+//        System.err.println();
+//        System.err.println();
+//        System.err.println(contractor.getName());
+//        System.err.println("=============================");
         Mission currentMission = null;
         for (Mission cm : currentMissions) {
           if (cm.getContractor().equalsIgnoreCase(contractor.getName())) {
@@ -91,8 +108,8 @@ public class ContractAnalysis {
             }
           }
 
-          System.err.println("S(" + matName + ") = " + S);
-          System.err.println("Sadd(" + matName + ") = " + Sadd);
+//          System.err.println("S(" + matName + ") = " + S);
+//          System.err.println("Sadd(" + matName + ") = " + Sadd);
           matMoreList.add(new Material(matName, Sadd));
         } // material
 

@@ -2,6 +2,8 @@ package com.horowitz.mickey.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
@@ -23,7 +25,7 @@ public class DataStore {
   public Contractor getContractor(String name) throws IOException {
     Contractor[] contractors = readContractors();
     for (Contractor c : contractors) {
-      if (c.getName().equalsIgnoreCase(name)) {
+      if (c.getName().equals(name)) {
         return c;
       }
     }
@@ -33,7 +35,7 @@ public class DataStore {
   public void saveContractor(Contractor contractor) throws IOException {
     Contractor[] contractors = readContractors();
     for (Contractor c : contractors) {
-      if (c.getName().equalsIgnoreCase(contractor.getName())) {
+      if (c.getName().equals(contractor.getName())) {
         c.extract(contractor);
         break;
       }
@@ -136,6 +138,16 @@ public class DataStore {
       }
     }
     writeCurrentMissions(missions);
+  }
+
+  public List<String> getActiveContractorNames() throws IOException {
+    List<String> active = new ArrayList<>();
+    for (Contractor c : readContractors()) {
+      if (c.isActive()) {
+        active.add(c.getName());
+      }
+    }
+    return active;
   }
 
 }
