@@ -79,7 +79,7 @@ public class InitialMassLoader {
     mat.add("tsany");
     Material[] ma = Material.createArray();
     for (Material material : ma) {
-      mat.add(material.getName().toLowerCase());
+      mat.add(material.getName());
     }
 
     List<Mission> missions = new ArrayList<>();

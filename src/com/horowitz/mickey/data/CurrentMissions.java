@@ -35,7 +35,7 @@ public class CurrentMissions {
     settings.loadSettings();
     String[] contractors = settings.getProperty("contractors").split(",");
     for (String c : contractors) {
-      String contractorName = StringUtils.capitalize(c.trim().toLowerCase());
+      String contractorName = StringUtils.capitalize(c.trim());
       Mission m = new Mission();
       m.setContractor(contractorName);
       m.setNumber(0);

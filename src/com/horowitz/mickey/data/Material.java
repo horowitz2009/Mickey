@@ -16,7 +16,7 @@ public class Material {
         new Material("Silicon"), };
   }
 
-  public static String[]         OTHER = new String[] { "Steam", "Diesel", "Electric", "Maglev", "Wagon", "XP", "TS", "TSany", };
+  public static String[]         OTHER = new String[] { "Steam", "Diesel", "Electric", "Maglev", "Loco", "Wagon", "XP", "TS", "TSany", };
 
   public static final Material[] ALL   = createArray();
 

@@ -78,7 +78,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     JFrame frame = new JFrame("Contractor Assistant");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    ContractorPanel cp = new ContractorPanel("mahatma");
+    ContractorPanel cp = new ContractorPanel("George");
 
     frame.getContentPane().add(cp, BorderLayout.CENTER);
 
@@ -209,7 +209,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   private void updateImage() throws IOException {
-    File f = new File("data/" + _contractor.getName().toLowerCase() + "_objectives.bmp");
+    File f = new File("data/" + _contractor.getName() + "_objectives.bmp");
     BufferedImage image = ImageIO.read(f);
     _canvas._image = image;
     _canvas.revalidate();
@@ -220,7 +220,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       public void run() {
         if (_contractor != null) {
           try {
-            File f = new File("data/" + _contractor.getName().toLowerCase() + "_missionNumber.bmp");
+            File f = new File("data/" + _contractor.getName() + "_missionNumber.bmp");
             if (f.exists()) {
               BufferedImage image = ImageIO.read(f);
               Icon icon = new ImageIcon(image);
@@ -259,7 +259,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
                   break;
                 }
               }
-              String mat = objectiveC.getMaterial().toLowerCase();
+              String mat = objectiveC.getMaterial();
               System.err.println(mat);
               ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
               if (icon == null) {
@@ -355,7 +355,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     if (ss[1].equals("currentAmount")) {
       List<Objective> objectives = _currentMission.getObjectives();
       for (Objective o : objectives) {
-        if (tf.getName().startsWith(o.getMaterial().toLowerCase())) {
+        if (tf.getName().startsWith(o.getMaterial())) {
           o.setCurrentAmount((Long) tf.getValue());
         }
       }
@@ -363,7 +363,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       // rarely but sometimes DB needs to be amended
       List<Objective> objectives = _missionDB.getObjectives();
       for (Objective o : objectives) {
-        if (tf.getName().startsWith(o.getMaterial().toLowerCase())) {
+        if (tf.getName().startsWith(o.getMaterial())) {
           o.setNeededAmount((Long) tf.getValue());
         }
       }
@@ -442,7 +442,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       DataStore ds = new DataStore();
       _contractor = ds.getContractor(_contractorName);
       if (_contractor != null) {
-        String cname = _contractor.getName().toLowerCase();
+        String cname = _contractor.getName();
         File f = new File("data/"+ cname + "_missionNumber.bmp");
         BufferedImage image = ImageIO.read(f);
 

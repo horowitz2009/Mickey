@@ -86,7 +86,7 @@ public class DataStore {
   }
 
   public void writeMission(Mission newMission) throws IOException {
-    Mission[] missions = readMissions(newMission.getContractor().toLowerCase());
+    Mission[] missions = readMissions(newMission.getContractor());
     for (Mission m : missions) {
       if (m.getContractor().equals(newMission.getContractor())) {
         m.setAny(newMission.isAny());
@@ -95,7 +95,7 @@ public class DataStore {
         break;
       }
     }
-    writeMissions(newMission.getContractor().toLowerCase(), missions);
+    writeMissions(newMission.getContractor(), missions);
   }
 
   public Mission[] readCurrentMissions() throws IOException {

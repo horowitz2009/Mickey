@@ -92,7 +92,7 @@ public class ContractTablePanel extends JPanel {
   public void reload() {
     ContractAnalysis ca = new ContractAnalysis();
     ca.calcALLNeeds();
-    Map<String, Map<String, Need>> map = ca.collectCurrentNeeds();
+    Map<String, Map<String, Need>> map = ca.collectCurrentNeedsALL();
     _model._map = map;
     repaint();
   }

@@ -25,11 +25,12 @@ public class ContractorAdvisor extends JPanel {
     _contractorsPanel = new ContractorsPanel();
     pane.addTab("Contractors", _contractorsPanel);
     ContractAnalysis ca = new ContractAnalysis();
-    Map<String, Map<String, Need>> map = ca.collectCurrentNeeds();
+    Map<String, Map<String, Need>> map1 = ca.collectCurrentNeeds();
+    Map<String, Map<String, Need>> map2 = ca.collectCurrentNeedsALL();
 
 
-    _contractTablePanel = new ContractTablePanel(new TableModel(map));
-    _contractTablePanel2 = new ContractTablePanel(new TableModel(null));
+    _contractTablePanel = new ContractTablePanel(new TableModel(map1));
+    _contractTablePanel2 = new ContractTablePanel(new TableModel(map2));
     pane.addTab("Table", _contractTablePanel);
     //_contractTablePanel2.setMap(null);
     pane.addTab("Table2", _contractTablePanel2);
@@ -37,7 +38,7 @@ public class ContractorAdvisor extends JPanel {
   }
 
   public static void main(String[] args) {
-    JFrame frame = new JFrame("Contract Advisor v.103");
+    JFrame frame = new JFrame("Contract Advisor v.104");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final ContractorAdvisor advisor = new ContractorAdvisor();
     frame.getContentPane().add(advisor, BorderLayout.CENTER);
@@ -59,6 +60,7 @@ public class ContractorAdvisor extends JPanel {
   private void reloadAll() {
     _contractorsPanel.reloadAll();
     _contractTablePanel.reload();
+    _contractTablePanel2.reload();
   }
 
 }

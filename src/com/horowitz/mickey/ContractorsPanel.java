@@ -78,7 +78,8 @@ public class ContractorsPanel extends JPanel {
 
     JScrollPane sp = new JScrollPane(box);
     sp.setMinimumSize(new Dimension(100, 500));
-    sp.setPreferredSize(new Dimension(74, 500));
+    sp.setPreferredSize(new Dimension(77, 500));
+    sp.getVerticalScrollBar().setUnitIncrement(20);
     add(sp, BorderLayout.WEST);
     JToggleButton firstButton = null;
     for (Contractor contractor : _contractors) {
@@ -161,18 +162,19 @@ public class ContractorsPanel extends JPanel {
 
   private JToggleButton createContractorButton(String name) {
     JToggleButton button = new JToggleButton(new ConctratorAction(name));
-    ImageIcon icon1 = ImageManager.getImage("contracts/" + name.toLowerCase() + "40.png");
-    ImageIcon icon2 = ImageManager.getImage("contracts/blueArea40flat.png");
+    ImageIcon icon1 = ImageManager.getImage("contracts/" + name + "49.png");
+    //ImageIcon icon2 = ImageManager.getImage("contracts/blueArea40flat.png");
 
-    BufferedImage bi = new BufferedImage(icon1.getIconWidth(), icon1.getIconHeight() + icon2.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-    Graphics g = bi.createGraphics();
+    //BufferedImage bi = new BufferedImage(icon1.getIconWidth(), icon1.getIconHeight() + icon2.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+    //Graphics g = bi.createGraphics();
     // paint the Icon to the BufferedImage.
-    icon1.paintIcon(null, g, 0, 0);
-    icon2.paintIcon(null, g, 0, 40);
-    g.dispose();
-    bi = bi.getSubimage(0, 1, bi.getWidth(), bi.getHeight() - 1);// cut first line
+    //icon1.paintIcon(null, g, 0, 0);
+    //icon2.paintIcon(null, g, 0, 40);
+    //g.dispose();
+    //bi = bi.getSubimage(0, 1, bi.getWidth(), bi.getHeight() - 1);// cut first line
 
-    button.setIcon(new ImageIcon(bi));
+    //button.setIcon(new ImageIcon(bi));
+    button.setIcon(icon1);
 
     button.setBorderPainted(false);
     button.setContentAreaFilled(false);

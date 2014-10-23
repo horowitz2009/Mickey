@@ -14,6 +14,8 @@ public class ContractAnalysis {
   }
 
   public static void main(String[] args) {
+    Map<String, Map<String, Need>> map = new ContractAnalysis().collectCurrentNeeds();
+    System.err.println(map);
     new ContractAnalysis().calcALLNeeds();
   }
 
@@ -193,26 +195,70 @@ public class ContractAnalysis {
         }
       }
 
-      /*
-       * for (Material material : allMats) { Map<String, Need> innerMap = new Hashtable<String, Need>(); map.put(material.getName(), innerMap); for
-       * (Need need : needs) { if (material.getName().equals(need.getObjective().getMaterial())) { innerMap.put(need.getContractorName(), need); } } }
-       * 
-       * String[] otherNeeds = Material.OTHER;
-       * 
-       * for (String other : otherNeeds) { Map<String, Need> innerMap = new Hashtable<>(); map.put(other, innerMap); for (Need need : needs) { if
-       * (other.equals(need.getObjective().getMaterial())) { innerMap.put(need.getContractorName(), need); } } }
-       */
       // map.get("Steel").get("Mizuki");
       // map.get("Silicon").isEmpty() is true => nobody needs silicon right now
 
       return map;
-
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
-
     return null;
   }
+  
+  public Map<String, Map<String, Need>> collectCurrentNeedsALL() {
+    try {
+      DataStore ds = new DataStore();
+      Mission[] currentMissions = ds.readCurrentMissions();
+      ds.mergeCurrentWithDB(currentMissions);
 
+      List<Need> needs = new ArrayList<>();
+      for (Mission mission : currentMissions) {
+        List<Objective> objectives = mission.getObjectives();
+        for (Objective objective : objectives) {
+          long curr = objective.getCurrentAmount();
+          long needed = objective.getNeededAmount();
+          if (curr < needed) {
+            needs.add(new Need(objective, mission.getContractor()));
+          }
+        }
+      }
+
+      // Contractor[] contractors = ds.readContractors();
+      Material[] allMats = Material.createArray();
+      Map<String, Map<String, Need>> map = new Hashtable<>();
+
+      for (Material material : allMats) {
+        Map<String, Need> innerMap = new Hashtable<String, Need>();
+        map.put(material.getName(), innerMap);
+        for (Need need : needs) {
+          if (material.getName().equals(need.getObjective().getMaterial())) {
+            innerMap.put(need.getContractorName(), need);
+          }
+        }
+      }
+
+      String[] otherNeeds = Material.OTHER;
+
+      for (String other : otherNeeds) {
+        for (Need need : needs) {
+          if (other.equals(need.getObjective().getMaterial())) {
+            Map<String, Need> innerMap = map.get(other);
+            if (innerMap == null) {
+              innerMap = new Hashtable<String, Need>();
+              map.put(other, innerMap);
+            }
+            innerMap.put(need.getContractorName(), need);
+          }
+        }
+      }
+
+      // map.get("Steel").get("Mizuki");
+      // map.get("Silicon").isEmpty() is true => nobody needs silicon right now
+
+      return map;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
 }

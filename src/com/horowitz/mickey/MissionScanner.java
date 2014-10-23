@@ -146,6 +146,9 @@ public class MissionScanner {
           break;
         }
       }
+      if (theIDE == null) {
+        theIDE = new ImageDataExt(null, "n/a", null);
+      }
       if (theIDE != null) {
         Pixel p;
         if (theIDE._imageData != null) {
