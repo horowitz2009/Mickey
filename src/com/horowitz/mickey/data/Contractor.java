@@ -11,6 +11,8 @@ public class Contractor {
 
   private Material[] _materials;
 
+  private Material[] _materialsMore;
+
   private int        _currentMissionNumber;
 
   private int        _endMissionNumber;
@@ -35,6 +37,14 @@ public class Contractor {
 
   public void setMaterials(Material[] materials) {
     _materials = materials;
+  }
+  
+  public Material[] getMaterialsMore() {
+    return _materialsMore;
+  }
+
+  public void setMaterialsMore(Material[] materialsMore) {
+    _materialsMore = materialsMore;
   }
 
   public int getCurrentMissionNumber() {
