@@ -175,7 +175,7 @@ public class MissionScanner {
             try {
               o.setCurrentAmount(Integer.parseInt(ss[0]));
               o.setNeededAmount(Integer.parseInt(ss[1]));
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
               e.printStackTrace();
             }
           }

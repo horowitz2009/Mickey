@@ -78,21 +78,22 @@ class TableModel extends AbstractTableModel {
     if (columnIndex == 0) {
       value = mat;
     } else {
+      Long v1 = 0l;
+      Long v2 = 0l;
       Contractor contractor = _contractors[columnIndex - 1];
       Map<String, Need> innerMap = _map.get(mat);
-      Long secondV = null;
 
       Need need = innerMap.get(contractor.getName());
       if (need != null) {
         Objective o = need.getObjective();
-        value = (o.getNeededAmount() - o.getCurrentAmount());
-        NumberFormat nf = NumberFormat.getIntegerInstance();
-        value = nf.format(value);
+        v1 = (o.getNeededAmount() - o.getCurrentAmount());
+        //NumberFormat nf = NumberFormat.getIntegerInstance();
+        //value = nf.format(value);
       }
       if (contractor.getMaterialsMore() != null) {
         for (Material mm : contractor.getMaterialsMore()) {
           if (mm.getName().equals(mat)) {
-            secondV = mm.getAmount();
+            v2 = mm.getAmount();
             break;
           }
         }
@@ -100,13 +101,13 @@ class TableModel extends AbstractTableModel {
 
       if (value == null)
         value = 0l;
-      if (secondV == null) {
-        secondV = 0l;
+      if (v2 == null) {
+        v2 = 0l;
       }
-      NumberFormat nf = NumberFormat.getIntegerInstance();
-      String sv = nf.format(secondV);
+      //NumberFormat nf = NumberFormat.getIntegerInstance();
+      //String sv = nf.format(v2);
 
-      value = value + ":" + sv;
+      value = v1 + ":" + v2;
     }
     return value;
   }
@@ -114,10 +115,17 @@ class TableModel extends AbstractTableModel {
   @Override
   public String getColumnName(int column) {
     if (column == 0) {
-      return "What";
+      return "";
     }
     Contractor contractor = _contractors[column - 1];
-    return contractor.getName();
+    String s = contractor.getAccepts();
+    if (s == null) {
+      s = "";
+    } else {
+      s = s.substring(s.length() - 1).toLowerCase();
+      s = "(" + s + ")";
+    }
+    return contractor.getName() + "  " + s;
   }
 
 }

@@ -28,20 +28,48 @@ public class ContractAnalysis {
 
       for (int i = 0; i < contractors.length; i++) {
         Contractor contractor = contractors[i];
-        Set<String> silicons = new HashSet<>();
-        silicons.add("Alan");
-        silicons.add("Wolfgang");
-        silicons.add("Mizuki");
-        silicons.add("Lucy");
-        silicons.add("Giovanni");
-        contractor.setScanMaterials2(silicons.contains(contractor.getName()));
         
-        silicons.add("Bobby");
-        silicons.add("Mahatma");
-        silicons.add("George");
-        silicons.add("Otto");
-        silicons.add("Sam");
-        contractor.setActive(silicons.contains(contractor.getName()));
+//        Set<String> sd = new HashSet<>();
+//        Set<String> sde = new HashSet<>();
+//        Set<String> sdem = new HashSet<>();
+//        sd.add("George");
+//        sd.add("Otto");
+//        
+//        if (sd.contains(contractor.getName())) {
+//          contractor.setAccepts("SD");
+//        }
+//        sde.add("Bobby");
+//        sde.add("Mahatma");
+//        sde.add("Sam");
+//        sde.add("Alan");//after 48 maglev
+//        sde.add("Wolfgang");//after 12 maglev
+//        
+//        if (sde.contains(contractor.getName())) {
+//          contractor.setAccepts("SDE");
+//        }
+//        
+//        sdem.add("Mizuki");
+//        sdem.add("Lucy");
+//        sdem.add("Giovanni");
+//        if (sdem.contains(contractor.getName())) {
+//          contractor.setAccepts("SDEM");
+//        }
+//        
+//        
+//        Set<String> silicons = new HashSet<>();
+//        silicons.add("Alan");
+//        silicons.add("Wolfgang");
+//        silicons.add("Mizuki");
+//        silicons.add("Lucy");
+//        silicons.add("Giovanni");
+//        contractor.setScanMaterials2(silicons.contains(contractor.getName()));
+//        
+//        silicons.add("Bobby");
+//        silicons.add("Mahatma");
+//        silicons.add("George");
+//        silicons.add("Otto");
+//        silicons.add("Sam");
+//        contractor.setActive(silicons.contains(contractor.getName()));
 
 //        System.err.println();
 //        System.err.println();

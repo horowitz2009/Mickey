@@ -19,6 +19,8 @@ public class Contractor {
   private int        _currentMissionNumber;
 
   private int        _endMissionNumber;
+  
+  private String   _accepts;
 
   public Contractor() {
     super();
@@ -82,6 +84,14 @@ public class Contractor {
 
   public void setActive(boolean active) {
     _active = active;
+  }
+
+  public String getAccepts() {
+    return _accepts;
+  }
+
+  public void setAccepts(String accepts) {
+    _accepts = accepts;
   }
 
   public String getName() {
