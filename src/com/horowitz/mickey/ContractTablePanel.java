@@ -46,8 +46,8 @@ public class ContractTablePanel extends JPanel {
           nf.setMaximumFractionDigits(0);
           Long v1 = Long.parseLong(ss[0]);
           Long v2 = Long.parseLong(ss[1]);
-          Double vv1 = v1 / 1000.0;
-          Double vv2 = v2 / 1000.0;
+          Double vv1 = v1 > 800 ? v1 / 1000.0 : v1;
+          Double vv2 = v2 > 800 ? v2 / 1000.0 : v2;
 
           String suffix1 = "";
           String suffix2 = "";
@@ -63,6 +63,7 @@ public class ContractTablePanel extends JPanel {
 //            suffix1 = "M";
 //          }
           String red = nf.format(vv1) + suffix1;
+          
           if (vv2 < 8) {
             nf.setMaximumFractionDigits(3);
           } else {
