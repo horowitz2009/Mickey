@@ -10,11 +10,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import com.horowitz.mickey.data.ContractAnalysis;
+import com.horowitz.mickey.data.ContractAnalysisAll;
+import com.horowitz.mickey.data.ContractAnalysisMin;
 import com.horowitz.mickey.data.Need;
 
 public class ContractorAdvisor extends JPanel {
 
-  private ContractorsPanel _contractorsPanel;
+  private ContractorsPanel   _contractorsPanel;
   private ContractTablePanel _contractTablePanel;
   private ContractTablePanel _contractTablePanel2;
 
@@ -24,23 +26,19 @@ public class ContractorAdvisor extends JPanel {
     JTabbedPane pane = new JTabbedPane();
     _contractorsPanel = new ContractorsPanel();
     pane.addTab("Contractors", _contractorsPanel);
-    
-    ContractAnalysis ca = new ContractAnalysis();
-    ca.calcALLNeeds();
-    Map<String, Map<String, Need>> map1 = ca.collectCurrentNeeds();
-    Map<String, Map<String, Need>> map2 = ca.collectCurrentNeedsALL();
 
-
-    _contractTablePanel = new ContractTablePanel(map1);
-    _contractTablePanel2 = new ContractTablePanel(map2);
+    ContractAnalysisMin contractAnalysys = new ContractAnalysisMin();
+    contractAnalysys.calcALLNeeds();
+    _contractTablePanel = new ContractTablePanel(contractAnalysys);
+    _contractTablePanel2 = new ContractTablePanel(new ContractAnalysisAll());
     pane.addTab("Table", _contractTablePanel);
-    //_contractTablePanel2.setMap(null);
+    // _contractTablePanel2.setMap(null);
     pane.addTab("Table2", _contractTablePanel2);
     add(pane);
   }
 
   public static void main(String[] args) {
-    JFrame frame = new JFrame("Contract Advisor v.104");
+    JFrame frame = new JFrame("Contract Advisor v.105a");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     final ContractorAdvisor advisor = new ContractorAdvisor();
     frame.getContentPane().add(advisor, BorderLayout.CENTER);
@@ -61,11 +59,11 @@ public class ContractorAdvisor extends JPanel {
 
   private void reloadAll() {
     _contractorsPanel.reloadAll();
-    
+
     ContractAnalysis ca = new ContractAnalysis();
     Map<String, Map<String, Need>> map1 = ca.collectCurrentNeeds();
     Map<String, Map<String, Need>> map2 = ca.collectCurrentNeedsALL();
-    
+
     ca.calcALLNeeds();
     _contractTablePanel.setMap(map1);
     _contractTablePanel2.setMap(map2);
