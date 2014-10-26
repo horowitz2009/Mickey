@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.net.URL;
 import java.text.NumberFormat;
 import java.util.Map;
 
@@ -16,9 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 
-import com.horowitz.mickey.data.ContractAnalysis;
+import sun.swing.table.DefaultTableCellHeaderRenderer;
+
 import com.horowitz.mickey.data.IContractAnalysys;
 import com.horowitz.mickey.data.Need;
 
@@ -35,7 +38,7 @@ public class ContractTablePanel extends JPanel {
     super();
 
     setLayout(new BorderLayout());
-
+    ToolTipManager.sharedInstance().setDismissDelay(30000);
     _contractAnalysis = contractAnalysys;
     _model = new TableModel(_contractAnalysis.collectNeeds());
 
@@ -71,10 +74,15 @@ public class ContractTablePanel extends JPanel {
 
           if (v1 > 0) {
             Double t1 = v1 / 1.10;
-            Double t2 = (v1 / 2) / 1.10;
-            Double t2a = t2 / 1.15;
-            Double t3 = (v1 / 3) / 1.10;
-            Double t3a = t3 / (1.30);
+            Double t2 = t1 / 2;
+            Double t3 = t1 / 3;
+            Double t4 = t1 / 4;
+            
+            Double t2a = t1 / 1.15;
+            Double t3a = t1 / 1.30;
+            Double t4a = t1 / 1.45;
+            
+            
             NumberFormat nf2 = NumberFormat.getNumberInstance();
             nf2.setMaximumFractionDigits(0);
             String tt1 = nf2.format(t1);
@@ -82,7 +90,13 @@ public class ContractTablePanel extends JPanel {
             String tt2a = nf2.format(t2a);
             String tt3 = nf2.format(t3);
             String tt3a = nf2.format(t3a);
-            label.setToolTipText("<html>" + tt1 + "<br>" + tt2 + " (" + tt2a + ")" + "<br>" + tt3 + " (" + tt3a + ")" + "</html>");
+            String tt4 = nf2.format(t4);
+            String tt4a = nf2.format(t4a);
+            label.setToolTipText("<html>" + tt1 + 
+                "<br>" + tt2 + " (" + tt2a + ")" + 
+            "<br>" + tt3 + " (" + tt3a + ")" + 
+            "<br>" + tt4 + " (" + tt4a + ")" + 
+                "</html>");
 
           }
 
@@ -182,6 +196,32 @@ public class ContractTablePanel extends JPanel {
 
     _table = new CTable(_model, _cellRenderer);
     _table.setRowHeight(26);
+    
+    TableCellRenderer defaultRenderer = _table.getTableHeader().getDefaultRenderer();
+    System.err.println(defaultRenderer);
+    _table.getTableHeader().setDefaultRenderer(new DefaultTableCellHeaderRenderer() {
+      @Override
+      public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        String name = (String) value;
+        if (name!= null && name.length() > 0) {
+          //try to get icon
+          String[] ss = name.split(" ");
+          if (ss != null) {
+            name = ss[0];
+          }
+          name = name +"40.png";
+          ImageIcon image = ImageManager.getImage("contracts/" + name);
+          label.setIcon(image);
+          label.setHorizontalTextPosition(SwingConstants.CENTER);
+          label.setVerticalTextPosition(SwingConstants.BOTTOM);
+          label.setText("");
+          label.setToolTipText((String)value);
+        }
+        return label;
+      }
+    });
+    
     _scrollPane.getViewport().setView(_table);
     repaint();
   }
