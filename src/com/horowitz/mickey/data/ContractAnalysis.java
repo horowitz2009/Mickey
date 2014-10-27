@@ -87,7 +87,10 @@ public class ContractAnalysis {
         }
 
         Mission[] missions = ds.readMissions(contractor.getName());
-        Mission[] extraMissions = ds.readMissions(contractor.getName(), "_BEST");
+        Mission[] extraMissions = ds.readMissions(contractor.getName(), "_OPT");
+        if (extraMissions.length == 0) {
+          extraMissions = ds.readMissions(contractor.getName(), "_BEST");
+        }
 //        if (currentMission == null) {
 //          currentMission = extraMissions[0].copy();
 //          ds.writeCurrentMission(currentMission);
