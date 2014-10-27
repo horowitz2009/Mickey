@@ -74,7 +74,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.805c";
+  private static final String APP_TITLE           = "v0.806b";
 
   private boolean             _devMode            = false;
 
@@ -1396,6 +1396,8 @@ public final class MainFrame extends JFrame {
           if (true) {//_withMaterials
             // click visit
             _mouse.click(p.x + 267, p.y + 335);
+            _mouse.delay(200);
+            _mouse.click(p.x + 267, p.y + 335 + 154);
             _mouse.delay(2000);
 
             // click materials
@@ -2564,8 +2566,13 @@ public final class MainFrame extends JFrame {
       // 3. click the destination
 
       _mouse.mouseMove(tm.x + time.getCoordinates().x, tm.y + time.getCoordinates().y);
-
-      _mouse.delay(200, false); // give chance to change the location without
+      if (_settings.getProperty("captureTrains", "false").equalsIgnoreCase("true")) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd  HH-mm-ss-SSS");
+        String date = sdf.format(Calendar.getInstance().getTime());
+        String filename = "train " + date + ".png";
+        _scanner.captureGame(filename);
+      }
+      _mouse.delay(500, false); // give chance to change the location without
       _mouse.savePosition(); // stopping the magic.
 
       if (!_devMode) {

@@ -437,7 +437,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       _currentMission = ds.getCurrentMission(_contractorName, mni);
       _missionDB = ds.getMission(_contractorName, mni);
 
-      if (_currentMission != null && _currentMission.getNumber() != _missionDB.getNumber()) {
+      if (_currentMission != null && _missionDB != null && _currentMission.getNumber() != _missionDB.getNumber()) {
         _currentMission = _missionDB.copy();
       }
       updateView();

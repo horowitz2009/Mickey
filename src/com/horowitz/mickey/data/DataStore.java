@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,11 +52,20 @@ public class DataStore {
   }
 
   public Mission[] readMissions(String contractor) throws IOException {
-    String json = FileUtils.readFileToString(new File("data/" + contractor + "_missions.json"));
+    return readMissions(contractor, "");
+  }
 
-    Mission[] missions = _gson.fromJson(json, Mission[].class);
-
-    return missions;
+  public Mission[] readMissions(String contractor, String type) throws IOException {
+    File file = new File("data/" + contractor + "_missions" + type + ".json");
+    if (file.exists()) {
+      String json = FileUtils.readFileToString(file);
+    
+      Mission[] missions = _gson.fromJson(json, Mission[].class);
+    
+      return missions;
+    } else {
+      return new Mission[0];
+    }
   }
 
   public Mission getMission(String contractor, int number) throws IOException {
@@ -115,7 +125,8 @@ public class DataStore {
     for (int i = 0; i < currentMissions.length; i++) {
       Mission cm = currentMissions[i];
       Mission mdb = getMission(cm.getContractor(), cm.getNumber());
-      cm.mergeWithDB(mdb);
+      if (mdb != null)
+        cm.mergeWithDB(mdb);
     }
   }
   
@@ -129,14 +140,21 @@ public class DataStore {
 
   public void writeCurrentMission(Mission currentMission) throws IOException {
     Mission[] missions = readCurrentMissions();
+    boolean found = false;
     for (Mission mission : missions) {
       if (mission.getContractor().equals(currentMission.getContractor())) {
         mission.setAny(currentMission.isAny());
         mission.setNumber(currentMission.getNumber());
         mission.setObjectives(currentMission.getObjectives());
+        found = true;
         break;
       }
     }
+    if (!found) {
+      //it's new
+      missions = (Mission[]) ArrayUtils.add(missions, currentMission);
+    }
+    
     writeCurrentMissions(missions);
   }
 

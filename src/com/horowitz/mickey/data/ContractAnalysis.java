@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
+
 public class ContractAnalysis {
 
   public ContractAnalysis() {
@@ -28,54 +30,54 @@ public class ContractAnalysis {
 
       for (int i = 0; i < contractors.length; i++) {
         Contractor contractor = contractors[i];
-        
-//        Set<String> sd = new HashSet<>();
-//        Set<String> sde = new HashSet<>();
-//        Set<String> sdem = new HashSet<>();
-//        sd.add("George");
-//        sd.add("Otto");
-//        
-//        if (sd.contains(contractor.getName())) {
-//          contractor.setAccepts("SD");
-//        }
-//        sde.add("Bobby");
-//        sde.add("Mahatma");
-//        sde.add("Sam");
-//        sde.add("Alan");//after 48 maglev
-//        sde.add("Wolfgang");//after 12 maglev
-//        
-//        if (sde.contains(contractor.getName())) {
-//          contractor.setAccepts("SDE");
-//        }
-//        
-//        sdem.add("Mizuki");
-//        sdem.add("Lucy");
-//        sdem.add("Giovanni");
-//        if (sdem.contains(contractor.getName())) {
-//          contractor.setAccepts("SDEM");
-//        }
-//        
-//        
-//        Set<String> silicons = new HashSet<>();
-//        silicons.add("Alan");
-//        silicons.add("Wolfgang");
-//        silicons.add("Mizuki");
-//        silicons.add("Lucy");
-//        silicons.add("Giovanni");
-//        contractor.setScanMaterials2(silicons.contains(contractor.getName()));
-//        
-//        silicons.add("Bobby");
-//        silicons.add("Mahatma");
-//        silicons.add("George");
-//        silicons.add("Otto");
-//        silicons.add("Sam");
-//        contractor.setActive(silicons.contains(contractor.getName()));
 
-//        System.err.println();
-//        System.err.println();
-//        System.err.println();
-//        System.err.println(contractor.getName());
-//        System.err.println("=============================");
+        // Set<String> sd = new HashSet<>();
+        // Set<String> sde = new HashSet<>();
+        // Set<String> sdem = new HashSet<>();
+        // sd.add("George");
+        // sd.add("Otto");
+        //
+        // if (sd.contains(contractor.getName())) {
+        // contractor.setAccepts("SD");
+        // }
+        // sde.add("Bobby");
+        // sde.add("Mahatma");
+        // sde.add("Sam");
+        // sde.add("Alan");//after 48 maglev
+        // sde.add("Wolfgang");//after 12 maglev
+        //
+        // if (sde.contains(contractor.getName())) {
+        // contractor.setAccepts("SDE");
+        // }
+        //
+        // sdem.add("Mizuki");
+        // sdem.add("Lucy");
+        // sdem.add("Giovanni");
+        // if (sdem.contains(contractor.getName())) {
+        // contractor.setAccepts("SDEM");
+        // }
+        //
+        //
+        // Set<String> silicons = new HashSet<>();
+        // silicons.add("Alan");
+        // silicons.add("Wolfgang");
+        // silicons.add("Mizuki");
+        // silicons.add("Lucy");
+        // silicons.add("Giovanni");
+        // contractor.setScanMaterials2(silicons.contains(contractor.getName()));
+        //
+        // silicons.add("Bobby");
+        // silicons.add("Mahatma");
+        // silicons.add("George");
+        // silicons.add("Otto");
+        // silicons.add("Sam");
+        // contractor.setActive(silicons.contains(contractor.getName()));
+
+        // System.err.println();
+        // System.err.println();
+        // System.err.println();
+        // System.err.println(contractor.getName());
+        // System.err.println("=============================");
         Mission currentMission = null;
         for (Mission cm : currentMissions) {
           if (cm.getContractor().equalsIgnoreCase(contractor.getName())) {
@@ -85,6 +87,12 @@ public class ContractAnalysis {
         }
 
         Mission[] missions = ds.readMissions(contractor.getName());
+        Mission[] extraMissions = ds.readMissions(contractor.getName(), "_BEST");
+//        if (currentMission == null) {
+//          currentMission = extraMissions[0].copy();
+//          ds.writeCurrentMission(currentMission);
+//        }
+        missions = (Mission[]) ArrayUtils.addAll(missions, extraMissions);
 
         Material[] materials = Material.createArray();
 
@@ -117,11 +125,16 @@ public class ContractAnalysis {
               S = S + o.getNeededAmount() - o.getCurrentAmount();
             }
           }
-
+          
+          int number = 999;
+          if (currentMission != null) {
+            number = currentMission.getNumber();
+          }
+          
           // now let's check the future missions
           for (int k = 0; k < missions.length; k++) {
             Mission mm = missions[k];
-            if (mm.getNumber() > currentMission.getNumber()) {
+            if (mm.getNumber() > number) {
               o = getObjective(mm, matName);
               if (o != null) {
                 if (o.getType().equals("b")) {
@@ -138,8 +151,8 @@ public class ContractAnalysis {
             }
           }
 
-//          System.err.println("S(" + matName + ") = " + S);
-//          System.err.println("Sadd(" + matName + ") = " + Sadd);
+          // System.err.println("S(" + matName + ") = " + S);
+          // System.err.println("Sadd(" + matName + ") = " + Sadd);
           matMoreList.add(new Material(matName, Sadd));
         } // material
 
@@ -148,7 +161,7 @@ public class ContractAnalysis {
       } // contractor
 
       ds.writeContractors(contractors);
-      
+
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -156,11 +169,12 @@ public class ContractAnalysis {
   }
 
   private Objective getObjective(Mission mission, String mat) {
-    for (Objective o : mission.getObjectives()) {
-      if (o.getMaterial().equals(mat)) {
-        return o;
+    if (mission != null)
+      for (Objective o : mission.getObjectives()) {
+        if (o.getMaterial().equals(mat)) {
+          return o;
+        }
       }
-    }
     return null;
   }
 
@@ -232,7 +246,7 @@ public class ContractAnalysis {
     }
     return null;
   }
-  
+
   public Map<String, Map<String, Need>> collectCurrentNeedsALL() {
     try {
       DataStore ds = new DataStore();

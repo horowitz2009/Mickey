@@ -101,8 +101,8 @@ public class ContractTablePanel extends JPanel {
           }
 
           Long v2 = Long.parseLong(ss[1]);
-          Double vv1 = v1 > 800 ? v1 / 1000.0 : v1;
-          Double vv2 = v2 > 800 ? v2 / 1000.0 : v2;
+          Double vv1 = v1 > 900 ? v1 / 1000.0 : v1;
+          Double vv2 = v2 > 900 ? v2 / 1000.0 : v2;
 
           String suffix1 = "";
           String suffix2 = "";
@@ -112,11 +112,11 @@ public class ContractTablePanel extends JPanel {
             nf.setMaximumFractionDigits(0);
           }
 
-          // if (vv1 > 2000) {
-          // vv1 = vv1 / 1000;
-          // nf.setMaximumFractionDigits(0);
-          // suffix1 = "M";
-          // }
+          if (vv1 > 900) {
+           vv1 = vv1 / 1000;
+           nf.setMaximumFractionDigits(1);
+           suffix1 = "M";
+           }
           String red = nf.format(vv1) + suffix1;
 
           if (vv2 < 8) {
@@ -124,11 +124,11 @@ public class ContractTablePanel extends JPanel {
           } else {
             nf.setMaximumFractionDigits(0);
           }
-          // if (vv2 > 2000) {
-          // vv2 = vv2 / 1000;
-          // nf.setMaximumFractionDigits(0);
-          // suffix2 = "M";
-          // }
+           if (vv2 > 900) {
+           vv2 = vv2 / 1000;
+           nf.setMaximumFractionDigits(1);
+           suffix2 = "M";
+           }
           String gray = nf.format(vv2) + suffix2;
 
           if (red.startsWith("0"))
