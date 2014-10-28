@@ -1,6 +1,6 @@
 24,s, 50 diesel
 25,b, 200000 money, 100000 glass, 100000 steel
-26,b, 50000 u-235, 200000 rubber
+26,d, 50000 u-235, 200000 rubber
 27,b, 220000 fuel, 300000 rubber
 28,s, 550 wagon
 29,b, 400000 money, 140000 steel

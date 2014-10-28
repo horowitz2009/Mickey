@@ -75,7 +75,7 @@ public class OCR2 {
     if (System.getenv("DEBUG") != null)
       try {
         ImageIO.write(image, "BMP", new File("subimage" + n + ".bmp"));
-      } catch (IOException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
   }
