@@ -74,7 +74,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.806b";
+  private static final String APP_TITLE           = "v0.807";
 
   private boolean             _devMode            = false;
 
@@ -883,7 +883,7 @@ public final class MainFrame extends JFrame {
   private void resetContractors() {
     try {
       _captureContractors = new DataStore().getActiveContractorNames();
-      //_withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
+      // _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -1182,63 +1182,62 @@ public final class MainFrame extends JFrame {
 
         // OTHER LOCATIONS
         scanOtherLocations(true);
-        
+
         captureContracts();
 
-        if (_captureContractors.size() > 0) {
+        if (_captureContractors.size() == 0) {
           scanOtherLocations(true);
-        }
-        
-        if (_pingClick.isSelected()) {
-          ping();
-        }
 
-        // REFRESH
-        if (_refreshClick.isSelected() && timeForRefresh > 3 * 60000) {
-          // if "0" chosen no refresh
-          long now = System.currentTimeMillis();
-          LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
-
-          if (now - start >= timeForRefresh) {
-            LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
-            refresh();
-            fstart = start = System.currentTimeMillis();
+          if (_pingClick.isSelected()) {
+            ping();
           }
 
-          if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
-            LOGGER.info("Mandatory refresh");
-            refresh();
-            fstart = start = System.currentTimeMillis();
+          // REFRESH
+          if (_refreshClick.isSelected() && timeForRefresh > 3 * 60000) {
+            // if "0" chosen no refresh
+            long now = System.currentTimeMillis();
+            LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
+
+            if (now - start >= timeForRefresh) {
+              LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
+              refresh();
+              fstart = start = System.currentTimeMillis();
+            }
+
+            if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
+              LOGGER.info("Mandatory refresh");
+              refresh();
+              fstart = start = System.currentTimeMillis();
+            }
+
+            // check again has refresh gone well after 3 minutes
+            if (_lastTime != null && now - _lastTime >= 3 * 60 * 1000) {
+              handleRarePopups();
+              _lastTime = System.currentTimeMillis();
+            }
           }
 
-          // check again has refresh gone well after 3 minutes
-          if (_lastTime != null && now - _lastTime >= 3 * 60 * 1000) {
-            handleRarePopups();
-            _lastTime = System.currentTimeMillis();
+          // POPUPS
+
+          handlePopups();
+
+          // HOME
+          boolean flag;
+          if (_oneClick.isSelected())
+            flag = clickHomeOneClick();
+          else
+            flag = clickHome();
+
+          // OTHER LOCATIONS
+          flag = scanOtherLocations(true) || flag;
+
+          if (flag) {
+            // true means train has been sent or other locations've been visited. Refresh postponed.
+            start = System.currentTimeMillis();
           }
+
+          _mouse.delay(200);
         }
-
-        // POPUPS
-
-        handlePopups();
-
-        // HOME
-        boolean flag;
-        if (_oneClick.isSelected())
-          flag = clickHomeOneClick();
-        else
-          flag = clickHome();
-
-        // OTHER LOCATIONS
-        flag = scanOtherLocations(true) || flag;
-
-        if (flag) {
-          // true means train has been sent or other locations've been visited. Refresh postponed.
-          start = System.currentTimeMillis();
-        }
-
-        _mouse.delay(200);
-
       } catch (AWTException | IOException e) {
         LOGGER.severe(e.getMessage());
         e.printStackTrace();
@@ -1260,6 +1259,7 @@ public final class MainFrame extends JFrame {
       } catch (Throwable e) {
         LOGGER.severe("SOMETHING WENT WRONG!");
         e.printStackTrace();
+        LOGGER.log(Level.SEVERE, e.getMessage(), e);
         setTitle("SOMETHING WENT WRONG!");
         break;
       }
@@ -1393,7 +1393,7 @@ public final class MainFrame extends JFrame {
 
           // _scanner.captureGame("status " + index + "A " + contractor + ".bmp");
           _mouse.delay(100);
-          if (true) {//_withMaterials
+          if (true) {// _withMaterials
             // click visit
             _mouse.click(p.x + 267, p.y + 335);
             _mouse.delay(200);
@@ -1427,7 +1427,7 @@ public final class MainFrame extends JFrame {
               _scanner.writeImage(rect, fname + "_materials.bmp");
               // _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
-              
+
               if (new DataStore().getContractor(contractorName).isScanMaterials2()) {
                 // click next page of materials
                 _mouse.click(pm.x + 724, pm.y + 292);
@@ -1435,7 +1435,7 @@ public final class MainFrame extends JFrame {
                 _scanner.writeImage(rect, fname + "_materials2.bmp");
                 // _scanner.captureGame("status " + index + "C " + contractor + " materials" + ".bmp");
                 _mouse.delay(300);
-                
+
               }
             }
 
