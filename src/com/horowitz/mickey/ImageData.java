@@ -11,6 +11,8 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.mickey.common.MyImageIO;
+
 public class ImageData {
 
   private String                _filename;
@@ -69,7 +71,7 @@ public class ImageData {
   private void writeImage(BufferedImage image, int n) {
     if (false)
       try {
-        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+        MyImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
         e.printStackTrace();
       }

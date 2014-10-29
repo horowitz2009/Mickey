@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.mickey.common.MyImageIO;
+
 public class ScreenScanner {
 
   private final static Logger  LOGGER                         = Logger.getLogger(ScreenScanner.class.getName());
@@ -125,7 +127,7 @@ public class ScreenScanner {
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
-      
+
       area = new Rectangle(0, 0, 250, 87);
       _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
     } catch (IOException e) {
@@ -296,9 +298,11 @@ public class ScreenScanner {
     return false;
   }
 
+
+
   public void writeImage(Rectangle rect, String filename) {
     try {
-      ImageIO.write(new Robot().createScreenCapture(rect), filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
+      MyImageIO.write(new Robot().createScreenCapture(rect), filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
     } catch (IOException e) {
       e.printStackTrace();
     } catch (AWTException e) {
@@ -371,7 +375,7 @@ public class ScreenScanner {
       Pixel[] indices) {
     if (DEBUG)
       try {
-        ImageIO.write(area, "PNG", new File("C:/area.png"));
+        MyImageIO.write(area, "PNG", new File("C:/area.png"));
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -381,7 +385,7 @@ public class ScreenScanner {
         final BufferedImage subimage = area.getSubimage(i, j, targetImage.getWidth(), targetImage.getHeight());
         if (DEBUG)
           try {
-            ImageIO.write(subimage, "PNG", new File("C:/subimage.png"));
+            MyImageIO.write(subimage, "PNG", new File("C:/subimage.png"));
           } catch (IOException e) {
             e.printStackTrace();
           }
@@ -403,7 +407,7 @@ public class ScreenScanner {
 
       BufferedImage screenshot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
       if (DEBUG)
-        ImageIO.write(screenshot, "PNG", new File("screenshot.png"));
+        MyImageIO.write(screenshot, "PNG", new File("screenshot.png"));
     } catch (HeadlessException | AWTException | IOException e) {
 
       e.printStackTrace();
@@ -435,7 +439,7 @@ public class ScreenScanner {
         final BufferedImage subimage = image2.getSubimage(i, j, image1.getWidth(), image1.getHeight());
         if (DEBUG)
           try {
-            ImageIO.write(subimage, "PNG", new File("subimage.png"));
+            MyImageIO.write(subimage, "PNG", new File("subimage.png"));
           } catch (IOException e) {
             e.printStackTrace();
           }

@@ -284,7 +284,7 @@ public class RoughImageComparator implements ImageComparator {
 			for (int y = 0; y < (image.getHeight() - MAX_Y); y++) {
 				final BufferedImage subimage = image.getSubimage(x, y, MAX_X, MAX_Y);
 				// try {
-				// ImageIO.write(subimage, "png", new File("subimage.png"));
+				// MyImageIO.write(subimage, "png", new File("subimage.png"));
 				// } catch (IOException e) {
 				// e.printStackTrace();
 				// }
@@ -388,7 +388,7 @@ public class RoughImageComparator implements ImageComparator {
 				final BufferedImage subimage = image.getSubimage(x, y, MAX_X, MAX_Y);
 
 				// try {
-				// ImageIO.write(subimage, "png", new File("subimage.png"));
+				// MyImageIO.write(subimage, "png", new File("subimage.png"));
 				// } catch (IOException e) {
 				// e.printStackTrace();
 				// }

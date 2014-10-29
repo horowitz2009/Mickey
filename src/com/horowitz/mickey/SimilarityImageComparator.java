@@ -319,7 +319,7 @@ public class SimilarityImageComparator implements ImageComparator {
 			for (int y = 0; y < (image.getHeight() - MAX_Y); y++) {
 				final BufferedImage subimage = image.getSubimage(x, y, MAX_X, MAX_Y);
 				// try {
-				// ImageIO.write(subimage, "png", new File("subimage.png"));
+				// MyImageIO.write(subimage, "png", new File("subimage.png"));
 				// } catch (IOException e) {
 				// e.printStackTrace();
 				// }
@@ -378,7 +378,7 @@ public class SimilarityImageComparator implements ImageComparator {
 	 * for (int x = startX > 0? startX - maxOffsetX : startX; x < maxX; x++) { //
 	 * for (int y = startY > 0 ? startY - maxOffsetY : startY; y < maxY; y++) {
 	 * BufferedImage subimage; try { subimage = image.getSubimage(x, y,
-	 * letter.getWidth(), letter.getHeight()); // try { // ImageIO.write(subimage,
+	 * letter.getWidth(), letter.getHeight()); // try { // MyImageIO.write(subimage,
 	 * "png", new File("subimage2.png")); // } catch (IOException e) { //
 	 * e.printStackTrace(); // } //
 	 * System.err.println("LETTER >>>>>>>>>>>>>>>>>>>>>>> " + letter.getName());
@@ -423,7 +423,7 @@ public class SimilarityImageComparator implements ImageComparator {
 				final BufferedImage subimage = image.getSubimage(x, y, MAX_X, MAX_Y);
 
 				// try {
-				// ImageIO.write(subimage, "png", new File("subimage.png"));
+				// MyImageIO.write(subimage, "png", new File("subimage.png"));
 				// } catch (IOException e) {
 				// e.printStackTrace();
 				// }

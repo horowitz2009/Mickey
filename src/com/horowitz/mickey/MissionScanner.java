@@ -1,6 +1,5 @@
 package com.horowitz.mickey;
 
-import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,6 +9,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Mission;
 import com.horowitz.mickey.data.Objective;
@@ -114,7 +114,7 @@ public class MissionScanner {
   private void writeImage(BufferedImage image, int n) {
     if (System.getenv("DEBUG") != null)
       try {
-        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+        MyImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
         e.printStackTrace();
       }

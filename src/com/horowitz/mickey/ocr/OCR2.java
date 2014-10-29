@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import com.horowitz.mickey.Pixel;
+import com.horowitz.mickey.common.MyImageIO;
 
 public class OCR2 {
   private Map<Integer, Color> _colors;
@@ -74,7 +75,7 @@ public class OCR2 {
   private void writeImage(BufferedImage image, int n) {
     if (System.getenv("DEBUG") != null)
       try {
-        ImageIO.write(image, "BMP", new File("subimage" + n + ".bmp"));
+        MyImageIO.write(image, "BMP", new File("subimage" + n + ".bmp"));
       } catch (Exception e) {
         e.printStackTrace();
       }

@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.Pixel;
+import com.horowitz.mickey.common.MyImageIO;
 
 public class OCR {
   private Color               _foreground;
@@ -40,7 +41,7 @@ public class OCR {
   private void writeImage(BufferedImage image, int n) {
     if (false)
       try {
-        ImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
+        MyImageIO.write(image, "PNG", new File("subimage" + n + ".png"));
       } catch (IOException e) {
         e.printStackTrace();
       }

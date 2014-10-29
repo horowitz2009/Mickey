@@ -23,7 +23,6 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -46,7 +45,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -62,6 +60,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
@@ -74,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.807";
+  private static final String APP_TITLE           = "v0.808";
 
   private boolean             _devMode            = false;
 
@@ -1005,7 +1004,7 @@ public final class MainFrame extends JFrame {
     try {
       String dateStr = DateUtils.formatDateForFile2(System.currentTimeMillis());
       Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      ImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
+      MyImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
       deleteOlder("refresh", 5);
     } catch (HeadlessException e1) {
       e1.printStackTrace();
@@ -1255,13 +1254,13 @@ public final class MainFrame extends JFrame {
         break;
       } catch (DragFailureException e) {
         handleDragFailure();
-        break;
+        //break; //refresh could help
       } catch (Throwable e) {
         LOGGER.severe("SOMETHING WENT WRONG!");
         e.printStackTrace();
-        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+        LOGGER.log(Level.SEVERE, "UH OH " + e.getMessage() + " UH OH", e);
         setTitle("SOMETHING WENT WRONG!");
-        break;
+        //break; //please don't stop the music!
       }
 
     }
