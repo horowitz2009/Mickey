@@ -95,6 +95,10 @@ public class ContractAnalysis {
 //          currentMission = extraMissions[0].copy();
 //          ds.writeCurrentMission(currentMission);
 //        }
+        
+        //TURNED OFF for a moment
+        //extraMissions = new Mission[0];
+        
         missions = (Mission[]) ArrayUtils.addAll(missions, extraMissions);
 
         Material[] materials = Material.createArray();

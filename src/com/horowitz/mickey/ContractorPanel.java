@@ -259,7 +259,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
                   break;
                 }
               }
-              
+
               String mat = objectiveC.getMaterial();
               System.err.println(mat);
               ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
@@ -453,7 +453,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       _contractor = ds.getContractor(_contractorName);
       if (_contractor != null) {
         String cname = _contractor.getName();
-        File f = new File("data/"+ cname + "_missionNumber.bmp");
+        File f = new File("data/" + cname + "_missionNumber.bmp");
         BufferedImage image = ImageIO.read(f);
 
         MissionScanner mscanner = new MissionScanner();
@@ -461,7 +461,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
         if (number == null) {
           _missionNumberTF.setForeground(Color.RED);
-          //_missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
+          // _missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
           try {
             number = Integer.parseInt(_missionNumberTF.getText());
           } catch (NumberFormatException e) {
@@ -478,29 +478,29 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             _currentMission = _missionDB.copy();
             updateImage();
             mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
-
-            MaterialsScanner matscanner = new MaterialsScanner();
-            // mscanner.scanMaterials(materialsImage, materials)
-            f = new File("data/"+ cname + "_materials.bmp");
-            image = ImageIO.read(f);
-            Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
-            _contractor.setMaterials(materials);
-
-            f = new File("data/"+ cname + "_materials2.bmp");
-            if (f.exists()) {
-              image = ImageIO.read(f);
-              Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2);
-              List<Material> old = new ArrayList<>();
-              for (Material material : materials2) {
-                old.add(material);
-              }
-              _contractor.setMaterials(old.toArray(new Material[0]));
-            }
-
-            save();
-
-            updateView();
           }
+          MaterialsScanner matscanner = new MaterialsScanner();
+          // mscanner.scanMaterials(materialsImage, materials)
+          f = new File("data/" + cname + "_materials.bmp");
+          image = ImageIO.read(f);
+          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
+          _contractor.setMaterials(materials);
+
+          f = new File("data/" + cname + "_materials2.bmp");
+          if (f.exists()) {
+            image = ImageIO.read(f);
+            Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2);
+            List<Material> old = new ArrayList<>();
+            for (Material material : materials2) {
+              old.add(material);
+            }
+            _contractor.setMaterials(old.toArray(new Material[0]));
+          }
+
+          save();
+
+          updateView();
+
         } else {
           // failed to scan mission number
           _missionDB = null;
@@ -516,16 +516,17 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   private void save() {
-    if (_currentMission != null && _missionDB != null) {
-      try {
-        DataStore dataStore = new DataStore();
+    DataStore dataStore = new DataStore();
+    try {
+      if (_contractor != null)
         dataStore.saveContractor(_contractor);
+      if (_currentMission != null && _missionDB != null) {
         dataStore.writeCurrentMission(_currentMission);
         dataStore.writeMission(_missionDB);
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       }
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
     }
   }
 
