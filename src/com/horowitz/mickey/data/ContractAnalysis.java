@@ -125,8 +125,8 @@ public class ContractAnalysis {
             if (o.getType().equals("b")) {
               S = S - o.getNeededAmount();
               if (S < 0) {
-                S = 0l;
                 Sadd += (-S);
+                S = 0l;
               }
             } else {
               S = S + o.getNeededAmount() - o.getCurrentAmount();
