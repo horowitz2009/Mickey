@@ -39,6 +39,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
@@ -435,7 +437,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         mni = Integer.parseInt(mn);
       }
       _currentMission = ds.getCurrentMission(_contractorName, mni);
-      _missionDB = ds.getMission(_contractorName, mni);
+      _missionDB = ds.getMissionWithExtra(_contractorName, mni);
 
       if (_currentMission != null && _missionDB != null && _currentMission.getNumber() != _missionDB.getNumber()) {
         _currentMission = _missionDB.copy();
@@ -473,11 +475,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         if (number != null) {
           _contractor.setCurrentMissionNumber(number);
 
-          _missionDB = ds.getMission(cname, number);
+          _missionDB = ds.getMissionWithExtra(cname, number);
           if (_missionDB != null) {
             _currentMission = _missionDB.copy();
             updateImage();
-            mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
+            if (_currentMission.getNumber() <= 100)
+              mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
           }
           MaterialsScanner matscanner = new MaterialsScanner();
           // mscanner.scanMaterials(materialsImage, materials)
@@ -485,16 +488,24 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
           image = ImageIO.read(f);
           Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
           _contractor.setMaterials(materials);
-
           f = new File("data/" + cname + "_materials2.bmp");
           if (f.exists()) {
             image = ImageIO.read(f);
             Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2);
-            List<Material> old = new ArrayList<>();
-            for (Material material : materials2) {
-              old.add(material);
+            materials = (Material[]) ArrayUtils.addAll(materials, materials2);
+            _contractor.setMaterials(materials);
+          }
+          
+          if (_currentMission.getNumber() > 100) {
+            //all missions above 100 are fake building missions, so fix the current mission progress using materials status
+            for (Objective o: _currentMission.getObjectives()) {
+              for (Material m: materials) {
+                if (m.getName().equals(o.getMaterial())) {
+                  o.setCurrentAmount(m.getAmount());
+                  break;
+                }
+              }
             }
-            _contractor.setMaterials(old.toArray(new Material[0]));
           }
 
           save();

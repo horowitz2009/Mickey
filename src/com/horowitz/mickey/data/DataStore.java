@@ -77,6 +77,30 @@ public class DataStore {
     }
     return null;
   }
+  
+  public Mission getMissionWithExtra(String contractor, int number) throws IOException {
+    Mission m = null;
+    Mission[] missions = readMissions(contractor);
+    for (Mission mission : missions) {
+      if (mission.getNumber() == number) {
+        m = mission;
+        break;
+      }
+    }
+    if (m == null) {
+      missions = readMissions(contractor, "_OPT");
+      if (missions.length == 0) {
+        missions = readMissions(contractor, "_BEST");
+      }
+      for (Mission mission : missions) {
+        if (mission.getNumber() == number) {
+          m = mission;
+          break;
+        }
+      }
+    }
+    return m;
+  }
 
   public Mission getCurrentMission(String contractor, int number) throws IOException {
     Mission[] missions = readCurrentMissions();
@@ -124,7 +148,7 @@ public class DataStore {
   public void mergeCurrentWithDB(Mission[] currentMissions) throws IOException {
     for (int i = 0; i < currentMissions.length; i++) {
       Mission cm = currentMissions[i];
-      Mission mdb = getMission(cm.getContractor(), cm.getNumber());
+      Mission mdb = getMissionWithExtra(cm.getContractor(), cm.getNumber());
       if (mdb != null)
         cm.mergeWithDB(mdb);
     }
