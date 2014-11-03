@@ -20,7 +20,7 @@ public class MissionScanner {
 
   private OCR                          _ocr;
 
-  private static final ImageComparator COMPARATOR    = new SimilarityImageComparator(0.04, 20);
+  private static final ImageComparator COMPARATOR    = new SimilarityImageComparator(0.04, 1200);
 
   private List<ImageDataExt>           _objectives10 = new ArrayList<>();
   private List<ImageDataExt>           _objectives8  = new ArrayList<>();

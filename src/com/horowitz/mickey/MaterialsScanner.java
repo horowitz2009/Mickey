@@ -38,7 +38,7 @@ public class MaterialsScanner {
   
   
   public ImageData createMaterialImageData(String name, int xOff, int yOff) throws IOException {
-    ImageData id = new ImageData(name+".bmp", new Rectangle(0, 0, 288, 325) , new SimilarityImageComparator(0.04, 20), xOff, yOff);
+    ImageData id = new ImageData(name+".bmp", new Rectangle(0, 0, 288, 325) , new SimilarityImageComparator(0.04, 1200), xOff, yOff);
     return id;
   }
 

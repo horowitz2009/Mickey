@@ -162,7 +162,7 @@ public class SimilarityImageComparator implements ImageComparator {
 							        * Math.abs(((rgb1 >> 8) & 0xFF) - ((rgb2 >> 8) & 0xFF))
 							        + Math.abs(((rgb1 >> 0) & 0xFF) - ((rgb2 >> 0) & 0xFF))
 							        * Math.abs(((rgb1 >> 0) & 0xFF) - ((rgb2 >> 0) & 0xFF));
-							if (diff <= 900) {
+							if (diff <= precision) {
 								// this color is good
 								atLeastOneColorIsGood = true;
 								break;
@@ -195,7 +195,7 @@ public class SimilarityImageComparator implements ImageComparator {
 						        * Math.abs(((rgb1 >> 0) & 0xFF) - ((rgb2 >> 0) & 0xFF));
 						// System.err.print(diff < 900 ? 1 : 0);
 						// sum += (diff < 900 ? 1 : 0);
-						if (diff > 1100)
+						if (diff > precision)
 							countErrors++;
 
 						if (countErrors > 4) {

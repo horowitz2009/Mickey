@@ -109,7 +109,7 @@ public class ScreenScanner {
 
   public ScreenScanner(Settings settings) {
     _settings = settings;
-    _comparator = new SimilarityImageComparator(0.04, 20);
+    _comparator = new SimilarityImageComparator(0.04, 2000);
 
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     Rectangle area = new Rectangle(20, 340, screenSize.width - 20 - 404, screenSize.height - 340 - 110);
