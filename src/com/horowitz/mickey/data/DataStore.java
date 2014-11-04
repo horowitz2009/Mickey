@@ -192,4 +192,14 @@ public class DataStore {
     return active;
   }
 
+  public List<String> getContractorNamesForScan() throws IOException {
+    List<String> forScan = new ArrayList<>();
+    for (Contractor c : readContractors()) {
+      if (c.isScan()) {
+        forScan.add(c.getName());
+      }
+    }
+    return forScan;
+  }
+
 }

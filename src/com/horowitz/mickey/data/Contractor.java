@@ -9,18 +9,18 @@ public class Contractor {
 
   private String     _name;
 
+  private boolean    _scan;
   private boolean    _scanMaterials2;
   private boolean    _active;
   private Material[] _materials;
-  
 
   private Material[] _materialsMore;
 
   private int        _currentMissionNumber;
 
   private int        _endMissionNumber;
-  
-  private String   _accepts;
+
+  private String     _accepts;
 
   public Contractor() {
     super();
@@ -34,6 +34,7 @@ public class Contractor {
     super();
     _name = name;
     _materials = materials;
+    _scan = false;
     _scanMaterials2 = false;
     _active = false;
   }
@@ -45,7 +46,7 @@ public class Contractor {
   public void setMaterials(Material[] materials) {
     _materials = materials;
   }
-  
+
   public Material[] getMaterialsMore() {
     return _materialsMore;
   }
@@ -68,6 +69,14 @@ public class Contractor {
 
   public void setCurrentMissionNumber(int currentMissionNumber) {
     this._currentMissionNumber = currentMissionNumber;
+  }
+
+  public boolean isScan() {
+    return _scan;
+  }
+
+  public void setScan(boolean scan) {
+    _scan = scan;
   }
 
   public boolean isScanMaterials2() {

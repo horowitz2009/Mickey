@@ -73,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.809a";
+  private static final String APP_TITLE           = "v0.811";
 
   private boolean             _devMode            = false;
 
@@ -117,6 +117,7 @@ public final class MainFrame extends JFrame {
   private JToggleButton       _resumeClick;
 
   private JToolBar            _frToolbar1;
+  private JToolBar            _freeToolbar1;
 
   private JToolBar            _frToolbar2;
 
@@ -125,7 +126,8 @@ public final class MainFrame extends JFrame {
   private JToolBar            _exToolbar2;
 
   private List<String>        _captureContractors = new ArrayList<String>();
-  private boolean             _withMaterials      = false;
+  private boolean             _captureHome        = false;
+  private boolean             _scanMaterials2     = false;
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
@@ -278,11 +280,32 @@ public final class MainFrame extends JFrame {
     JToolBar mainToolbar2 = new JToolBar();
 
     _frToolbar1 = new JToolBar();
+    _freeToolbar1 = new JToolBar();
     _frToolbar2 = new JToolBar();
-    _frToolbar1.add(new JLabel("Freight     "));
+    JLabel frLabel = new JLabel("Freight     ");
+    _frToolbar1.add(frLabel);
+    JLabel freeLabel = new JLabel("Free          ");
+    _freeToolbar1.add(freeLabel);
     _exToolbar1 = new JToolBar();
     _exToolbar2 = new JToolBar();
-    _exToolbar1.add(new JLabel("Express  "));
+    JLabel exLabel = new JLabel("Express  ");
+    _exToolbar1.add(exLabel);
+    JLabel exLabel2 = new JLabel("         ");
+    _exToolbar2.add(exLabel2);
+
+    Dimension d = new Dimension(55, 20);
+    frLabel.setPreferredSize(d);
+    freeLabel.setPreferredSize(d);
+    exLabel.setPreferredSize(d);
+    exLabel2.setPreferredSize(d);
+    frLabel.setMinimumSize(d);
+    freeLabel.setMinimumSize(d);
+    exLabel.setMinimumSize(d);
+    exLabel2.setMinimumSize(d);
+    frLabel.setMaximumSize(d);
+    freeLabel.setMaximumSize(d);
+    exLabel.setMaximumSize(d);
+    exLabel2.setMaximumSize(d);
 
     JPanel toolbars = new JPanel(new GridLayout(6, 1));
     toolbars.add(mainToolbar1);
@@ -290,15 +313,17 @@ public final class MainFrame extends JFrame {
     mainToolbar1.setFloatable(false);
     mainToolbar2.setFloatable(false);
     _frToolbar1.setFloatable(false);
+    _freeToolbar1.setFloatable(false);
     _frToolbar2.setFloatable(false);
     _exToolbar1.setFloatable(false);
     _exToolbar2.setFloatable(false);
     _frToolbar1.setBackground(new Color(201, 177, 133));
+    _freeToolbar1.setBackground(new Color(201, 177, 183));// TODO
     _frToolbar2.setBackground(new Color(201, 177, 133));
     _exToolbar1.setBackground(new Color(153, 173, 209));
     _exToolbar2.setBackground(new Color(153, 173, 209));
     toolbars.add(_frToolbar1);
-    toolbars.add(_frToolbar2);
+    toolbars.add(_freeToolbar1);
     toolbars.add(_exToolbar1);
     toolbars.add(_exToolbar2);
     Box north = Box.createVerticalBox();
@@ -493,7 +518,7 @@ public final class MainFrame extends JFrame {
 
     // LOCATE
     {
-      _locateAction = new JButton(new AbstractAction("Locate") {
+      _locateAction = new JButton(new AbstractAction("L") {
         public void actionPerformed(ActionEvent e) {
           Thread myThread = new Thread(new Runnable() {
             @Override
@@ -518,6 +543,31 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar1.add(_locateAction);
     }
+    // LOCATE
+    {
+      JButton b1 = new JButton(new AbstractAction("H") {
+        public void actionPerformed(ActionEvent e) {
+          Thread myThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+              try {
+                _captureHome = true;
+                if (!isRunning("MAGIC")) {
+                  runMagic();
+                }
+              } catch (Exception e1) {
+                LOGGER.log(Level.WARNING, e1.getMessage());
+                e1.printStackTrace();
+              }
+            }
+
+          });
+          myThread.start();
+        }
+      });
+      mainToolbar1.add(b1);
+    }
     // CAPTURE CONTRACTS 1
     {
       JButton b1 = new JButton(new AbstractAction("C1") {
@@ -528,7 +578,7 @@ public final class MainFrame extends JFrame {
             public void run() {
               try {
                 resetContractors();
-                _withMaterials = true;
+                _scanMaterials2 = true;
                 if (!isRunning("MAGIC")) {
                   runMagic();
                 }
@@ -554,7 +604,7 @@ public final class MainFrame extends JFrame {
             public void run() {
               try {
                 resetContractors();
-                _withMaterials = false;
+                _scanMaterials2 = false;
                 if (!isRunning("MAGIC")) {
                   runMagic();
                 }
@@ -629,15 +679,18 @@ public final class MainFrame extends JFrame {
     }
 
     ButtonGroup bgFr = new ButtonGroup();
-    createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE1, true);
-    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE2, true);
-    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE3, true);
+    ButtonGroup bgFree = new ButtonGroup();
+    createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
+    createButtons(_freeToolbar1, bgFree, Locations.LOC_PAGE_F1, "free");
+    // createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE2, true);
+    // createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE3, true);
 
     ButtonGroup bgEx = new ButtonGroup();
-    createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE1, false);
-    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE2, false);
-    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
+    createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE_E1, "express");
+    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE_E2, "express");
+    // createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
     ((JToggleButton) _frToolbar1.getComponent(3)).setSelected(true);
+    ((JToggleButton) _freeToolbar1.getComponent(2)).setSelected(true);
     ((JToggleButton) _exToolbar1.getComponent(4)).setSelected(true);
 
     /*
@@ -726,18 +779,34 @@ public final class MainFrame extends JFrame {
   private void reapplySettings() {
     LOGGER.info(".................");
     int free = _commands.getInt("free", -1);
+    int freight = _commands.getInt("freight", -1);
+    int express = _commands.getInt("express", -1);
+
+    // if (free >= 0) {
+    // for (Location loc : Locations.ALL) {
+    // if (loc.getTime() == free) {
+    // _freeTime = loc;
+    // break;
+    // }
+    // }
+    // }
 
     if (free >= 0) {
-      for (Location loc : Locations.ALL) {
-        if (loc.getTime() == free) {
-          _freeTime = loc;
-          break;
+      Component[] components = _freeToolbar1.getComponents();
+      boolean found = false;
+      for (int i = 0; i < components.length && !found; i++) {
+        if (components[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components[i];
+          if (b.getTrainLocation().getTime() == free) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
         }
       }
     }
-
-    int freight = _commands.getInt("freight", -1);
-    int express = _commands.getInt("express", -1);
 
     if (freight >= 0) {
       Component[] components = _frToolbar1.getComponents();
@@ -754,25 +823,8 @@ public final class MainFrame extends JFrame {
           }
         }
       }
-      components = _frToolbar2.getComponents();
-      for (int i = 0; i < components.length && !found; i++) {
-        if (components[i] instanceof LocationToggleButton) {
-          LocationToggleButton b = (LocationToggleButton) components[i];
-          if (b.getTrainLocation().getTime() == freight) {
-            if (!b.isSelected()) {
-              b.doClick();
-              b.invalidate();
-            }
-            found = true;
-          }
-        }
-      }
-
-      // if (found) {
-      // _commands.removeKey("freight");
-      // _commands.saveSettings();
-      // }
     }
+
     if (express >= 0) {
       boolean found = false;
       Component[] components = _exToolbar1.getComponents();
@@ -788,24 +840,21 @@ public final class MainFrame extends JFrame {
           }
         }
       }
-      components = _exToolbar2.getComponents();
-      for (int i = 0; i < components.length && !found; i++) {
-        if (components[i] instanceof LocationToggleButton) {
-          LocationToggleButton b = (LocationToggleButton) components[i];
-          if (b.getTrainLocation().getTime() == express) {
-            if (!b.isSelected()) {
-              b.doClick();
-              b.invalidate();
+      if (!found) {
+        components = _exToolbar2.getComponents();
+        for (int i = 0; i < components.length && !found; i++) {
+          if (components[i] instanceof LocationToggleButton) {
+            LocationToggleButton b = (LocationToggleButton) components[i];
+            if (b.getTrainLocation().getTime() == express) {
+              if (!b.isSelected()) {
+                b.doClick();
+                b.invalidate();
+              }
+              found = true;
             }
-            found = true;
           }
         }
       }
-      // if (found) {
-      // _commands.removeKey("express");
-      // _commands.saveSettings();
-      // }
-
     }
 
     boolean ping = "true".equalsIgnoreCase(_commands.getProperty("ping"));
@@ -860,6 +909,7 @@ public final class MainFrame extends JFrame {
     } else if ("contracts".equals(command)) {
       _commands.setProperty("command", command + "_ok");
       // _commands.saveSettingsSorted();
+      _scanMaterials2 = true;
       resetContractors();
       if (!isRunning("MAGIC")) {
         runMagic();
@@ -867,7 +917,7 @@ public final class MainFrame extends JFrame {
       _commands.setProperty("command.done", "" + DateUtils.formatDateForFile2(System.currentTimeMillis()));
       _commands.saveSettingsSorted();
     } else if ("contractor".equals(command)) {
-      _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
+      _scanMaterials2 = "true".equals(_settings.getProperty("contractors.withMaterials"));
       _commands.setProperty("command", command + "_ok");
       String contractor = _commands.getProperty("contractor");
       rescanContractor(contractor);
@@ -881,8 +931,8 @@ public final class MainFrame extends JFrame {
 
   private void resetContractors() {
     try {
-      _captureContractors = new DataStore().getActiveContractorNames();
-      // _withMaterials = "true".equals(_settings.getProperty("contractors.withMaterials"));
+      _captureHome = true;
+      _captureContractors = new DataStore().getContractorNamesForScan();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -905,21 +955,21 @@ public final class MainFrame extends JFrame {
     _stopThread = false;
   }
 
-  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final boolean freight) {
+  private void createButtons(final JToolBar toolbar, final ButtonGroup bg, final Location[] locations, final String type) {
     for (int i = 0; i < locations.length; i++) {
       final Location l = locations[i];
       LocationToggleButton button = new LocationToggleButton(l, new AbstractAction(l.getName()) {
 
         public void actionPerformed(ActionEvent e) {
-          if (freight) {
+          if (type.equals("free")) {
+            _freeTime = l;
+          } else if (type.equals("freight")) {
             _freightTime = l;
-            LOGGER.info("selected freight: " + l.getName());
-            _commands.setProperty("freight", "" + l.getTime());
           } else {
             _expressTime = l;
-            _commands.setProperty("express", "" + l.getTime());
-            LOGGER.info("selected express: " + l.getName());
           }
+          LOGGER.info("selected " + type + ": " + l.getName());
+          _commands.setProperty(type, "" + l.getTime());
           _commands.saveSettingsSorted();
         }
       });
@@ -1254,13 +1304,13 @@ public final class MainFrame extends JFrame {
         break;
       } catch (DragFailureException e) {
         handleDragFailure();
-        //break; //refresh could help
+        // break; //refresh could help
       } catch (Throwable e) {
         LOGGER.severe("SOMETHING WENT WRONG!");
         e.printStackTrace();
         LOGGER.log(Level.SEVERE, "UH OH " + e.getMessage() + " UH OH", e);
         setTitle("SOMETHING WENT WRONG!");
-        //break; //please don't stop the music!
+        // break; //please don't stop the music!
       }
 
     }
@@ -1328,9 +1378,45 @@ public final class MainFrame extends JFrame {
     }
   }
 
+  private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
+    handlePopups();
+    goHomeIfNeeded();
+    // open contracts
+    _mouse.click(_scanner.getBottomRight().x - 61, _scanner.getTopLeft().y + 73);
+    _mouse.delay(1000);
+
+    Pixel pm = null;
+    int tries = 0;
+    do {
+      pm = _scanner.getMaterials().findImage();
+      if (pm == null) {
+        // try again after 1 second
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+      }
+      tries++;
+    } while (pm == null && tries < 3);
+
+    if (pm != null) {
+      pm = new Pixel(pm.x - 313, pm.y - 31);
+      Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
+      _scanner.writeImage(rect, "data/Home_materials.bmp");
+      _mouse.delay(300);
+    }
+
+    // click close
+    _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
+    _mouse.delay(600);
+
+  }
+
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
-    // _commands.setProperty("contractor.scan", "idle");
-    // _commands.saveSettingsSorted();
+    if (_captureHome) {
+      captureHome();
+      _captureHome = false;
+    }
 
     if (_captureContractors.size() > 0) {
       String contractorName = _captureContractors.get(0);
@@ -1427,7 +1513,11 @@ public final class MainFrame extends JFrame {
               // _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
 
-              if (new DataStore().getContractor(contractorName).isScanMaterials2()) {
+              boolean scanMaterials2 = false;
+              if (_scanMaterials2) {
+                scanMaterials2 = new DataStore().getContractor(contractorName).isScanMaterials2();
+              }
+              if (scanMaterials2) {
                 // click next page of materials
                 _mouse.click(pm.x + 724, pm.y + 292);
                 _mouse.delay(500);
