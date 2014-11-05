@@ -64,6 +64,7 @@ import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
+import com.horowitz.mickey.service.Service;
 
 /**
  * @author zhristov
@@ -73,7 +74,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.811";
+  private static final String APP_TITLE           = "v0.812c";
 
   private boolean             _devMode            = false;
 
@@ -752,6 +753,7 @@ public final class MainFrame extends JFrame {
   private void runSettingsListener() {
     Thread settingsThread = new Thread(new Runnable() {
       public void run() {
+        new Service().purgeAll();
         boolean stop = false;
         do {
           _settings.loadSettings();
@@ -762,6 +764,7 @@ public final class MainFrame extends JFrame {
           } else {
             reapplySettings();
             processCommands();
+            processRequests();
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
@@ -867,6 +870,59 @@ public final class MainFrame extends JFrame {
     if (resume != _resumeClick.isSelected()) {
       _resumeClick.setSelected(resume);
     }
+  }
+
+  private void processRequests() {
+    Service service = new Service();
+
+    String[] requests = service.getActiveRequests();
+    for (String r : requests) {
+      service.inProgress(r);
+      if (r.startsWith("capture")) {
+        String[] ss = r.split("_");
+        if (ss.length > 2) {
+          // _captureContractors.clear();
+          _captureContractors.add(ss[1]);
+          hook(r);
+        } else {
+          resetContractors();
+          hook(r);
+        }
+      }
+    }
+
+    service.purgeOld(1000 * 60 * 60);// 1 hour old
+  }
+
+  private void hook(final String request) {
+    Thread hookThread = new Thread(new Runnable() {
+      public void run() {
+        int n = 0;
+        boolean done = false;
+        do {
+          n++;
+          String[] ss = request.split("_");
+          String c = null;
+          if (ss.length > 2) {
+            c = ss[1];
+            LOGGER.info("checking (" + n + ") " + c);
+          }
+          if ((c != null && !_captureContractors.contains(c)) || (c == null && _captureContractors.size() == 0)) {
+            new Service().done(request);
+            done = true;
+            LOGGER.info(c + " is DONE!!!");
+          }
+          try {
+            Thread.sleep(4000);
+          } catch (InterruptedException e) {
+          }
+        } while (!done && n < 5 * 20);
+        if (!done) {
+          new Service().purgeAll();
+        }
+      }
+    });
+    hookThread.start();
   }
 
   private void processCommands() {
@@ -1420,6 +1476,9 @@ public final class MainFrame extends JFrame {
 
     if (_captureContractors.size() > 0) {
       String contractorName = _captureContractors.get(0);
+      if (contractorName.indexOf("_") > 0) {
+        // TODO
+      }
       String fname = "data/" + contractorName;
       // String index = StringUtils.leftPad(ss[0], 2, "0");
       handlePopups();

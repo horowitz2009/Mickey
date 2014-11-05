@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.Format;
 import java.text.NumberFormat;
@@ -35,10 +36,12 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.horowitz.mickey.data.Contractor;
@@ -46,12 +49,14 @@ import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.data.Mission;
 import com.horowitz.mickey.data.Objective;
+import com.horowitz.mickey.service.Service;
 
 public final class ContractorPanel extends JPanel implements PropertyChangeListener {
-  private JPanel  _toolbar;
-  private CCanvas _canvas;
+  private JPanel       _toolbar;
+  private CCanvas      _canvas;
+  private JProgressBar _progressBar;
 
-  private String  _contractorName;
+  private String       _contractorName;
 
   public String getContractorName() {
     return _contractorName;
@@ -107,41 +112,6 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     // _missionNumberTF.setMinimumSize(new Dimension(20, 20));
     _toolbar.add(_missionNumberTF);
 
-    JButton requestScan = new JButton(new AbstractAction("Request scan") {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (_contractor != null && !isRunning("CSTHREAD")) {
-          final Settings commands = Settings.createCommands();
-          commands.setProperty("contractor", _contractor.getName());
-          commands.setProperty("command", "contractor");
-          Thread csThread = new Thread(new Runnable() {
-
-            public void run() {
-              long start = System.currentTimeMillis();
-              long now;
-              boolean weredone = false;
-              do {
-                try {
-                  Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                }
-                String status = commands.getProperty("contractor.scan");
-                if ("done".equals(status)) {
-                  // we're done
-                  weredone = true;
-                  rescan();
-                }
-                now = System.currentTimeMillis();
-              } while (!weredone && now - start < 1000 * 120); // 2 minutes
-            }
-          }, "CSTHREAD");
-          csThread.start();
-        }
-      }
-    });
-    // _toolbar.add(requestScan);
-
     JButton reloadButton = new JButton(new AbstractAction("Reload") {
 
       @Override
@@ -171,10 +141,21 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       }
     });
 
-    // _toolbar.add(Box.createHorizontalStrut(4));
     _toolbar.add(rescanButton);
 
-    // _toolbar.add(Box.createGlue());
+    JButton requestScan = new JButton(new AbstractAction("Request capture") {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        capture();
+      }
+    });
+    _toolbar.add(requestScan);
+    
+    
+    _progressBar = new JProgressBar(0, 120);
+    _progressBar.setVisible(false);
+    _toolbar.add(_progressBar);
 
     add(_toolbar, BorderLayout.NORTH);
   }
@@ -495,11 +476,11 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             materials = (Material[]) ArrayUtils.addAll(materials, materials2);
             _contractor.setMaterials(materials);
           }
-          
+
           if (_currentMission.getNumber() > 100) {
-            //all missions above 100 are fake building missions, so fix the current mission progress using materials status
-            for (Objective o: _currentMission.getObjectives()) {
-              for (Material m: materials) {
+            // all missions above 100 are fake building missions, so fix the current mission progress using materials status
+            for (Objective o : _currentMission.getObjectives()) {
+              for (Material m : materials) {
                 if (m.getName().equals(o.getMaterial())) {
                   o.setCurrentAmount(m.getAmount());
                   break;
@@ -524,6 +505,37 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       e.printStackTrace();
     }
 
+  }
+
+  private void capture() {
+    if (_contractor != null && !isRunning("CSTHREAD_" + _contractorName)) {
+  
+      final String requestName = new Service().request("capture_" + _contractorName);
+  
+      Thread csThread = new Thread(new Runnable() {
+  
+        public void run() {
+          boolean weredone = false;
+          int n = 0;
+          _progressBar.setValue(n);
+          _progressBar.setVisible(true);
+          do {
+            try {
+              Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            _progressBar.setValue(++n);
+            boolean isDone = new Service().isDone(requestName);
+            if (isDone) {
+              weredone = true;
+              _progressBar.setVisible(false);
+              rescan();
+            }
+          } while (!weredone && n < 120); // 2 minutes
+        }
+      }, "CSTHREAD_" + _contractorName);
+      csThread.start();
+    }
   }
 
   private void save() {

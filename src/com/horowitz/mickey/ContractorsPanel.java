@@ -5,10 +5,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
@@ -27,6 +25,7 @@ import javax.swing.event.ChangeListener;
 
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
+import com.horowitz.mickey.service.Service;
 
 public class ContractorsPanel extends JPanel {
 
@@ -64,6 +63,12 @@ public class ContractorsPanel extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         rescanAll();
+      }
+    });
+    mainToolbar.add(new AbstractAction("Request capture all") {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        requestAll();
       }
     });
 
@@ -158,6 +163,39 @@ public class ContractorsPanel extends JPanel {
       }
     });
     scanThread.start();
+  }
+  
+  private void requestAll() {
+   final String request = new Service().request("captureAll");
+    Thread csThread = new Thread(new Runnable() {
+      
+      public void run() {
+        boolean weredone = false;
+        int n = 0;
+        _progressBar.setValue(n);
+        int old = _progressBar.getMaximum();
+        _progressBar.setMaximum(120 * 5);
+        _progressBar.setVisible(true);
+        do {
+          System.err.println("hmm " + n);
+          try {
+            Thread.sleep(3000);
+          } catch (InterruptedException e) {
+          }
+          n += 3;
+          _progressBar.setValue(n);
+          boolean isDone = new Service().isDone(request);
+          if (isDone) {
+            weredone = true;
+            _progressBar.setVisible(false);
+            _progressBar.setMaximum(old);
+            _progressBar.setValue(0);
+            rescanAll();
+          }
+        } while (!weredone && n < 200); // 2 minutes
+      }
+    });
+    csThread.start();
   }
 
   private JToggleButton createContractorButton(String name) {
