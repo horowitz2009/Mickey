@@ -2,12 +2,13 @@ package com.horowitz.mickey.data;
 
 public class Home {
 
-  private int        trainSlots;
-  private int        intSlots;
-  private int        depotSlots;
+  private int        _localSlots;
+  private int        _intSlots;
+  private int        _depotSlots;
   private int        _freeFreight;
   private int        _freight;
   private int        _express;
+  
   private Material[] _materials;
 
   public Home() {
@@ -19,28 +20,28 @@ public class Home {
     return _materials;
   }
 
-  public int getTrainSlots() {
-    return trainSlots;
+  public int getLocalSlots() {
+    return _localSlots;
   }
 
-  public void setTrainSlots(int trainSlots) {
-    this.trainSlots = trainSlots;
+  public void setLocalSlots(int trainSlots) {
+    this._localSlots = trainSlots;
   }
 
   public int getIntSlots() {
-    return intSlots;
+    return _intSlots;
   }
 
   public void setIntSlots(int intSlots) {
-    this.intSlots = intSlots;
+    this._intSlots = intSlots;
   }
 
   public int getDepotSlots() {
-    return depotSlots;
+    return _depotSlots;
   }
 
   public void setDepotSlots(int depotSlots) {
-    this.depotSlots = depotSlots;
+    this._depotSlots = depotSlots;
   }
 
   public int getFreeFreight() {

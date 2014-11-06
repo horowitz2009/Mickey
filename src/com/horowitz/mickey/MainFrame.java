@@ -74,7 +74,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.812c";
+  private static final String APP_TITLE           = "v0.813h";
 
   private boolean             _devMode            = false;
 
@@ -885,8 +885,14 @@ public final class MainFrame extends JFrame {
           _captureContractors.add(ss[1]);
           hook(r);
         } else {
-          resetContractors();
-          hook(r);
+          if (r.startsWith("captureAll")) {
+            resetContractors();
+            hook(r);
+          } else if (r.startsWith("captureHome")) {
+            _captureHome = true;
+            hookHome(r);
+          }
+          
         }
       }
     }
@@ -906,8 +912,43 @@ public final class MainFrame extends JFrame {
           if (ss.length > 2) {
             c = ss[1];
             LOGGER.info("checking (" + n + ") " + c);
+          } else {
+            c = ss[0];
           }
-          if ((c != null && !_captureContractors.contains(c)) || (c == null && _captureContractors.size() == 0)) {
+          if ((ss.length> 2 && !_captureContractors.contains(c)) || (ss.length <= 2 && _captureContractors.size() == 0)) {
+            new Service().done(request);
+            done = true;
+            LOGGER.info(c + " is DONE!!!");
+          }
+          try {
+            Thread.sleep(4000);
+          } catch (InterruptedException e) {
+          }
+        } while (!done && n < 5 * 20);
+        if (!done) {
+          new Service().purgeAll();
+        }
+      }
+    });
+    hookThread.start();
+  }
+
+  private void hookHome(final String request) {
+    Thread hookThread = new Thread(new Runnable() {
+      public void run() {
+        int n = 0;
+        boolean done = false;
+        do {
+          n++;
+          String[] ss = request.split("_");
+          String c = null;
+          if (ss.length > 2) {
+            c = ss[1];
+            LOGGER.info("checking (" + n + ") " + c);
+          } else {
+            c = ss[0];
+          }
+          if (!_captureHome) {
             new Service().done(request);
             done = true;
             LOGGER.info(c + " is DONE!!!");
@@ -1465,20 +1506,16 @@ public final class MainFrame extends JFrame {
     // click close
     _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
     _mouse.delay(600);
-
+    _captureHome = false;
   }
 
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     if (_captureHome) {
       captureHome();
-      _captureHome = false;
     }
 
     if (_captureContractors.size() > 0) {
       String contractorName = _captureContractors.get(0);
-      if (contractorName.indexOf("_") > 0) {
-        // TODO
-      }
       String fname = "data/" + contractorName;
       // String index = StringUtils.leftPad(ss[0], 2, "0");
       handlePopups();

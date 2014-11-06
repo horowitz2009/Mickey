@@ -1,8 +1,10 @@
 {
-  "_name": "Home",
-  "_scan": false,
-  "_scanMaterials2": false,
-  "_active": true,
+  "_localSlots": 0,
+  "_intSlots": 0,
+  "_depotSlots": 0,
+  "_freeFreight": 0,
+  "_freight": 0,
+  "_express": 0,
   "_materials": [
     {
       "_name": "Gold",
@@ -72,77 +74,5 @@
       "_name": "Silicon",
       "_amount": 0
     }
-  ],
-  "_materialsMore": [
-    {
-      "_name": "Gold",
-      "_amount": 0
-    },
-    {
-      "_name": "Wood",
-      "_amount": 0
-    },
-    {
-      "_name": "Nails",
-      "_amount": 0
-    },
-    {
-      "_name": "Bricks",
-      "_amount": 0
-    },
-    {
-      "_name": "Glass",
-      "_amount": 0
-    },
-    {
-      "_name": "Fuel",
-      "_amount": 0
-    },
-    {
-      "_name": "Steel",
-      "_amount": 0
-    },
-    {
-      "_name": "Gravel",
-      "_amount": 0
-    },
-    {
-      "_name": "U-235",
-      "_amount": 0
-    },
-    {
-      "_name": "Cement",
-      "_amount": 0
-    },
-    {
-      "_name": "Rubber",
-      "_amount": 0
-    },
-    {
-      "_name": "Carbon",
-      "_amount": 0
-    },
-    {
-      "_name": "Titanium",
-      "_amount": 0
-    },
-    {
-      "_name": "Marble",
-      "_amount": 0
-    },
-    {
-      "_name": "Wires",
-      "_amount": 0
-    },
-    {
-      "_name": "Plastics",
-      "_amount": 0
-    },
-    {
-      "_name": "Silicon",
-      "_amount": 0
-    }
-  ],
-  "_currentMissionNumber": 101,
-  "_endMissionNumber": 0
+  ]
 }

@@ -14,7 +14,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -87,15 +86,19 @@ public class ContractorsPanel extends JPanel {
     sp.getVerticalScrollBar().setUnitIncrement(20);
     add(sp, BorderLayout.WEST);
     JToggleButton firstButton = null;
+    
+    HomeContractorPanel hcp = new HomeContractorPanel();
+    _cardPanel.add(hcp, "Home");
+    JToggleButton hbutton = createContractorButton("Home");
+    firstButton = hbutton;
+    bg.add(hbutton);
+    box.add(hbutton);
+    
     for (Contractor contractor : _contractors) {
       if (contractor.isActive()) {
         ContractorPanel cp = new ContractorPanel(contractor.getName());
         _cardPanel.add(cp, contractor.getName());
-
         JToggleButton button = createContractorButton(contractor.getName());
-        if (firstButton == null) {
-          firstButton = button;
-        }
         bg.add(button);
         box.add(button);
       }
@@ -115,22 +118,15 @@ public class ContractorsPanel extends JPanel {
         // List<Mission> currentMissions = new ArrayList<>();
         Component[] components = _cardPanel.getComponents();
         for (Component component : components) {
-          if (component instanceof ContractorPanel) {
-            ContractorPanel conPanel = (ContractorPanel) component;
-            conPanel.rescan();
-            // currentMissions.add(conPanel.getCurrentMission());
-            // TODO conPanel.getMaterialStatus -> getContractor() updated
+          if (component instanceof IContractorPanel) {
+            IContractorPanel conPanel = (IContractorPanel) component;
+            if (conPanel.isScan()) {
+              conPanel.rescan();
+            }
             _progressBar.setValue(++n);
           }
         }
 
-        // // SAVE CURRENT MISSIONS
-        // try {
-        // new DataStore().writeCurrentMissions((Mission[]) currentMissions.toArray(new Mission[currentMissions.size()]));
-        // } catch (IOException e1) {
-        // // TODO Auto-generated catch block
-        // e1.printStackTrace();
-        // }
         _progressBar.setValue(++n);
 
         try {
@@ -151,8 +147,8 @@ public class ContractorsPanel extends JPanel {
         int n = 0;
         Component[] components = _cardPanel.getComponents();
         for (Component component : components) {
-          if (component instanceof ContractorPanel) {
-            ContractorPanel conPanel = (ContractorPanel) component;
+          if (component instanceof IContractorPanel) {
+            IContractorPanel conPanel = (IContractorPanel) component;
             conPanel.reload();
             _progressBar.setValue(++n);
           }
@@ -164,11 +160,11 @@ public class ContractorsPanel extends JPanel {
     });
     scanThread.start();
   }
-  
+
   private void requestAll() {
-   final String request = new Service().request("captureAll");
+    final String request = new Service().request("captureAll");
     Thread csThread = new Thread(new Runnable() {
-      
+
       public void run() {
         boolean weredone = false;
         int n = 0;
@@ -201,17 +197,17 @@ public class ContractorsPanel extends JPanel {
   private JToggleButton createContractorButton(String name) {
     JToggleButton button = new JToggleButton(new ConctratorAction(name));
     ImageIcon icon1 = ImageManager.getImage("contracts/" + name + "49.png");
-    //ImageIcon icon2 = ImageManager.getImage("contracts/blueArea40flat.png");
+    // ImageIcon icon2 = ImageManager.getImage("contracts/blueArea40flat.png");
 
-    //BufferedImage bi = new BufferedImage(icon1.getIconWidth(), icon1.getIconHeight() + icon2.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-    //Graphics g = bi.createGraphics();
+    // BufferedImage bi = new BufferedImage(icon1.getIconWidth(), icon1.getIconHeight() + icon2.getIconHeight(), BufferedImage.TYPE_INT_RGB);
+    // Graphics g = bi.createGraphics();
     // paint the Icon to the BufferedImage.
-    //icon1.paintIcon(null, g, 0, 0);
-    //icon2.paintIcon(null, g, 0, 40);
-    //g.dispose();
-    //bi = bi.getSubimage(0, 1, bi.getWidth(), bi.getHeight() - 1);// cut first line
+    // icon1.paintIcon(null, g, 0, 0);
+    // icon2.paintIcon(null, g, 0, 40);
+    // g.dispose();
+    // bi = bi.getSubimage(0, 1, bi.getWidth(), bi.getHeight() - 1);// cut first line
 
-    //button.setIcon(new ImageIcon(bi));
+    // button.setIcon(new ImageIcon(bi));
     button.setIcon(icon1);
 
     button.setBorderPainted(false);
@@ -223,7 +219,6 @@ public class ContractorsPanel extends JPanel {
 
       @Override
       public void stateChanged(ChangeEvent e) {
-        // TODO Auto-generated method stub
         JToggleButton b = (JToggleButton) e.getSource();
         b.setBorderPainted(b.isSelected());
         b.revalidate();
@@ -246,19 +241,6 @@ public class ContractorsPanel extends JPanel {
     public void actionPerformed(ActionEvent e) {
       _cardLayout.show(_cardPanel, _contractor);
     }
-
-  }
-
-  public static void main(String[] args) {
-    JFrame frame = new JFrame("Contractor Assistant");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.getContentPane().add(new ContractorsPanel(), BorderLayout.CENTER);
-
-    frame.setSize(new Dimension(800, 550));
-
-    frame.setLocationRelativeTo(null);
-
-    frame.setVisible(true);
 
   }
 }

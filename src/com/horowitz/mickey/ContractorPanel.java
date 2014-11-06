@@ -16,11 +16,9 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.Format;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +40,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.horowitz.mickey.data.Contractor;
@@ -52,7 +49,7 @@ import com.horowitz.mickey.data.Mission;
 import com.horowitz.mickey.data.Objective;
 import com.horowitz.mickey.service.Service;
 
-public final class ContractorPanel extends JPanel implements PropertyChangeListener {
+public final class ContractorPanel extends JPanel implements PropertyChangeListener, IContractorPanel {
   private JPanel       _toolbar;
   private CCanvas      _canvas;
   private JProgressBar _progressBar;
@@ -424,6 +421,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.horowitz.mickey.IContractorPanel#reload()
+   */
+  @Override
   public void reload() {
     try {
       DataStore ds = new DataStore();
@@ -449,6 +452,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
     }
   }
 
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.horowitz.mickey.IContractorPanel#rescan()
+   */
+  @Override
   public void rescan() {
     try {
       DataStore ds = new DataStore();
@@ -458,62 +467,70 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         BufferedImage image;
         Integer number = null;
         String cname = _contractor.getName();
-        File f = new File("data/" + cname + "_missionNumber.bmp");
-        if (f.exists()) {
-          image = ImageIO.read(f);
-          number = mscanner.scanMissionNumber(image);
+        try {
+          number = Integer.parseInt(_missionNumberTF.getText());
+        } catch (NumberFormatException e) {
         }
-        if (number == null) {
-          _missionNumberTF.setForeground(Color.RED);
-          // _missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
-          try {
-            number = Integer.parseInt(_missionNumberTF.getText());
-          } catch (NumberFormatException e) {
+
+        if (number == null || (number != null && number <= 100)) {
+          File f = new File("data/" + cname + "_missionNumber.bmp");
+          if (f.exists()) {
+            image = ImageIO.read(f);
+            number = mscanner.scanMissionNumber(image);
+            if (number == null) {
+              _missionNumberTF.setForeground(Color.RED);
+              _missionNumberTF.setText("ERR");
+            } else {
+              _missionNumberTF.setForeground(Color.BLACK);
+              _missionNumberTF.setText("" + number);
+            }
           }
-        } else {
-          _missionNumberTF.setForeground(Color.BLACK);
         }
 
         if (number != null) {
           _contractor.setCurrentMissionNumber(number);
 
+          // SCAN MISSION if under 100
           _missionDB = ds.getMissionWithExtra(cname, number);
           if (_missionDB != null) {
             _currentMission = _missionDB.copy();
             updateImage();
             if (_currentMission.getNumber() <= 100)
               mscanner.scanCurrentMissionDirect(_canvas._image, _currentMission);
-          }
-          MaterialsScanner matscanner = new MaterialsScanner();
-          // mscanner.scanMaterials(materialsImage, materials)
-          f = new File("data/" + cname + "_materials.bmp");
-          image = ImageIO.read(f);
-          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1, cname.equals("Home"));
-          _contractor.setMaterials(materials);
-          f = new File("data/" + cname + "_materials2.bmp");
-          if (f.exists()) {
-            image = ImageIO.read(f);
-            Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2, false);
-            materials = (Material[]) ArrayUtils.addAll(materials, materials2);
-            _contractor.setMaterials(materials);
-          }
 
-          if (_currentMission.getNumber() > 100) {
-            // all missions above 100 are fake building missions, so fix the current mission progress using materials status
-            for (Objective o : _currentMission.getObjectives()) {
-              for (Material m : materials) {
-                if (m.getName().equals(o.getMaterial())) {
-                  o.setCurrentAmount(m.getAmount());
-                  break;
+            // MATERIALS SCAN
+            MaterialsScanner matscanner = new MaterialsScanner();
+            // mscanner.scanMaterials(materialsImage, materials)
+            File f = new File("data/" + cname + "_materials.bmp");
+            image = ImageIO.read(f);
+            Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1, cname.equals("Home"));
+            _contractor.setMaterials(materials);
+            f = new File("data/" + cname + "_materials2.bmp");
+            if (f.exists()) {
+              image = ImageIO.read(f);
+              Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2, false);
+              materials = (Material[]) ArrayUtils.addAll(materials, materials2);
+              _contractor.setMaterials(materials);
+            }
+
+            // TAKE NUMBERS FROM MATERIALS
+            if (number > 100) {
+              // all missions above 100 are fake building missions, so fix the current mission progress using materials status
+              for (Objective o : _currentMission.getObjectives()) {
+                for (Material m : materials) {
+                  if (m.getName().equals(o.getMaterial())) {
+                    o.setCurrentAmount(m.getAmount());
+                    break;
+                  }
                 }
               }
             }
+            _area.setText(_missionDB.getDescription());
+
+            save();
+
+            updateView();
           }
-
-          save();
-
-          updateView();
-
         } else {
           // failed to scan mission number
           _missionDB = null;
@@ -570,21 +587,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         dataStore.writeMission(_missionDB);
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
 
-  public Contractor getContractor() {
-    return _contractor;
+  @Override
+  public boolean isScan() {
+    return _contractor != null && _contractor.isScan();
   }
-
-  public Mission getCurrentMission() {
-    return _currentMission;
-  }
-
-  public Mission getMissionDB() {
-    return _missionDB;
-  }
-
 }

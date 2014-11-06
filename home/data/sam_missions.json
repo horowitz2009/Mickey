@@ -19,6 +19,7 @@
     "_number": 41,
     "_contractor": "Sam",
     "_description": "",
+    "_selected": false,
     "_any": false
   },
   {
@@ -40,6 +41,7 @@
     ],
     "_number": 21,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -61,6 +63,7 @@
     ],
     "_number": 22,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -75,6 +78,7 @@
     ],
     "_number": 23,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -96,6 +100,7 @@
     ],
     "_number": 24,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -117,6 +122,7 @@
     ],
     "_number": 25,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -145,6 +151,7 @@
     ],
     "_number": 26,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -173,6 +180,7 @@
     ],
     "_number": 27,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -201,6 +209,7 @@
     ],
     "_number": 28,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -215,6 +224,7 @@
     ],
     "_number": 29,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -243,6 +253,7 @@
     ],
     "_number": 30,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -264,6 +275,7 @@
     ],
     "_number": 31,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -278,6 +290,7 @@
     ],
     "_number": 32,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -299,6 +312,7 @@
     ],
     "_number": 33,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -313,6 +327,7 @@
     ],
     "_number": 34,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -348,6 +363,7 @@
     ],
     "_number": 35,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -369,6 +385,7 @@
     ],
     "_number": 36,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -397,6 +414,7 @@
     ],
     "_number": 37,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -411,6 +429,7 @@
     ],
     "_number": 38,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -425,6 +444,7 @@
     ],
     "_number": 39,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -453,6 +473,7 @@
     ],
     "_number": 40,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -474,6 +495,7 @@
     ],
     "_number": 41,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -502,6 +524,7 @@
     ],
     "_number": 42,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -523,6 +546,7 @@
     ],
     "_number": 43,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -544,6 +568,7 @@
     ],
     "_number": 44,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -565,6 +590,7 @@
     ],
     "_number": 45,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -586,6 +612,7 @@
     ],
     "_number": 46,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -607,6 +634,7 @@
     ],
     "_number": 47,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -635,6 +663,7 @@
     ],
     "_number": 48,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -663,6 +692,7 @@
     ],
     "_number": 49,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -705,6 +735,7 @@
     ],
     "_number": 50,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -719,6 +750,7 @@
     ],
     "_number": 51,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -733,6 +765,7 @@
     ],
     "_number": 52,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -747,6 +780,7 @@
     ],
     "_number": 53,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -761,6 +795,7 @@
     ],
     "_number": 54,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -789,6 +824,7 @@
     ],
     "_number": 55,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -810,6 +846,7 @@
     ],
     "_number": 56,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -831,6 +868,7 @@
     ],
     "_number": 57,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -845,6 +883,7 @@
     ],
     "_number": 58,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -866,6 +905,7 @@
     ],
     "_number": 59,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   },
   {
@@ -894,6 +934,7 @@
     ],
     "_number": 60,
     "_contractor": "Sam",
+    "_selected": false,
     "_any": false
   }
 ]

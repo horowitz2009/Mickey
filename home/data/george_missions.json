@@ -2,35 +2,6 @@
   {
     "_objectives": [
       {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 50000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 50000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 50000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 104,
-    "_contractor": "George",
-    "_description": "Build Maintenance Depot #3",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
         "_type": "d",
         "_material": "Gold",
         "_neededAmount": 350000,

@@ -14,6 +14,7 @@ public class Mission {
   private int             _number;
   private String          _contractor;
   private String          _description;
+  private boolean         _selected;
 
   /**
    * if true means any of the objective if being done, then mission is considered accomplished. If false, then all objectives must be done.
@@ -25,6 +26,7 @@ public class Mission {
     _contractor = contractor;
     _description = description;
     _number = number;
+    _selected = false;
   }
 
   public Mission() {
@@ -70,6 +72,14 @@ public class Mission {
 
   public void setDescription(String description) {
     _description = description;
+  }
+
+  public boolean isSelected() {
+    return _selected;
+  }
+
+  public void setSelected(boolean selected) {
+    _selected = selected;
   }
 
   @Override
@@ -124,6 +134,14 @@ public class Mission {
           o.setNeededAmount(odb.getNeededAmount());
       }
     }
+  }
+
+  public void populate(Mission m) {
+    m.setAny(isAny());
+    m.setDescription(getDescription());
+    m.setObjectives(getObjectives());
+    m.setNumber(getNumber());
+    m.setSelected(isSelected());
   }
 
 }

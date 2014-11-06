@@ -7,221 +7,205 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import oracle.jrockit.jfr.events.DataStructureDescriptor;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class InitialMassLoader {
 
   public static void main(String[] args) {
     System.out.println("genereating contractors and missions");
-    //generateContractors();
-    //generateMissions();
+    // generateContractors();
+    // generateMissions();
     loadHomeMissions();
-    
+
     System.out.println("Done.");
   }
 
   private static void loadHomeMissions() {
     try {
       DataStore ds = new DataStore();
-      Contractor home = new Contractor("Home");
-      home.setActive(true);
+      Home home = new Home();
       home.setMaterials(Material.createArray());
-      home.setMaterialsMore(Material.createArray());
-      home.setCurrentMissionNumber(101);
-      ds.saveContractor(home);
-//      Mission[] missions = ds.readMissions("Home");
-//      for (Mission mission : missions) {
-//        System.out.println(mission);
-//      }
+      ds.saveHome(home);
+
       List<Mission> newMissions = new ArrayList<>();
-     // if (missions.length > 0) {
-        int n = 100;
-        //ok, then we continue here
-        Mission m;
-        List<Objective> objectives;
-        
-        
-        m = new Mission("Home", "International slot #13", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gold", 8000000));
-        objectives.add(new Objective("b", "Wires", 1040000));
-        objectives.add(new Objective("b", "Silicon", 1040000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "International slot #14", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Nails", 1116000));
-        objectives.add(new Objective("b", "U-235", 1044000));
-        objectives.add(new Objective("b", "Carbon", 1044000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "International slot #15", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Glass", 1200000));
-        objectives.add(new Objective("b", "Titanium", 1120000));
-        objectives.add(new Objective("b", "Plastics", 1120000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Second Maglev Rail", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Titanium", 524000));
-        objectives.add(new Objective("b", "Wires", 476000));
-        objectives.add(new Objective("b", "Silicon", 452000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #21", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Bricks", 1800000));
-        objectives.add(new Objective("b", "Steel", 1480000));
-        objectives.add(new Objective("b", "Cement", 880000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #23", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Wood", 1800000));
-        objectives.add(new Objective("b", "Gravel", 1480000));
-        objectives.add(new Objective("b", "Cement", 880000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #24", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Wood", 1800000));
-        objectives.add(new Objective("b", "Steel", 1480000));
-        objectives.add(new Objective("b", "Rubber", 880000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
 
-        m = new Mission("Home", "Local slot #25", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gravel", 1400000));
-        objectives.add(new Objective("b", "Rubber", 1400000));
-        objectives.add(new Objective("b", "Titanium", 800000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #26", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Nails", 1560000));
-        objectives.add(new Objective("b", "Cement", 1400000));
-        objectives.add(new Objective("b", "Carbon", 1000000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #27", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gold", 3960000));
-        objectives.add(new Objective("b", "Fuel", 1560000));
-        objectives.add(new Objective("b", "U-235", 1320000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        m = new Mission("Home", "Local slot #28", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gold", 16000000));
-        objectives.add(new Objective("b", "Titanium", 200000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //level 229
-        m = new Mission("Home", "Local slot #29", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gold", 15200000));
-        objectives.add(new Objective("b", "Nails", 680000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //level 243
-        m = new Mission("Home", "Local slot #30", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Steel", 1200000));
-        objectives.add(new Objective("b", "Rubber", 1160000));
-        objectives.add(new Objective("b", "Wires", 1120000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
+      int n = 100;
+      Mission m;
+      List<Objective> objectives;
 
-        //level 257
-        m = new Mission("Home", "Local slot #31", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Wood", 1600000));
-        objectives.add(new Objective("b", "Nails", 1600000));
-        objectives.add(new Objective("b", "Plastics", 1240000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        
-        //level 222
-        m = new Mission("Home", "International slot #16", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Bricks", 1200000));
-        objectives.add(new Objective("b", "U-235", 1200000));
-        objectives.add(new Objective("b", "Carbon", 1200000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //level 237
-        m = new Mission("Home", "International slot #17", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Fuel", 1320000));
-        objectives.add(new Objective("b", "Titanium", 1240000));
-        objectives.add(new Objective("b", "Marble", 1320000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //level 252
-        m = new Mission("Home", "International slot #18", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Glass", 1360000));
-        objectives.add(new Objective("b", "Cement", 1280000));
-        objectives.add(new Objective("b", "Rubber", 1200000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
+      m = new Mission("Home", "International slot #13", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 8000000));
+      objectives.add(new Objective("b", "Wires", 1040000));
+      objectives.add(new Objective("b", "Silicon", 1040000));
+      m.setObjectives(objectives);
+      m.setSelected(true);
+      newMissions.add(m);
 
-        m = new Mission("Home", "8 destinations", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gravel", 240000));
-        objectives.add(new Objective("b", "Rubber", 200000));
-        objectives.add(new Objective("b", "Carbon", 200000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //second station
-        m = new Mission("Home", "Second Station", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gravel", 660000));
-        objectives.add(new Objective("b", "U-235", 710000));
-        objectives.add(new Objective("b", "Cement", 649600));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        //third station
-        m = new Mission("Home", "Third Station", ++n);
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("b", "Gold", 6800000));
-        objectives.add(new Objective("b", "Wood", 560000));
-        objectives.add(new Objective("b", "Marble", 560000));
-        m.setObjectives(objectives);
-        newMissions.add(m);
-        
-        
-        
-        ds.writeMissions("Home", newMissions.toArray(new Mission[0]));
-        
-        
-        
-      //}
-      
+      m = new Mission("Home", "International slot #14", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Nails", 1116000));
+      objectives.add(new Objective("b", "U-235", 1044000));
+      objectives.add(new Objective("b", "Carbon", 1044000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "International slot #15", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Glass", 1200000));
+      objectives.add(new Objective("b", "Titanium", 1120000));
+      objectives.add(new Objective("b", "Plastics", 1120000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Second Maglev Rail", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Titanium", 524000));
+      objectives.add(new Objective("b", "Wires", 476000));
+      objectives.add(new Objective("b", "Silicon", 452000));
+      m.setObjectives(objectives);
+      m.setSelected(true);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #21", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Bricks", 1800000));
+      objectives.add(new Objective("b", "Steel", 1480000));
+      objectives.add(new Objective("b", "Cement", 880000));
+      m.setSelected(true);
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #23", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Wood", 1800000));
+      objectives.add(new Objective("b", "Gravel", 1480000));
+      objectives.add(new Objective("b", "Cement", 880000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #24", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Wood", 1800000));
+      objectives.add(new Objective("b", "Steel", 1480000));
+      objectives.add(new Objective("b", "Rubber", 880000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #25", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gravel", 1400000));
+      objectives.add(new Objective("b", "Rubber", 1400000));
+      objectives.add(new Objective("b", "Titanium", 800000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #26", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Nails", 1560000));
+      objectives.add(new Objective("b", "Cement", 1400000));
+      objectives.add(new Objective("b", "Carbon", 1000000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #27", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 3960000));
+      objectives.add(new Objective("b", "Fuel", 1560000));
+      objectives.add(new Objective("b", "U-235", 1320000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Local slot #28", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 16000000));
+      objectives.add(new Objective("b", "Titanium", 200000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 229
+      m = new Mission("Home", "Local slot #29", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 15200000));
+      objectives.add(new Objective("b", "Nails", 680000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 243
+      m = new Mission("Home", "Local slot #30", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Steel", 1200000));
+      objectives.add(new Objective("b", "Rubber", 1160000));
+      objectives.add(new Objective("b", "Wires", 1120000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 257
+      m = new Mission("Home", "Local slot #31", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Wood", 1600000));
+      objectives.add(new Objective("b", "Nails", 1600000));
+      objectives.add(new Objective("b", "Plastics", 1240000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 222
+      m = new Mission("Home", "International slot #16", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Bricks", 1200000));
+      objectives.add(new Objective("b", "U-235", 1200000));
+      objectives.add(new Objective("b", "Carbon", 1200000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 237
+      m = new Mission("Home", "International slot #17", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Fuel", 1320000));
+      objectives.add(new Objective("b", "Titanium", 1240000));
+      objectives.add(new Objective("b", "Marble", 1320000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // level 252
+      m = new Mission("Home", "International slot #18", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Glass", 1360000));
+      objectives.add(new Objective("b", "Cement", 1280000));
+      objectives.add(new Objective("b", "Rubber", 1200000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      m = new Mission("Home", "8 destinations", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gravel", 240000));
+      objectives.add(new Objective("b", "Rubber", 200000));
+      objectives.add(new Objective("b", "Carbon", 200000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // second station
+      m = new Mission("Home", "Second Station", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gravel", 660000));
+      objectives.add(new Objective("b", "U-235", 710000));
+      objectives.add(new Objective("b", "Cement", 649600));
+      m.setSelected(true);
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      // third station
+      m = new Mission("Home", "Third Station", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 6800000));
+      objectives.add(new Objective("b", "Wood", 560000));
+      objectives.add(new Objective("b", "Marble", 560000));
+      m.setObjectives(objectives);
+      newMissions.add(m);
+
+      ds.writeMissions("Home", newMissions.toArray(new Mission[0]));
+
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -255,7 +239,7 @@ public class InitialMassLoader {
   }
 
   private static void generateMissions() {
-    String[] contractors = new String[] { "bobby", "mahatma", "george", "otto", "sam", "alan", "wolfgang", "mizuki", "lucy", "giovanni", };
+    String[] contractors = new String[] { "Bobby", "Mahatma", "George", "Otto", "Sam", "Alan", "Wolfgang", "Mizuki", "Lucy", "Giovanni", };
 
     try {
       for (String contractor : contractors) {

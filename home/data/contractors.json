@@ -226,7 +226,7 @@
       },
       {
         "_name": "Nails",
-        "_amount": 521624
+        "_amount": 498328
       },
       {
         "_name": "Bricks",
@@ -246,7 +246,7 @@
       },
       {
         "_name": "Gravel",
-        "_amount": 593903
+        "_amount": 569730
       },
       {
         "_name": "U-235",
@@ -689,7 +689,7 @@
       },
       {
         "_name": "U-235",
-        "_amount": 78266
+        "_amount": 50735
       },
       {
         "_name": "Cement",
@@ -842,7 +842,7 @@
       },
       {
         "_name": "Cement",
-        "_amount": 382992
+        "_amount": 380512
       },
       {
         "_name": "Rubber",
@@ -850,7 +850,7 @@
       },
       {
         "_name": "Carbon",
-        "_amount": 12470
+        "_amount": 9990
       },
       {
         "_name": "Titanium",
@@ -955,7 +955,7 @@
     "_materialsMore": [
       {
         "_name": "Gold",
-        "_amount": 243939486
+        "_amount": 243790589
       },
       {
         "_name": "Wood",
@@ -1140,7 +1140,7 @@
       },
       {
         "_name": "Cement",
-        "_amount": 10874663
+        "_amount": 10872183
       },
       {
         "_name": "Rubber",
@@ -1148,7 +1148,7 @@
       },
       {
         "_name": "Carbon",
-        "_amount": 217529
+        "_amount": 215049
       },
       {
         "_name": "Titanium",
@@ -1285,11 +1285,11 @@
       },
       {
         "_name": "U-235",
-        "_amount": 1382407
+        "_amount": 1354876
       },
       {
         "_name": "Cement",
-        "_amount": 28055035
+        "_amount": 28052555
       },
       {
         "_name": "Rubber",
@@ -1297,11 +1297,11 @@
       },
       {
         "_name": "Carbon",
-        "_amount": 2913540
+        "_amount": 2911060
       },
       {
         "_name": "Titanium",
-        "_amount": 2900541
+        "_amount": 2898061
       },
       {
         "_name": "Marble",
@@ -1547,7 +1547,7 @@
     "_materialsMore": [
       {
         "_name": "Gold",
-        "_amount": 35285218
+        "_amount": 33595808
       },
       {
         "_name": "Wood",
@@ -1559,11 +1559,11 @@
       },
       {
         "_name": "Bricks",
-        "_amount": 1652686
+        "_amount": 1467914
       },
       {
         "_name": "Glass",
-        "_amount": 1334134
+        "_amount": 1268134
       },
       {
         "_name": "Fuel",
@@ -1614,7 +1614,7 @@
         "_amount": 0
       }
     ],
-    "_currentMissionNumber": 104,
+    "_currentMissionNumber": 106,
     "_endMissionNumber": 40,
     "_accepts": "SD"
   },
@@ -1704,7 +1704,7 @@
       },
       {
         "_name": "Bricks",
-        "_amount": 160369
+        "_amount": 151196
       },
       {
         "_name": "Glass",

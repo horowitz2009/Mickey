@@ -197,8 +197,6 @@ public class ContractTablePanel extends JPanel {
     _table = new CTable(_model, _cellRenderer);
     _table.setRowHeight(26);
     
-    TableCellRenderer defaultRenderer = _table.getTableHeader().getDefaultRenderer();
-    System.err.println(defaultRenderer);
     _table.getTableHeader().setDefaultRenderer(new DefaultTableCellHeaderRenderer() {
       @Override
       public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

@@ -33,6 +33,11 @@ public class DataStore {
     return null;
   }
 
+  public Home getHome() throws IOException {
+    String json = FileUtils.readFileToString(new File("data/home.json"));
+    return _gson.fromJson(json, Home.class);
+  }
+
   public void saveContractor(Contractor contractor) throws IOException {
     Contractor[] contractors = readContractors();
     boolean found = false;
@@ -49,11 +54,28 @@ public class DataStore {
     writeContractors(contractors);
   }
 
+  public void saveHome(Home home) throws IOException {
+    String json = _gson.toJson(home);
+
+    FileUtils.writeStringToFile(new File("data/home.json"), json);
+  }
+
   public void writeContractors(Contractor[] contractors) throws IOException {
 
     String json = _gson.toJson(contractors);
 
     FileUtils.writeStringToFile(new File("data/contractors.json"), json);
+  }
+
+  public Mission[] getHomeMissions(boolean selectedOnly) throws IOException {
+    Mission[] readMissions = readMissions("Home");
+    List<Mission> res = new ArrayList<>();
+    for (Mission mission : readMissions) {
+      if (!selectedOnly || (selectedOnly && mission.isSelected())) {
+        res.add(mission);
+      }
+    }
+    return res.toArray(new Mission[0]);
   }
 
   public Mission[] readMissions(String contractor) throws IOException {
@@ -118,24 +140,42 @@ public class DataStore {
   }
 
   public void writeMissions(String contractor, Mission[] missions) throws IOException {
+    writeMissions(contractor, missions, "");
+  }
+
+  public void writeMissions(String contractor, Mission[] missions, String type) throws IOException {
 
     String json = _gson.toJson(missions);
 
-    FileUtils.writeStringToFile(new File("data/" + contractor + "_missions.json"), json);
+    FileUtils.writeStringToFile(new File("data/" + contractor + "_missions" + type + ".json"), json);
   }
 
   public void writeMission(Mission newMission) throws IOException {
-    Mission[] missions = readMissions(newMission.getContractor());
-    for (Mission m : missions) {
-      if (m.getContractor().equals(newMission.getContractor())) {
-        m.setAny(newMission.isAny());
-        m.setNumber(newMission.getNumber());
-        m.setObjectives(newMission.getObjectives());
-        m.setDescription(newMission.getDescription());
+    Mission m = null;
+    String type = "";
+    Mission[] missions;
+    if (newMission.getNumber() > 100) {
+      type = "_OPT";
+      missions = readMissions(newMission.getContractor(), type);
+      if (missions.length == 0) {
+        type = "_BEST";
+        missions = readMissions(newMission.getContractor(), type);
+      }
+    } else {
+      missions = readMissions(newMission.getContractor());
+    }
+
+    for (Mission mission : missions) {
+      if (mission.getNumber() == newMission.getNumber()) {
+        m = mission;
         break;
       }
     }
-    writeMissions(newMission.getContractor(), missions);
+
+    if (m != null) {
+      newMission.populate(m);
+    }
+    writeMissions(newMission.getContractor(), missions, type);
   }
 
   public Mission[] readCurrentMissions() throws IOException {
