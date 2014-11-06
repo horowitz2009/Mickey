@@ -2,22 +2,17 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 3200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Fuel",
-        "_neededAmount": 100000,
+        "_type": "s",
+        "_material": "Electric",
+        "_neededAmount": 75,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 23,
+    "_number": 28,
     "_contractor": "Alan",
+    "_description": "",
+    "_selected": false,
     "_any": false
   },
   {
@@ -39,6 +34,7 @@
     ],
     "_number": 19,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -60,6 +56,7 @@
     ],
     "_number": 20,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -102,6 +99,7 @@
     ],
     "_number": 21,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -130,6 +128,7 @@
     ],
     "_number": 22,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -151,6 +150,7 @@
     ],
     "_number": 23,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -172,6 +172,7 @@
     ],
     "_number": 24,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -193,6 +194,7 @@
     ],
     "_number": 25,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -214,6 +216,7 @@
     ],
     "_number": 26,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -235,6 +238,7 @@
     ],
     "_number": 27,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -249,6 +253,7 @@
     ],
     "_number": 28,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -277,6 +282,7 @@
     ],
     "_number": 29,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -305,6 +311,7 @@
     ],
     "_number": 30,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -319,6 +326,7 @@
     ],
     "_number": 31,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -333,6 +341,7 @@
     ],
     "_number": 32,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -354,6 +363,7 @@
     ],
     "_number": 33,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -368,6 +378,7 @@
     ],
     "_number": 34,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -389,6 +400,7 @@
     ],
     "_number": 35,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -410,6 +422,7 @@
     ],
     "_number": 36,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -424,6 +437,7 @@
     ],
     "_number": 37,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -473,6 +487,7 @@
     ],
     "_number": 38,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -501,6 +516,7 @@
     ],
     "_number": 39,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -529,6 +545,7 @@
     ],
     "_number": 40,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -543,6 +560,7 @@
     ],
     "_number": 41,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -557,12 +575,14 @@
     ],
     "_number": 42,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
     "_objectives": [],
     "_number": 43,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -577,6 +597,7 @@
     ],
     "_number": 44,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -591,6 +612,7 @@
     ],
     "_number": 45,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -605,6 +627,7 @@
     ],
     "_number": 46,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -626,6 +649,7 @@
     ],
     "_number": 47,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -654,6 +678,7 @@
     ],
     "_number": 48,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -675,6 +700,7 @@
     ],
     "_number": 49,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -696,6 +722,7 @@
     ],
     "_number": 50,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -717,6 +744,7 @@
     ],
     "_number": 51,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -731,6 +759,7 @@
     ],
     "_number": 52,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -752,6 +781,7 @@
     ],
     "_number": 53,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -773,6 +803,7 @@
     ],
     "_number": 54,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -801,6 +832,7 @@
     ],
     "_number": 55,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -815,6 +847,7 @@
     ],
     "_number": 56,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -836,6 +869,7 @@
     ],
     "_number": 57,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -850,6 +884,7 @@
     ],
     "_number": 58,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -871,6 +906,7 @@
     ],
     "_number": 59,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -885,6 +921,7 @@
     ],
     "_number": 60,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -899,6 +936,7 @@
     ],
     "_number": 61,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -913,6 +951,7 @@
     ],
     "_number": 62,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -941,6 +980,7 @@
     ],
     "_number": 63,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -955,6 +995,7 @@
     ],
     "_number": 64,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -969,6 +1010,7 @@
     ],
     "_number": 65,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -997,6 +1039,7 @@
     ],
     "_number": 66,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1011,6 +1054,7 @@
     ],
     "_number": 67,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1025,6 +1069,7 @@
     ],
     "_number": 68,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1046,6 +1091,7 @@
     ],
     "_number": 69,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1067,6 +1113,7 @@
     ],
     "_number": 70,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1088,6 +1135,7 @@
     ],
     "_number": 71,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1109,6 +1157,7 @@
     ],
     "_number": 72,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1130,6 +1179,7 @@
     ],
     "_number": 73,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1144,6 +1194,7 @@
     ],
     "_number": 74,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1158,6 +1209,7 @@
     ],
     "_number": 75,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1172,6 +1224,7 @@
     ],
     "_number": 76,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1200,6 +1253,7 @@
     ],
     "_number": 77,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1214,6 +1268,7 @@
     ],
     "_number": 78,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1242,6 +1297,7 @@
     ],
     "_number": 79,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1256,6 +1312,7 @@
     ],
     "_number": 80,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1270,6 +1327,7 @@
     ],
     "_number": 81,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1284,6 +1342,7 @@
     ],
     "_number": 82,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1298,6 +1357,7 @@
     ],
     "_number": 83,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1312,6 +1372,7 @@
     ],
     "_number": 84,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1333,6 +1394,7 @@
     ],
     "_number": 85,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1347,6 +1409,7 @@
     ],
     "_number": 86,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1361,6 +1424,7 @@
     ],
     "_number": 87,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1382,6 +1446,7 @@
     ],
     "_number": 88,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1396,6 +1461,7 @@
     ],
     "_number": 89,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1410,6 +1476,7 @@
     ],
     "_number": 90,
     "_contractor": "Alan",
+    "_selected": false,
     "_any": false
   }
 ]

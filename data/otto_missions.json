@@ -2,22 +2,17 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Bricks",
-        "_neededAmount": 85000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Glass",
-        "_neededAmount": 85000,
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 30,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 30,
+    "_number": 39,
     "_contractor": "Otto",
+    "_description": "",
+    "_selected": false,
     "_any": false
   },
   {
@@ -39,6 +34,7 @@
     ],
     "_number": 30,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -53,6 +49,7 @@
     ],
     "_number": 31,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -81,6 +78,7 @@
     ],
     "_number": 32,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -109,6 +107,7 @@
     ],
     "_number": 33,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -130,6 +129,7 @@
     ],
     "_number": 34,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -158,6 +158,7 @@
     ],
     "_number": 35,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -193,6 +194,7 @@
     ],
     "_number": 36,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -221,6 +223,7 @@
     ],
     "_number": 37,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -235,6 +238,7 @@
     ],
     "_number": 38,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -249,6 +253,7 @@
     ],
     "_number": 39,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   },
   {
@@ -263,6 +268,7 @@
     ],
     "_number": 40,
     "_contractor": "Otto",
+    "_selected": false,
     "_any": false
   }
 ]

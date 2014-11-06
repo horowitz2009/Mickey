@@ -2,41 +2,6 @@
   {
     "_objectives": [
       {
-        "_type": "s",
-        "_material": "Wagon",
-        "_neededAmount": 225,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 32,
-    "_contractor": "George",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 400000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Gravel",
-        "_neededAmount": 50000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 29,
-    "_contractor": "George",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
         "_type": "d",
         "_material": "Gold",
         "_neededAmount": 350000,

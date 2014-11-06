@@ -3,28 +3,16 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Rubber",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 60000,
+        "_material": "Gold",
+        "_neededAmount": 2550000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 13,
+    "_number": 20,
     "_contractor": "Lucy",
+    "_description": "",
+    "_selected": false,
     "_any": false
   },
   {
@@ -60,6 +48,7 @@
     ],
     "_number": 12,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -88,6 +77,7 @@
     ],
     "_number": 13,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -102,6 +92,7 @@
     ],
     "_number": 14,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -116,6 +107,7 @@
     ],
     "_number": 15,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -130,6 +122,7 @@
     ],
     "_number": 16,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -144,6 +137,7 @@
     ],
     "_number": 17,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -165,6 +159,7 @@
     ],
     "_number": 18,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -193,6 +188,7 @@
     ],
     "_number": 19,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -207,6 +203,7 @@
     ],
     "_number": 20,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -228,6 +225,7 @@
     ],
     "_number": 21,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -249,6 +247,7 @@
     ],
     "_number": 22,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -270,6 +269,7 @@
     ],
     "_number": 23,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -291,6 +291,7 @@
     ],
     "_number": 24,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -312,6 +313,7 @@
     ],
     "_number": 25,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -333,6 +335,7 @@
     ],
     "_number": 26,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -347,6 +350,7 @@
     ],
     "_number": 27,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -375,6 +379,7 @@
     ],
     "_number": 28,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -403,6 +408,7 @@
     ],
     "_number": 29,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -424,6 +430,7 @@
     ],
     "_number": 30,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -445,6 +452,7 @@
     ],
     "_number": 31,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -459,6 +467,7 @@
     ],
     "_number": 32,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -487,12 +496,14 @@
     ],
     "_number": 33,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
     "_objectives": [],
     "_number": 34,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -535,6 +546,7 @@
     ],
     "_number": 35,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -556,6 +568,7 @@
     ],
     "_number": 36,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -584,6 +597,7 @@
     ],
     "_number": 37,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -605,6 +619,7 @@
     ],
     "_number": 38,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -626,6 +641,7 @@
     ],
     "_number": 39,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -647,6 +663,7 @@
     ],
     "_number": 40,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -675,6 +692,7 @@
     ],
     "_number": 41,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -696,6 +714,7 @@
     ],
     "_number": 42,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -724,6 +743,7 @@
     ],
     "_number": 43,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -745,6 +765,7 @@
     ],
     "_number": 44,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -766,6 +787,7 @@
     ],
     "_number": 45,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -787,6 +809,7 @@
     ],
     "_number": 46,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -808,6 +831,7 @@
     ],
     "_number": 47,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -829,6 +853,7 @@
     ],
     "_number": 48,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -850,6 +875,7 @@
     ],
     "_number": 49,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -864,6 +890,7 @@
     ],
     "_number": 50,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -892,6 +919,7 @@
     ],
     "_number": 51,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -913,6 +941,7 @@
     ],
     "_number": 52,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -934,6 +963,7 @@
     ],
     "_number": 53,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -955,6 +985,7 @@
     ],
     "_number": 54,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -976,6 +1007,7 @@
     ],
     "_number": 55,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -997,6 +1029,7 @@
     ],
     "_number": 56,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1018,6 +1051,7 @@
     ],
     "_number": 57,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1046,6 +1080,7 @@
     ],
     "_number": 58,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1060,6 +1095,7 @@
     ],
     "_number": 59,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1088,6 +1124,7 @@
     ],
     "_number": 60,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1102,6 +1139,7 @@
     ],
     "_number": 61,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1123,6 +1161,7 @@
     ],
     "_number": 62,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1144,6 +1183,7 @@
     ],
     "_number": 63,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1165,6 +1205,7 @@
     ],
     "_number": 64,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1193,6 +1234,7 @@
     ],
     "_number": 65,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1214,6 +1256,7 @@
     ],
     "_number": 66,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1235,6 +1278,7 @@
     ],
     "_number": 67,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1256,6 +1300,7 @@
     ],
     "_number": 68,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1284,6 +1329,7 @@
     ],
     "_number": 69,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1298,6 +1344,7 @@
     ],
     "_number": 70,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1326,6 +1373,7 @@
     ],
     "_number": 71,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1354,6 +1402,7 @@
     ],
     "_number": 72,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1375,6 +1424,7 @@
     ],
     "_number": 73,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1424,6 +1474,7 @@
     ],
     "_number": 74,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1445,6 +1496,7 @@
     ],
     "_number": 75,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1473,6 +1525,7 @@
     ],
     "_number": 76,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1494,6 +1547,7 @@
     ],
     "_number": 77,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": true
   },
   {
@@ -1522,6 +1576,7 @@
     ],
     "_number": 78,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1536,6 +1591,7 @@
     ],
     "_number": 79,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1550,6 +1606,7 @@
     ],
     "_number": 80,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1578,6 +1635,7 @@
     ],
     "_number": 81,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1606,6 +1664,7 @@
     ],
     "_number": 82,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1620,6 +1679,7 @@
     ],
     "_number": 83,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1648,6 +1708,7 @@
     ],
     "_number": 84,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1676,6 +1737,7 @@
     ],
     "_number": 85,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1697,6 +1759,7 @@
     ],
     "_number": 86,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1725,6 +1788,7 @@
     ],
     "_number": 87,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1746,6 +1810,7 @@
     ],
     "_number": 88,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1767,6 +1832,7 @@
     ],
     "_number": 89,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1795,6 +1861,7 @@
     ],
     "_number": 90,
     "_contractor": "Lucy",
+    "_selected": false,
     "_any": false
   }
 ]

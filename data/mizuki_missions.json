@@ -2,15 +2,17 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 1575000,
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 400,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 6,
+    "_number": 10,
     "_contractor": "Mizuki",
+    "_description": "",
+    "_selected": false,
     "_any": false
   },
   {
@@ -32,6 +34,7 @@
     ],
     "_number": 4,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -60,6 +63,7 @@
     ],
     "_number": 5,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -74,6 +78,7 @@
     ],
     "_number": 6,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -102,6 +107,7 @@
     ],
     "_number": 7,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -116,6 +122,7 @@
     ],
     "_number": 8,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -130,6 +137,7 @@
     ],
     "_number": 9,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -144,6 +152,7 @@
     ],
     "_number": 10,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -158,6 +167,7 @@
     ],
     "_number": 11,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -172,6 +182,7 @@
     ],
     "_number": 12,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -186,6 +197,7 @@
     ],
     "_number": 13,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -207,6 +219,7 @@
     ],
     "_number": 14,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -235,6 +248,7 @@
     ],
     "_number": 15,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -249,6 +263,7 @@
     ],
     "_number": 16,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -263,6 +278,7 @@
     ],
     "_number": 17,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -291,6 +307,7 @@
     ],
     "_number": 18,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -319,6 +336,7 @@
     ],
     "_number": 19,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -333,6 +351,7 @@
     ],
     "_number": 20,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -354,6 +373,7 @@
     ],
     "_number": 21,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -368,6 +388,7 @@
     ],
     "_number": 22,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -396,6 +417,7 @@
     ],
     "_number": 23,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -410,6 +432,7 @@
     ],
     "_number": 24,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -424,6 +447,7 @@
     ],
     "_number": 25,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -452,6 +476,7 @@
     ],
     "_number": 26,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -466,6 +491,7 @@
     ],
     "_number": 27,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -494,6 +520,7 @@
     ],
     "_number": 28,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -522,6 +549,7 @@
     ],
     "_number": 29,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -536,6 +564,7 @@
     ],
     "_number": 30,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -550,6 +579,7 @@
     ],
     "_number": 31,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -571,6 +601,7 @@
     ],
     "_number": 32,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -585,6 +616,7 @@
     ],
     "_number": 33,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -613,6 +645,7 @@
     ],
     "_number": 34,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -627,6 +660,7 @@
     ],
     "_number": 35,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -655,6 +689,7 @@
     ],
     "_number": 36,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -669,6 +704,7 @@
     ],
     "_number": 37,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -690,6 +726,7 @@
     ],
     "_number": 38,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -704,6 +741,7 @@
     ],
     "_number": 39,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -732,6 +770,7 @@
     ],
     "_number": 40,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -746,6 +785,7 @@
     ],
     "_number": 41,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -774,6 +814,7 @@
     ],
     "_number": 42,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -802,6 +843,7 @@
     ],
     "_number": 43,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -823,6 +865,7 @@
     ],
     "_number": 44,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -844,6 +887,7 @@
     ],
     "_number": 45,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -865,6 +909,7 @@
     ],
     "_number": 46,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -879,6 +924,7 @@
     ],
     "_number": 47,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -893,6 +939,7 @@
     ],
     "_number": 48,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -907,6 +954,7 @@
     ],
     "_number": 49,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -928,6 +976,7 @@
     ],
     "_number": 50,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -949,6 +998,7 @@
     ],
     "_number": 51,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -970,6 +1020,7 @@
     ],
     "_number": 52,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -984,6 +1035,7 @@
     ],
     "_number": 53,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -998,6 +1050,7 @@
     ],
     "_number": 54,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1012,6 +1065,7 @@
     ],
     "_number": 55,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1040,6 +1094,7 @@
     ],
     "_number": 56,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1089,6 +1144,7 @@
     ],
     "_number": 57,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1117,6 +1173,7 @@
     ],
     "_number": 58,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1131,6 +1188,7 @@
     ],
     "_number": 59,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   },
   {
@@ -1145,6 +1203,7 @@
     ],
     "_number": 60,
     "_contractor": "Mizuki",
+    "_selected": false,
     "_any": false
   }
 ]

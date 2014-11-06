@@ -1,16 +1,10 @@
 [
   {
-    "_objectives": [
-      {
-        "_type": "s",
-        "_material": "Steam",
-        "_neededAmount": 60,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 45,
+    "_objectives": [],
+    "_number": 53,
     "_contractor": "Mahatma",
+    "_description": "Build 20 Tapti Manufactures",
+    "_selected": false,
     "_any": false
   },
   {
@@ -25,6 +19,7 @@
     ],
     "_number": 46,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -53,6 +48,7 @@
     ],
     "_number": 47,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -67,6 +63,7 @@
     ],
     "_number": 48,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -88,6 +85,7 @@
     ],
     "_number": 49,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -102,6 +100,7 @@
     ],
     "_number": 50,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -116,6 +115,7 @@
     ],
     "_number": 51,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -130,12 +130,14 @@
     ],
     "_number": 52,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
     "_objectives": [],
     "_number": 53,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -150,6 +152,7 @@
     ],
     "_number": 54,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -171,6 +174,7 @@
     ],
     "_number": 55,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -192,6 +196,7 @@
     ],
     "_number": 56,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -213,6 +218,7 @@
     ],
     "_number": 57,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -234,6 +240,7 @@
     ],
     "_number": 58,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -248,6 +255,7 @@
     ],
     "_number": 59,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   },
   {
@@ -262,6 +270,7 @@
     ],
     "_number": 60,
     "_contractor": "Mahatma",
+    "_selected": false,
     "_any": false
   }
 ]
