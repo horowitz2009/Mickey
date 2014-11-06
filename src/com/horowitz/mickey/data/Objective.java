@@ -24,6 +24,10 @@ public class Objective {
     this(type, material, 0, 0, 0);
   }
 
+  public Objective(String type, String material, long neededAmount) {
+    this(type, material, 0l, neededAmount, 0l);
+  }
+
   public Objective(String type, String material, long initialAmount, long neededAmount, long currentAmount) {
     super();
     _type = type;

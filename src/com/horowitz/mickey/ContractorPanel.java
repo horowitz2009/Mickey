@@ -38,6 +38,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -68,6 +69,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   private JPanel     _objectivesPanel;
   private JTextField _missionNumberTF;
   private JLabel     _missionNumberLabel;
+  private JTextArea  _area;
 
   public ContractorPanel(String contractorName) {
     super();
@@ -151,8 +153,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       }
     });
     _toolbar.add(requestScan);
-    
-    
+
     _progressBar = new JProgressBar(0, 120);
     _progressBar.setVisible(false);
     _toolbar.add(_progressBar);
@@ -192,14 +193,21 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
   }
 
   private void updateImage() throws IOException {
-    File f = new File("data/" + _contractor.getName() + "_objectives.bmp");
-    BufferedImage image = ImageIO.read(f);
+    File f = new File("data/" + _contractor.getName() + "" + "_objectives.bmp");
+    BufferedImage image;
+    if (!f.exists()) {
+      image = ImageIO.read(ImageManager.getImageURL("contracts/NotFound.png"));
+    } else {
+      image = ImageIO.read(f);
+    }
     _canvas._image = image;
     _canvas.revalidate();
+
   }
 
   public void updateView() {
     SwingUtilities.invokeLater(new Runnable() {
+
       public void run() {
         if (_contractor != null) {
           try {
@@ -226,12 +234,20 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             updateImage();
 
             _objectivesPanel.setLayout(new GridBagLayout());
-            List<Objective> objectivesC = _currentMission.getObjectives();
-            List<Objective> objectivesDB = _missionDB.getObjectives();
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = 0;
             gbc.insets = new Insets(10, 10, 5, 5);
+            _area = new JTextArea(3, 35);
+            _area.setOpaque(false);
+            _area.setText(_missionDB.getDescription());
+            _area.setWrapStyleWord(true);
+            _objectivesPanel.add(_area, gbc);
+
+            gbc.gridy = 1;
+
+            List<Objective> objectivesC = _currentMission.getObjectives();
+            List<Objective> objectivesDB = _missionDB.getObjectives();
             NumberFormat nf = NumberFormat.getIntegerInstance();
 
             for (Objective objectiveC : objectivesC) {
@@ -423,6 +439,9 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       if (_currentMission != null && _missionDB != null && _currentMission.getNumber() != _missionDB.getNumber()) {
         _currentMission = _missionDB.copy();
       }
+      if (_currentMission == null)
+        _currentMission = _missionDB.copy();
+
       updateView();
     } catch (IOException e) {
       // TODO Auto-generated catch block
@@ -435,13 +454,15 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       DataStore ds = new DataStore();
       _contractor = ds.getContractor(_contractorName);
       if (_contractor != null) {
+        MissionScanner mscanner = new MissionScanner();
+        BufferedImage image;
+        Integer number = null;
         String cname = _contractor.getName();
         File f = new File("data/" + cname + "_missionNumber.bmp");
-        BufferedImage image = ImageIO.read(f);
-
-        MissionScanner mscanner = new MissionScanner();
-        Integer number = mscanner.scanMissionNumber(image);
-
+        if (f.exists()) {
+          image = ImageIO.read(f);
+          number = mscanner.scanMissionNumber(image);
+        }
         if (number == null) {
           _missionNumberTF.setForeground(Color.RED);
           // _missionNumberTF.setText("" + _contractor.getCurrentMissionNumber());
@@ -467,12 +488,12 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
           // mscanner.scanMaterials(materialsImage, materials)
           f = new File("data/" + cname + "_materials.bmp");
           image = ImageIO.read(f);
-          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1);
+          Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1, cname.equals("Home"));
           _contractor.setMaterials(materials);
           f = new File("data/" + cname + "_materials2.bmp");
           if (f.exists()) {
             image = ImageIO.read(f);
-            Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2);
+            Material[] materials2 = matscanner.scanMaterials(image, Locations.MATERIALS_2, false);
             materials = (Material[]) ArrayUtils.addAll(materials, materials2);
             _contractor.setMaterials(materials);
           }
@@ -509,11 +530,11 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
   private void capture() {
     if (_contractor != null && !isRunning("CSTHREAD_" + _contractorName)) {
-  
+
       final String requestName = new Service().request("capture_" + _contractorName);
-  
+
       Thread csThread = new Thread(new Runnable() {
-  
+
         public void run() {
           boolean weredone = false;
           int n = 0;
@@ -545,6 +566,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
         dataStore.saveContractor(_contractor);
       if (_currentMission != null && _missionDB != null) {
         dataStore.writeCurrentMission(_currentMission);
+        _missionDB.setDescription(_area.getText());
         dataStore.writeMission(_missionDB);
       }
     } catch (IOException e) {

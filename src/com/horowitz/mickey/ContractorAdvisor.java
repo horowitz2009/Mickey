@@ -46,7 +46,7 @@ public class ContractorAdvisor extends JPanel {
     final ContractorAdvisor advisor = new ContractorAdvisor();
     frame.getContentPane().add(advisor, BorderLayout.CENTER);
 
-    frame.setSize(new Dimension(800, 550));
+    frame.setSize(new Dimension(850, 600));
 
     frame.setLocationRelativeTo(null);
 

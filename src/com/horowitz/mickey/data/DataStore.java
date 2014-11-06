@@ -35,11 +35,16 @@ public class DataStore {
 
   public void saveContractor(Contractor contractor) throws IOException {
     Contractor[] contractors = readContractors();
+    boolean found = false;
     for (Contractor c : contractors) {
       if (c.getName().equals(contractor.getName())) {
         c.extract(contractor);
+        found = true;
         break;
       }
+    }
+    if (!found) {
+      contractors = (Contractor[]) ArrayUtils.add(contractors, contractor);
     }
     writeContractors(contractors);
   }
@@ -59,9 +64,9 @@ public class DataStore {
     File file = new File("data/" + contractor + "_missions" + type + ".json");
     if (file.exists()) {
       String json = FileUtils.readFileToString(file);
-    
+
       Mission[] missions = _gson.fromJson(json, Mission[].class);
-    
+
       return missions;
     } else {
       return new Mission[0];
@@ -77,7 +82,7 @@ public class DataStore {
     }
     return null;
   }
-  
+
   public Mission getMissionWithExtra(String contractor, int number) throws IOException {
     Mission m = null;
     Mission[] missions = readMissions(contractor);
@@ -126,6 +131,7 @@ public class DataStore {
         m.setAny(newMission.isAny());
         m.setNumber(newMission.getNumber());
         m.setObjectives(newMission.getObjectives());
+        m.setDescription(newMission.getDescription());
         break;
       }
     }
@@ -153,9 +159,7 @@ public class DataStore {
         cm.mergeWithDB(mdb);
     }
   }
-  
-  
-  
+
   public void writeCurrentMissions(Mission[] currentMissions) throws IOException {
     String json = _gson.toJson(currentMissions);
 
@@ -175,10 +179,10 @@ public class DataStore {
       }
     }
     if (!found) {
-      //it's new
+      // it's new
       missions = (Mission[]) ArrayUtils.add(missions, currentMission);
     }
-    
+
     writeCurrentMissions(missions);
   }
 

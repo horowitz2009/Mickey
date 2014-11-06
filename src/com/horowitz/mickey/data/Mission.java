@@ -3,7 +3,6 @@ package com.horowitz.mickey.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
@@ -14,11 +13,19 @@ public class Mission {
 
   private int             _number;
   private String          _contractor;
+  private String          _description;
 
   /**
    * if true means any of the objective if being done, then mission is considered accomplished. If false, then all objectives must be done.
    */
   private boolean         _any;
+
+  public Mission(String contractor, String description, int number) {
+    super();
+    _contractor = contractor;
+    _description = description;
+    _number = number;
+  }
 
   public Mission() {
     super();
@@ -57,6 +64,14 @@ public class Mission {
     _any = any;
   }
 
+  public String getDescription() {
+    return _description;
+  }
+
+  public void setDescription(String description) {
+    _description = description;
+  }
+
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
@@ -68,12 +83,12 @@ public class Mission {
     copy._contractor = _contractor;
     copy._number = _number;
     List<Objective> copyObj = new ArrayList<>();
-    
+
     for (Objective obj : _objectives) {
       copyObj.add(obj.copy());
     }
     copy._objectives = copyObj;
-    
+
     return copy;
   }
 
@@ -83,19 +98,20 @@ public class Mission {
     copy._contractor = _contractor;
     copy._number = _number;
     List<Objective> copyObj = new ArrayList<>();
-    
+
     for (Objective obj : _objectives) {
       copyObj.add(obj.copyNeeded());
     }
     copy._objectives = copyObj;
-    
+
     return copy;
   }
+
   @Override
   public boolean equals(Object obj) {
     return EqualsBuilder.reflectionEquals(this, obj);
   }
-  
+
   @Override
   public int hashCode() {
     return HashCodeBuilder.reflectionHashCode(this);
