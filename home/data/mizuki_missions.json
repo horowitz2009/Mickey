@@ -2,15 +2,16 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 1575000,
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 400,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 6,
+    "_number": 10,
     "_contractor": "Mizuki",
+    "_description": "",
     "_any": false
   },
   {

@@ -2,22 +2,16 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Bricks",
-        "_neededAmount": 85000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Glass",
-        "_neededAmount": 85000,
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 30,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 30,
+    "_number": 39,
     "_contractor": "Otto",
+    "_description": "",
     "_any": false
   },
   {

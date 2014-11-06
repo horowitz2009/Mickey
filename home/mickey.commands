@@ -1,4 +1,5 @@
 command=none
+contractor.scan=running
 express=180
 free=6
 freight=10

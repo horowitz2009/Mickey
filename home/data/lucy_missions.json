@@ -3,28 +3,15 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Rubber",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 60000,
+        "_material": "Gold",
+        "_neededAmount": 2550000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 13,
+    "_number": 20,
     "_contractor": "Lucy",
+    "_description": "",
     "_any": false
   },
   {

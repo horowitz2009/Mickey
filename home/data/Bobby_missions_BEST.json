@@ -1,0 +1,30 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1900000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1520000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 3800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 101,
+    "_contractor": "Bobby",
+    "_any": false
+  }  
+]

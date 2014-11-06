@@ -1,0 +1,17 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Silicon",
+        "_neededAmount": 1000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 1,
+    "_contractor": "Ethan",
+    "_description": "",
+    "_any": false
+  }
+]

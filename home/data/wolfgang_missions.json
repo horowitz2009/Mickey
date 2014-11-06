@@ -2,22 +2,16 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 30000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Plastics",
-        "_neededAmount": 30000,
+        "_type": "s",
+        "_material": "TS",
+        "_neededAmount": 6,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 12,
+    "_number": 20,
     "_contractor": "Wolfgang",
+    "_description": "",
     "_any": false
   },
   {

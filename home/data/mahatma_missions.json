@@ -1,16 +1,9 @@
 [
   {
-    "_objectives": [
-      {
-        "_type": "s",
-        "_material": "Steam",
-        "_neededAmount": 60,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 45,
+    "_objectives": [],
+    "_number": 53,
     "_contractor": "Mahatma",
+    "_description": "Build 20 Tapti Manufactures",
     "_any": false
   },
   {

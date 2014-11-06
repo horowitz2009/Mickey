@@ -3,62 +3,55 @@
     "_objectives": [
       {
         "_type": "s",
-        "_material": "Diesel",
-        "_neededAmount": 50,
-        "_currentAmount": 37,
+        "_material": "Wagon",
+        "_neededAmount": 550,
+        "_currentAmount": 180,
         "_initialAmount": 0
       }
     ],
-    "_number": 24,
+    "_number": 28,
     "_contractor": "Bobby",
     "_any": false
   },
   {
     "_objectives": [
       {
-        "_type": "s",
-        "_material": "Steam",
-        "_neededAmount": 60,
-        "_currentAmount": 58,
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 50000,
+        "_currentAmount": 163829,
         "_initialAmount": 0
-      }
-    ],
-    "_number": 45,
-    "_contractor": "Mahatma",
-    "_any": false
-  },
-  {
-    "_objectives": [
+      },
       {
-        "_type": "s",
-        "_material": "Wagon",
-        "_neededAmount": 225,
-        "_currentAmount": 84,
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 50000,
+        "_currentAmount": 50086,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 50000,
+        "_currentAmount": 580596,
         "_initialAmount": 0
       }
     ],
-    "_number": 32,
+    "_number": 104,
     "_contractor": "George",
     "_any": false
   },
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Bricks",
-        "_neededAmount": 85000,
-        "_currentAmount": 83504,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Glass",
-        "_neededAmount": 85000,
-        "_currentAmount": 85000,
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 30,
+        "_currentAmount": 20,
         "_initialAmount": 0
       }
     ],
-    "_number": 30,
+    "_number": 39,
     "_contractor": "Otto",
     "_any": false
   },
@@ -67,82 +60,61 @@
       {
         "_type": "d",
         "_material": "Gold",
-        "_neededAmount": 120000,
-        "_currentAmount": 120000,
+        "_neededAmount": 700000,
+        "_currentAmount": 148897,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Glass",
-        "_neededAmount": 30000,
-        "_currentAmount": 30000,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 30000,
-        "_currentAmount": 14742,
+        "_material": "Gravel",
+        "_neededAmount": 40000,
+        "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 27,
+    "_number": 41,
     "_contractor": "Sam",
     "_any": false
   },
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 3200000,
-        "_currentAmount": 541339,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Fuel",
-        "_neededAmount": 100000,
-        "_currentAmount": 0,
+        "_type": "s",
+        "_material": "Electric",
+        "_neededAmount": 75,
+        "_currentAmount": 41,
         "_initialAmount": 0
       }
     ],
-    "_number": 23,
+    "_number": 28,
     "_contractor": "Alan",
     "_any": false
   },
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 30000,
-        "_currentAmount": 30000,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Plastics",
-        "_neededAmount": 30000,
-        "_currentAmount": 0,
+        "_type": "s",
+        "_material": "TS",
+        "_neededAmount": 6,
+        "_currentAmount": 1,
         "_initialAmount": 0
       }
     ],
-    "_number": 12,
+    "_number": 20,
     "_contractor": "Wolfgang",
     "_any": false
   },
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 1575000,
-        "_currentAmount": 659312,
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 400,
+        "_currentAmount": 36,
         "_initialAmount": 0
       }
     ],
-    "_number": 6,
+    "_number": 10,
     "_contractor": "Mizuki",
     "_any": false
   },
@@ -150,27 +122,13 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Rubber",
-        "_neededAmount": 60000,
-        "_currentAmount": 33815,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 60000,
-        "_currentAmount": 14742,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Wires",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
+        "_material": "Gold",
+        "_neededAmount": 2550000,
+        "_currentAmount": 949011,
         "_initialAmount": 0
       }
     ],
-    "_number": 13,
+    "_number": 20,
     "_contractor": "Lucy",
     "_any": false
   },
@@ -178,14 +136,90 @@
     "_objectives": [
       {
         "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 50000000,
-        "_currentAmount": 34703800,
+        "_material": "Gravel",
+        "_neededAmount": 400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 3,
+    "_contractor": "Giovanni",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 49000,
+        "_currentAmount": 44804,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 34000,
+        "_currentAmount": 136239,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 48800,
+        "_currentAmount": 93033,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 106,
+    "_contractor": "Jules",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Silicon",
+        "_neededAmount": 1000000,
+        "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 1,
-    "_contractor": "Giovanni",
+    "_contractor": "Ethan",
+    "_any": false
+  },
+  {
+    "_objectives": [],
+    "_number": 53,
+    "_contractor": "Mahatma",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 8000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1040000,
+        "_currentAmount": 722060,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1040000,
+        "_currentAmount": 2664359,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 101,
+    "_contractor": "Home",
     "_any": false
   }
 ]

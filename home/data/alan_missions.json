@@ -2,22 +2,16 @@
   {
     "_objectives": [
       {
-        "_type": "d",
-        "_material": "Gold",
-        "_neededAmount": 3200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Fuel",
-        "_neededAmount": 100000,
+        "_type": "s",
+        "_material": "Electric",
+        "_neededAmount": 75,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 23,
+    "_number": 28,
     "_contractor": "Alan",
+    "_description": "",
     "_any": false
   },
   {

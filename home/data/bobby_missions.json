@@ -3,14 +3,15 @@
     "_objectives": [
       {
         "_type": "s",
-        "_material": "Diesel",
-        "_neededAmount": 50,
+        "_material": "Wagon",
+        "_neededAmount": 550,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 24,
+    "_number": 28,
     "_contractor": "Bobby",
+    "_description": "",
     "_any": false
   },
   {

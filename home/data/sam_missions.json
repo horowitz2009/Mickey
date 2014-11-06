@@ -4,27 +4,21 @@
       {
         "_type": "d",
         "_material": "Gold",
-        "_neededAmount": 120000,
+        "_neededAmount": 700000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "d",
-        "_material": "Glass",
-        "_neededAmount": 30000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "d",
-        "_material": "Titanium",
-        "_neededAmount": 30000,
+        "_material": "Gravel",
+        "_neededAmount": 40000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 27,
+    "_number": 41,
     "_contractor": "Sam",
+    "_description": "",
     "_any": false
   },
   {
