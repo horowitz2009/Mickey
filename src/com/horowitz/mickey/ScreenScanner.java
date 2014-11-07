@@ -63,6 +63,14 @@ public class ScreenScanner {
   private ImageData            _close3                        = null;
   private ImageData            _close4                        = null;
   private ImageData            _pointerDown                   = null;
+
+  public ImageData             _letterRed                     = null;
+  public ImageData             _letterWhite                   = null;
+  public ImageData             _letterBrown                   = null;
+  public ImageData             _letterRed2                    = null;
+  public ImageData             _letterWhite2                  = null;
+  public ImageData             _letterBrown2                  = null;
+
   private ImageData            _pointerDownL                  = null;
   private ImageData            _pointerDownR                  = null;
   private ImageData            _nightX                        = null;
@@ -83,6 +91,7 @@ public class ScreenScanner {
 
   private Rectangle            _homeArea                      = null;
   private Rectangle            _trainArea                     = null;
+  private Rectangle            _letterArea                    = null;
 
   private int[]                _railsOut;
   private int[]                _railsHome;
@@ -150,6 +159,14 @@ public class ScreenScanner {
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
     _pointerDown = new ImageData("pointerDown5.bmp", null, _comparator, 15, 21);
+    _letterRed = new ImageData("letters/red11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterWhite = new ImageData("letters/white11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterBrown = new ImageData("letters/brown11a.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+
+    _letterRed2 = new ImageData("letters/red9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterWhite2 = new ImageData("letters/white9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterBrown2 = new ImageData("letters/brown9b.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+
     _pointerDownL = new ImageData("pointerDown5l.bmp", null, _comparator, 18, 21);
     _pointerDownR = new ImageData("pointerDown5r.bmp", null, _comparator, 4, 21);
     _expressTrain = new ImageData("expressTrain.bmp", null, _comparator, 0, 0);
@@ -184,7 +201,8 @@ public class ScreenScanner {
 
     _homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 
-    _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 110, getGameWidth(), 110);
+    _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 150, getGameWidth(), 150);
+    _letterArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 190, getGameWidth(), 190);
 
     int diff = getGameWidth() - 760;
     diff = diff / 2;
@@ -297,8 +315,6 @@ public class ScreenScanner {
     }
     return false;
   }
-
-
 
   public void writeImage(Rectangle rect, String filename) {
     try {
@@ -460,6 +476,10 @@ public class ScreenScanner {
     return _trainArea;
   }
 
+  public Rectangle getLetterArea() {
+    return _letterArea;
+  }
+
   public int getXOffset() {
     return _xOffset;
   }
@@ -503,6 +523,18 @@ public class ScreenScanner {
 
   public ImageData getPointerDown() {
     return _pointerDown;
+  }
+
+  public ImageData getLetterRed() {
+    return _letterRed;
+  }
+
+  public ImageData getLetterWhite() {
+    return _letterWhite;
+  }
+
+  public ImageData getLetterBrown() {
+    return _letterBrown;
   }
 
   public ImageData getPointerDownR() {

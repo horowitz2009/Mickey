@@ -23,6 +23,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.813h";
+  private static final String APP_TITLE           = "v0.814d";
 
   private boolean             _devMode            = false;
 
@@ -89,6 +90,9 @@ public final class MainFrame extends JFrame {
   private JLabel              _expressTrainsNumberLabel;
   private JLabel              _expressTrainsNumberLabelA;
   private JLabel              _refreshNumberLabel;
+  private JLabel              _refreshMNumberLabel;
+  private JLabel              _refreshTNumberLabel;
+  private JLabel              _refreshSNumberLabel;
   private JLabel              _refreshNumberLabelA;
   private JLabel              _refreshTimeLabel;
   private JLabel              _lastActivityLabel;
@@ -129,6 +133,8 @@ public final class MainFrame extends JFrame {
   private List<String>        _captureContractors = new ArrayList<String>();
   private boolean             _captureHome        = false;
   private boolean             _scanMaterials2     = false;
+
+  private List<BufferedImage> _lastImageList = new ArrayList<>();
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
@@ -361,9 +367,15 @@ public final class MainFrame extends JFrame {
     refreshNumberLabel.setForeground(Color.GRAY);
     refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(14.0f));
     _refreshNumberLabel = new JLabel("" + (_refreshClick.isSelected() ? "88" : "off"));
+    _refreshMNumberLabel = new JLabel("" + (_refreshClick.isSelected() ? "88" : "off"));
+    _refreshTNumberLabel = new JLabel("" + (_refreshClick.isSelected() ? "88" : "off"));
+    _refreshSNumberLabel = new JLabel("" + (_refreshClick.isSelected() ? "88" : "off"));
     _refreshNumberLabelA = new JLabel("88");
     _refreshNumberLabelA.setForeground(Color.GRAY);
     _refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(14.0f));
+    _refreshMNumberLabel.setFont(_refreshMNumberLabel.getFont().deriveFont(14.0f));
+    _refreshTNumberLabel.setFont(_refreshTNumberLabel.getFont().deriveFont(14.0f));
+    _refreshSNumberLabel.setFont(_refreshSNumberLabel.getFont().deriveFont(14.0f));
     _refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel lastActivityLabel = new JLabel("L:");
@@ -460,6 +472,43 @@ public final class MainFrame extends JFrame {
     gbc.gridx++;
     gbc.gridwidth = 2;
     labelsBox.add(_startedLabel, gbc);
+
+    // //////////////////////////
+
+    gbc.gridy++;
+    gbc.gridx = 0;
+    gbc.insets = new Insets(0, 4, 0, 0);
+    gbc.weightx = 0.0;
+    labelsBox.add(new JLabel("M:"), gbc);
+
+    gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.gridx++;
+    labelsBox.add(_refreshMNumberLabel, gbc);
+
+    gbc.insets = new Insets(0, 3, 0, 0);
+    gbc.gridx++;
+    labelsBox.add(new JLabel(" "), gbc);
+
+    gbc.insets = new Insets(0, 7, 0, 0);
+    gbc.gridx++;
+    labelsBox.add(new JLabel("T:"), gbc);
+
+    gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.gridx++;
+    gbc.gridwidth = 2;
+    labelsBox.add(_refreshTNumberLabel, gbc);
+
+    gbc.insets = new Insets(0, 7, 0, 0);
+    gbc.gridx += 2;
+    gbc.gridwidth = 1;
+    labelsBox.add(new JLabel("S:"), gbc);
+
+    gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.gridx++;
+    gbc.gridwidth = 2;
+    labelsBox.add(_refreshSNumberLabel, gbc);
+
+    // //////////////////////////
 
     north.add(labelsBox);
     rootPanel.add(north, BorderLayout.NORTH);
@@ -762,6 +811,17 @@ public final class MainFrame extends JFrame {
             LOGGER.info("stop everything");
             stop = true;
           } else {
+            // if (!isRunning("MAGIC") && _scanner.isOptimized()) {
+            // try {
+            // checkIsStuck();
+            // } catch (GameStuckException e1) {
+            // try {
+            // refresh();
+            // runMagic();
+            // } catch (RobotInterruptedException e) {
+            // }
+            // }
+            // }
             reapplySettings();
             processCommands();
             processRequests();
@@ -892,7 +952,7 @@ public final class MainFrame extends JFrame {
             _captureHome = true;
             hookHome(r);
           }
-          
+
         }
       }
     }
@@ -915,7 +975,7 @@ public final class MainFrame extends JFrame {
           } else {
             c = ss[0];
           }
-          if ((ss.length> 2 && !_captureContractors.contains(c)) || (ss.length <= 2 && _captureContractors.size() == 0)) {
+          if ((ss.length > 2 && !_captureContractors.contains(c)) || (ss.length <= 2 && _captureContractors.size() == 0)) {
             new Service().done(request);
             done = true;
             LOGGER.info(c + " is DONE!!!");
@@ -1096,6 +1156,9 @@ public final class MainFrame extends JFrame {
     _freightTrainsNumberLabel.setText("" + _stats.getFreightTrainCount());
     _expressTrainsNumberLabel.setText("" + _stats.getExpressTrainCount());
     _refreshNumberLabel.setText("" + _stats.getRefreshCount());
+    _refreshMNumberLabel.setText("" + _stats.getRefreshMandatoryCount());
+    _refreshTNumberLabel.setText("" + _stats.getRefreshTimeoutCount());
+    _refreshSNumberLabel.setText("" + _stats.getRefreshStuckCount());
     _lastActivityLabel.setText("" + _stats.getLastActivityTimeAsString());
     _startedLabel.setText("" + _stats.getStartedTimeAsString());
 
@@ -1201,10 +1264,6 @@ public final class MainFrame extends JFrame {
       } catch (SessionTimeOutException e) {
         LOGGER.info("Session time out. Stopping.");
       }
-
-      // fixTheGame();
-      _stats.registerRefresh();
-      updateLabels();
 
       LOGGER.info("Refresh done");
     } catch (AWTException e) {
@@ -1326,6 +1385,9 @@ public final class MainFrame extends JFrame {
 
         goHomeIfNeeded();
 
+        // antistuck prevention
+        checkIsStuck();
+
         // OTHER LOCATIONS
         scanOtherLocations(true);
 
@@ -1347,12 +1409,17 @@ public final class MainFrame extends JFrame {
             if (now - start >= timeForRefresh) {
               LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
               refresh();
+              _stats.registerTimeOutRefresh();
+              updateLabels();
               fstart = start = System.currentTimeMillis();
             }
 
             if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
               LOGGER.info("Mandatory refresh");
               refresh();
+              _stats.registerMandatoryRefresh();
+              updateLabels();
+
               fstart = start = System.currentTimeMillis();
             }
 
@@ -1399,9 +1466,22 @@ public final class MainFrame extends JFrame {
         setTitle(APP_TITLE + " READY");
         _stopThread = true;
         break;
-      } catch (DragFailureException e) {
-        handleDragFailure();
-        // break; //refresh could help
+      } catch (GameStuckException e) {
+        _stopThread = true;
+        new Thread(new Runnable() {
+          public void run() {
+            try {
+              _stats.registerStuckRefresh();
+              updateLabels();
+              Thread.sleep(2000);
+              refresh();
+              runMagic();
+            } catch (RobotInterruptedException e) {
+            } catch (InterruptedException e) {
+            }
+          }
+        }).start();
+        break;
       } catch (Throwable e) {
         LOGGER.severe("SOMETHING WENT WRONG!");
         e.printStackTrace();
@@ -1413,6 +1493,32 @@ public final class MainFrame extends JFrame {
     }
     if (_stopThread) {
       LOGGER.info("Mickey has being stopped");
+    }
+  }
+
+  private void checkIsStuck() throws GameStuckException {
+    Pixel tl = _scanner.getTopLeft();
+    int w = (_scanner.getGameWidth() - 214) / 2;
+    Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
+    try {
+      if (_lastImageList.size() < 3) {
+        BufferedImage image = new Robot().createScreenCapture(rect); 
+        _lastImageList.add(image);
+      } else if (_lastImageList.size() >= 3) {
+        _lastImageList.remove(0);
+        BufferedImage image = new Robot().createScreenCapture(rect); 
+        _lastImageList.add(image);
+        
+        SimilarityImageComparator comparator = new SimilarityImageComparator(0.04, 2000);
+        boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
+        uhoh = uhoh && comparator.compare(_lastImageList.get(1), _lastImageList.get(2));
+        if (uhoh) {
+          _lastImageList.clear();
+          LOGGER.severe("THE GAME PROBABLY GOT STUCK");
+          throw new GameStuckException();
+        }
+      }
+    } catch (AWTException e) {
     }
   }
 
@@ -1794,7 +1900,8 @@ public final class MainFrame extends JFrame {
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
       refresh();
-      // runMagic();
+      _stats.registerRefresh();
+      updateLabels();
     }
 
     area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
@@ -1995,7 +2102,11 @@ public final class MainFrame extends JFrame {
           } // for
         }
 
-      } // p != null
+      } else {
+        // p == null -> no trains detected yet
+        huntLetters();
+      }
+
       _mouse.checkUserMovement();
     } while (!done && curr - start <= timeGiven && !_stopThread);
 
@@ -2003,6 +2114,19 @@ public final class MainFrame extends JFrame {
     LOGGER.fine("time: " + (t2 - t1));
 
     return trainHasBeenSent || hadOtherLocations;
+  }
+
+  private void huntLetters() throws RobotInterruptedException {
+    LOGGER.info("Scanning for letters...");
+    Pixel p = detectLetter();
+    if (p != null) {
+      LOGGER.info("found letter: " + p);
+      _mouse.click(p.x, p.y - 6);
+      _mouse.click(p.x, p.y - 22);
+      _mouse.click(p.x, p.y - 17);
+      _mouse.click(p.x, p.y - 13);
+      _mouse.mouseMove(_scanner.getBottomRight());
+    }
   }
 
   private boolean isRunning(String threadName) {
@@ -2188,6 +2312,9 @@ public final class MainFrame extends JFrame {
     LOGGER.severe("NO IDEA WHAT TO DO!!!");
     try {
       refresh();
+      _stats.registerRefresh();
+      updateLabels();
+
       Thread.sleep(20000);
       runMagic();
     } catch (InterruptedException e) {
@@ -2602,6 +2729,45 @@ public final class MainFrame extends JFrame {
     Pixel p = pointerDown.findImage(_scanner.getTrainArea());
     if (p != null && p.x >= 2)
       p.x -= 2;// DOUBLE LOCO problem
+    return p;
+  }
+
+  private Pixel detectLetter() throws RobotInterruptedException {
+    ImageData red = _scanner._letterRed;
+    Pixel p = red.findImage(_scanner.getLetterArea());
+    if (p == null) {
+      ImageData white = _scanner._letterWhite;
+      p = white.findImage(_scanner.getLetterArea());
+      if (p == null) {
+        ImageData brown = _scanner._letterBrown;
+        p = brown.findImage(_scanner.getLetterArea());
+        if (p != null)
+          LOGGER.info("brown1");
+      } else {
+        LOGGER.info("white1");
+      }
+    } else {
+      LOGGER.info("red1");
+    }
+    if (p == null) {
+      red = _scanner._letterRed2;
+      p = red.findImage(_scanner.getLetterArea());
+      if (p == null) {
+        ImageData white = _scanner._letterWhite2;
+        p = white.findImage(_scanner.getLetterArea());
+        if (p == null) {
+          ImageData brown = _scanner._letterBrown2;
+          p = brown.findImage(_scanner.getLetterArea());
+          if (p != null)
+            LOGGER.info("brown2");
+        } else {
+          LOGGER.info("white2");
+        }
+      } else {
+        LOGGER.info("red2");
+      }
+    }
+
     return p;
   }
 
