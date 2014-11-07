@@ -8,8 +8,9 @@ public class Home {
   private int        _freeFreight;
   private int        _freight;
   private int        _express;
-  
+
   private Material[] _materials;
+  private Mission    _currentMission;
 
   public Home() {
     super();
@@ -70,6 +71,14 @@ public class Home {
 
   public void setMaterials(Material[] materials) {
     _materials = materials;
+  }
+
+  public void setCurrentMission(Mission currentMission) {
+    _currentMission = currentMission;
+  }
+
+  public Mission getCurrentMission() {
+    return _currentMission;
   }
 
   public static void main(String[] args) {

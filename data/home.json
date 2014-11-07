@@ -7,72 +7,126 @@
   "_express": 0,
   "_materials": [
     {
-      "_name": "Gold",
-      "_amount": 0
-    },
-    {
       "_name": "Wood",
-      "_amount": 0
+      "_amount": 2401327
     },
     {
       "_name": "Nails",
-      "_amount": 0
+      "_amount": 2130487
     },
     {
       "_name": "Bricks",
-      "_amount": 0
+      "_amount": 976762
     },
     {
       "_name": "Glass",
-      "_amount": 0
+      "_amount": 3065728
     },
     {
       "_name": "Fuel",
-      "_amount": 0
+      "_amount": 3185668
     },
     {
       "_name": "Steel",
-      "_amount": 0
+      "_amount": 1566758
     },
     {
       "_name": "Gravel",
-      "_amount": 0
+      "_amount": 1661694
     },
     {
       "_name": "U-235",
-      "_amount": 0
+      "_amount": 320087
     },
     {
       "_name": "Cement",
-      "_amount": 0
+      "_amount": 181417
     },
     {
       "_name": "Rubber",
-      "_amount": 0
+      "_amount": 349022
     },
     {
       "_name": "Carbon",
-      "_amount": 0
+      "_amount": 1208577
     },
     {
       "_name": "Titanium",
-      "_amount": 0
+      "_amount": 599718
     },
     {
       "_name": "Marble",
-      "_amount": 0
+      "_amount": 367026
     },
     {
       "_name": "Wires",
-      "_amount": 0
+      "_amount": 743551
     },
     {
       "_name": "Plastics",
-      "_amount": 0
+      "_amount": 781043
     },
     {
       "_name": "Silicon",
-      "_amount": 0
+      "_amount": 2689372
     }
-  ]
+  ],
+  "_currentMission": {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 8000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 660000,
+        "_currentAmount": 1661694,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 710000,
+        "_currentAmount": 320087,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 649600,
+        "_currentAmount": 181417,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 524000,
+        "_currentAmount": 599718,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1516000,
+        "_currentAmount": 743551,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1492000,
+        "_currentAmount": 2689372,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 1000,
+    "_contractor": "Home",
+    "_description": "MIX",
+    "_selected": true,
+    "_any": false
+  }
 }

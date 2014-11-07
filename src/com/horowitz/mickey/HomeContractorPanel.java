@@ -1,6 +1,7 @@
 package com.horowitz.mickey;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -10,13 +11,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -36,11 +38,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
+import com.horowitz.mickey.ContractorPanel.FocusTextField;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Home;
 import com.horowitz.mickey.data.Material;
@@ -207,11 +206,12 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
       public void actionPerformed(ActionEvent e) {
         System.err.println(e.getActionCommand() + checkBox.isSelected());
         int number = Integer.parseInt(e.getActionCommand());
-        for(Mission m: _missions) {
+        for (Mission m : _missions) {
           if (m.getNumber() == number) {
             m.setSelected(checkBox.isSelected());
           }
         }
+        updateObjectives();
       }
     });
 
@@ -254,6 +254,137 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
     gbc.gridx = 0;
   }
 
+  protected void updateObjectives() {
+    // merge objectives
+    Material[] mats = Material.createArray();
+    for (Mission m : _missions) {
+      if (m.isSelected())
+        for (Material mat : mats) {
+          for (Objective o : m.getObjectives()) {
+            if (mat.getName().equals(o.getMaterial())) {
+              mat.setAmount(mat.getAmount() + o.getNeededAmount());
+            }
+          }
+        }
+    }
+
+    // amounts are consolidated. now generate new objectives
+    List<Objective> newObjectives = new ArrayList<>();
+    for (Material mat : mats) {
+      if (mat.getAmount() > 0) {
+        Objective o = new Objective("b", mat.getName());
+        o.setNeededAmount(mat.getAmount());
+        for (Material mm : _home.getMaterials()) {
+          if (mm.getName().equals(mat.getName())) {
+            o.setCurrentAmount(mm.getAmount());
+          }
+        }
+
+        newObjectives.add(o);
+      }
+    }
+
+    _objectivesPanel.removeAll();
+
+    _objectivesPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.insets = new Insets(10, 10, 5, 5);
+    _area = new JTextArea(3, 35);
+    _area.setOpaque(false);
+    _area.setText("These objectives are for all selected missions");
+    _area.setWrapStyleWord(true);
+    _objectivesPanel.add(_area, gbc);
+
+    gbc.gridy = 1;
+
+    NumberFormat nf = NumberFormat.getIntegerInstance();
+
+    for (Objective obj : newObjectives) {
+
+      String mat = obj.getMaterial();
+      ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
+      if (icon == null) {
+        icon = ImageManager.getImage("contracts/" + "unknown" + "24.png");
+      }
+      JLabel objLabel = new JLabel(icon);
+      JLabel objLabel2 = new JLabel(" / ");
+      objLabel2.setFont(objLabel2.getFont().deriveFont(15f));
+
+      FocusTextField tf1 = new FocusTextField(nf);
+      tf1.setEditable(false);
+      tf1.setOpaque(false);
+      tf1.setBorder(BorderFactory.createEmptyBorder());
+
+      tf1.setMargin(new Insets(1, 1, 1, 4));
+      tf1.setColumns(6);
+      tf1.setName(mat + "_currentAmount");
+      tf1.setHorizontalAlignment(JTextField.RIGHT);
+      tf1.setValue(obj.getCurrentAmount());
+
+      FocusTextField tf2 = new FocusTextField(nf);
+      tf2.setEditable(false);
+      tf2.setOpaque(false);
+      tf2.setBorder(BorderFactory.createEmptyBorder());
+      tf2.setMargin(new Insets(1, 1, 1, 1));
+      tf2.setColumns(6);
+      tf2.setName(mat + "_neededAmount");
+      tf2.setHorizontalAlignment(JTextField.RIGHT);
+      tf2.setValue(obj.getNeededAmount());
+
+      // NumberFormat nf2 = NumberFormat.getIntegerInstance();
+      // nf2.setMinimumIntegerDigits(0);
+      //
+      JTextField tf3 = new JTextField();
+
+      tf3.setMargin(new Insets(1, 1, 1, 1));
+      tf3.setColumns(6);
+      tf3.setHorizontalAlignment(JTextField.RIGHT);
+
+      long d = obj.getNeededAmount() - obj.getCurrentAmount();
+      if (d > 0) {
+        tf3.setText(nf.format(d));
+        tf3.setForeground(Color.RED);
+      } else {
+        tf3.setText("");
+      }
+      tf3.setEditable(false);
+      tf3.setOpaque(false);
+      tf3.setBorder(BorderFactory.createEmptyBorder());
+
+      Box box = Box.createHorizontalBox();
+
+      box.add(objLabel);
+      box.add(Box.createHorizontalStrut(5));
+      box.add(tf1);
+      box.add(objLabel2);
+      box.add(tf2);
+      box.add(Box.createHorizontalStrut(6));
+      box.add(tf3);
+
+      gbc.anchor = GridBagConstraints.WEST;
+      _objectivesPanel.add(box, gbc);
+
+      gbc.gridy++;
+      gbc.insets = new Insets(5, 10, 5, 5);
+    }
+
+    gbc.gridwidth = 2;
+    gbc.weightx = 1;
+    gbc.weighty = 1;
+
+    JLabel fake = new JLabel(" ");
+    _objectivesPanel.add(fake, gbc);
+
+    _objScrollPane.getViewport().setView(_objectivesPanel);
+
+    
+    _currentMission = new Mission("Home", "MIX", 1000);
+    _currentMission.setObjectives(newObjectives);
+    _currentMission.setSelected(true);
+  }
+
   private void createView() {
     try {
       DataStore ds = new DataStore();
@@ -273,84 +404,11 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
 
         _missionsPanel.add(new JLabel(""), gbc);
       }
+
+      updateObjectives();
       // _missionsPanel.invalidate();
       _missionScrollPane.getViewport().setView(_missionsPanel);
 
-      // _objectivesPanel.setLayout(new GridBagLayout());
-      // GridBagConstraints gbc = new GridBagConstraints();
-      // gbc.gridx = 0;
-      // gbc.gridy = 0;
-      // gbc.insets = new Insets(10, 10, 5, 5);
-      // _area = new JTextArea(3, 35);
-      // _area.setOpaque(false);
-      // _area.setText(_missionDB.getDescription());
-      // _area.setWrapStyleWord(true);
-      // _objectivesPanel.add(_area, gbc);
-      //
-      // gbc.gridy = 1;
-      //
-      // List<Objective> objectivesC = _currentMission.getObjectives();
-      // List<Objective> objectivesDB = _missionDB.getObjectives();
-      // NumberFormat nf = NumberFormat.getIntegerInstance();
-      //
-      // for (Objective objectiveC : objectivesC) {
-      // Objective objectiveDBFound = null;
-      // for (Objective objectiveDB : objectivesDB) {
-      // if (objectiveDB.getMaterial().equals(objectiveC.getMaterial())) {
-      // objectiveDBFound = objectiveDB;
-      // break;
-      // }
-      // }
-      //
-      // String mat = objectiveC.getMaterial();
-      // System.err.println(mat);
-      // ImageIcon icon = ImageManager.getImage("contracts/" + mat + "24.png");
-      // if (icon == null) {
-      // icon = ImageManager.getImage("contracts/" + "unknown" + "24.png");
-      // }
-      // JLabel objLabel = new JLabel(icon);
-      // JLabel objLabel2 = new JLabel(" / ");
-      // objLabel2.setFont(objLabel2.getFont().deriveFont(15f));
-      //
-      // FocusTextField tf1 = new FocusTextField(nf);
-      // tf1.setMargin(new Insets(1, 1, 1, 4));
-      // tf1.setColumns(7);
-      // tf1.setName(mat + "_currentAmount");
-      // tf1.setHorizontalAlignment(JTextField.RIGHT);
-      // tf1.setValue(objectiveC.getCurrentAmount());
-      // tf1.addPropertyChangeListener("value", HomeContractorPanel.this);
-      //
-      // FocusTextField tf2 = new FocusTextField(nf);
-      // tf2.setMargin(new Insets(1, 1, 1, 4));
-      // tf2.setColumns(7);
-      // tf2.setName(mat + "_neededAmount");
-      // tf2.setHorizontalAlignment(JTextField.RIGHT);
-      // tf2.setValue(objectiveDBFound.getNeededAmount());
-      // tf2.addPropertyChangeListener("value", HomeContractorPanel.this);
-      //
-      // Box box = Box.createHorizontalBox();
-      //
-      // box.add(objLabel);
-      // box.add(Box.createHorizontalStrut(5));
-      // box.add(tf1);
-      // box.add(objLabel2);
-      // box.add(tf2);
-      //
-      // _objectivesPanel.add(box, gbc);
-      //
-      // gbc.gridy++;
-      // gbc.insets = new Insets(5, 10, 5, 5);
-      // }
-      //
-      // gbc.gridwidth = 2;
-      // gbc.weightx = 1;
-      // gbc.weighty = 1;
-      //
-      // JLabel fake = new JLabel(" ");
-      // _objectivesPanel.add(fake, gbc);
-      //
-      // _objectivesPanel.invalidate();
-      //
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -456,7 +514,8 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
         BufferedImage image = ImageIO.read(f);
         Material[] materials = matscanner.scanMaterials(image, Locations.MATERIALS_1, true);
         _home.setMaterials(materials);
-        updateView();// TODO
+        updateView();
+        save();
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -498,8 +557,12 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
   private void save() {
     DataStore dataStore = new DataStore();
     try {
-      if (_home != null)
+      if (_home != null) {
+        if (_currentMission != null) {
+          _home.setCurrentMission(_currentMission);
+        }
         dataStore.saveHome(_home);
+      }
       if (_missions != null) {
         dataStore.writeMissions("Home", _missions);
       }

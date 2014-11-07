@@ -16,12 +16,13 @@ import com.horowitz.mickey.data.Need;
 
 public class ContractorAdvisor extends JPanel {
 
-  private static final String VERSION = "v.111h";
-  private static final String TITLE = "Contract Advisor " + VERSION;
-  
-  private ContractorsPanel   _contractorsPanel;
-  private ContractTablePanel _contractTablePanel;
-  private ContractTablePanel _contractTablePanel2;
+  private static final String VERSION = "v.112h";
+  private static final String TITLE   = "Contract Advisor " + VERSION;
+
+  private ContractorsPanel    _contractorsPanel;
+  private ContractTablePanel  _contractTablePanel;
+  private ContractTablePanel  _contractTablePanel2;
+  private TotalsPanel         _totalsPanel;
 
   public ContractorAdvisor() {
     super();
@@ -34,9 +35,11 @@ public class ContractorAdvisor extends JPanel {
     contractAnalysys.calcALLNeeds();
     _contractTablePanel = new ContractTablePanel(contractAnalysys);
     _contractTablePanel2 = new ContractTablePanel(new ContractAnalysisAll());
+    _totalsPanel = new TotalsPanel(false);
     pane.addTab("Table", _contractTablePanel);
     // _contractTablePanel2.setMap(null);
     pane.addTab("Table2", _contractTablePanel2);
+    pane.addTab("Totals", _totalsPanel);
     add(pane);
   }
 

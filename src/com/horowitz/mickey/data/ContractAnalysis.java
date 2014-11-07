@@ -20,7 +20,43 @@ public class ContractAnalysis {
     System.err.println(map);
     new ContractAnalysis().calcALLNeeds();
   }
+  
+  public Material[] getConsolidatedMaterials(boolean shortTerm) {
+    Material[] mats = Material.createArray();
 
+    try {
+      DataStore ds = new DataStore();
+      Contractor[] contractors = ds.readContractors();
+
+      //collect from contractors
+      for (Contractor c : contractors) {
+        for (Material mat : mats) {
+          consolidate(mat, c.getMaterials());
+          consolidate(mat, c.getMaterialsMore());
+        }
+      }
+      
+      //home: only selected (shortTerm) or all
+      Home home = ds.getHome();
+      for (Material mat : mats) {
+        consolidate(mat, home.getMaterials());
+        
+        if (shortTerm) {
+          consolidate(mat, home.getCurrentMission().getObjectives());
+        } else {
+          Mission[] missions = ds.getHomeMissions(false);
+          for (Mission mission : missions) {
+            consolidate(mat, mission.getObjectives());
+          }
+        }
+      }
+      
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return mats;
+  }
+  
   public void calcALLNeeds() {
     try {
       DataStore ds = new DataStore();
@@ -133,7 +169,7 @@ public class ContractAnalysis {
             }
           }
           
-          int number = 999;
+          int number = 100;
           if (currentMission != null) {
             number = currentMission.getNumber();
           }
@@ -173,25 +209,6 @@ public class ContractAnalysis {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-  }
-
-  private Objective getObjective(Mission mission, String mat) {
-    if (mission != null)
-      for (Objective o : mission.getObjectives()) {
-        if (o.getMaterial().equals(mat)) {
-          return o;
-        }
-      }
-    return null;
-  }
-
-  private Material extractMat(String matName, Material[] materials) {
-    for (int i = 0; i < materials.length; i++) {
-      if (materials[i].getName().equals(matName)) {
-        return materials[i];
-      }
-    }
-    return null;
   }
 
   public Map<String, Map<String, Need>> collectCurrentNeeds() {
@@ -307,6 +324,42 @@ public class ContractAnalysis {
       return map;
     } catch (IOException e) {
       e.printStackTrace();
+    }
+    return null;
+  }
+
+  private void consolidate(Material mat, Material[] materials) {
+    for (Material m : materials) {
+      if (mat.getName().equals(m.getName())) {
+        mat.setAmount(mat.getAmount() + m.getAmount());
+        break;
+      }
+    }
+  }
+
+  private void consolidate(Material mat, List<Objective> objectives) {
+    for (Objective o : objectives) {
+      if (mat.getName().equals(o.getMaterial())) {
+        mat.setAmount(mat.getAmount() + o.getNeededAmount());
+      }
+    }
+  }
+
+  private Objective getObjective(Mission mission, String mat) {
+    if (mission != null)
+      for (Objective o : mission.getObjectives()) {
+        if (o.getMaterial().equals(mat)) {
+          return o;
+        }
+      }
+    return null;
+  }
+
+  private Material extractMat(String matName, Material[] materials) {
+    for (int i = 0; i < materials.length; i++) {
+      if (materials[i].getName().equals(matName)) {
+        return materials[i];
+      }
     }
     return null;
   }
