@@ -30,7 +30,7 @@ public class Statistics {
     _lastActivityTime = _startTime = System.currentTimeMillis();
     // _lastActivityTime +=1 * 30 * 60 * 1000;
     _lastTrainTime = _lastFreightTime = _lastExpressTime = _lastRefreshTime = _lastActivityTime;
-
+    _refreshMandatoryCount = _refreshStuckCount = _refreshTimeoutCount = _refreshCount;
   }
 
   public void registerExpress() {

@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.814d";
+  private static final String APP_TITLE           = "v0.814i";
 
   private boolean             _devMode            = false;
 
@@ -134,7 +134,7 @@ public final class MainFrame extends JFrame {
   private boolean             _captureHome        = false;
   private boolean             _scanMaterials2     = false;
 
-  private List<BufferedImage> _lastImageList = new ArrayList<>();
+  private List<BufferedImage> _lastImageList      = new ArrayList<>();
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
@@ -1500,18 +1500,22 @@ public final class MainFrame extends JFrame {
     Pixel tl = _scanner.getTopLeft();
     int w = (_scanner.getGameWidth() - 214) / 2;
     Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
+    //Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
     try {
-      if (_lastImageList.size() < 3) {
-        BufferedImage image = new Robot().createScreenCapture(rect); 
+      int howMuch = 4;
+      if (_lastImageList.size() < howMuch) {
+        BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
-      } else if (_lastImageList.size() >= 3) {
+      } else if (_lastImageList.size() >= howMuch) {
         _lastImageList.remove(0);
-        BufferedImage image = new Robot().createScreenCapture(rect); 
+        BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
-        
-        SimilarityImageComparator comparator = new SimilarityImageComparator(0.04, 2000);
+
+        SimilarityImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
         boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
-        uhoh = uhoh && comparator.compare(_lastImageList.get(1), _lastImageList.get(2));
+        for (int i = 1; i < howMuch - 1; ++i) {
+          uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
+        }
         if (uhoh) {
           _lastImageList.clear();
           LOGGER.severe("THE GAME PROBABLY GOT STUCK");
@@ -2078,7 +2082,7 @@ public final class MainFrame extends JFrame {
 
           // again all rails one by one now more carefully
           boolean stop = false;
-          for (int i = 0; i < rails.length && !stop && !_stopThread; i++) {
+          for (int i = 1; i < rails.length - 1 && !stop && !_stopThread; i++) {
             try {
               LOGGER.info("trying rail " + (i + 1));
               p.y = _scanner.getBottomRight().y - rails[i] - 4;

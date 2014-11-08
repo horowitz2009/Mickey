@@ -2,7 +2,7 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project Mickey2">
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-	<property name="versionNumber" value="814d" />
+	<property name="versionNumber" value="814i" />
 
 	<property name="jarname" value="Mickey${versionNumber}.jar" description="" />
 
