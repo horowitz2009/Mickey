@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 public class InitialMassLoader {
@@ -16,9 +17,117 @@ public class InitialMassLoader {
     System.out.println("genereating contractors and missions");
     // generateContractors();
     // generateMissions();
-    loadHomeMissions();
-
+    //loadHomeMissions();
+    //addMoreHomeMissions();
     System.out.println("Done.");
+  }
+
+  private static void addMoreHomeMissions() {
+    try {
+      DataStore ds = new DataStore();
+      Home home = new Home();
+      home.setMaterials(Material.createArray());
+      ds.saveHome(home);
+
+      List<Mission> newMissions = new ArrayList<>();
+
+      int n = 120;
+      Mission m;
+      List<Objective> objectives;
+
+      m = new Mission("Home", "Storage 800-900", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "U-235", 160000));
+      objectives.add(new Objective("b", "Wires", 104000));
+      objectives.add(new Objective("b", "Plastics", 104000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Storage 900-1000", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 1760000));
+      objectives.add(new Objective("b", "Wood", 160000));
+      objectives.add(new Objective("b", "Plastics", 120000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+
+      m = new Mission("Home", "Storage 1000-1100", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Glass", 200000));
+      objectives.add(new Objective("b", "Fuel", 192000));
+      objectives.add(new Objective("b", "Silicon", 184000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1100-1200", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 3200000));
+      objectives.add(new Objective("b", "U-235", 240000));
+      objectives.add(new Objective("b", "Silicon", 240000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1200-1300", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Steel", 240000));
+      objectives.add(new Objective("b", "Titanium", 200000));
+      objectives.add(new Objective("b", "Silicon", 220000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1300-1400", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Gold", 3600000));
+      objectives.add(new Objective("b", "Wood", 240000));
+      objectives.add(new Objective("b", "Glass", 240000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1400-1500", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Steel", 300000));
+      objectives.add(new Objective("b", "Carbon", 280000));
+      objectives.add(new Objective("b", "Plastics", 280000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1500-1600", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Nails", 320000));
+      objectives.add(new Objective("b", "Gravel", 320000));
+      objectives.add(new Objective("b", "Marble", 304000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      m = new Mission("Home", "Storage 1600-1700", ++n);
+      objectives = new ArrayList<>();
+      objectives.add(new Objective("b", "Glass", 384000));
+      objectives.add(new Objective("b", "Cement", 384000));
+      objectives.add(new Objective("b", "Silicon", 320000));
+      m.setObjectives(objectives);
+      m.setSelected(false);
+      newMissions.add(m);
+      
+      
+      Mission[] oldMissions = ds.getHomeMissions();
+      
+      Mission[] newMissionsArray = newMissions.toArray(new Mission[0]);
+      Mission[] all = (Mission[]) ArrayUtils.addAll(oldMissions, newMissionsArray);
+      
+      ds.writeMissions("Home", all);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
   }
 
   private static void loadHomeMissions() {

@@ -67,11 +67,15 @@ public class DataStore {
     FileUtils.writeStringToFile(new File("data/contractors.json"), json);
   }
 
-  public Mission[] getHomeMissions(boolean selectedOnly) throws IOException {
+  public Mission[] getHomeMissions() throws IOException {
+    return readMissions("Home");
+  }
+
+  public Mission[] getSelectedHomeMissions() throws IOException {
     Mission[] readMissions = readMissions("Home");
     List<Mission> res = new ArrayList<>();
     for (Mission mission : readMissions) {
-      if (!selectedOnly || (selectedOnly && mission.isSelected())) {
+      if (mission.isSelected()) {
         res.add(mission);
       }
     }

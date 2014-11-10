@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.814i";
+  private static final String APP_TITLE           = "v0.815";
 
   private boolean             _devMode            = false;
 
@@ -2082,7 +2082,7 @@ public final class MainFrame extends JFrame {
 
           // again all rails one by one now more carefully
           boolean stop = false;
-          for (int i = 1; i < rails.length - 1 && !stop && !_stopThread; i++) {
+          for (int i = 1; i < rails.length && !stop && !_stopThread; i++) {
             try {
               LOGGER.info("trying rail " + (i + 1));
               p.y = _scanner.getBottomRight().y - rails[i] - 4;
@@ -2127,9 +2127,11 @@ public final class MainFrame extends JFrame {
       LOGGER.info("found letter: " + p);
       _mouse.click(p.x, p.y - 6);
       _mouse.click(p.x, p.y - 22);
+      _mouse.checkUserMovement();
       _mouse.click(p.x, p.y - 17);
       _mouse.click(p.x, p.y - 13);
       _mouse.mouseMove(_scanner.getBottomRight());
+      _mouse.checkUserMovement();
     }
   }
 
@@ -2740,9 +2742,11 @@ public final class MainFrame extends JFrame {
     ImageData red = _scanner._letterRed;
     Pixel p = red.findImage(_scanner.getLetterArea());
     if (p == null) {
+      _mouse.checkUserMovement();
       ImageData white = _scanner._letterWhite;
       p = white.findImage(_scanner.getLetterArea());
       if (p == null) {
+        _mouse.checkUserMovement();
         ImageData brown = _scanner._letterBrown;
         p = brown.findImage(_scanner.getLetterArea());
         if (p != null)
@@ -2753,13 +2757,16 @@ public final class MainFrame extends JFrame {
     } else {
       LOGGER.info("red1");
     }
+    _mouse.checkUserMovement();
     if (p == null) {
       red = _scanner._letterRed2;
       p = red.findImage(_scanner.getLetterArea());
       if (p == null) {
+        _mouse.checkUserMovement();
         ImageData white = _scanner._letterWhite2;
         p = white.findImage(_scanner.getLetterArea());
         if (p == null) {
+          _mouse.checkUserMovement();
           ImageData brown = _scanner._letterBrown2;
           p = brown.findImage(_scanner.getLetterArea());
           if (p != null)

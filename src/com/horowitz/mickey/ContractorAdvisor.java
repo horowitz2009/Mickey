@@ -23,6 +23,7 @@ public class ContractorAdvisor extends JPanel {
   private ContractTablePanel  _contractTablePanel;
   private ContractTablePanel  _contractTablePanel2;
   private TotalsPanel         _totalsPanel;
+  private TotalsPanel         _totalsPanel2;
 
   public ContractorAdvisor() {
     super();
@@ -35,11 +36,14 @@ public class ContractorAdvisor extends JPanel {
     contractAnalysys.calcALLNeeds();
     _contractTablePanel = new ContractTablePanel(contractAnalysys);
     _contractTablePanel2 = new ContractTablePanel(new ContractAnalysisAll());
-    _totalsPanel = new TotalsPanel(false);
+    _totalsPanel = new TotalsPanel(true);
     pane.addTab("Table", _contractTablePanel);
     // _contractTablePanel2.setMap(null);
     pane.addTab("Table2", _contractTablePanel2);
     pane.addTab("Totals", _totalsPanel);
+
+    _totalsPanel2 = new TotalsPanel(false);
+    pane.addTab("Totals2", _totalsPanel2);
     add(pane);
   }
 

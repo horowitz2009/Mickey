@@ -44,9 +44,10 @@ public class ContractAnalysis {
         if (shortTerm) {
           consolidate(mat, home.getCurrentMission().getObjectives());
         } else {
-          Mission[] missions = ds.getHomeMissions(false);
+          Mission[] missions = ds.getHomeMissions();
           for (Mission mission : missions) {
-            consolidate(mat, mission.getObjectives());
+            if (!mission.isDone())
+              consolidate(mat, mission.getObjectives());
           }
         }
       }

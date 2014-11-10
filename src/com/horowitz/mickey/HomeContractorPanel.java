@@ -61,8 +61,6 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
   private Mission     _currentMission;
   private Mission     _missionDB;
   private JPanel      _objectivesPanel;
-  private JTextField  _missionNumberTF;
-  private JLabel      _missionNumberLabel;
   private JTextArea   _area;
   private JPanel      _missionsPanel;
   private Mission[]   _missions;
@@ -190,21 +188,26 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
     reload();
   }
 
-  private void buildMissionRow(Mission m, GridBagConstraints gbc) {
+  private void buildMissionRow(final Mission m, GridBagConstraints gbc) {
     gbc.anchor = GridBagConstraints.WEST;
 
+    final JCheckBox checkBoxDone = new JCheckBox();
+    checkBoxDone.setName("" + m.getNumber());
+    //checkBoxDone.setText(" ");
+    checkBoxDone.setSelected(m.isDone());
+
+
+    
     final JCheckBox checkBox = new JCheckBox();
     checkBox.setName("" + m.getNumber());
     checkBox.setSelected(m.isSelected());
-
     checkBox.setText("" + m.getNumber());
-    _missionsPanel.add(checkBox, gbc);
+    checkBox.setEnabled(!m.isDone());
 
     checkBox.addActionListener(new ActionListener() {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        System.err.println(e.getActionCommand() + checkBox.isSelected());
         int number = Integer.parseInt(e.getActionCommand());
         for (Mission m : _missions) {
           if (m.getNumber() == number) {
@@ -215,14 +218,18 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
       }
     });
 
-    gbc.gridx++;
-    JLabel desc = new JLabel();
+    final JLabel desc = new JLabel();
     String d = m.getDescription();
     if (d == null)
       d = "";
     desc.setText(d);
     desc.setLabelFor(checkBox);
 
+    if (m.isDone()) {
+      desc.setForeground(Color.GRAY);
+    } else {
+      desc.setForeground(Color.BLACK);
+    }
     MouseAdapter mouseListener = new MouseAdapter() {
       @Override
       public void mouseReleased(MouseEvent e) {
@@ -231,6 +238,40 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
       }
     };
     desc.addMouseListener(mouseListener);
+    
+    checkBoxDone.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        m.setDone(checkBoxDone.isSelected());
+        if (checkBoxDone.isSelected()) {
+          if (checkBox.isSelected()) {
+            checkBox.setSelected(false);
+            m.setSelected(false);
+            updateObjectives();
+          }
+          checkBox.setEnabled(false);
+          desc.setForeground(Color.GRAY);
+        } else {
+          checkBox.setEnabled(true);
+          desc.setForeground(Color.BLACK);
+        }
+        checkBox.repaint();
+        desc.repaint();
+      }
+    });
+    
+    
+    gbc.insets = new Insets(4, 2, 4, 4);
+    _missionsPanel.add(checkBoxDone, gbc);
+
+    gbc.gridx++;
+    gbc.insets = new Insets(2, 2, 2, 2);
+    
+    
+    _missionsPanel.add(checkBox, gbc);
+
+    gbc.gridx++;
     gbc.insets = new Insets(2, 2, 2, 12);
     _missionsPanel.add(desc, gbc);
 
@@ -249,7 +290,7 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
       _missionsPanel.add(matLabel, gbc);
     }
 
-    gbc.insets = new Insets(0, 0, 0, 0);
+    gbc.insets = new Insets(2, 2, 2, 2);
     gbc.gridy++;
     gbc.gridx = 0;
   }
@@ -379,7 +420,6 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
 
     _objScrollPane.getViewport().setView(_objectivesPanel);
 
-    
     _currentMission = new Mission("Home", "MIX", 1000);
     _currentMission.setObjectives(newObjectives);
     _currentMission.setSelected(true);
@@ -388,7 +428,7 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
   private void createView() {
     try {
       DataStore ds = new DataStore();
-      _missions = ds.getHomeMissions(false);
+      _missions = ds.getHomeMissions();
       clear();
       if (_missions != null && _missions.length > 0) {
         GridBagConstraints gbc = new GridBagConstraints();

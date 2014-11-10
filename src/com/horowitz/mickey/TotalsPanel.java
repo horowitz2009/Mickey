@@ -2,15 +2,19 @@ package com.horowitz.mickey;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.text.NumberFormat;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,6 +31,7 @@ public class TotalsPanel extends JPanel {
   private JPanel      _tablePanel;
   private JScrollPane _tableScrollPane;
   private boolean     _shortTerm;
+  private JPanel      _toolbar;
 
   public TotalsPanel(boolean shortTerm) {
     super();
@@ -34,8 +39,46 @@ public class TotalsPanel extends JPanel {
     setLayout(new BorderLayout());
     _tablePanel = new JPanel();
     _tableScrollPane = new JScrollPane(_tablePanel);
-    add(_tableScrollPane);
+    initToolbar();
+    add(_tableScrollPane, BorderLayout.CENTER);
     reload();
+  }
+
+  private void initToolbar() {
+    //setLayout(new BorderLayout());
+    _toolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 4));
+
+    JButton reloadButton = new JButton(new AbstractAction("Reload") {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        Thread t = new Thread(new Runnable() {
+          public void run() {
+            reload();
+          }
+        });
+        t.start();
+      }
+    });
+
+    _toolbar.add(reloadButton);
+
+    // JButton rescanButton = new JButton(new AbstractAction("Rescan") {
+    //
+    // @Override
+    // public void actionPerformed(ActionEvent e) {
+    // Thread t = new Thread(new Runnable() {
+    // public void run() {
+    // rescan();
+    // }
+    // });
+    // t.start();
+    // }
+    // });
+    //
+    // _toolbar.add(rescanButton);
+
+    add(_toolbar, BorderLayout.NORTH);
   }
 
   private void reload() {
@@ -53,15 +96,15 @@ public class TotalsPanel extends JPanel {
       GridBagConstraints gbc = new GridBagConstraints();
       gbc.gridx = 0;
       gbc.gridy = 0;
-      gbc.insets = new Insets(10, 10, 5, 5);
-      JTextArea area = new JTextArea(3, 35);
-      area.setOpaque(false);
-      area.setText("BLAH BLAH BLAH");
-      area.setWrapStyleWord(true);
-      _tablePanel.add(area, gbc);
-
-      gbc.gridy = 1;
-
+      gbc.insets = new Insets(2, 10, 2, 5);
+//      JTextArea area = new JTextArea(3, 35);
+//      area.setOpaque(false);
+//      area.setText("");
+//      area.setWrapStyleWord(true);
+//      _tablePanel.add(area, gbc);
+//
+//      gbc.gridy = 1;
+//
       NumberFormat nf = NumberFormat.getIntegerInstance();
 
       for (Material mat : mats) {
@@ -136,7 +179,7 @@ public class TotalsPanel extends JPanel {
         _tablePanel.add(box, gbc);
 
         gbc.gridy++;
-        gbc.insets = new Insets(5, 10, 5, 5);
+        gbc.insets = new Insets(2, 10, 2, 5);
       }
 
       gbc.gridwidth = 2;
