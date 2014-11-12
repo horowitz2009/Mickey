@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import org.apache.commons.lang.ArrayUtils;
 
 import com.horowitz.mickey.ContractorPanel.FocusTextField;
 import com.horowitz.mickey.data.DataStore;
@@ -193,7 +196,7 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
 
     final JCheckBox checkBoxDone = new JCheckBox();
     checkBoxDone.setName("" + m.getNumber());
-    //checkBoxDone.setText(" ");
+    checkBoxDone.setText("" + m.getLevel());
     checkBoxDone.setSelected(m.isDone());
 
 
@@ -429,6 +432,7 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
     try {
       DataStore ds = new DataStore();
       _missions = ds.getHomeMissions();
+      Arrays.sort(_missions);
       clear();
       if (_missions != null && _missions.length > 0) {
         GridBagConstraints gbc = new GridBagConstraints();

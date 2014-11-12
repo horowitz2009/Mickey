@@ -2,11 +2,9 @@ package com.horowitz.mickey.data;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -15,12 +13,6 @@ public class ContractAnalysis {
   public ContractAnalysis() {
   }
 
-  public static void main(String[] args) {
-    Map<String, Map<String, Need>> map = new ContractAnalysis().collectCurrentNeeds();
-    System.err.println(map);
-    new ContractAnalysis().calcALLNeeds();
-  }
-  
   public Material[] getConsolidatedMaterials(boolean shortTerm) {
     Material[] mats = Material.createArray();
 
@@ -28,21 +20,22 @@ public class ContractAnalysis {
       DataStore ds = new DataStore();
       Contractor[] contractors = ds.readContractors();
 
-      //collect from contractors
+      // collect from contractors
       for (Contractor c : contractors) {
         for (Material mat : mats) {
           consolidate(mat, c.getMaterials());
           consolidate(mat, c.getMaterialsMore());
         }
       }
-      
-      //home: only selected (shortTerm) or all
+
+      // home: only selected (shortTerm) or all
       Home home = ds.getHome();
       for (Material mat : mats) {
         consolidate(mat, home.getMaterials());
-        
+
         if (shortTerm) {
-          consolidate(mat, home.getCurrentMission().getObjectives());
+          if (home.getCurrentMission() != null)
+            consolidate(mat, home.getCurrentMission().getObjectives());
         } else {
           Mission[] missions = ds.getHomeMissions();
           for (Mission mission : missions) {
@@ -51,13 +44,13 @@ public class ContractAnalysis {
           }
         }
       }
-      
+
     } catch (IOException e) {
       e.printStackTrace();
     }
     return mats;
   }
-  
+
   public void calcALLNeeds() {
     try {
       DataStore ds = new DataStore();
@@ -128,14 +121,14 @@ public class ContractAnalysis {
         if (extraMissions.length == 0) {
           extraMissions = ds.readMissions(contractor.getName(), "_BEST");
         }
-//        if (currentMission == null) {
-//          currentMission = extraMissions[0].copy();
-//          ds.writeCurrentMission(currentMission);
-//        }
-        
-        //TURNED OFF for a moment
-        //extraMissions = new Mission[0];
-        
+        // if (currentMission == null) {
+        // currentMission = extraMissions[0].copy();
+        // ds.writeCurrentMission(currentMission);
+        // }
+
+        // TURNED OFF for a moment
+        // extraMissions = new Mission[0];
+
         missions = (Mission[]) ArrayUtils.addAll(missions, extraMissions);
 
         Material[] materials = Material.createArray();
@@ -169,12 +162,12 @@ public class ContractAnalysis {
               S = S + o.getNeededAmount() - o.getCurrentAmount();
             }
           }
-          
+
           int number = 100;
           if (currentMission != null) {
             number = currentMission.getNumber();
           }
-          
+
           // now let's check the future missions
           for (int k = 0; k < missions.length; k++) {
             Mission mm = missions[k];

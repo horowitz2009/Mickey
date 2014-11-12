@@ -3,12 +3,13 @@ package com.horowitz.mickey.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class Mission {
+public class Mission implements Comparable<Mission> {
   private List<Objective> _objectives;
 
   private int             _number;
@@ -16,6 +17,7 @@ public class Mission {
   private String          _description;
   private boolean         _selected;
   private boolean         _done;
+  private int             _level;
 
   /**
    * if true means any of the objective if being done, then mission is considered accomplished. If false, then all objectives must be done.
@@ -29,6 +31,7 @@ public class Mission {
     _number = number;
     _selected = false;
     _done = false;
+    _level = 0;
   }
 
   public Mission() {
@@ -92,6 +95,14 @@ public class Mission {
     _done = done;
   }
 
+  public int getLevel() {
+    return _level;
+  }
+
+  public void setLevel(int level) {
+    _level = level;
+  }
+
   @Override
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
@@ -153,6 +164,13 @@ public class Mission {
     m.setNumber(getNumber());
     m.setSelected(isSelected());
     m.setDone(isDone());
+    m.setLevel(getLevel());
+  }
+  
+  @Override
+  public int compareTo(Mission o) {
+    return new CompareToBuilder().append(this.getLevel(), o.getLevel()).toComparison();
+    //return new CompareToBuilder().append(this.getNumber(), o.getNumber()).toComparison();
   }
 
 }
