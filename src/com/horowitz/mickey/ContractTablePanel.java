@@ -131,9 +131,9 @@ public class ContractTablePanel extends JPanel {
            }
           String gray = nf.format(vv2) + suffix2;
 
-          if (red.startsWith("0"))
+          if (red.equals("0"))
             red = "";
-          if (gray.startsWith("0"))
+          if (gray.equals("0"))
             gray = "";
           if (red.length() > 0) {
             if (v1 <= 800) {
