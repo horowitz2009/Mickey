@@ -40,8 +40,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import com.horowitz.mickey.ContractorPanel.FocusTextField;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Home;
@@ -199,8 +197,6 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
     checkBoxDone.setText("" + m.getLevel());
     checkBoxDone.setSelected(m.isDone());
 
-
-    
     final JCheckBox checkBox = new JCheckBox();
     checkBox.setName("" + m.getNumber());
     checkBox.setSelected(m.isSelected());
@@ -241,9 +237,9 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
       }
     };
     desc.addMouseListener(mouseListener);
-    
+
     checkBoxDone.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent e) {
         m.setDone(checkBoxDone.isSelected());
@@ -263,15 +259,13 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
         desc.repaint();
       }
     });
-    
-    
+
     gbc.insets = new Insets(4, 2, 4, 4);
     _missionsPanel.add(checkBoxDone, gbc);
 
     gbc.gridx++;
     gbc.insets = new Insets(2, 2, 2, 2);
-    
-    
+
     _missionsPanel.add(checkBox, gbc);
 
     gbc.gridx++;
@@ -589,9 +583,22 @@ public final class HomeContractorPanel extends JPanel implements PropertyChangeL
             if (isDone) {
               weredone = true;
               _progressBar.setVisible(false);
+              int start = _progressBar.getValue();
+              int end = _progressBar.getMaximum();
+              int diff = end - start;
+              for (int i = 1; i <= 10; ++i) {
+                try {
+                  Thread.sleep(1000);// wait Dropbox to download the new image
+                } catch (InterruptedException e) {
+                }
+                _progressBar.setValue(start + diff * i / 10);
+              }
               rescan();
             }
-          } while (!weredone && n < 40); // 2 minutes
+          } while (!weredone && n < 120); // 2 minutes
+          if (!weredone)
+            _progressBar.setVisible(false);
+
         }
       }, "CSTHREAD_Home");
       csThread.start();

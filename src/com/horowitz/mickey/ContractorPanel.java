@@ -567,6 +567,10 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
             if (isDone) {
               weredone = true;
               _progressBar.setVisible(false);
+              try {
+                Thread.sleep(10000);
+              } catch (InterruptedException e) {
+              }
               rescan();
             }
           } while (!weredone && n < 120); // 2 minutes

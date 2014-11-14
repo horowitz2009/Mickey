@@ -39,7 +39,6 @@ public class ContractorsPanel extends JPanel {
       _contractors = new DataStore().readContractors();
       init();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
   }
@@ -86,14 +85,14 @@ public class ContractorsPanel extends JPanel {
     sp.getVerticalScrollBar().setUnitIncrement(20);
     add(sp, BorderLayout.WEST);
     JToggleButton firstButton = null;
-    
+
     HomeContractorPanel hcp = new HomeContractorPanel();
     _cardPanel.add(hcp, "Home");
     JToggleButton hbutton = createContractorButton("Home");
     firstButton = hbutton;
     bg.add(hbutton);
     box.add(hbutton);
-    
+
     for (Contractor contractor : _contractors) {
       if (contractor.isActive()) {
         ContractorPanel cp = new ContractorPanel(contractor.getName());
@@ -183,12 +182,16 @@ public class ContractorsPanel extends JPanel {
           boolean isDone = new Service().isDone(request);
           if (isDone) {
             weredone = true;
-            _progressBar.setVisible(false);
-            _progressBar.setMaximum(old);
-            _progressBar.setValue(0);
+            try {
+              Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
             rescanAll();
           }
         } while (!weredone && n < 200); // 2 minutes
+        _progressBar.setVisible(false);
+        _progressBar.setMaximum(old);
+        _progressBar.setValue(0);
       }
     });
     csThread.start();
