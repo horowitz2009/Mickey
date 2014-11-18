@@ -76,6 +76,7 @@ public class ScreenScanner {
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
   private ImageData            _promoX                        = null;
+  private ImageData            _share                         = null;
 
   private ImageData            _trainManagement               = null;
   private ImageData            _materials                     = null;
@@ -241,6 +242,9 @@ public class ScreenScanner {
 
     area = new Rectangle(xx + 298, yy + 27, 111, 40);
     _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
+
+    area = new Rectangle(xx, _br.y - 250, 760, 250);
+    _share = new ImageData("share.bmp", area, _comparator, 23, 6);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -619,6 +623,10 @@ public class ScreenScanner {
 
   public ImageData getPromoX() {
     return _promoX;
+  }
+
+  public ImageData getShare() {
+    return _share;
   }
 
   public ImageData getShopX() {

@@ -103,22 +103,15 @@
       },
       {
         "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 524000,
-        "_currentAmount": 599718,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
         "_material": "Wires",
-        "_neededAmount": 1516000,
+        "_neededAmount": 1040000,
         "_currentAmount": 743551,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Silicon",
-        "_neededAmount": 1492000,
+        "_neededAmount": 1040000,
         "_currentAmount": 2689372,
         "_initialAmount": 0
       }
@@ -127,6 +120,7 @@
     "_contractor": "Home",
     "_description": "MIX",
     "_selected": true,
+    "_done": false,
     "_any": false
   }
 }

@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.815";
+  private static final String APP_TITLE           = "v0.816";
 
   private boolean             _devMode            = false;
 
@@ -1423,8 +1423,8 @@ public final class MainFrame extends JFrame {
               fstart = start = System.currentTimeMillis();
             }
 
-            // check again has refresh gone well after 3 minutes
-            if (_lastTime != null && now - _lastTime >= 3 * 60 * 1000) {
+            // check again has refresh gone well after 4 minutes
+            if (_lastTime != null && now - _lastTime >= 4 * 60 * 1000) {
               handleRarePopups();
               _lastTime = System.currentTimeMillis();
             }
@@ -1886,6 +1886,7 @@ public final class MainFrame extends JFrame {
     checkSession();
 
     // NEXT LEVEL
+    found = scanAndClick(_scanner.getShare(), null);
     found = scanAndClick(_scanner.getPromoX(), null);
 
     // SHOP
@@ -2046,7 +2047,7 @@ public final class MainFrame extends JFrame {
 
       p = detectPointerDown();
       if (p != null) {
-        checkDangerousZones(p);
+        boolean danger = checkDangerousZones(p);
         // Pixel p2 = detectPointerDown();
         // if (p2 != null)
         // p = p2;
@@ -2055,22 +2056,24 @@ public final class MainFrame extends JFrame {
 
         int[] rails = _scanner.getRailsHome();
 
-        // fast click all rails + street1 mainly for mail express trains
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-        clickCareful(p, false, false);
-
-        for (int i = rails.length - 1; i >= 0; i--) {
-          p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        if (!danger) {
+          // fast click all rails + street1 mainly for mail express trains
+          p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
           clickCareful(p, false, false);
-        }
-        for (int i = 0; i < rails.length; i++) {
-          p.y = _scanner.getBottomRight().y - rails[i] - 4;
-          clickCareful(p, false, false);
-        }
 
+          for (int i = rails.length - 1; i >= 0; i--) {
+            p.y = _scanner.getBottomRight().y - rails[i] - 4;
+            clickCareful(p, false, false);
+          }
+          for (int i = 0; i < rails.length; i++) {
+            p.y = _scanner.getBottomRight().y - rails[i] - 4;
+            clickCareful(p, false, false);
+          } 
+        }
+        
         // Try mail again. This time with adjusting
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
-        clickCareful(p, false, true);
+        clickCareful(p, danger, true);
 
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
@@ -2622,7 +2625,7 @@ public final class MainFrame extends JFrame {
     LOGGER.info("done");
   }
 
-  private void checkDangerousZones(Pixel p) throws RobotInterruptedException, DragFailureException {
+  private boolean checkDangerousZones(Pixel p) throws RobotInterruptedException, DragFailureException {
 
     // find which zone first
     Rectangle zone = null;
@@ -2639,7 +2642,7 @@ public final class MainFrame extends JFrame {
       int diff;
       int y = _scanner.getBottomRight().y - 160;
       int x1;
-      if (i < _scanner.getDangerousZones().length - 1) {
+      if (i >= _scanner.getDangerousZones().length - 1) {
         // first n-1 zones move left, the rest move right
         diff = p.x - zone.x + 18;
         x1 = _scanner.getBottomRight().x - 50;
@@ -2657,35 +2660,43 @@ public final class MainFrame extends JFrame {
       p.x = p.x - diff;
       LOGGER.finest("[2] p.x = " + p.x);
 
-      Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
-      Pixel p2 = _scanner.getPointerDown().findImage(miniArea);
-      if (p2 != null)
-        p.x = p2.x;
-      LOGGER.finest("[3] p.x = " + p.x);
-
-      if (!_lastDiffs.offer(diff)) {
-        // queue full
-        Iterator<Integer> it = _lastDiffs.iterator();
-        boolean same = true;
-        while (it.hasNext()) {
-          Integer d = (Integer) it.next();
-          if (Math.abs(d - diff) > 2) {
-            same = false;
-          }
-        }
-        if (same) {
-          // we have huge problem
-          // TODO throw new DragFailureException();
-
-          _lastDiffs.poll();// poll one
-          _lastDiffs.offer(diff);// add one
-
+      //Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
+      Pixel p2 = _scanner.getPointerDown().findImage(_scanner.getTrainArea());
+      
+      if (p2 != null) {
+        if (Math.abs(p2.x - p.x) <= 2) {
+          //it is in the zone and can't be avoided
+          return true;
         } else {
-          _lastDiffs.poll();// poll one
-          _lastDiffs.offer(diff);// add one
+          p.x = p2.x;
         }
       }
+      LOGGER.finest("[3] p.x = " + p.x);
+
+//      if (!_lastDiffs.offer(diff)) {
+//        // queue full
+//        Iterator<Integer> it = _lastDiffs.iterator();
+//        boolean same = true;
+//        while (it.hasNext()) {
+//          Integer d = (Integer) it.next();
+//          if (Math.abs(d - diff) > 2) {
+//            same = false;
+//          }
+//        }
+//        if (same) {
+//          // we have huge problem
+//          // TODO throw new DragFailureException();
+//
+//          _lastDiffs.poll();// poll one
+//          _lastDiffs.offer(diff);// add one
+//
+//        } else {
+//          _lastDiffs.poll();// poll one
+//          _lastDiffs.offer(diff);// add one
+//        }
+//      }
     }
+    return false;
   }
 
   private void moveIfNecessary() throws RobotInterruptedException {

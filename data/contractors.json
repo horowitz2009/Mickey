@@ -1469,8 +1469,8 @@
         "_amount": 0
       }
     ],
-    "_currentMissionNumber": 1,
-    "_endMissionNumber": 60,
+    "_currentMissionNumber": 0,
+    "_endMissionNumber": 0,
     "_accepts": "SDEM"
   },
   {

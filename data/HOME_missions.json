@@ -27,6 +27,7 @@
     "_contractor": "Home",
     "_description": "International slot #13",
     "_selected": true,
+    "_done": false,
     "_any": false
   },
   {
@@ -57,6 +58,7 @@
     "_contractor": "Home",
     "_description": "International slot #14",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -87,6 +89,7 @@
     "_contractor": "Home",
     "_description": "International slot #15",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -116,7 +119,8 @@
     "_number": 104,
     "_contractor": "Home",
     "_description": "Second Maglev Rail",
-    "_selected": true,
+    "_selected": false,
+    "_done": true,
     "_any": false
   },
   {
@@ -147,6 +151,7 @@
     "_contractor": "Home",
     "_description": "Local slot #21",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -177,6 +182,7 @@
     "_contractor": "Home",
     "_description": "Local slot #23",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -207,6 +213,7 @@
     "_contractor": "Home",
     "_description": "Local slot #24",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -237,6 +244,7 @@
     "_contractor": "Home",
     "_description": "Local slot #25",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -267,6 +275,7 @@
     "_contractor": "Home",
     "_description": "Local slot #26",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -297,6 +306,7 @@
     "_contractor": "Home",
     "_description": "Local slot #27",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -320,6 +330,7 @@
     "_contractor": "Home",
     "_description": "Local slot #28",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -343,6 +354,7 @@
     "_contractor": "Home",
     "_description": "Local slot #29",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -373,6 +385,7 @@
     "_contractor": "Home",
     "_description": "Local slot #30",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -403,6 +416,7 @@
     "_contractor": "Home",
     "_description": "Local slot #31",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -433,6 +447,7 @@
     "_contractor": "Home",
     "_description": "International slot #16",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -463,6 +478,7 @@
     "_contractor": "Home",
     "_description": "International slot #17",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -493,6 +509,7 @@
     "_contractor": "Home",
     "_description": "International slot #18",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -523,6 +540,7 @@
     "_contractor": "Home",
     "_description": "8 destinations",
     "_selected": false,
+    "_done": false,
     "_any": false
   },
   {
@@ -553,6 +571,7 @@
     "_contractor": "Home",
     "_description": "Second Station",
     "_selected": true,
+    "_done": false,
     "_any": false
   },
   {
@@ -583,6 +602,7 @@
     "_contractor": "Home",
     "_description": "Third Station",
     "_selected": false,
+    "_done": false,
     "_any": false
   }
 ]

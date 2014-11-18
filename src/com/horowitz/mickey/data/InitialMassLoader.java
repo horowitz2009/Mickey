@@ -17,9 +17,12 @@ public class InitialMassLoader {
     System.out.println("generating contractors and missions");
     // generateContractors();
     // generateMissions();
-    loadHomeMissions(100);
-    addMoreHomeMissions(200);
-    addMoreHomeMissions2(300);
+    
+    //loadHomeMissions(100);
+    //addMoreHomeMissions(200);
+    //addMoreHomeMissions2(300);
+    
+    addNewContractor("Ethan");
     System.out.println("Done.");
   }
 
@@ -740,6 +743,20 @@ public class InitialMassLoader {
     }
 
   }
+  
+  private static void addNewContractor(String contractorName) {
+    try {
+      Contractor contractor = new Contractor(contractorName, Material.createArray());
+      new DataStore().saveContractor(contractor);
+      Mission[] missions = readMissions(contractorName);
+      new DataStore().writeMissions(contractorName, missions);
+    } catch (IOException e) {
+      e.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
 
   private static void generateMissions() {
     String[] contractors = new String[] { "Bobby", "Mahatma", "George", "Otto", "Sam", "Alan", "Wolfgang", "Mizuki", "Lucy", "Giovanni", };
@@ -761,6 +778,7 @@ public class InitialMassLoader {
 
     mat.add("xp");
     mat.add("money");
+    mat.add("gold");
     mat.add("loco");
     mat.add("wagon");
     mat.add("steam");
@@ -831,6 +849,7 @@ public class InitialMassLoader {
         }
         missions.add(m);
       } catch (Throwable t) {
+        t.printStackTrace();
         throw new Exception("ERROR reading line: " + contractor + " " + line);
       }
     }
