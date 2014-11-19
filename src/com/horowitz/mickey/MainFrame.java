@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.816";
+  private static final String APP_TITLE           = "v0.818a";
 
   private boolean             _devMode            = false;
 
@@ -552,7 +552,7 @@ public final class MainFrame extends JFrame {
           @Override
           public void run() {
             try {
-              refresh();
+              refresh(false);
               runMagic();
             } catch (RobotInterruptedException e) {
               LOGGER.log(Level.SEVERE, "Interrupted by user6", e);
@@ -1038,7 +1038,7 @@ public final class MainFrame extends JFrame {
 
       stopMagic();
       try {
-        refresh();
+        refresh(true);
         runMagic();
       } catch (RobotInterruptedException e) {
         e.printStackTrace();
@@ -1209,7 +1209,7 @@ public final class MainFrame extends JFrame {
 
   }
 
-  private void refresh() throws RobotInterruptedException {
+  private void refresh(boolean bookmark) throws RobotInterruptedException {
     _lastTime = System.currentTimeMillis();
     try {
       String dateStr = DateUtils.formatDateForFile2(System.currentTimeMillis());
@@ -1225,20 +1225,28 @@ public final class MainFrame extends JFrame {
       e1.printStackTrace();
     }
     LOGGER.info("Time to refresh...");
-    Pixel p;
-    if (_scanner.isOptimized()) {
-      p = _scanner.getBottomRight();
-      p.y = _scanner.getTopLeft().y + 100;
-      p.x = _scanner.getBottomRight().x + 4;
-    } else {
-      p = new Pixel(0, 110);
-    }
-    _mouse.click(p.x, p.y);
-
     try {
-      Robot robot = new Robot();
-      robot.keyPress(KeyEvent.VK_F5);
-      robot.keyRelease(KeyEvent.VK_F5);
+      Pixel p;
+      if (!bookmark) {
+        if (_scanner.isOptimized()) {
+          p = _scanner.getBottomRight();
+          p.y = _scanner.getTopLeft().y + 100;
+          p.x = _scanner.getBottomRight().x + 4;
+        } else {
+          p = new Pixel(0, 110);
+        }
+        _mouse.click(p.x, p.y);
+        Robot robot = new Robot();
+        robot.keyPress(KeyEvent.VK_F5);
+        robot.keyRelease(KeyEvent.VK_F5);
+      } else {
+        try {
+          p = _scanner.generateImageData("tsFavicon.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
+          _mouse.click(p.x, p.y);
+        } catch (IOException e) {
+        }
+      }
+
       LOGGER.fine("Wait 10 seconds...");
       _mouse.delay(10000);
       boolean done = false;
@@ -1408,7 +1416,7 @@ public final class MainFrame extends JFrame {
 
             if (now - start >= timeForRefresh) {
               LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
-              refresh();
+              refresh(false);
               _stats.registerTimeOutRefresh();
               updateLabels();
               fstart = start = System.currentTimeMillis();
@@ -1416,7 +1424,7 @@ public final class MainFrame extends JFrame {
 
             if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
               LOGGER.info("Mandatory refresh");
-              refresh();
+              refresh(true);
               _stats.registerMandatoryRefresh();
               updateLabels();
 
@@ -1474,7 +1482,7 @@ public final class MainFrame extends JFrame {
               _stats.registerStuckRefresh();
               updateLabels();
               Thread.sleep(2000);
-              refresh();
+              refresh(true);
               runMagic();
             } catch (RobotInterruptedException e) {
             } catch (InterruptedException e) {
@@ -1500,7 +1508,7 @@ public final class MainFrame extends JFrame {
     Pixel tl = _scanner.getTopLeft();
     int w = (_scanner.getGameWidth() - 214) / 2;
     Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
-    //Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
+    // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
     try {
       int howMuch = 4;
       if (_lastImageList.size() < howMuch) {
@@ -1904,7 +1912,7 @@ public final class MainFrame extends JFrame {
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
-      refresh();
+      refresh(true);
       _stats.registerRefresh();
       updateLabels();
     }
@@ -1944,7 +1952,7 @@ public final class MainFrame extends JFrame {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-          refresh();
+          refresh(true);
         } else {
           throw new SessionTimeOutException();
         }
@@ -2068,9 +2076,9 @@ public final class MainFrame extends JFrame {
           for (int i = 0; i < rails.length; i++) {
             p.y = _scanner.getBottomRight().y - rails[i] - 4;
             clickCareful(p, false, false);
-          } 
+          }
         }
-        
+
         // Try mail again. This time with adjusting
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
         clickCareful(p, danger, true);
@@ -2127,15 +2135,34 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Scanning for letters...");
     Pixel p = detectLetter();
     if (p != null) {
-      LOGGER.info("found letter: " + p);
       _mouse.click(p.x, p.y - 6);
       _mouse.click(p.x, p.y - 22);
       _mouse.checkUserMovement();
       _mouse.click(p.x, p.y - 17);
       _mouse.click(p.x, p.y - 13);
-      _mouse.mouseMove(_scanner.getBottomRight());
       _mouse.checkUserMovement();
+      LOGGER.info("Whites: " + _stats.getWhiteLetter() + "   Reds: " + _stats.getRedLetter() + "   Browns: " + _stats.getBrownLetter());
+      //LOGGER.info("found letter: " + p);
+      _mouse.mouseMove(_scanner.getBottomRight());
     }
+  }
+
+  private void huntLettersOld() throws RobotInterruptedException {
+    LOGGER.info("Scanning for letters...");
+    Pixel[] ps = detectLetters();
+    int i = 0;
+    int off = 4;
+    for (Pixel p : ps) {
+      LOGGER.info("found letter: " + p);
+      _mouse.click(p.x, p.y - 6 - (i * off));
+      _mouse.click(p.x, p.y - 22 - (i * off));
+      _mouse.checkUserMovement();
+      _mouse.click(p.x, p.y - 17 - (i * off));
+      _mouse.click(p.x, p.y - 13 - (i * off));
+      _mouse.checkUserMovement();
+      i++;
+    }
+    _mouse.mouseMove(_scanner.getBottomRight());
   }
 
   private boolean isRunning(String threadName) {
@@ -2320,7 +2347,7 @@ public final class MainFrame extends JFrame {
     LOGGER.severe("Drag failure...");
     LOGGER.severe("NO IDEA WHAT TO DO!!!");
     try {
-      refresh();
+      refresh(true);
       _stats.registerRefresh();
       updateLabels();
 
@@ -2548,7 +2575,15 @@ public final class MainFrame extends JFrame {
       // handleRarePopups();
       // handlePopups();
 
-      captureContractors(true);
+      // captureContractors(true);
+
+      // Pixel p = _scanner.generateImageData("trainStationBookmarkFirefox.bmp", 23, 8).findImage(new Rectangle(0, 0, 400, 200));
+      Pixel p = _scanner.generateImageData("tsFavicon.bmp", 8, 7).findImage(new Rectangle(0, 0, 400, 200));
+      if (p != null) {
+        _mouse.mouseMove(p);
+        _mouse.click();
+        _mouse.delay(5000);
+      }
 
       // fixTheGame();
     } catch (Throwable e) {
@@ -2660,41 +2695,21 @@ public final class MainFrame extends JFrame {
       p.x = p.x - diff;
       LOGGER.finest("[2] p.x = " + p.x);
 
-      //Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
+      // Rectangle miniArea = new Rectangle(p.x - 44, p.y - 90, 88, 180);
       Pixel p2 = _scanner.getPointerDown().findImage(_scanner.getTrainArea());
-      
+
       if (p2 != null) {
-        if (Math.abs(p2.x - p.x) <= 2) {
-          //it is in the zone and can't be avoided
-          return true;
-        } else {
-          p.x = p2.x;
+        found = false;
+        for (i = 0; i < _scanner.getDangerousZones().length && !found; ++i) {
+          zone = _scanner.getDangerousZones()[i];
+          if (p.x >= zone.x && p.x <= zone.x + zone.width) {
+            found = true;
+          }
         }
+        p.x = p2.x;
+        return found;
       }
       LOGGER.finest("[3] p.x = " + p.x);
-
-//      if (!_lastDiffs.offer(diff)) {
-//        // queue full
-//        Iterator<Integer> it = _lastDiffs.iterator();
-//        boolean same = true;
-//        while (it.hasNext()) {
-//          Integer d = (Integer) it.next();
-//          if (Math.abs(d - diff) > 2) {
-//            same = false;
-//          }
-//        }
-//        if (same) {
-//          // we have huge problem
-//          // TODO throw new DragFailureException();
-//
-//          _lastDiffs.poll();// poll one
-//          _lastDiffs.offer(diff);// add one
-//
-//        } else {
-//          _lastDiffs.poll();// poll one
-//          _lastDiffs.offer(diff);// add one
-//        }
-//      }
     }
     return false;
   }
@@ -2707,7 +2722,7 @@ public final class MainFrame extends JFrame {
       // _mouse.mouseMove(p);
       int x1 = _scanner.getTopLeft().x + 5;
       int y = _scanner.getBottomRight().y - Locations.RAIL1;
-      _mouse.drag(x1, y, x1 + 640, y);
+      _mouse.drag(x1, y, x1 + 320, y);
       // _mouse.delay(500);
     } else {
       p = _scanner.getPointerRight().findImage();
@@ -2716,7 +2731,7 @@ public final class MainFrame extends JFrame {
         // _mouse.mouseMove(p);
         int x1 = _scanner.getBottomRight().x - 5;
         int y = _scanner.getBottomRight().y - Locations.RAIL1;
-        _mouse.drag(x1, y, x1 - 640, y);
+        _mouse.drag(x1, y, x1 - 320, y);
         // _mouse.delay(500);
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
@@ -2725,7 +2740,7 @@ public final class MainFrame extends JFrame {
         if (p != null) {
           int x1 = _scanner.getBottomRight().x - 5;
           int y = _scanner.getBottomRight().y - Locations.RAIL1;
-          _mouse.drag(x1, y, x1 - 240, y);
+          _mouse.drag(x1, y, x1 - 140, y);
         }
         if (p == null) {
           pointerDown = _scanner.getPointerDownR();
@@ -2734,7 +2749,7 @@ public final class MainFrame extends JFrame {
           if (p != null) {
             int x1 = _scanner.getTopLeft().x + 5;
             int y = _scanner.getBottomRight().y - Locations.RAIL1;
-            _mouse.drag(x1, y, x1 + 240, y);
+            _mouse.drag(x1, y, x1 + 140, y);
           }
         }
       }
@@ -2749,48 +2764,81 @@ public final class MainFrame extends JFrame {
     return p;
   }
 
-  private Pixel detectLetter() throws RobotInterruptedException {
-    ImageData red = _scanner._letterRed;
-    Pixel p = red.findImage(_scanner.getLetterArea());
-    if (p == null) {
-      _mouse.checkUserMovement();
-      ImageData white = _scanner._letterWhite;
-      p = white.findImage(_scanner.getLetterArea());
-      if (p == null) {
-        _mouse.checkUserMovement();
-        ImageData brown = _scanner._letterBrown;
-        p = brown.findImage(_scanner.getLetterArea());
-        if (p != null)
-          LOGGER.info("brown1");
-      } else {
-        LOGGER.info("white1");
-      }
-    } else {
-      LOGGER.info("red1");
+  private Pixel[] detectLetters() throws RobotInterruptedException {
+    //
+    // ImageData red = _scanner._letterRed;
+    // Pixel p = red.findImage(_scanner.getLetterArea());
+    // if (p == null) {
+    // _mouse.checkUserMovement();
+    // ImageData white = _scanner._letterWhite;
+    // p = white.findImage(_scanner.getLetterArea());
+    // if (p == null) {
+    // _mouse.checkUserMovement();
+    // ImageData brown = _scanner._letterBrown;
+    // p = brown.findImage(_scanner.getLetterArea());
+    // if (p != null)
+    // LOGGER.info("brown1");
+    // } else {
+    // LOGGER.info("white1");
+    // }
+    // } else {
+    // LOGGER.info("red1");
+    // }
+    // _mouse.checkUserMovement();
+    // if (p == null) {
+
+    List<Pixel> res = new ArrayList<>();
+    ImageData white = _scanner._letterWhite2;
+    Pixel p = white.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      res.add(p);
+      LOGGER.info("white2");
     }
     _mouse.checkUserMovement();
-    if (p == null) {
-      red = _scanner._letterRed2;
-      p = red.findImage(_scanner.getLetterArea());
-      if (p == null) {
-        _mouse.checkUserMovement();
-        ImageData white = _scanner._letterWhite2;
-        p = white.findImage(_scanner.getLetterArea());
-        if (p == null) {
-          _mouse.checkUserMovement();
-          ImageData brown = _scanner._letterBrown2;
-          p = brown.findImage(_scanner.getLetterArea());
-          if (p != null)
-            LOGGER.info("brown2");
-        } else {
-          LOGGER.info("white2");
-        }
-      } else {
-        LOGGER.info("red2");
-      }
-    }
 
-    return p;
+    ImageData red = _scanner._letterRed2;
+    p = red.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      res.add(p);
+      LOGGER.info("red2");
+    }
+    _mouse.checkUserMovement();
+
+    ImageData brown = _scanner._letterBrown2;
+    p = brown.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      res.add(p);
+      LOGGER.info("brown2");
+    }
+    // }
+
+    return res.toArray(new Pixel[0]);
+  }
+
+  private Pixel detectLetter() throws RobotInterruptedException {
+    ImageData white = _scanner._letterWhite2;
+    Pixel p = white.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      _stats.registerWhiteLetter();
+      return p;
+    }
+    _mouse.checkUserMovement();
+
+    ImageData red = _scanner._letterRed2;
+    p = red.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      _stats.registerRedLetter();
+      return p;
+    }
+    _mouse.checkUserMovement();
+
+    ImageData brown = _scanner._letterBrown2;
+    p = brown.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      _stats.registerBrownLetter();
+      return p;
+    }
+    return null;
   }
 
   private Pixel findPointerDown(Rectangle area, int railNumber) throws RobotInterruptedException {

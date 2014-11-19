@@ -640,5 +640,13 @@ public class ScreenScanner {
   public ImageData getMaterials() {
     return _materials;
   }
+  
+  public ImageData generateImageData(String imageFilename) throws IOException {
+    return new ImageData(imageFilename, null, _comparator, 0, 0);
+  }
+  
+  public ImageData generateImageData(String imageFilename, int xOff, int yOff) throws IOException {
+    return new ImageData(imageFilename, null, _comparator, xOff, yOff);
+  }
 
 }

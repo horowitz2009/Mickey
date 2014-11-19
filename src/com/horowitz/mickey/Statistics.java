@@ -18,6 +18,10 @@ public class Statistics {
   private long _lastRefreshTime;
   private long _lastTrainTime;
 
+  private long _brownLetter;
+  private long _redLetter;
+  private long _whiteLetter;
+
   public Statistics() {
     super();
     reset();
@@ -31,6 +35,7 @@ public class Statistics {
     // _lastActivityTime +=1 * 30 * 60 * 1000;
     _lastTrainTime = _lastFreightTime = _lastExpressTime = _lastRefreshTime = _lastActivityTime;
     _refreshMandatoryCount = _refreshStuckCount = _refreshTimeoutCount = _refreshCount;
+    _brownLetter = _redLetter = _whiteLetter = 0;
   }
 
   public void registerExpress() {
@@ -54,6 +59,30 @@ public class Statistics {
   public void registerTimeOutRefresh() {
     _refreshTimeoutCount++;
     registerRefresh();
+  }
+
+  public void registerBrownLetter() {
+    _brownLetter++;
+  }
+
+  public long getBrownLetter() {
+    return _brownLetter;
+  }
+
+  public long getRedLetter() {
+    return _redLetter;
+  }
+
+  public long getWhiteLetter() {
+    return _whiteLetter;
+  }
+
+  public void registerRedLetter() {
+    _redLetter++;
+  }
+
+  public void registerWhiteLetter() {
+    _whiteLetter++;
   }
 
   public void registerMandatoryRefresh() {
