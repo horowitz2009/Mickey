@@ -3,35 +3,6 @@
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 4050,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 11100,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 3600,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 101,
-    "_contractor": "Otto",
-	"_description": "First Extra mission",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
         "_material": "Wood",
         "_neededAmount": 60000,
         "_currentAmount": 0,
@@ -54,6 +25,10 @@
     ],
     "_number": 102,
     "_contractor": "Otto",
+    "_description": "Circus #2",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -82,6 +57,10 @@
     ],
     "_number": 103,
     "_contractor": "Otto",
+    "_description": "Circus #3",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -110,6 +89,10 @@
     ],
     "_number": 104,
     "_contractor": "Otto",
+    "_description": "Circus #4",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -138,6 +121,10 @@
     ],
     "_number": 105,
     "_contractor": "Otto",
+    "_description": "Circus #5",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -166,6 +153,10 @@
     ],
     "_number": 106,
     "_contractor": "Otto",
+    "_description": "Circus #6",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -194,6 +185,10 @@
     ],
     "_number": 107,
     "_contractor": "Otto",
+    "_description": "Circus #7",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -222,6 +217,10 @@
     ],
     "_number": 108,
     "_contractor": "Otto",
+    "_description": "Circus #8",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -250,6 +249,10 @@
     ],
     "_number": 109,
     "_contractor": "Otto",
+    "_description": "Circus #9",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -278,6 +281,10 @@
     ],
     "_number": 110,
     "_contractor": "Otto",
+    "_description": "Circus #10",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -306,6 +313,10 @@
     ],
     "_number": 111,
     "_contractor": "Otto",
+    "_description": "Circus #11",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -334,6 +345,10 @@
     ],
     "_number": 112,
     "_contractor": "Otto",
+    "_description": "Circus #12",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -362,6 +377,10 @@
     ],
     "_number": 113,
     "_contractor": "Otto",
+    "_description": "Circus #13",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -390,6 +409,10 @@
     ],
     "_number": 114,
     "_contractor": "Otto",
+    "_description": "Circus #14",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -418,6 +441,10 @@
     ],
     "_number": 115,
     "_contractor": "Otto",
+    "_description": "Circus #15",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -446,6 +473,10 @@
     ],
     "_number": 116,
     "_contractor": "Otto",
+    "_description": "Circus #16",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -474,6 +505,10 @@
     ],
     "_number": 117,
     "_contractor": "Otto",
+    "_description": "Circus #17",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -502,6 +537,10 @@
     ],
     "_number": 118,
     "_contractor": "Otto",
+    "_description": "Circus #18",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -530,6 +569,10 @@
     ],
     "_number": 119,
     "_contractor": "Otto",
+    "_description": "Circus #19",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -558,343 +601,10 @@
     ],
     "_number": 120,
     "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 121,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 122,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 123,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 124,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 125,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 126,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 127,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 128,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 129,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 130,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 131,
-    "_contractor": "Otto",
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 60000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 132,
-    "_contractor": "Otto",
+    "_description": "Circus #20",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   }
-
 ]

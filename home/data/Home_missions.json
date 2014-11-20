@@ -3,270 +3,32 @@
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Gold",
-        "_neededAmount": 8000000,
+        "_material": "U-235",
+        "_neededAmount": 160000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Wires",
-        "_neededAmount": 1040000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Silicon",
-        "_neededAmount": 1040000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 101,
-    "_contractor": "Home",
-    "_description": "International slot #13",
-    "_selected": true,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 1116000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "U-235",
-        "_neededAmount": 1044000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Carbon",
-        "_neededAmount": 1044000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 102,
-    "_contractor": "Home",
-    "_description": "International slot #14",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 1120000,
+        "_neededAmount": 104000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Plastics",
-        "_neededAmount": 1120000,
+        "_neededAmount": 104000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 103,
+    "_number": 201,
     "_contractor": "Home",
-    "_description": "International slot #15",
+    "_description": "Storage 800-900",
     "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 524000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Wires",
-        "_neededAmount": 476000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Silicon",
-        "_neededAmount": 452000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 104,
-    "_contractor": "Home",
-    "_description": "Second Maglev Rail",
-    "_selected": true,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 1800000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 1480000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 880000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 105,
-    "_contractor": "Home",
-    "_description": "Local slot #21",
-    "_selected": true,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 1800000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 1480000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 880000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 106,
-    "_contractor": "Home",
-    "_description": "Local slot #23",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Wood",
-        "_neededAmount": 1800000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 1480000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Rubber",
-        "_neededAmount": 880000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 107,
-    "_contractor": "Home",
-    "_description": "Local slot #24",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 1400000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Rubber",
-        "_neededAmount": 1400000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 800000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 108,
-    "_contractor": "Home",
-    "_description": "Local slot #25",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 1560000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 1400000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Carbon",
-        "_neededAmount": 1000000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 109,
-    "_contractor": "Home",
-    "_description": "Local slot #26",
-    "_selected": false,
+    "_done": true,
+    "_level": 95,
     "_any": false
   },
   {
@@ -274,255 +36,31 @@
       {
         "_type": "b",
         "_material": "Gold",
-        "_neededAmount": 3960000,
+        "_neededAmount": 1760000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
-      {
-        "_type": "b",
-        "_material": "Fuel",
-        "_neededAmount": 1560000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "U-235",
-        "_neededAmount": 1320000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 110,
-    "_contractor": "Home",
-    "_description": "Local slot #27",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Gold",
-        "_neededAmount": 16000000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 111,
-    "_contractor": "Home",
-    "_description": "Local slot #28",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Gold",
-        "_neededAmount": 15200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 680000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 112,
-    "_contractor": "Home",
-    "_description": "Local slot #29",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Rubber",
-        "_neededAmount": 1160000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Wires",
-        "_neededAmount": 1120000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 113,
-    "_contractor": "Home",
-    "_description": "Local slot #30",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
       {
         "_type": "b",
         "_material": "Wood",
-        "_neededAmount": 1600000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Nails",
-        "_neededAmount": 1600000,
+        "_neededAmount": 160000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Plastics",
-        "_neededAmount": 1240000,
+        "_neededAmount": 120000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
-    "_number": 114,
+    "_number": 202,
     "_contractor": "Home",
-    "_description": "Local slot #31",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "U-235",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Carbon",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 115,
-    "_contractor": "Home",
-    "_description": "International slot #16",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Fuel",
-        "_neededAmount": 1320000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Titanium",
-        "_neededAmount": 1240000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Marble",
-        "_neededAmount": 1320000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 116,
-    "_contractor": "Home",
-    "_description": "International slot #17",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 1360000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 1280000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Rubber",
-        "_neededAmount": 1200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 117,
-    "_contractor": "Home",
-    "_description": "International slot #18",
-    "_selected": false,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 240000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Rubber",
-        "_neededAmount": 200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Carbon",
-        "_neededAmount": 200000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 118,
-    "_contractor": "Home",
-    "_description": "8 destinations",
-    "_selected": false,
+    "_description": "Storage 900-1000",
+    "_selected": true,
+    "_done": false,
+    "_level": 110,
     "_any": false
   },
   {
@@ -553,6 +91,136 @@
     "_contractor": "Home",
     "_description": "Second Station",
     "_selected": false,
+    "_done": true,
+    "_level": 125,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 192000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 184000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 203,
+    "_contractor": "Home",
+    "_description": "Storage 1000-1100",
+    "_selected": false,
+    "_done": false,
+    "_level": 125,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 1800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 880000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 105,
+    "_contractor": "Home",
+    "_description": "Local slot #21",
+    "_selected": false,
+    "_done": true,
+    "_level": 131,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 118,
+    "_contractor": "Home",
+    "_description": "8 destinations",
+    "_selected": false,
+    "_done": true,
+    "_level": 135,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 3200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 204,
+    "_contractor": "Home",
+    "_description": "Storage 1100-1200",
+    "_selected": false,
+    "_done": false,
+    "_level": 140,
     "_any": false
   },
   {
@@ -583,6 +251,1754 @@
     "_contractor": "Home",
     "_description": "Third Station",
     "_selected": false,
+    "_done": false,
+    "_level": 145,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 524000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 476000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 452000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 104,
+    "_contractor": "Home",
+    "_description": "Second Maglev Rail",
+    "_selected": false,
+    "_done": true,
+    "_level": 155,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 880000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 106,
+    "_contractor": "Home",
+    "_description": "Local slot #23",
+    "_selected": false,
+    "_done": true,
+    "_level": 155,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 220000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 205,
+    "_contractor": "Home",
+    "_description": "Storage 1200-1300",
+    "_selected": false,
+    "_done": false,
+    "_level": 155,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 8000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1040000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1040000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 101,
+    "_contractor": "Home",
+    "_description": "International slot #13",
+    "_selected": false,
+    "_done": true,
+    "_level": 156,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 880000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 107,
+    "_contractor": "Home",
+    "_description": "Local slot #24",
+    "_selected": false,
+    "_done": true,
+    "_level": 159,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1116000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1044000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1044000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 102,
+    "_contractor": "Home",
+    "_description": "International slot #14",
+    "_selected": false,
+    "_done": true,
+    "_level": 170,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 3600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 206,
+    "_contractor": "Home",
+    "_description": "Storage 1300-1400",
+    "_selected": false,
+    "_done": false,
+    "_level": 170,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 108,
+    "_contractor": "Home",
+    "_description": "Local slot #25",
+    "_selected": true,
+    "_done": false,
+    "_level": 173,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 103,
+    "_contractor": "Home",
+    "_description": "International slot #15",
+    "_selected": false,
+    "_done": false,
+    "_level": 184,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 300000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 207,
+    "_contractor": "Home",
+    "_description": "Storage 1400-1500",
+    "_selected": false,
+    "_done": false,
+    "_level": 185,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1560000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 109,
+    "_contractor": "Home",
+    "_description": "Local slot #26",
+    "_selected": false,
+    "_done": false,
+    "_level": 187,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 304000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 208,
+    "_contractor": "Home",
+    "_description": "Storage 1500-1600",
+    "_selected": false,
+    "_done": false,
+    "_level": 200,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 3960000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1560000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 110,
+    "_contractor": "Home",
+    "_description": "Local slot #27",
+    "_selected": false,
+    "_done": false,
+    "_level": 201,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 16000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 111,
+    "_contractor": "Home",
+    "_description": "Local slot #28",
+    "_selected": false,
+    "_done": false,
+    "_level": 215,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 384000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 384000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 209,
+    "_contractor": "Home",
+    "_description": "Storage 1600-1700",
+    "_selected": false,
+    "_done": false,
+    "_level": 215,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 115,
+    "_contractor": "Home",
+    "_description": "International slot #16",
+    "_selected": false,
+    "_done": false,
+    "_level": 222,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 15200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 680000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 112,
+    "_contractor": "Home",
+    "_description": "Local slot #29",
+    "_selected": false,
+    "_done": false,
+    "_level": 229,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 1320000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 116,
+    "_contractor": "Home",
+    "_description": "International slot #17",
+    "_selected": false,
+    "_done": false,
+    "_level": 237,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1160000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 113,
+    "_contractor": "Home",
+    "_description": "Local slot #30",
+    "_selected": false,
+    "_done": false,
+    "_level": 243,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 1360000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1200000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 117,
+    "_contractor": "Home",
+    "_description": "International slot #18",
+    "_selected": false,
+    "_done": false,
+    "_level": 252,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 114,
+    "_contractor": "Home",
+    "_description": "Local slot #31",
+    "_selected": false,
+    "_done": false,
+    "_level": 257,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1360000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1360000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1360000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 322,
+    "_contractor": "Home",
+    "_description": "International slot #19",
+    "_selected": false,
+    "_done": false,
+    "_level": 267,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1536000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1560000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1544000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 324,
+    "_contractor": "Home",
+    "_description": "International slot #21",
+    "_selected": false,
+    "_done": false,
+    "_level": 268,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1080000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1080000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1040000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 301,
+    "_contractor": "Home",
+    "_description": "Local slot #32",
+    "_selected": false,
+    "_done": false,
+    "_level": 271,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1440000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1440000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1440000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 323,
+    "_contractor": "Home",
+    "_description": "International slot #20",
+    "_selected": false,
+    "_done": false,
+    "_level": 282,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1704000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 1680000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 325,
+    "_contractor": "Home",
+    "_description": "International slot #22",
+    "_selected": false,
+    "_done": false,
+    "_level": 282,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1120000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 1040000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 302,
+    "_contractor": "Home",
+    "_description": "Local slot #33",
+    "_selected": false,
+    "_done": false,
+    "_level": 285,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 1824000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1768000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1920000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 326,
+    "_contractor": "Home",
+    "_description": "International slot #23",
+    "_selected": false,
+    "_done": false,
+    "_level": 296,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 960000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 960000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 960000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 303,
+    "_contractor": "Home",
+    "_description": "Local slot #34",
+    "_selected": false,
+    "_done": false,
+    "_level": 299,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 1915000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1920000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 327,
+    "_contractor": "Home",
+    "_description": "International slot #24",
+    "_selected": false,
+    "_done": false,
+    "_level": 310,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 304,
+    "_contractor": "Home",
+    "_description": "Local slot #35",
+    "_selected": false,
+    "_done": false,
+    "_level": 313,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 2010400,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 2040000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1984000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 328,
+    "_contractor": "Home",
+    "_description": "International slot #25",
+    "_selected": false,
+    "_done": false,
+    "_level": 324,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 32000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 305,
+    "_contractor": "Home",
+    "_description": "Local slot #36",
+    "_selected": false,
+    "_done": false,
+    "_level": 327,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 2112000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 2080000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 2144000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 329,
+    "_contractor": "Home",
+    "_description": "International slot #26",
+    "_selected": false,
+    "_done": false,
+    "_level": 338,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 306,
+    "_contractor": "Home",
+    "_description": "Local slot #37",
+    "_selected": false,
+    "_done": false,
+    "_level": 341,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 2213600,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 2213600,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 2213600,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 330,
+    "_contractor": "Home",
+    "_description": "International slot #27",
+    "_selected": false,
+    "_done": false,
+    "_level": 352,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1520000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1440000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 307,
+    "_contractor": "Home",
+    "_description": "Local slot #38",
+    "_selected": false,
+    "_done": false,
+    "_level": 355,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 2315200,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 2315200,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 2315200,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 331,
+    "_contractor": "Home",
+    "_description": "International slot #28",
+    "_selected": false,
+    "_done": false,
+    "_level": 366,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 308,
+    "_contractor": "Home",
+    "_description": "Local slot #39",
+    "_selected": false,
+    "_done": false,
+    "_level": 369,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 309,
+    "_contractor": "Home",
+    "_description": "Local slot #40",
+    "_selected": false,
+    "_done": false,
+    "_level": 383,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 310,
+    "_contractor": "Home",
+    "_description": "Local slot #41",
+    "_selected": false,
+    "_done": false,
+    "_level": 397,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 311,
+    "_contractor": "Home",
+    "_description": "Local slot #42",
+    "_selected": false,
+    "_done": false,
+    "_level": 411,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 2416800,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 2416800,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 2416800,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 332,
+    "_contractor": "Home",
+    "_description": "International slot #29",
+    "_selected": false,
+    "_done": false,
+    "_level": 417,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 312,
+    "_contractor": "Home",
+    "_description": "Local slot #43",
+    "_selected": false,
+    "_done": false,
+    "_level": 425,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 2518400,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 2518400,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 2518400,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 333,
+    "_contractor": "Home",
+    "_description": "International slot #30",
+    "_selected": false,
+    "_done": false,
+    "_level": 432,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 313,
+    "_contractor": "Home",
+    "_description": "Local slot #44",
+    "_selected": false,
+    "_done": false,
+    "_level": 439,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 2620000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 2620000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 2620000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 334,
+    "_contractor": "Home",
+    "_description": "International slot #31",
+    "_selected": false,
+    "_done": false,
+    "_level": 447,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 1600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 314,
+    "_contractor": "Home",
+    "_description": "Local slot #45",
+    "_selected": false,
+    "_done": false,
+    "_level": 453,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 1920000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 1840000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 315,
+    "_contractor": "Home",
+    "_description": "Local slot #46",
+    "_selected": false,
+    "_done": false,
+    "_level": 467,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 2240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 2240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 2240000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 316,
+    "_contractor": "Home",
+    "_description": "Local slot #47",
+    "_selected": false,
+    "_done": false,
+    "_level": 481,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wood",
+        "_neededAmount": 2480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 2480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 2480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 317,
+    "_contractor": "Home",
+    "_description": "Local slot #48",
+    "_selected": false,
+    "_done": false,
+    "_level": 495,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Nails",
+        "_neededAmount": 2720000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 2720000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 2720000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 318,
+    "_contractor": "Home",
+    "_description": "Local slot #49",
+    "_selected": false,
+    "_done": false,
+    "_level": 509,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 2980000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 2980000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Marble",
+        "_neededAmount": 2980000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 319,
+    "_contractor": "Home",
+    "_description": "Local slot #50",
+    "_selected": false,
+    "_done": false,
+    "_level": 523,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 3280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 3280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 3280000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 320,
+    "_contractor": "Home",
+    "_description": "Local slot #51",
+    "_selected": false,
+    "_done": false,
+    "_level": 537,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Fuel",
+        "_neededAmount": 3600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 3600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 3600000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 321,
+    "_contractor": "Home",
+    "_description": "Local slot #52",
+    "_selected": false,
+    "_done": false,
+    "_level": 551,
     "_any": false
   }
 ]

@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.818a";
+  private static final String APP_TITLE           = "v0.818c";
 
   private boolean             _devMode            = false;
 
@@ -552,7 +552,7 @@ public final class MainFrame extends JFrame {
           @Override
           public void run() {
             try {
-              refresh(false);
+              refresh(true);
               runMagic();
             } catch (RobotInterruptedException e) {
               LOGGER.log(Level.SEVERE, "Interrupted by user6", e);
@@ -1416,7 +1416,7 @@ public final class MainFrame extends JFrame {
 
             if (now - start >= timeForRefresh) {
               LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
-              refresh(false);
+              refresh(true);
               _stats.registerTimeOutRefresh();
               updateLabels();
               fstart = start = System.currentTimeMillis();
@@ -2735,21 +2735,21 @@ public final class MainFrame extends JFrame {
         // _mouse.delay(500);
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
-        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 70, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 70, 150);
+        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 22, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 22, 150);
         p = findPointerDownInt(area, pointerDown, 4);
         if (p != null) {
           int x1 = _scanner.getBottomRight().x - 5;
           int y = _scanner.getBottomRight().y - Locations.RAIL1;
-          _mouse.drag(x1, y, x1 - 140, y);
+          _mouse.drag(x1, y, x1 - 30, y);
         }
         if (p == null) {
           pointerDown = _scanner.getPointerDownR();
-          area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 70, 150);
+          area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 22, 150);
           p = findPointerDownInt(area, pointerDown, 4);
           if (p != null) {
             int x1 = _scanner.getTopLeft().x + 5;
             int y = _scanner.getBottomRight().y - Locations.RAIL1;
-            _mouse.drag(x1, y, x1 + 140, y);
+            _mouse.drag(x1, y, x1 + 30, y);
           }
         }
       }

@@ -3,283 +3,256 @@
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Gold",
-        "_neededAmount": 66200,
+        "_material": "Titanium",
+        "_neededAmount": 524000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 74800,
+        "_material": "Wires",
+        "_neededAmount": 476000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 452000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 101,
+    "_contractor": "Home",
+	"_description": "2nd Maglev Rail",
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Bricks",
+        "_neededAmount": 1800000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Steel",
-        "_neededAmount": 63600,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      }
-    ],
-    "_number": 101,
-    "_contractor": "Jules",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
-    "_any": false
-  },
-  {
-    "_objectives": [
-      {
-        "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_neededAmount": 1480000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "Cement",
+        "_neededAmount": 880000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 102,
-    "_contractor": "Jules",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #21",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
+        "_material": "Wood",
+        "_neededAmount": 1800000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_neededAmount": 1480000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Cement",
+        "_neededAmount": 880000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 103,
-    "_contractor": "Jules",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #23",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_material": "Wood",
+        "_neededAmount": 1800000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
+        "_material": "Steel",
+        "_neededAmount": 1480000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "Rubber",
+        "_neededAmount": 880000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 104,
-    "_contractor": "Jules",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #24",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
         "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Rubber",
+        "_neededAmount": 1400000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Titanium",
+        "_neededAmount": 800000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 105,
-    "_contractor": "Jules",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #25",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_material": "Nails",
+        "_neededAmount": 1560000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
+        "_material": "Cement",
+        "_neededAmount": 1400000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "Carbon",
+        "_neededAmount": 1000000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 106,
-    "_contractor": "Jules",
-    "_description": "Build Jules\u0027s Workshop #5",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #26",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_material": "Gold",
+        "_neededAmount": 3960000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
+        "_material": "Fuel",
+        "_neededAmount": 1560000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "U-235",
+        "_neededAmount": 1320000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 107,
-    "_contractor": "Jules",
-    "_description": "Build Jules\u0027s Workshop #6",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #27",
     "_any": false
   },
   {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_material": "Gold",
+        "_neededAmount": 16000000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
-        "_currentAmount": 0,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "Titanium",
+        "_neededAmount": 200000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 108,
-    "_contractor": "Jules",
-    "_description": "Build Jules\u0027s Workshop #7",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "Local slot #28",
     "_any": false
   },
-  {
+    {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 49000,
+        "_material": "Gold",
+        "_neededAmount": 8000000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Glass",
-        "_neededAmount": 34000,
+        "_material": "Wires",
+        "_neededAmount": 1040000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 48800,
+        "_material": "Silicon",
+        "_neededAmount": 1040000,
         "_currentAmount": 0,
         "_initialAmount": 0
       }
     ],
     "_number": 109,
-    "_contractor": "Jules",
-    "_description": "Build Jules\u0027s Workshop #8",
-    "_selected": false,
-    "_done": false,
-    "_level": 0,
+    "_contractor": "Home",
+	"_description": "International slot #13",
     "_any": false
   }
+  
+
 ]

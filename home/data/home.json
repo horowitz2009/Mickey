@@ -8,67 +8,67 @@
   "_materials": [
     {
       "_name": "Wood",
-      "_amount": 2400887
+      "_amount": 71329
     },
     {
       "_name": "Nails",
-      "_amount": 2127975
+      "_amount": 865891
     },
     {
       "_name": "Bricks",
-      "_amount": 996110
+      "_amount": 896087
     },
     {
       "_name": "Glass",
-      "_amount": 3052885
+      "_amount": 3908151
     },
     {
       "_name": "Fuel",
-      "_amount": 3150098
+      "_amount": 4954406
     },
     {
       "_name": "Steel",
-      "_amount": 1525129
+      "_amount": 224336
     },
     {
       "_name": "Gravel",
-      "_amount": 1666390
+      "_amount": 615882
     },
     {
       "_name": "U-235",
-      "_amount": 365997
+      "_amount": 388455
     },
     {
       "_name": "Cement",
-      "_amount": 160539
+      "_amount": 1299185
     },
     {
       "_name": "Rubber",
-      "_amount": 316689
+      "_amount": 1082646
     },
     {
       "_name": "Carbon",
-      "_amount": 1200063
+      "_amount": 1290968
     },
     {
       "_name": "Titanium",
-      "_amount": 587268
+      "_amount": 840763
     },
     {
       "_name": "Marble",
-      "_amount": 362970
+      "_amount": 759342
     },
     {
       "_name": "Wires",
-      "_amount": 729044
+      "_amount": 1048960
     },
     {
       "_name": "Plastics",
-      "_amount": 769188
+      "_amount": 1248552
     },
     {
       "_name": "Silicon",
-      "_amount": 2677469
+      "_amount": 962756
     }
   ],
   "_currentMission": {
@@ -76,50 +76,43 @@
       {
         "_type": "b",
         "_material": "Gold",
-        "_neededAmount": 8000000,
+        "_neededAmount": 1760000,
         "_currentAmount": 0,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Bricks",
-        "_neededAmount": 1800000,
-        "_currentAmount": 996110,
+        "_material": "Wood",
+        "_neededAmount": 160000,
+        "_currentAmount": 71329,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Steel",
-        "_neededAmount": 1480000,
-        "_currentAmount": 1525129,
+        "_material": "Gravel",
+        "_neededAmount": 1400000,
+        "_currentAmount": 615882,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 880000,
-        "_currentAmount": 160539,
+        "_material": "Rubber",
+        "_neededAmount": 1400000,
+        "_currentAmount": 1082646,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Titanium",
-        "_neededAmount": 524000,
-        "_currentAmount": 587268,
+        "_neededAmount": 800000,
+        "_currentAmount": 840763,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Wires",
-        "_neededAmount": 1516000,
-        "_currentAmount": 729044,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Silicon",
-        "_neededAmount": 1492000,
-        "_currentAmount": 2677469,
+        "_material": "Plastics",
+        "_neededAmount": 120000,
+        "_currentAmount": 1248552,
         "_initialAmount": 0
       }
     ],
@@ -127,6 +120,8 @@
     "_contractor": "Home",
     "_description": "MIX",
     "_selected": true,
+    "_done": false,
+    "_level": 0,
     "_any": false
   }
 }

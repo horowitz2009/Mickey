@@ -20,6 +20,8 @@
     "_contractor": "George",
     "_description": "Build Coaling Stations",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -50,6 +52,8 @@
     "_contractor": "George",
     "_description": "Build Maintenance Depot #1",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -80,6 +84,8 @@
     "_contractor": "George",
     "_description": "Build Maintenance Depot #2",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -110,6 +116,8 @@
     "_contractor": "George",
     "_description": "Build Maintenance Depot #3",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -140,6 +148,8 @@
     "_contractor": "George",
     "_description": "Build Maintenance Depot #4",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -170,6 +180,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #1",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -200,6 +212,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #2",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -230,6 +244,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #3",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -260,6 +276,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #4",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -290,6 +308,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #5",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -320,6 +340,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #6",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -350,6 +372,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #7",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -380,6 +404,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #8",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -410,6 +436,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #9",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -440,6 +468,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #10",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -470,6 +500,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #11",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -500,6 +532,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #12",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -530,6 +564,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #13",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -560,6 +596,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #14",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -590,6 +628,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #15",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -620,6 +660,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #16",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -650,6 +692,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #17",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -680,6 +724,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #18",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -710,6 +756,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #19",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -740,6 +788,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #20",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -770,6 +820,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #21",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -800,6 +852,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #22",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   },
   {
@@ -830,6 +884,8 @@
     "_contractor": "George",
     "_description": "Build Buckingham Palace #23",
     "_selected": false,
+    "_done": false,
+    "_level": 0,
     "_any": false
   }
 ]
