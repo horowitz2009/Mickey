@@ -78,7 +78,8 @@ public class ScreenScanner {
   private ImageData            _promoX                        = null;
   private ImageData            _share                         = null;
 
-  private ImageData            _trainManagement               = null;
+  private ImageData            _trainManagementAnchor         = null;
+  private ImageData            _trainsAnchor                  = null;
   private ImageData            _materials                     = null;
 
   private ImageData            _topLeftImage                  = null;
@@ -176,7 +177,7 @@ public class ScreenScanner {
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
     Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);
-    _trainManagement = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, 0, 0);
+    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, 0, 0);
 
@@ -219,6 +220,8 @@ public class ScreenScanner {
     diff = getGameHeight() - 551;
     diff = diff / 2;
     y = _br.y - diff + 1;
+
+    
     _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
@@ -242,6 +245,8 @@ public class ScreenScanner {
 
     area = new Rectangle(xx + 298, yy + 27, 111, 40);
     _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
+    area = new Rectangle(xx + 300, yy + 35, 160, 37);
+    _trainsAnchor = new ImageData("int/Trains.bmp", area, _comparator, 0, 0);
 
     area = new Rectangle(xx, _br.y - 250, 760, 250);
     _share = new ImageData("share.bmp", area, _comparator, 23, 6);
@@ -577,8 +582,12 @@ public class ScreenScanner {
     return _topLeftImage;
   }
 
-  public ImageData getPointerTrainManagement() {
-    return _trainManagement;
+  public ImageData getTrainManagementAnchor() {
+    return _trainManagementAnchor;
+  }
+
+  public ImageData getTrainsAnchor() {
+    return _trainsAnchor;
   }
 
   public Rectangle[] getDangerousZones() {
@@ -640,11 +649,11 @@ public class ScreenScanner {
   public ImageData getMaterials() {
     return _materials;
   }
-  
+
   public ImageData generateImageData(String imageFilename) throws IOException {
     return new ImageData(imageFilename, null, _comparator, 0, 0);
   }
-  
+
   public ImageData generateImageData(String imageFilename, int xOff, int yOff) throws IOException {
     return new ImageData(imageFilename, null, _comparator, xOff, yOff);
   }

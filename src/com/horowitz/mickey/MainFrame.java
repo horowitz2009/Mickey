@@ -94,7 +94,6 @@ public final class MainFrame extends JFrame {
   private JLabel              _refreshTNumberLabel;
   private JLabel              _refreshSNumberLabel;
   private JLabel              _refreshNumberLabelA;
-  private JLabel              _refreshTimeLabel;
   private JLabel              _lastActivityLabel;
   private JLabel              _startedLabel;
 
@@ -142,20 +141,16 @@ public final class MainFrame extends JFrame {
 
   public MainFrame(Boolean refresh, Boolean ping) throws HeadlessException {
     super();
-    _settings = new Settings();
-    _commands = new Settings("mickey.commands");
+    _settings = Settings.createDefaultSettings();
+    _commands = Settings.createCommands();
     _stats = new Statistics();
-
-    // _settings.setDefaults();
-    // _settings.saveSettingsSorted();
-
-    _settings.loadSettings();
 
     setupLogger();
 
     init();
 
-    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
+    // KEYS TURNED OFF. NO NEED AT THIS POINT
+    // KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
 
     runSettingsListener();
   }
@@ -516,24 +511,19 @@ public final class MainFrame extends JFrame {
     // SCAN
     AbstractAction scanAction = new AbstractAction("Scan") {
       public void actionPerformed(ActionEvent e) {
-
         Thread myThread = new Thread(new Runnable() {
-
           @Override
           public void run() {
             scan();
           }
-
         });
 
         myThread.start();
-
       }
     };
     mainToolbar1.add(scanAction);
 
     // DO MAGIC
-
     {
       _doMagicAction = new JButton(new AbstractAction("DO MAGIC") {
         public void actionPerformed(ActionEvent e) {
@@ -546,22 +536,18 @@ public final class MainFrame extends JFrame {
     // REFRESH
     AbstractAction runAction = new AbstractAction("Refresh") {
       public void actionPerformed(ActionEvent e) {
-
         Thread myThread = new Thread(new Runnable() {
-
           @Override
           public void run() {
             try {
-              refresh(true);
+              refresh(false);
               runMagic();
             } catch (RobotInterruptedException e) {
               LOGGER.log(Level.SEVERE, "Interrupted by user6", e);
             }
           }
         });
-
         myThread.start();
-
       }
     };
     mainToolbar1.add(runAction);
@@ -593,25 +579,16 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar1.add(_locateAction);
     }
-    // LOCATE
+
+    // Train Sender
     {
-      JButton b1 = new JButton(new AbstractAction("H") {
+      JButton b1 = new JButton(new AbstractAction("TS") {
         public void actionPerformed(ActionEvent e) {
           Thread myThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
-              try {
-                _captureHome = true;
-                if (!isRunning("MAGIC")) {
-                  runMagic();
-                }
-              } catch (Exception e1) {
-                LOGGER.log(Level.WARNING, e1.getMessage());
-                e1.printStackTrace();
-              }
+              scanTrains();
             }
-
           });
           myThread.start();
         }
@@ -644,32 +621,33 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar1.add(b1);
     }
-    // CAPTURE CONTRACTS 2
-    {
-      JButton b1 = new JButton(new AbstractAction("C2") {
-        public void actionPerformed(ActionEvent e) {
-          Thread myThread = new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-              try {
-                resetContractors();
-                _scanMaterials2 = false;
-                if (!isRunning("MAGIC")) {
-                  runMagic();
-                }
-              } catch (Exception e1) {
-                LOGGER.log(Level.WARNING, e1.getMessage());
-                e1.printStackTrace();
-              }
-            }
-
-          });
-          myThread.start();
-        }
-      });
-      mainToolbar1.add(b1);
-    }
+    // // CAPTURE CONTRACTS 2
+    // {
+    // JButton b1 = new JButton(new AbstractAction("C2") {
+    // public void actionPerformed(ActionEvent e) {
+    // Thread myThread = new Thread(new Runnable() {
+    //
+    // @Override
+    // public void run() {
+    // try {
+    // resetContractors();
+    // _scanMaterials2 = false;
+    // if (!isRunning("MAGIC")) {
+    // runMagic();
+    // }
+    // } catch (Exception e1) {
+    // LOGGER.log(Level.WARNING, e1.getMessage());
+    // e1.printStackTrace();
+    // }
+    // }
+    //
+    // });
+    // myThread.start();
+    // }
+    // });
+    // mainToolbar1.add(b1);
+    // }
     // RESET
     {
       _resetAction = new JButton(new AbstractAction("Reset") {
@@ -1038,7 +1016,7 @@ public final class MainFrame extends JFrame {
 
       stopMagic();
       try {
-        refresh(true);
+        refresh(false);
         runMagic();
       } catch (RobotInterruptedException e) {
         e.printStackTrace();
@@ -1174,9 +1152,12 @@ public final class MainFrame extends JFrame {
       @Override
       public void run() {
         try {
-          LOGGER.info("Let's get rolling...");
-          Thread.sleep(200);
-          doMagic();
+          if (_scanner.isOptimized()) {
+            LOGGER.info("Let's get rolling...");
+            Thread.sleep(200);
+            doMagic();
+          } else
+            LOGGER.info("Scan first!");
         } catch (Exception e1) {
           LOGGER.severe(e1.getMessage());
           e1.printStackTrace();
@@ -1416,7 +1397,7 @@ public final class MainFrame extends JFrame {
 
             if (now - start >= timeForRefresh) {
               LOGGER.info("Warning: no trains for last " + DateUtils.fancyTime2(now - start));
-              refresh(true);
+              refresh(false);
               _stats.registerTimeOutRefresh();
               updateLabels();
               fstart = start = System.currentTimeMillis();
@@ -1424,7 +1405,7 @@ public final class MainFrame extends JFrame {
 
             if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
               LOGGER.info("Mandatory refresh");
-              refresh(true);
+              refresh(false);
               _stats.registerMandatoryRefresh();
               updateLabels();
 
@@ -1482,7 +1463,7 @@ public final class MainFrame extends JFrame {
               _stats.registerStuckRefresh();
               updateLabels();
               Thread.sleep(2000);
-              refresh(true);
+              refresh(false);
               runMagic();
             } catch (RobotInterruptedException e) {
             } catch (InterruptedException e) {
@@ -1552,7 +1533,7 @@ public final class MainFrame extends JFrame {
           // capture trains
           pingPrefix += " trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
-          _mouse.delay(300);
+          _mouse.delay(1300);
           _mouse.click(xx + 64, yy + 101);
           _mouse.delay(2300);
 
@@ -1563,7 +1544,7 @@ public final class MainFrame extends JFrame {
           // capture international trains
           pingPrefix += " int trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
-          _mouse.delay(300);
+          _mouse.delay(1300);
           _mouse.click(xx + 127, yy + 101);
           _mouse.delay(2300);
 
@@ -1912,7 +1893,7 @@ public final class MainFrame extends JFrame {
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game probably crashed and needs refresh...");
-      refresh(true);
+      refresh(false);
       _stats.registerRefresh();
       updateLabels();
     }
@@ -1952,7 +1933,7 @@ public final class MainFrame extends JFrame {
           } catch (InterruptedException e) {
             e.printStackTrace();
           }
-          refresh(true);
+          refresh(false);
         } else {
           throw new SessionTimeOutException();
         }
@@ -2142,7 +2123,7 @@ public final class MainFrame extends JFrame {
       _mouse.click(p.x, p.y - 13);
       _mouse.checkUserMovement();
       LOGGER.info("Whites: " + _stats.getWhiteLetter() + "   Reds: " + _stats.getRedLetter() + "   Browns: " + _stats.getBrownLetter());
-      //LOGGER.info("found letter: " + p);
+      // LOGGER.info("found letter: " + p);
       _mouse.mouseMove(_scanner.getBottomRight());
     }
   }
@@ -2347,7 +2328,7 @@ public final class MainFrame extends JFrame {
     LOGGER.severe("Drag failure...");
     LOGGER.severe("NO IDEA WHAT TO DO!!!");
     try {
-      refresh(true);
+      refresh(false);
       _stats.registerRefresh();
       updateLabels();
 
@@ -2941,7 +2922,7 @@ public final class MainFrame extends JFrame {
     // _scanner.getTopLeft().y + 47, 130, 90);
     // Location time = _times[getTimeIndex()];
     Location time = _freightTime;
-    Pixel tm = _scanner.getPointerTrainManagement().findImage();
+    Pixel tm = _scanner.getTrainManagementAnchor().findImage();
 
     // (ScreenScanner.POINTER_TRAIN_MANAGEMENT_IMAGE, area,
     // time.get_coordinates().x,
@@ -3010,7 +2991,7 @@ public final class MainFrame extends JFrame {
         do {
           turns++;
           LOGGER.fine("Check TM again " + turns);
-          tm = _scanner.getPointerTrainManagement().findImage();
+          tm = _scanner.getTrainManagementAnchor().findImage();
           if (tm != null) {
             _mouse.delay(300);
           } else {
@@ -3046,5 +3027,15 @@ public final class MainFrame extends JFrame {
     _captureContractors.clear();
     _captureContractors.add(contractor);
   }
+
+  private void scanTrains() {
+    if (isRunning("MAGIC")) {
+      stopMagic();
+    }
+    TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
+    tscanner.analyzeIntTrains();
+  }
+
+ 
 
 }
