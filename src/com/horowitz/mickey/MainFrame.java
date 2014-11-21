@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.819";
+  private static final String APP_TITLE           = "v0.820";
 
   private boolean             _devMode            = false;
 
@@ -105,7 +105,7 @@ public final class MainFrame extends JFrame {
   private Location            _freightTime        = Locations.LOC_10MIN;
   private Location            _expressTime        = Locations.LOC_30MIN;
 
-  private Long                _lastTime;
+  private Long                _lastTime           = 0l;
   private Queue<Integer>      _lastDiffs          = new ArrayBlockingQueue<Integer>(3);
 
   private JToggleButton       _oneClick;
@@ -804,9 +804,11 @@ public final class MainFrame extends JFrame {
             processCommands();
             processRequests();
 
-//            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//            _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-//                "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+            if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
+              final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+              _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+                  "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+            }
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
