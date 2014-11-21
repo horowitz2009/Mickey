@@ -176,4 +176,12 @@ public class MouseRobot {
   public Point getCurrentPosition() {
     return MouseInfo.getPointerInfo().getLocation();
   }
+  
+  public void wheelDown(int notches) {
+    try {
+      new Robot().mouseWheel(notches);
+    } catch (AWTException e) {
+      e.printStackTrace();
+    }
+  }
 }

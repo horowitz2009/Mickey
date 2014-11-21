@@ -804,9 +804,9 @@ public final class MainFrame extends JFrame {
             processCommands();
             processRequests();
 
-            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-                "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+//            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//            _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+//                "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
