@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.818c";
+  private static final String APP_TITLE           = "v0.819";
 
   private boolean             _devMode            = false;
 
@@ -803,11 +803,17 @@ public final class MainFrame extends JFrame {
             reapplySettings();
             processCommands();
             processRequests();
+
+            final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+                "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
               e.printStackTrace();
             }
+            deleteOlder("screenshot", 5);
+
           }
         } while (!stop);
       }
@@ -932,10 +938,36 @@ public final class MainFrame extends JFrame {
           }
 
         }
+      } else if (r.startsWith("click")) {
+        processClick(r);
+      } else if (r.startsWith("refresh")) {
+        String[] ss = r.split("_");
+        Boolean bookmark = Boolean.parseBoolean(ss[1]);
+        try {
+          stopMagic();
+          refresh(bookmark);
+          runMagic();
+        } catch (RobotInterruptedException e) {
+        }
       }
     }
 
     service.purgeOld(1000 * 60 * 60);// 1 hour old
+  }
+
+  private void processClick(String r) {
+    try {
+      String[] ss = r.split("_");
+      int x = Integer.parseInt(ss[1]);
+      int y = Integer.parseInt(ss[2]);
+      _mouse.click(x, y);
+      try {
+        _mouse.delay(1000);
+      } catch (RobotInterruptedException e) {
+      }
+    } finally {
+      new Service().done(r);
+    }
   }
 
   private void hook(final String request) {
@@ -3035,7 +3067,5 @@ public final class MainFrame extends JFrame {
     TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
     tscanner.analyzeIntTrains();
   }
-
- 
 
 }
