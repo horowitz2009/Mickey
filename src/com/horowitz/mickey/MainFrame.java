@@ -66,6 +66,7 @@ import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.service.Service;
+import com.horowitz.mickey.trainScanner.TrainScanner;
 
 /**
  * @author zhristov
@@ -75,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.820";
+  private static final String APP_TITLE           = "v0.821";
 
   private boolean             _devMode            = false;
 

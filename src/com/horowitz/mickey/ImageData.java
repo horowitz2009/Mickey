@@ -54,8 +54,8 @@ public class ImageData {
   }
 
   public Pixel findImage(BufferedImage screen) {
-    for (int i = 0; i < (screen.getWidth() - _image.getWidth()); i++) {
-      for (int j = 0; j < (screen.getHeight() - _image.getHeight()); j++) {
+    for (int i = 0; i <= (screen.getWidth() - _image.getWidth()); i++) {
+      for (int j = 0; j <= (screen.getHeight() - _image.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, _image.getWidth(), _image.getHeight());
         writeImage(subimage, 201);
         if (_comparator.compare(_image, subimage, _colors, _mask)) {

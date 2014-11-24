@@ -160,7 +160,7 @@ public class ScreenScanner {
     _close3 = new ImageData(POINTER_CLOSE3_IMAGE, null, _comparator, 23, 10);
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
-    _pointerDown = new ImageData("pointerDown5.bmp", null, _comparator, 15, 21);
+    _pointerDown = new ImageData("pointerDownBlue.bmp", null, _comparator, 13, 19);
     _letterRed = new ImageData("letters/red11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterWhite = new ImageData("letters/white11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown = new ImageData("letters/brown11a.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
@@ -225,10 +225,10 @@ public class ScreenScanner {
     _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
-    _pointerLeft = new ImageData("pointerLeft.bmp", area, _comparator, 0, 0);
+    _pointerLeft = new ImageData("pointerLeftBlue.bmp", area, _comparator, 0, 0);
 
     area = new Rectangle(_br.x - 130, _br.y - getRailsHome()[0] - 195, 130, 195);
-    _pointerRight = new ImageData("pointerRight.bmp", area, _comparator, 0, 0);
+    _pointerRight = new ImageData("pointerRightBlue.bmp", area, _comparator, 0, 0);
 
     xx = (getGameWidth() - 780) / 2;
     yy = (getGameHeight() - 585) / 2;
@@ -656,6 +656,10 @@ public class ScreenScanner {
 
   public ImageData generateImageData(String imageFilename, int xOff, int yOff) throws IOException {
     return new ImageData(imageFilename, null, _comparator, xOff, yOff);
+  }
+
+  public ImageComparator getComparator() {
+    return _comparator;
   }
 
 }

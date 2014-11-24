@@ -36,17 +36,17 @@ public class Service {
 
     File f = new File(fname + "_inprogress");
     if (f.exists()) {
-      return f.renameTo(new File(fname +  "_done"));
+      return f.renameTo(new File(fname + "_done"));
     }
     return false;
   }
 
   public boolean inProgress(String request) {
     String fname = "requests/" + request;
-    
+
     File f = new File(fname);
     if (f.exists()) {
-      return f.renameTo(new File(fname +  "_inprogress"));
+      return f.renameTo(new File(fname + "_inprogress"));
     }
     return false;
   }
@@ -118,9 +118,9 @@ public class Service {
         return (pathname.isFile() && pathname.getName().endsWith(suffix) && (now - pathname.lastModified() > howMuchOld));
       }
     });
-
-    for (File file : listFiles) {
-      file.delete();
-    }
+    if (listFiles != null)
+      for (File file : listFiles) {
+        file.delete();
+      }
   }
 }
