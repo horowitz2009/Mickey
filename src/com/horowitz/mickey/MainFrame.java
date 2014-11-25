@@ -66,6 +66,8 @@ import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.service.Service;
+import com.horowitz.mickey.trainScanner.Train;
+import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
 
 /**
@@ -3068,7 +3070,10 @@ public final class MainFrame extends JFrame {
       stopMagic();
     }
     TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
-    tscanner.analyzeIntTrains();
+    List<Train> trains = tscanner.analyzeIntTrains();
+    TrainManagementWindow trainManagementWindow = new TrainManagementWindow(trains);
+    
+    
   }
 
 }

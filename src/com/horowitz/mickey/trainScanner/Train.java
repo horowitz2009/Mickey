@@ -12,6 +12,7 @@ public class Train {
 
   private List<ContractorView> _contractorViews;
   private List<String>         _contractorsToSend = new ArrayList<String>();
+  private boolean              _idle;
 
   public BufferedImage getAdditionalInfo() {
     return _additionalInfo;
@@ -69,4 +70,13 @@ public class Train {
   public void setAdditionalInfoShort(BufferedImage additionalInfoShort) {
     _additionalInfoShort = additionalInfoShort;
   }
+
+  public void setIdle(boolean isIdle) {
+    _idle = isIdle;
+  }
+
+  public boolean isIdle() {
+    return _idle;
+  }
+
 }

@@ -318,71 +318,69 @@ public class TrainScanner {
     Robot robot = new Robot();
     Train train = new Train(robot.createScreenCapture(trainArea), robot.createScreenCapture(newArea));
 
-    _mouse.savePosition();
-    _mouse.mouseMove(trainArea.x + 9, trainArea.y + 9);
-
     try {
       _mouse.delay(1000, false);
     } catch (RobotInterruptedException e) {
     }
-    
-    //check whether is idle
+
+    // check whether is idle
+    boolean isIdle = false;
     try {
       ImageData idle = _scanner.generateImageData("int/idle.bmp");
-      idle.findImage(train.getFullImage().getSubimage(0, 0, 100, train.getFullImage().getHeight()));
-      
+      isIdle = idle.findImage(train.getFullImage().getSubimage(0, 0, 127, train.getFullImage().getHeight())) != null;
     } catch (IOException e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
     }
-    
-    
-    Rectangle infoArea = new Rectangle(trainArea.x, trainArea.y + trainArea.height, 580, 110);
-    _scanner.writeImage(infoArea, "trainInfo" + number + ".bmp");
-    train.setAdditionalInfo(robot.createScreenCapture(infoArea));
+    train.setIdle(isIdle);
+    if (!isIdle) {
+      _mouse.savePosition();
+      _mouse.mouseMove(trainArea.x + 9, trainArea.y + 9);
+      Rectangle infoArea = new Rectangle(trainArea.x, trainArea.y + trainArea.height, 580, 110);
+      _scanner.writeImage(infoArea, "trainInfo" + number + ".bmp");
+      train.setAdditionalInfo(robot.createScreenCapture(infoArea));
 
-    try {
-      ImageData eastEnd = _scanner.generateImageData("int/eastEnd4.bmp");
-      Pixel p = eastEnd.findImage(train.getAdditionalInfo());
-      ImageData eastEnd2 = _scanner.generateImageData("int/eastEnd2.bmp");
-      ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
-      ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
-      System.err.println(number + ":" + p);
-      Pixel p2 = eastEnd2.findImage(train.getAdditionalInfo().getSubimage(p.x - 15, p.y, train.getAdditionalInfo().getWidth() - p.x + 15,
-          train.getAdditionalInfo().getHeight()));
-      Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(70, 0, 64, train.getAdditionalInfo().getHeight()));
-      if (pwest == null) {
-        pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(70, 0, 64, train.getAdditionalInfo().getHeight()));
-      }
-      if (pwest == null) {
-        pwest = new Pixel(0, 0);
-      }
-      int xStart = 70 + pwest.x;
-      int xLast = p.x - 15 + p2.x + 4;
-      int yLast = p2.y;
-      int width = xLast - xStart;
-      double n = (double) (width + 5) / 67;
-      int nn = (int) Math.round(n);
-      System.err.println(number + "  xStart: " + xStart + "; xLast: " + xLast + "; N: " + n + "    " + nn);
-      int gap = 5;
-      if (nn > 1) {
-        gap = (width - nn * 62) / (nn - 1);
-      } else {
-        gap = (width - nn * 62);
-      }
-      System.err.println("" + gap);
-      List<ContractorView> contractorViews = scanContractors(train, xStart, yLast, nn, gap, number);
+      try {
+        ImageData eastEnd = _scanner.generateImageData("int/eastEnd4.bmp");
+        Pixel p = eastEnd.findImage(train.getAdditionalInfo());
+        ImageData eastEnd2 = _scanner.generateImageData("int/eastEnd2.bmp");
+        ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
+        ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
+        System.err.println(number + ":" + p);
+        Pixel p2 = eastEnd2.findImage(train.getAdditionalInfo().getSubimage(p.x - 15, p.y, train.getAdditionalInfo().getWidth() - p.x + 15,
+            train.getAdditionalInfo().getHeight()));
+        Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(70, 0, 64, train.getAdditionalInfo().getHeight()));
+        if (pwest == null) {
+          pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(70, 0, 64, train.getAdditionalInfo().getHeight()));
+        }
+        if (pwest == null) {
+          pwest = new Pixel(0, 0);
+        }
+        int xStart = 70 + pwest.x;
+        int xLast = p.x - 15 + p2.x + 4;
+        int yLast = p2.y;
+        int width = xLast - xStart;
+        double n = (double) (width + 5) / 67;
+        int nn = (int) Math.round(n);
+        System.err.println(number + "  xStart: " + xStart + "; xLast: " + xLast + "; N: " + n + "    " + nn);
+        int gap = 5;
+        if (nn > 1) {
+          gap = (width - nn * 62) / (nn - 1);
+        } else {
+          gap = (width - nn * 62);
+        }
+        System.err.println("" + gap);
+        List<ContractorView> contractorViews = scanContractors(train, xStart, yLast, nn, gap, number);
 
-      train.setContractorViews(contractorViews);
-      train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, xStart - 1, train.getAdditionalInfo().getHeight()));
+        train.setContractorViews(contractorViews);
+        train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(1, 3, xStart - 2, 97));
 
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+      _mouse.restorePosition();
     }
-
-    _mouse.restorePosition();
-
     return train;
   }
 
