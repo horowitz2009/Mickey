@@ -78,7 +78,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.821";
+  private static final String APP_TITLE           = "v0.822";
 
   private boolean             _devMode            = false;
 
@@ -3071,9 +3071,10 @@ public final class MainFrame extends JFrame {
     }
     TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
     List<Train> trains = tscanner.analyzeIntTrains();
-    TrainManagementWindow trainManagementWindow = new TrainManagementWindow(trains);
-    
-    
+    TrainManagementWindow trainManagementWindow = new TrainManagementWindow(trains, tscanner);
+
+    trainManagementWindow.setVisible(true);
+
   }
 
 }

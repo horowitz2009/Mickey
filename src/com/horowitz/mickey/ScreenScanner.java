@@ -30,11 +30,13 @@ public class ScreenScanner {
 
   private static final boolean DEBUG                          = false;
 
+  public static final String   POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
+  public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
+  public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
+
   public static final String   ANCHOR_IMAGE                   = "anchorBill.bmp";
   public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeft.bmp";
-  public static final String   POINTER_DOWN_IMAGE             = "pointerDown3.bmp";
-  public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDown3l.bmp";
-  public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDown3r.bmp";
+  
   public static final String   POINTER_SHOPX_IMAGE            = "shopX.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
@@ -160,7 +162,7 @@ public class ScreenScanner {
     _close3 = new ImageData(POINTER_CLOSE3_IMAGE, null, _comparator, 23, 10);
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
-    _pointerDown = new ImageData("pointerDownBlue.bmp", null, _comparator, 13, 19);
+    _pointerDown = new ImageData(POINTER_DOWN_IMAGE, null, _comparator, 13, 19);
     _letterRed = new ImageData("letters/red11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterWhite = new ImageData("letters/white11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown = new ImageData("letters/brown11a.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
@@ -169,8 +171,8 @@ public class ScreenScanner {
     _letterWhite2 = new ImageData("letters/white9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown2 = new ImageData("letters/brown9b.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
 
-    _pointerDownL = new ImageData("pointerDown5l.bmp", null, _comparator, 18, 21);
-    _pointerDownR = new ImageData("pointerDown5r.bmp", null, _comparator, 4, 21);
+    _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
+    _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
     _expressTrain = new ImageData("expressTrain.bmp", null, _comparator, 0, 0);
     _freeTrain = new ImageData("free.bmp", null, _comparator, 0, 0);
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);

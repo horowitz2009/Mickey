@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -51,7 +50,7 @@ import com.horowitz.mickey.service.Service;
 
 public final class ContractorPanel extends JPanel implements PropertyChangeListener, IContractorPanel {
   private JPanel       _toolbar;
-  private CCanvas      _canvas;
+  private JCanvas      _canvas;
   private JProgressBar _progressBar;
 
   private String       _contractorName;
@@ -160,7 +159,7 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
 
   private void initForm() {
     JPanel formPanel = new JPanel(new BorderLayout());
-    _canvas = new CCanvas();
+    _canvas = new JCanvas();
     formPanel.add(_canvas, BorderLayout.WEST);
     _objectivesPanel = new JPanel();
     formPanel.add(new JScrollPane(_objectivesPanel));
@@ -364,31 +363,6 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
           o.setNeededAmount((Long) tf.getValue());
         }
       }
-    }
-  }
-
-  class CCanvas extends JPanel {
-
-    public CCanvas() {
-      setMaximumSize(new Dimension(1000, 150));
-    }
-
-    BufferedImage _image = null;
-
-    public void paint(Graphics g) {
-      super.paint(g);
-      if (_image != null) {
-        g.drawImage(_image, 0, 0, null);
-      }
-    }
-
-    @Override
-    public Dimension getPreferredSize() {
-      Dimension ps = super.getPreferredSize();
-      if (_image != null) {
-        ps = new Dimension(_image.getWidth(), _image.getHeight());
-      }
-      return ps;
     }
   }
 
