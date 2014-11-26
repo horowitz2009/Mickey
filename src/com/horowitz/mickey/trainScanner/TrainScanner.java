@@ -27,7 +27,7 @@ public class TrainScanner {
   private ScreenScanner   _scanner;
   private ImageComparator _comparator;
   private MouseRobot      _mouse;
-  private Logger          LOGGER;
+  Logger                  LOGGER;
 
   public TrainScanner(ScreenScanner scanner, Logger logger) {
     super();
@@ -306,6 +306,8 @@ public class TrainScanner {
   }
 
   public void sendTrains(List<Train> trains) {
+    int x = 0;
+    int y = 0;
     try {
       int xx = (_scanner.getGameWidth() - 759) / 2;
       int yy = (_scanner.getGameHeight() - 550) / 2;
@@ -313,16 +315,16 @@ public class TrainScanner {
       yy += _scanner.getTopLeft().y;
 
       _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
-      _mouse.delay(1300);
+      _mouse.delay(1300, false);
       _mouse.click(xx + 127, yy + 101);
-      _mouse.delay(2300);
+      _mouse.delay(2300, false);
       _mouse.mouseMove(_scanner.getBottomRight());
 
       // make sure it is trains and it is international
       Pixel p = _scanner.getTrainsAnchor().findImage();
       if (p != null) {
-        int x = p.x - 333;
-        int y = p.y - 37;
+        x = p.x - 333;
+        y = p.y - 37;
         // ImageData intTrainsTab = _scanner.generateImageData("int/int.bmp");
         { // if (intTrainsTab.findImage(new Rectangle(x + 94, y + 86, 66, 30)) != null) {
           // we're on the right track
@@ -344,6 +346,9 @@ public class TrainScanner {
       e.printStackTrace();
     } catch (RobotInterruptedException e) {
       LOGGER.severe("Interrupted by user");
+    } finally {
+      if (x != 0)
+        _mouse.click(x + 159, y + 524);
     }
   }
 
@@ -409,18 +414,26 @@ public class TrainScanner {
           Pixel cp = _comparator.findImage(contractorImage, cimage);
           if (cp != null) {
             // found the contractor
-            _mouse.click(carea.x + cp.x, carea.y + cp.y);
+            _mouse.mouseMove(carea.x + cp.x, carea.y + cp.y);
             _mouse.delay(250);
+            _mouse.click();
+            _mouse.delay(750);
             break;
           } else {
+            _mouse.delay(250);
             _mouse.click(tl.x + 739, tl.y + 131);
-            _mouse.delay(300);
+            _mouse.delay(750);
           }
         }
       }
 
       // TODO click send and choose 4h way
-
+      _mouse.mouseMove(tl.x + 475, tl.y + 517);
+      _mouse.delay(300);
+      _mouse.click();
+      _mouse.delay(700);
+      _mouse.click(tl.x + 475, tl.y + 498);
+      _mouse.delay(400);
       // at the end
       train.setSentTime(System.currentTimeMillis());
     }

@@ -2,7 +2,6 @@ package com.horowitz.mickey.trainScanner;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -19,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
@@ -26,6 +26,7 @@ import javax.swing.event.ChangeListener;
 
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.JCanvas;
+import com.horowitz.mickey.common.Scheduler;
 import com.horowitz.mickey.data.DataStore;
 
 public class TrainManagementWindow extends JFrame {
@@ -47,6 +48,7 @@ public class TrainManagementWindow extends JFrame {
 
   private List<TrainView> _trainViews;
   private JScrollPane     _jScrollPane;
+  private JTextField _timeTF;
 
   private void init() {
     JPanel mainPanel = new JPanel();
@@ -102,6 +104,10 @@ public class TrainManagementWindow extends JFrame {
 
       toolbar.add(button);
     }
+    
+    _timeTF = new JTextField(8);
+    toolbar.add(_timeTF);
+    
     mainPanel.add(toolbar, BorderLayout.NORTH);
   }
 
@@ -154,8 +160,28 @@ public class TrainManagementWindow extends JFrame {
   }
 
   protected void schedule() {
-
-    // TODO Auto-generated method stub
+    final long time = Scheduler.parse(_timeTF.getText());
+    _tscanner.LOGGER.info("Scheduling sending for " + _timeTF.getText());
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        while(true) {
+          try {
+            Thread.sleep(20000);
+          } catch (InterruptedException e) {
+            break;
+          }
+          if (System.currentTimeMillis() - time <=0) {
+            //it's time
+            sendTrains();
+            break;
+          } else {
+            _tscanner.LOGGER.info("Sending scheduled. Waiting...");
+          }
+        }
+      }
+    }, "SCHEDULER");
+    t.start();
+    
 
   }
 
