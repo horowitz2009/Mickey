@@ -78,7 +78,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.822";
+  private static final String APP_TITLE           = "v0.823";
 
   private boolean             _devMode            = false;
 
@@ -1554,6 +1554,8 @@ public final class MainFrame extends JFrame {
 
   private int _pingTurn = 1;
 
+  private TrainManagementWindow _trainManagementWindow;
+
   private void ping() {
     long now = System.currentTimeMillis();
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
@@ -2753,7 +2755,7 @@ public final class MainFrame extends JFrame {
         // _mouse.delay(500);
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
-        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 22, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 22, 150);
+        Rectangle area = new Rectangle(_scanner.getBottomRight().x - 26, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 26, 150);
         p = findPointerDownInt(area, pointerDown, 4);
         if (p != null) {
           int x1 = _scanner.getBottomRight().x - 5;
@@ -2762,7 +2764,7 @@ public final class MainFrame extends JFrame {
         }
         if (p == null) {
           pointerDown = _scanner.getPointerDownR();
-          area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 22, 150);
+          area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 26, 150);
           p = findPointerDownInt(area, pointerDown, 4);
           if (p != null) {
             int x1 = _scanner.getTopLeft().x + 5;
@@ -3069,12 +3071,11 @@ public final class MainFrame extends JFrame {
     if (isRunning("MAGIC")) {
       stopMagic();
     }
-    TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
-    List<Train> trains = tscanner.analyzeIntTrains();
-    TrainManagementWindow trainManagementWindow = new TrainManagementWindow(trains, tscanner);
-
-    trainManagementWindow.setVisible(true);
-
+    if (_trainManagementWindow == null) {
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
+      _trainManagementWindow = new TrainManagementWindow(null, tscanner);
+    }
+    _trainManagementWindow.setVisible(true);
   }
 
 }

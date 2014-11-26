@@ -20,7 +20,6 @@ import com.horowitz.mickey.Pixel;
 import com.horowitz.mickey.RobotInterruptedException;
 import com.horowitz.mickey.ScreenScanner;
 import com.horowitz.mickey.common.MyImageIO;
-import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 
 public class TrainScanner {
@@ -123,10 +122,21 @@ public class TrainScanner {
         _mouse.delay(200, false);
         // 2. now find the last scanned train's position
         Rectangle expectedArea = new Rectangle(xt + 3 + 140, yEnd - 140, 528, 140);
-        _scanner.writeImage(expectedArea, "expectedArea.png");
+        writeImage(expectedArea, "expectedArea.png");
         Pixel pl = _comparator.findImage(lastTrain.getScanImage(), new Robot().createScreenCapture(expectedArea));
+        if (pl == null) {
+          // failed to find the last train. Probably too animated.
+          // let's try another approach
+          expectedArea = new Rectangle(xt + 3 + 140 + 500, yEnd - 140, 28, 140);
+          writeImage(expectedArea, "expectedArea2.png");
+          BufferedImage im = lastTrain.getFullImage();
+          im = im.getSubimage(im.getWidth() - 19, 0, 19, 38);
+          pl = _comparator.findImage(im, new Robot().createScreenCapture(expectedArea));
+          if (pl != null) {
+            pl.y += 12;
+          }
+        }
         if (pl != null) {
-          pl.x += expectedArea.x;
           pl.y += expectedArea.y;
           //
           System.err.println("FOUND IT: ");
@@ -135,7 +145,7 @@ public class TrainScanner {
           _scanner.captureGame("game.png");
           if (yt + 57 <= yEnd) {
             Rectangle area = new Rectangle(xt + 669 - 9, yt - 5, 10, 25);
-            _scanner.writeImage(area, "area.png");
+            writeImage(area, "area.png");
             Pixel p = trCorner.findImage(area);
             if (p != null) {
               yt = p.y;
@@ -156,6 +166,12 @@ public class TrainScanner {
     return trains;
   }
 
+  private void writeImage(Rectangle area, String filename) {
+
+    _scanner.writeImage(area, filename);
+
+  }
+
   private boolean reachedEnd(int x, int y) {
     try {
       final ImageData scrollerEnded = _scanner.generateImageData("int/scrollerEnded.bmp");
@@ -169,9 +185,9 @@ public class TrainScanner {
 
   private Train scanThisTrain(Rectangle trainArea, int number) throws AWTException, RobotInterruptedException {
     Rectangle trainArea1 = new Rectangle(trainArea.x + 148, trainArea.y, trainArea.width - 148, trainArea.height);
-    _scanner.writeImage(trainArea, "train" + number + ".bmp");
+    writeImage(trainArea, "train" + number + ".bmp");
     Rectangle newArea = new Rectangle(trainArea.x + 148, trainArea.y + 1, 512, 24);
-    _scanner.writeImage(newArea, "train" + number + "_scanThis.bmp");
+    writeImage(newArea, "train" + number + "_scanThis.bmp");
     Robot robot = new Robot();
     Train train = new Train(robot.createScreenCapture(trainArea1), robot.createScreenCapture(newArea));
 
@@ -195,7 +211,7 @@ public class TrainScanner {
       _mouse.mouseMove(trainArea.x + 9, trainArea.y + 9);
       _mouse.delay(200);
       Rectangle infoArea = new Rectangle(trainArea.x, trainArea.y + trainArea.height, 590, 110);
-      _scanner.writeImage(infoArea, "trainInfo" + number + ".bmp");
+      writeImage(infoArea, "trainInfo" + number + ".bmp");
       train.setAdditionalInfo(robot.createScreenCapture(infoArea));
 
       try {
@@ -340,22 +356,75 @@ public class TrainScanner {
       _mouse.delay(1000);
 
     }
-    // train area is 357px high. USE IT!
-
-    int yEnd = yt + 357;
     yt += 60; // skip first slot
-    int i = 1;
-    int j = 1;
-    Train lastTrain = null;
-    // scan first 5 trains fast
-    Rectangle area = new Rectangle(xt + 669 - 9, yt - 5, 10, 25);
-    Pixel p = trCorner.findImage(area);
+    // for now all trains must be sent!
+    for (int i = 0; i < trains.size(); ++i) {
+      Rectangle area = new Rectangle(xt + 669 - 9, yt - 5, 10, 25);
+      Pixel p = trCorner.findImage(area);
+      if (p != null) {
+        yt = p.y;
+        LOGGER.info("Sending train " + i);
+        Rectangle singleTrainArea = new Rectangle(xt + 3, yt, 666, 50);
+
+        for (Train train : trains) {
+          if (!train.getContractorsToSend().isEmpty()) { // not good. next version make it to handle such situations
+            if (train.getSentTime() == 0 || System.currentTimeMillis() - train.getSentTime() > 4 * 60 * 60000) {
+              Pixel p1 = _comparator.findImage(train.getScanImage(), new Robot().createScreenCapture(singleTrainArea));
+              if (p1 != null) {
+                // found it, then send it
+                sendThisTrain(train, xt + 3, yt);
+                break;
+              }
+            }
+          }
+        }
+
+        _mouse.delay(200);
+      }// if
+    }// for
+  }
+
+  private void sendThisTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
+    _mouse.mouseMove(x + 72, y + 25);
+    _mouse.delay(300);
+    _mouse.mouseMove(x + 200, y + 25);
+    _mouse.click();
+    _mouse.delay(300);
+    // it is expected a SendDialiof been opened
+    int xx = (_scanner.getGameWidth() - 760) / 2;
+    int yy = (_scanner.getGameHeight() - 550) / 2;
+    xx += _scanner.getTopLeft().x;
+    yy += _scanner.getTopLeft().y;
+
+    ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
+    Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 200, 75));
     if (p != null) {
-      yt = p.y;
-      LOGGER.info("Sending train " + i);
-      // TODO sendThisTrain(new Rectangle(xt + 3, yt, 666, 50), i++);
-      _mouse.delay(200);
+      // find and select contractors
+      final Pixel tl = new Pixel(p.x - 35, p.y - 32);
+      Rectangle carea = new Rectangle(tl.x + 41, tl.y + 94, 678, 82);
+      for (String cname : train.getContractorsToSend()) {
+        for (int page = 0; page < 3; page++) {
+          BufferedImage cimage = new Robot().createScreenCapture(carea);
+          BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + ".bmp"));
+          Pixel cp = _comparator.findImage(contractorImage, cimage);
+          if (cp != null) {
+            // found the contractor
+            _mouse.click(carea.x + cp.x, carea.y + cp.y);
+            _mouse.delay(250);
+            break;
+          } else {
+            _mouse.click(tl.x + 739, tl.y + 131);
+            _mouse.delay(300);
+          }
+        }
+      }
+
+      // TODO click send and choose 4h way
+
+      // at the end
+      train.setSentTime(System.currentTimeMillis());
     }
+
   }
 
 }

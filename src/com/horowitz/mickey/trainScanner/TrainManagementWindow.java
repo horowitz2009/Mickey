@@ -34,6 +34,8 @@ public class TrainManagementWindow extends JFrame {
 
   public TrainManagementWindow(List<Train> trains, TrainScanner tscanner) {
     super();
+    _trains = trains;
+    _tscanner = tscanner;
 
     setDefaultCloseOperation(HIDE_ON_CLOSE);
     setTitle("Int. Train Manager");
@@ -41,11 +43,10 @@ public class TrainManagementWindow extends JFrame {
     setSize(700, 550);
     setLocationRelativeTo(null);
 
-    _trains = trains;
-    _tscanner = tscanner;
   }
 
   private List<TrainView> _trainViews;
+  private JScrollPane     _jScrollPane;
 
   private void init() {
     JPanel mainPanel = new JPanel();
@@ -55,20 +56,12 @@ public class TrainManagementWindow extends JFrame {
 
     Box box = Box.createVerticalBox();
 
-    mainPanel.add(new JScrollPane(box));
+    _jScrollPane = new JScrollPane(box);
+    mainPanel.add(_jScrollPane);
 
-    _trainViews = new ArrayList<>();
-
-    for (Train t : _trains) {
-      TrainView tv = buildTrainView(t);
-      box.add(tv._panel);
-      box.add(Box.createVerticalStrut(5));
-
-      _trainViews.add(tv);
-
-    }
     getContentPane().add(mainPanel);
 
+    updateView();
   }
 
   private void initToolbar(JPanel mainPanel) {
@@ -76,6 +69,17 @@ public class TrainManagementWindow extends JFrame {
 
     toolbar.setFloatable(false);
 
+    {
+      JButton button = new JButton(new AbstractAction("Scan") {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          scan();
+        }
+      });
+
+      toolbar.add(button);
+    }
     {
       JButton button = new JButton(new AbstractAction("Send Now") {
 
@@ -98,23 +102,55 @@ public class TrainManagementWindow extends JFrame {
 
       toolbar.add(button);
     }
-
+    mainPanel.add(toolbar, BorderLayout.NORTH);
   }
 
-  protected void sendTrains() {
-    for (TrainView tv : _trainViews) {
-      Train t = tv._train;
-      List<String> contractorsToSend = t.getContractorsToSend();
-      contractorsToSend.clear();
-      
-      for (JToggleButton b : tv._buttons) {
-        if (b.isSelected()) {
-          contractorsToSend.add(b.getName());
-        }
+  private void updateView() {
+    Box box = Box.createVerticalBox();
+    _trainViews = new ArrayList<>();
+    if (_trains != null) {
+      for (Train t : _trains) {
+        TrainView tv = buildTrainView(t);
+        box.add(tv._panel);
+        box.add(Box.createVerticalStrut(5));
+        _trainViews.add(tv);
       }
     }
 
-    _tscanner.sendTrains(_trains);
+    _jScrollPane.getViewport().setView(box);
+  }
+
+  protected void scan() {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        TrainManagementWindow.this.setVisible(false);
+        _trains = _tscanner.analyzeIntTrains();
+        updateView();
+        TrainManagementWindow.this.setVisible(true);
+      }
+    });
+    t.start();
+  }
+
+  protected void sendTrains() {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        for (TrainView tv : _trainViews) {
+          Train t = tv._train;
+          List<String> contractorsToSend = t.getContractorsToSend();
+          contractorsToSend.clear();
+
+          for (JToggleButton b : tv._buttons) {
+            if (b.isSelected()) {
+              contractorsToSend.add(b.getName());
+            }
+          }
+        }
+
+        _tscanner.sendTrains(_trains);
+      }
+    });
+    t.start();
   }
 
   protected void schedule() {

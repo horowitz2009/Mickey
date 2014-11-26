@@ -13,6 +13,7 @@ public class Train {
   private List<ContractorView> _contractorViews;
   private List<String>         _contractorsToSend = new ArrayList<String>();
   private boolean              _idle;
+  private long _sentTime;
 
   public BufferedImage getAdditionalInfo() {
     return _additionalInfo;
@@ -77,6 +78,14 @@ public class Train {
 
   public boolean isIdle() {
     return _idle;
+  }
+
+  public void setSentTime(long time) {
+    _sentTime = time;
+  }
+
+  public long getSentTime() {
+    return _sentTime;
   }
 
 }

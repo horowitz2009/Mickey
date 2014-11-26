@@ -1,7 +1,6 @@
 package com.horowitz.mickey;
 
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ class TableModel extends AbstractTableModel {
 
   Map<String, Map<String, Need>> _map;
 
-  private Contractor[]           _contractors;
+  private List<Contractor>       _contractors;
 
   private Material[]             _allmats;
 
@@ -47,7 +46,7 @@ class TableModel extends AbstractTableModel {
     }
 
     try {
-      _contractors = new DataStore().readContractors();
+      _contractors = new DataStore().getActiveContractors();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -58,7 +57,7 @@ class TableModel extends AbstractTableModel {
   public int getColumnCount() {
     if (_contractors == null)
       return 1;
-    return _contractors.length + 1;
+    return _contractors.size() + 1;
   }
 
   @Override
@@ -80,15 +79,15 @@ class TableModel extends AbstractTableModel {
     } else {
       Long v1 = 0l;
       Long v2 = 0l;
-      Contractor contractor = _contractors[columnIndex - 1];
+      Contractor contractor = _contractors.get(columnIndex - 1);
       Map<String, Need> innerMap = _map.get(mat);
 
       Need need = innerMap.get(contractor.getName());
       if (need != null) {
         Objective o = need.getObjective();
         v1 = (o.getNeededAmount() - o.getCurrentAmount());
-        //NumberFormat nf = NumberFormat.getIntegerInstance();
-        //value = nf.format(value);
+        // NumberFormat nf = NumberFormat.getIntegerInstance();
+        // value = nf.format(value);
       }
       if (contractor.getMaterialsMore() != null) {
         for (Material mm : contractor.getMaterialsMore()) {
@@ -104,8 +103,8 @@ class TableModel extends AbstractTableModel {
       if (v2 == null) {
         v2 = 0l;
       }
-      //NumberFormat nf = NumberFormat.getIntegerInstance();
-      //String sv = nf.format(v2);
+      // NumberFormat nf = NumberFormat.getIntegerInstance();
+      // String sv = nf.format(v2);
 
       value = v1 + ":" + v2;
     }
@@ -117,7 +116,7 @@ class TableModel extends AbstractTableModel {
     if (column == 0) {
       return "";
     }
-    Contractor contractor = _contractors[column - 1];
+    Contractor contractor = _contractors.get(column - 1);
     String s = contractor.getAccepts();
     if (s == null) {
       s = "";

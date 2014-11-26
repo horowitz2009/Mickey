@@ -16,7 +16,7 @@ import com.horowitz.mickey.data.Need;
 
 public class ContractorAdvisor extends JPanel {
 
-  private static final String VERSION = "v.115";
+  private static final String VERSION = "v.116";
   private static final String TITLE   = "Contract Advisor " + VERSION;
 
   private ContractorsPanel    _contractorsPanel;
@@ -53,7 +53,7 @@ public class ContractorAdvisor extends JPanel {
     final ContractorAdvisor advisor = new ContractorAdvisor();
     frame.getContentPane().add(advisor, BorderLayout.CENTER);
 
-    frame.setSize(new Dimension(850, 600));
+    frame.setSize(new Dimension(850, 665));
 
     frame.setLocationRelativeTo(null);
 
