@@ -185,12 +185,15 @@ public class TrainScanner {
 
   private Train scanThisTrain(Rectangle trainArea, int number) throws AWTException, RobotInterruptedException {
     Rectangle trainArea1 = new Rectangle(trainArea.x + 148, trainArea.y, trainArea.width - 148, trainArea.height);
-    writeImage(trainArea, "train" + number + ".bmp");
+    String fullImageFilename = "data/int/train" + number + ".bmp";
+    writeImage(trainArea, fullImageFilename);
     Rectangle newArea = new Rectangle(trainArea.x + 148, trainArea.y + 1, 512, 24);
-    writeImage(newArea, "train" + number + "_scanThis.bmp");
+    String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
+    writeImage(newArea, scanImageFilename);
     Robot robot = new Robot();
     Train train = new Train(robot.createScreenCapture(trainArea1), robot.createScreenCapture(newArea));
-
+    train.setFullImageFileName(fullImageFilename);
+    train.setScanImageFileName(scanImageFilename);
     try {
       _mouse.delay(400, false);
     } catch (RobotInterruptedException e) {
@@ -249,10 +252,13 @@ public class TrainScanner {
             gap = (width - nn * 62);
           }
           System.err.println("" + gap);
-          List<ContractorView> contractorViews = scanContractors(train, xStart, yLast, nn, gap, number);
+          List<String> contractorNames = scanContractors(train, xStart, yLast, nn, gap, number);
 
-          train.setContractorViews(contractorViews);
+          train.setContractorsBeenSent(contractorNames);
           train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(1, 3, xStart - 2, 97));
+          String shortFilename = "data/int/train" + number + "_info.bmp";
+          _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
+          train.setAdditionalInfoShortFileName(shortFilename);
         } else {
           train.setIdle(true);
         }
@@ -265,8 +271,8 @@ public class TrainScanner {
     return train;
   }
 
-  private List<ContractorView> scanContractors(Train train, int xStart, int y, long nn, int gap, int number) {
-    List<ContractorView> result = new ArrayList<>();
+  private List<String> scanContractors(Train train, int xStart, int y, long nn, int gap, int number) {
+    List<String> result = new ArrayList<>();
     for (int i = 0; i < nn; ++i) {
       BufferedImage subimage = train.getAdditionalInfo().getSubimage(xStart + (i * (62 + gap)), y, 62, 77);
 
@@ -286,8 +292,7 @@ public class TrainScanner {
               Pixel p = _comparator.findImage(image, subimage);
               if (p != null) {
                 System.err.println("This is " + cname);
-                ContractorView cv = new ContractorView(cname, image);
-                result.add(cv);
+                result.add(cname);
                 break;
               }
             }

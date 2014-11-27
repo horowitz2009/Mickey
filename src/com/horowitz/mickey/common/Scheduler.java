@@ -3,17 +3,18 @@ package com.horowitz.mickey.common;
 import java.util.HashSet;
 import java.util.Set;
 
-import sun.applet.Main;
-
 public class Scheduler {
 
   public static long parse(String s) {
     long res = 0;
 
-    String[] ss = s.trim().split(" ");
+    try {
+      String[] ss = s.trim().split(" ");
 
-    for (int i = 0; i < ss.length; i++) {
-      res += parseSimple(ss[i]);
+      for (int i = 0; i < ss.length; i++) {
+        res += parseSimple(ss[i]);
+      }
+    } catch (Exception e) {
     }
 
     return res;

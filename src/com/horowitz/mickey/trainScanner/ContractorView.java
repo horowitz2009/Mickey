@@ -1,7 +1,11 @@
 package com.horowitz.mickey.trainScanner;
 
 import java.awt.image.BufferedImage;
-
+/**
+ * @deprecated
+ * @author Zhivko Hristov
+ *
+ */
 public class ContractorView {
   private String        _name;
   private BufferedImage _image;

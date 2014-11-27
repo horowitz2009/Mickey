@@ -10,6 +10,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.horowitz.mickey.trainScanner.Train;
 
 public class DataStore {
 
@@ -65,6 +66,21 @@ public class DataStore {
     String json = _gson.toJson(contractors);
 
     FileUtils.writeStringToFile(new File("data/contractors.json"), json);
+  }
+
+  public void writeTrains(Train[] trains) throws IOException {
+
+    String json = _gson.toJson(trains);
+
+    FileUtils.writeStringToFile(new File("data/int/trains.json"), json);
+  }
+
+  public Train[] readTrains() throws IOException {
+    String json = FileUtils.readFileToString(new File("data/int/trains.json"));
+
+    Train[] trains = _gson.fromJson(json, Train[].class);
+
+    return trains;
   }
 
   public Mission[] getHomeMissions() throws IOException {
@@ -239,7 +255,7 @@ public class DataStore {
     }
     return active;
   }
-  
+
   public List<Contractor> getActiveContractors() throws IOException {
     List<Contractor> active = new ArrayList<>();
     for (Contractor c : readContractors()) {

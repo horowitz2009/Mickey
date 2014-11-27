@@ -5,15 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Train {
-  private BufferedImage        _fullImage;
-  private BufferedImage        _scanImage;
-  private BufferedImage        _additionalInfo;
-  private BufferedImage        _additionalInfoShort;
+  private transient BufferedImage _fullImage;
+  private String                  _fullImageFileName;
 
-  private List<ContractorView> _contractorViews;
-  private List<String>         _contractorsToSend = new ArrayList<String>();
-  private boolean              _idle;
-  private long _sentTime;
+  private transient BufferedImage _scanImage;
+  private String                  _scanImageFileName;
+
+  private transient BufferedImage _additionalInfo;
+  // private String _additionalInfoFileName;
+
+  private transient BufferedImage _additionalInfoShort;
+  private String                  _additionalInfoShortFileName;
+
+  private List<String>            _contractorsBeenSent;
+  private List<String>            _contractorsToSend = new ArrayList<String>();
+  private boolean                 _idle;
+  private long                    _sentTime;
 
   public BufferedImage getAdditionalInfo() {
     return _additionalInfo;
@@ -25,6 +32,7 @@ public class Train {
 
   public Train(BufferedImage fullImage, BufferedImage scanImage) {
     super();
+
     _fullImage = fullImage;
     _scanImage = scanImage;
   }
@@ -45,19 +53,20 @@ public class Train {
     _scanImage = scanImage;
   }
 
-  public void setContractorViews(List<ContractorView> contractorViews) {
-    _contractorViews = contractorViews;
+  public void setContractorsBeenSent(List<String> contractorsBeenSent) {
+    _contractorsBeenSent = contractorsBeenSent;
   }
 
-  public List<ContractorView> getContractorViews() {
-    return _contractorViews;
+  public List<String> getContractorsBeenSent() {
+    return _contractorsBeenSent;
   }
 
   public void setSame() {
     _contractorsToSend.clear();
-    for (ContractorView cv : _contractorViews) {
-      _contractorsToSend.add(cv.getName());
-    }
+    _contractorsToSend.addAll(_contractorsBeenSent);
+    // for (String cname : _contractorsBeenSent) {
+    // _contractorsToSend.add(cname);
+    // }
   }
 
   public List<String> getContractorsToSend() {
@@ -86,6 +95,30 @@ public class Train {
 
   public long getSentTime() {
     return _sentTime;
+  }
+
+  public String getFullImageFileName() {
+    return _fullImageFileName;
+  }
+
+  public void setFullImageFileName(String fullImageFileName) {
+    _fullImageFileName = fullImageFileName;
+  }
+
+  public String getAdditionalInfoShortFileName() {
+    return _additionalInfoShortFileName;
+  }
+
+  public void setAdditionalInfoShortFileName(String additionalInfoShortFileName) {
+    _additionalInfoShortFileName = additionalInfoShortFileName;
+  }
+
+  public String getScanImageFileName() {
+    return _scanImageFileName;
+  }
+
+  public void setScanImageFileName(String scanImageFileName) {
+    _scanImageFileName = scanImageFileName;
   }
 
 }

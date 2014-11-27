@@ -78,7 +78,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.823b";
+  private static final String APP_TITLE           = "v0.824";
 
   private boolean             _devMode            = false;
 
@@ -1418,6 +1418,7 @@ public final class MainFrame extends JFrame {
         scanOtherLocations(true);
 
         captureContracts();
+        sendInternational();
 
         if (_captureContractors.size() == 0) {
           scanOtherLocations(true);
@@ -1552,7 +1553,7 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private int _pingTurn = 1;
+  private int                   _pingTurn = 1;
 
   private TrainManagementWindow _trainManagementWindow;
 
@@ -1645,6 +1646,13 @@ public final class MainFrame extends JFrame {
     _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
     _mouse.delay(600);
     _captureHome = false;
+  }
+
+  private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
+      _trainManagementWindow.sendTrainsNow();// in this thread please
+      _trainManagementWindow.setTimeLeft(4 * 60 * 60000 + 10 * 60000);
+    }
   }
 
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {

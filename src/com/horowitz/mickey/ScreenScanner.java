@@ -36,7 +36,7 @@ public class ScreenScanner {
 
   public static final String   ANCHOR_IMAGE                   = "anchorBill.bmp";
   public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeft.bmp";
-  
+
   public static final String   POINTER_SHOPX_IMAGE            = "shopX.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
@@ -223,7 +223,6 @@ public class ScreenScanner {
     diff = diff / 2;
     y = _br.y - diff + 1;
 
-    
     _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
@@ -329,10 +328,16 @@ public class ScreenScanner {
 
   public void writeImage(Rectangle rect, String filename) {
     try {
-      MyImageIO.write(new Robot().createScreenCapture(rect), filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
-    } catch (IOException e) {
-      e.printStackTrace();
+      writeImage(new Robot().createScreenCapture(rect), filename);
     } catch (AWTException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void writeImage(BufferedImage image, String filename) {
+    try {
+      MyImageIO.write(image, filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
