@@ -335,8 +335,16 @@ public class ScreenScanner {
   }
 
   public void writeImage(BufferedImage image, String filename) {
+    
     try {
-      MyImageIO.write(image, filename.substring(filename.length() - 3).toUpperCase(), new File(filename));
+      int ind = filename.lastIndexOf("/");
+      if (ind > 0){
+        String path = filename.substring(0, ind);
+        File f = new File(path);
+        f.mkdirs();
+      }
+      File file = new File(filename);
+      MyImageIO.write(image, filename.substring(filename.length() - 3).toUpperCase(), file);
     } catch (IOException e) {
       e.printStackTrace();
     }

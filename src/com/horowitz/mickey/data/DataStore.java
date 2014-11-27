@@ -76,9 +76,12 @@ public class DataStore {
   }
 
   public Train[] readTrains() throws IOException {
-    String json = FileUtils.readFileToString(new File("data/int/trains.json"));
-
-    Train[] trains = _gson.fromJson(json, Train[].class);
+    File file = new File("data/int/trains.json");
+    Train[] trains = null;
+    if (file.exists()) {
+      String json = FileUtils.readFileToString(file);
+      trains = _gson.fromJson(json, Train[].class);
+    }
 
     return trains;
   }

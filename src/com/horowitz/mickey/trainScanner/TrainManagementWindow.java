@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -320,6 +321,19 @@ public class TrainManagementWindow extends JFrame {
     Thread t = new Thread(new Runnable() {
       public void run() {
         TrainManagementWindow.this.setVisible(false);
+        File d = new File("data/int");
+        String[] list = d.list(new FilenameFilter() {
+
+          @Override
+          public boolean accept(File f, String name) {
+            return name.endsWith(".bmp");
+          }
+        });
+        for (String filename : list) {
+          File f = new File(d, filename);
+          f.delete();
+        }
+
         _trains = _tscanner.analyzeIntTrains();
         updateView();
         save();
@@ -335,6 +349,10 @@ public class TrainManagementWindow extends JFrame {
     }
     final long time = Scheduler.parse(_timeTF.getText()) + System.currentTimeMillis();
     _tscanner.LOGGER.info("Scheduling sending for " + _timeTF.getText());
+    runScheduleThread(time);
+  }
+
+  private void runScheduleThread(final long time) {
     _scheduleThread = new Thread(new Runnable() {
 
       public void run() {
@@ -348,6 +366,7 @@ public class TrainManagementWindow extends JFrame {
           _timeLeft = time - System.currentTimeMillis();
           if (_timeLeft <= 0) {
             // it's time
+            _timeLabel.setText("");
             if (!isRunning("MAGIC"))
               sendTrains();
             break;
@@ -367,7 +386,6 @@ public class TrainManagementWindow extends JFrame {
       }
     }, "SCHEDULER");
     _scheduleThread.start();
-
   }
 
   private void selectSame(TrainView tv) {
@@ -438,5 +456,11 @@ public class TrainManagementWindow extends JFrame {
 
   public void setTimeLeft(long timeLeft) {
     _timeLeft = timeLeft;
+  }
+
+  public void reschedule(long time) {
+    time += System.currentTimeMillis();
+    setTimeLeft(time);
+    runScheduleThread(time);
   }
 }

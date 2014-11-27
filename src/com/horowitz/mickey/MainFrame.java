@@ -16,7 +16,6 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -66,7 +65,6 @@ import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.service.Service;
-import com.horowitz.mickey.trainScanner.Train;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
 
@@ -78,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.824";
+  private static final String APP_TITLE           = "v0.824e";
 
   private boolean             _devMode            = false;
 
@@ -807,11 +805,13 @@ public final class MainFrame extends JFrame {
             processCommands();
             processRequests();
 
-            if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
-              final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-              _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-                  "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
-            }
+//            if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
+//              final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+//              _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+//                  "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+//            }
+            
+            
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
@@ -1648,10 +1648,10 @@ public final class MainFrame extends JFrame {
     _captureHome = false;
   }
 
-  private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+  private void sendInternational() {
     if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
       _trainManagementWindow.sendTrainsNow();// in this thread please
-      _trainManagementWindow.setTimeLeft(4 * 60 * 60000 + 10 * 60000);
+      _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
     }
   }
 

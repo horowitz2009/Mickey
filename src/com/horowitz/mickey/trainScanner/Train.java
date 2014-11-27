@@ -16,6 +16,7 @@ public class Train {
 
   private transient BufferedImage _additionalInfoShort;
   private String                  _additionalInfoShortFileName;
+  private String                  _additionalInfoFileName;
 
   private List<String>            _contractorsBeenSent;
   private List<String>            _contractorsToSend = new ArrayList<String>();
@@ -101,23 +102,31 @@ public class Train {
     return _fullImageFileName;
   }
 
-  public void setFullImageFileName(String fullImageFileName) {
+  public void setFullImageFilename(String fullImageFileName) {
     _fullImageFileName = fullImageFileName;
+  }
+
+  public String getAdditionalInfoFileName() {
+    return _additionalInfoFileName;
   }
 
   public String getAdditionalInfoShortFileName() {
     return _additionalInfoShortFileName;
   }
 
-  public void setAdditionalInfoShortFileName(String additionalInfoShortFileName) {
+  public void setAdditionalInfoShortFilename(String additionalInfoShortFileName) {
     _additionalInfoShortFileName = additionalInfoShortFileName;
+  }
+
+  public void setAdditionalInfoFilename(String additionalInfoFileName) {
+    _additionalInfoFileName = additionalInfoFileName;
   }
 
   public String getScanImageFileName() {
     return _scanImageFileName;
   }
 
-  public void setScanImageFileName(String scanImageFileName) {
+  public void setScanImageFilename(String scanImageFileName) {
     _scanImageFileName = scanImageFileName;
   }
 
