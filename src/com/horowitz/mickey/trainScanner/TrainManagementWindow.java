@@ -103,6 +103,7 @@ public class TrainManagementWindow extends JFrame {
       List<String> activeContractorNames = new DataStore().getActiveContractorNames();
       for (String cname : activeContractorNames) {
         JToggleButton cbutton = createContractorButton(cname);
+        box.add(Box.createHorizontalStrut(2));
         box.add(cbutton);
         trainView._buttons.add(cbutton);
       }

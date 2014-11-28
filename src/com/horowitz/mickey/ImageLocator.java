@@ -43,19 +43,22 @@ public class ImageLocator extends JPanel {
     } catch (AWTException e) {
     }
 
-    registerImageButton("Bobby2.bmp");
-    registerImageButton("Mahatma2.bmp");
-    registerImageButton("George2.bmp");
-    registerImageButton("Otto2.bmp");
-    registerImageButton("Jules2.bmp");
-    registerImageButton("Sam2.bmp");
-    registerImageButton("Alan2.bmp");
-    registerImageButton("Wolfgang2.bmp");
-    registerImageButton("Mizuki2.bmp");
-    registerImageButton("Lucy2.bmp");
-    registerImageButton("Giovanni2.bmp");
-    registerImageButton("Ethan2.bmp");
-    registerImageButton("int/brCorner.bmp");
+//    registerImageButton("Bobby2.bmp");
+//    registerImageButton("Mahatma2.bmp");
+//    registerImageButton("George2.bmp");
+//    registerImageButton("Otto2.bmp");
+//    registerImageButton("Jules2.bmp");
+//    registerImageButton("Sam2.bmp");
+//    registerImageButton("Alan2.bmp");
+//    registerImageButton("Wolfgang2.bmp");
+//    registerImageButton("Mizuki2.bmp");
+//    registerImageButton("Lucy2.bmp");
+//    registerImageButton("Giovanni2.bmp");
+//    registerImageButton("Ethan2.bmp");
+//    registerImageButton("int/brCorner.bmp");
+//    registerImageButton("loginFB.bmp");
+      registerImageButton("int/Del.bmp");
+      registerImageButton("int/brEdge.bmp");
 
   }
 

@@ -77,6 +77,7 @@ public class TrainScanner {
       }
 
     } catch (RobotInterruptedException | IOException | AWTException e) {
+      LOGGER.severe("Scanning interrupted! The data is incomplete!!!");
       e.printStackTrace();
     }
     return trains;
@@ -92,77 +93,6 @@ public class TrainScanner {
     } catch (RobotInterruptedException e) {
     }
     _mouse.click();
-  }
-
-  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller) throws RobotInterruptedException, IOException, AWTException {
-    List<Train> trains = new ArrayList<>();
-    if (hasScroller) {
-      _mouse.mouseMove(x + 719, y + 157);// center of scrollball placed in the beginning
-      _mouse.click();
-      _mouse.delay(1000);
-    }
-
-    yt += 63; // skip first slot
-    xt += 3;
-
-    scanSlots(xt, yt, 1, trains);
-    if (hasScroller) {
-      pageDown(x, y, 2);
-      _mouse.delay(2000);
-      scanSlots(xt, yt, 2, trains);
-      _mouse.delay(1000);
-
-      pageDown(x, y, 3);
-      _mouse.delay(2000);
-      scanSlots(xt, yt, 3, trains);
-      _mouse.delay(1000);
-
-      LOGGER.info("DONE");
-    }
-    return trains;
-  }
-
-  private void scanSlots(int xt, int yt, int page, List<Train> trains) throws AWTException, IOException, RobotInterruptedException {
-    for (int slot = 0; slot < 5; slot++) {
-      Rectangle slotArea = new Rectangle(xt, yt + slot * 60, 666, 50);
-      int number = slot + 1 + ((page - 1) * 5);
-      String fullImageFilename = "data/int/train" + number + ".png";
-      writeImage(slotArea, fullImageFilename);
-      Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
-      String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
-      writeImage(newArea, scanImageFilename);
-      Robot robot = new Robot();
-      Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
-      train.setFullImageFilename(fullImageFilename);
-      train.setScanImageFilename(scanImageFilename);
-      try {
-        _mouse.delay(400, false);
-      } catch (RobotInterruptedException e) {
-      }
-
-      Rectangle delArea = new Rectangle(slotArea.x + 9, slotArea.y + 25, 25, 17);
-      ImageData delData = _scanner.generateImageData("int/Del.bmp");
-      if (delData.findImage(delArea) != null) {
-        // scan additional info
-        _mouse.savePosition();
-        _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
-        _mouse.delay(800);
-        Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
-        String addInfoFilename = "trainInfo" + number + ".bmp";
-        writeImage(infoArea, addInfoFilename);
-        train.setAdditionalInfo(robot.createScreenCapture(infoArea));
-        train.setAdditionalInfoFilename(addInfoFilename);
-
-        train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 145, 110));
-        String shortFilename = "data/int/trainInfo" + number + "_short.png";
-        _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
-        train.setAdditionalInfoShortFilename(shortFilename);
-        train.setIdle(false);
-      } else {
-        train.setIdle(true);
-      }
-      trains.add(train);
-    }
   }
 
   private List<Train> scanIntTrains(int x, int y, int xt, int yt, boolean hasScroller) throws RobotInterruptedException, IOException, AWTException {
@@ -356,46 +286,6 @@ public class TrainScanner {
     }
     return train;
   }
-  private List<String> scanContractorsSimple(Train train) {
-    List<String> result = new ArrayList<>();
-    
-    //TODO scan one, if found, move next etc.
-//    for (int i = 0; i < nn; ++i) {
-//      BufferedImage subimage = train.getAdditionalInfo().getSubimage(xStart + (i * (62 + gap)), y, 62, 77);
-//
-//      // try {
-//      // MyImageIO.write(subimage, "PNG", new File("contractor" + number + "_" + (i + 1) + ".png"));
-//      // } catch (IOException e) {
-//      // e.printStackTrace();
-//      // }
-//
-//      try {
-//        List<String> activeContractorNames = new DataStore().getActiveContractorNames();
-//        for (String cname : activeContractorNames) {
-//          String filename = "int/" + cname + "3.bmp";
-//          try {
-//            BufferedImage image = ImageIO.read(ImageManager.getImageURL(filename));
-//            if (image != null) {
-//              Pixel p = _comparator.findImage(image, subimage);
-//              if (p != null) {
-//                System.err.println("This is " + cname);
-//                result.add(cname);
-//                break;
-//              }
-//            }
-//          } catch (Exception e) {
-//            System.err.println("can't find " + filename);
-//          }
-//        }
-//      } catch (IOException e) {
-//        e.printStackTrace();
-//      }
-//
-//    }
-
-    return result;
-  }
-
 
   private List<String> scanContractors(Train train, int xStart, int y, long nn, int gap, int number) {
     List<String> result = new ArrayList<>();
@@ -571,6 +461,152 @@ public class TrainScanner {
       // train.setSentTime(System.currentTimeMillis());
     }
 
+  }
+
+  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller) throws RobotInterruptedException, IOException, AWTException {
+    List<Train> trains = new ArrayList<>();
+    if (hasScroller) {
+      _mouse.mouseMove(x + 719, y + 157);// center of scrollball placed in the beginning
+      _mouse.click();
+      _mouse.delay(1000);
+    }
+
+    yt += 63; // skip first slot
+    xt += 3;
+
+    scanSlots(xt, yt, 1, trains);
+    if (hasScroller) {
+      pageDown(x, y, 2);
+      _mouse.delay(2000);
+      scanSlots(xt, yt, 2, trains);
+      _mouse.delay(1000);
+
+      pageDown(x, y, 3);
+      _mouse.delay(2000);
+      scanSlots(xt, yt, 3, trains);
+      _mouse.delay(1000);
+
+      LOGGER.info("DONE");
+    }
+    return trains;
+  }
+
+  private void scanSlots(int xt, int yt, int page, List<Train> trains) throws AWTException, IOException, RobotInterruptedException {
+    for (int slot = 0; slot < 5; slot++) {
+      _mouse.delay(400);
+      Rectangle slotArea = new Rectangle(xt, yt + slot * 60, 666, 50);
+      int number = slot + 1 + ((page - 1) * 5);
+      String fullImageFilename = "data/int/train" + number + ".png";
+      writeImage(slotArea, fullImageFilename);
+      Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
+      String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
+      writeImage(newArea, scanImageFilename);
+      Robot robot = new Robot();
+      Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
+      train.setFullImageFilename(fullImageFilename);
+      train.setScanImageFilename(scanImageFilename);
+
+      Rectangle delArea = new Rectangle(slotArea.x, slotArea.y + 24, 50, 20);
+      ImageData delData = _scanner.generateImageData("int/Del.bmp");
+      if (delData.findImage(delArea) != null) {
+        LOGGER.info("Found Del.bmp in slot " + slot);
+        // scan additional info
+        _mouse.savePosition();
+        _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
+        _mouse.delay(800);
+        Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
+        String addInfoFilename = "trainInfo" + number + ".bmp";
+        writeImage(infoArea, addInfoFilename);
+        train.setAdditionalInfo(cutToEdge(robot.createScreenCapture(infoArea)));
+
+        train.setAdditionalInfoFilename(addInfoFilename);
+
+        //short info
+        ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
+        ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
+        Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+        if (pwest == null) {
+          pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+        } else {
+          System.err.println("found westEnd");
+        }
+        if (pwest == null) {
+          pwest = new Pixel(13, 0);
+        } else {
+          System.err.println("found westEnd2");
+        }
+        
+        System.err.println(pwest);
+
+        train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 60 + pwest.x - 1, train.getAdditionalInfo().getHeight()));
+        
+        
+        String shortFilename = "data/int/trainInfo" + number + "_short.png";
+        _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
+        train.setAdditionalInfoShortFilename(shortFilename);
+        train.setIdle(false);
+
+        List<String> contractorNames = scanContractorsSimple(train);
+
+        train.setContractorsBeenSent(contractorNames);
+
+        _mouse.restorePosition();
+      } else {
+        train.setIdle(true);
+      }
+      trains.add(train);
+    }
+  }
+
+  private BufferedImage cutToEdge(BufferedImage image) {
+    BufferedImage result = image;
+    try {
+      BufferedImage edgeImage = ImageIO.read(ImageManager.getImageURL("int/brEdge.bmp"));
+      Pixel p = _comparator.findImage(edgeImage, image);
+      if (p != null) {
+        System.err.println("found edge " + p);
+        result = image.getSubimage(0, 0, p.x + edgeImage.getWidth(), p.y + edgeImage.getHeight());
+      }
+    } catch (IOException e) {
+    }
+    return result;
+  }
+
+  private List<String> scanContractorsSimple(Train train) {
+    List<String> result = new ArrayList<>();
+
+    if (train.getAdditionalInfo() != null) {
+      BufferedImage subimage = train.getAdditionalInfo().getSubimage(60, 0, train.getAdditionalInfo().getWidth() - 60,
+          train.getAdditionalInfo().getHeight());
+      try {
+        List<String> activeContractorNames = new DataStore().getActiveContractorNames();
+        while (subimage.getWidth() >= 50) {
+          boolean atLeastOneFound = false;
+          for (String cname : activeContractorNames) {
+            if (!result.contains(cname)) {
+              String filename = "int/" + cname + "3.bmp";
+              BufferedImage cimage = ImageIO.read(ImageManager.getImageURL(filename));
+              if (cimage != null) {
+                Pixel p = _comparator.findImage(cimage, subimage);
+                if (p != null) {
+                  atLeastOneFound = true;
+                  System.err.println("Found " + cname);
+                  subimage = subimage.getSubimage(cimage.getWidth() + 3, 0, subimage.getWidth() - cimage.getWidth() - 3, subimage.getHeight());
+                  result.add(cname);
+                  break;
+                }// if
+              }// if cimage != null
+            }// if contains
+          }// for
+          if (!atLeastOneFound) {
+            break;
+          }
+        } // while
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }// if
+    return result;
   }
 
 }

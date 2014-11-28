@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.824e";
+  private static final String APP_TITLE           = "v0.824i";
 
   private boolean             _devMode            = false;
 
@@ -1337,8 +1337,13 @@ public final class MainFrame extends JFrame {
 
     // FB LOGIN
     if (scanAndClick(_scanner.getLoginWIthFB(), null))
-      _mouse.delay(5000);
+      _mouse.delay(2000);
 
+    if (scanAndClick(_scanner.getLoginFB(), null)) 
+      _mouse.delay(5000);
+    else
+      _mouse.delay(3000);
+    
     // DAILY
     if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(1000);
@@ -1918,6 +1923,7 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
     if (found)
       _mouse.delay(300);
+    found = scanAndClick(_scanner.getNoButton(), null);
 
     checkSession();
 

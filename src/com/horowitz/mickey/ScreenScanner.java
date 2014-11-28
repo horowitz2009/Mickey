@@ -78,6 +78,7 @@ public class ScreenScanner {
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
   private ImageData            _promoX                        = null;
+  private ImageData            _noButton                      = null;
   private ImageData            _share                         = null;
 
   private ImageData            _trainManagementAnchor         = null;
@@ -103,7 +104,8 @@ public class ScreenScanner {
   private float                _railYOffset                   = 5;
   private int                  _xOffset                       = 22;
 
-  private ImageData            _loginWIthFB;
+  private ImageData            _loginWithFB;
+  private ImageData            _loginFB;
 
   private ImageData            _dailyRewards;
 
@@ -127,7 +129,8 @@ public class ScreenScanner {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     Rectangle area = new Rectangle(20, 340, screenSize.width - 20 - 404, screenSize.height - 340 - 110);
     try {
-      _loginWIthFB = new ImageData("loginWithFB2.bmp", area, _comparator, 8, 8);
+      _loginWithFB = new ImageData("loginWithFB2.bmp", area, _comparator, 8, 8);
+      _loginFB = new ImageData("loginFB.bmp", area, _comparator, 29, 6);
 
       area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
       _dailyRewards = new ImageData("dailyX.bmp", area, _comparator, 9, 9);
@@ -189,6 +192,8 @@ public class ScreenScanner {
     int yy = (getGameHeight() - 386) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + yy + 50, 275, 75); // TODO to be widen if not working
     _sessionTimeOut = new ImageData("session.bmp", area, _comparator, 0, 0);
+    Rectangle area2 = new Rectangle(_tl.x + xx, _tl.y + 310, getGameWidth() - 2 * xx, 200);
+    _noButton = new ImageData("noButton2.bmp", area2, _comparator, 0, 0);
 
     area = new Rectangle(getGameWidth() / 2, _tl.y, getGameWidth() / 2, 112);
     _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
@@ -335,10 +340,10 @@ public class ScreenScanner {
   }
 
   public void writeImage(BufferedImage image, String filename) {
-    
+
     try {
       int ind = filename.lastIndexOf("/");
-      if (ind > 0){
+      if (ind > 0) {
         String path = filename.substring(0, ind);
         File f = new File(path);
         f.mkdirs();
@@ -578,7 +583,11 @@ public class ScreenScanner {
   }
 
   public ImageData getLoginWIthFB() {
-    return _loginWIthFB;
+    return _loginWithFB;
+  }
+
+  public ImageData getLoginFB() {
+    return _loginFB;
   }
 
   public ImageData getDailyRewards() {
@@ -647,6 +656,10 @@ public class ScreenScanner {
 
   public ImageData getPromoX() {
     return _promoX;
+  }
+
+  public ImageData getNoButton() {
+    return _noButton;
   }
 
   public ImageData getShare() {
