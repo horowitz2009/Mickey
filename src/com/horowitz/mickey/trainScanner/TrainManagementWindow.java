@@ -431,9 +431,9 @@ public class TrainManagementWindow extends JFrame {
     }
   }
 
-  public void sendTrainsNow() {
+  public boolean sendTrainsNow() {
     updateTrainStatus(true);
-    _tscanner.sendTrains(_trains);
+    return _tscanner.sendTrains(_trains);
   }
 
   private void updateView() {

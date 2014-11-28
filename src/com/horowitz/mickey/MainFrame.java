@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.824i";
+  private static final String APP_TITLE           = "v0.825a";
 
   private boolean             _devMode            = false;
 
@@ -805,13 +805,12 @@ public final class MainFrame extends JFrame {
             processCommands();
             processRequests();
 
-//            if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
-//              final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//              _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-//                  "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
-//            }
-            
-            
+            // if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
+            // final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            // _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+            // "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+            // }
+
             try {
               Thread.sleep(20000);
             } catch (InterruptedException e) {
@@ -1339,11 +1338,11 @@ public final class MainFrame extends JFrame {
     if (scanAndClick(_scanner.getLoginWIthFB(), null))
       _mouse.delay(2000);
 
-    if (scanAndClick(_scanner.getLoginFB(), null)) 
+    if (scanAndClick(_scanner.getLoginFB(), null))
       _mouse.delay(5000);
     else
       _mouse.delay(3000);
-    
+
     // DAILY
     if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(1000);
@@ -1655,8 +1654,11 @@ public final class MainFrame extends JFrame {
 
   private void sendInternational() {
     if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
-      _trainManagementWindow.sendTrainsNow();// in this thread please
-      _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
+      boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
+//      if (atLeastOneSent)
+//        _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
+//      else
+        _trainManagementWindow.reschedule(10 * 60000);
     }
   }
 
