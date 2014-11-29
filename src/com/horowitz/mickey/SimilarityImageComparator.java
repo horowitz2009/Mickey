@@ -390,8 +390,8 @@ public class SimilarityImageComparator implements ImageComparator {
 
   @Override
   public Pixel findImage(BufferedImage image, BufferedImage screen) {
-    for (int i = 0; i < (screen.getWidth() - image.getWidth()); i++) {
-      for (int j = 0; j < (screen.getHeight() - image.getHeight()); j++) {
+    for (int i = 0; i <= (screen.getWidth() - image.getWidth()); i++) {
+      for (int j = 0; j <= (screen.getHeight() - image.getHeight()); j++) {
         final BufferedImage subimage = screen.getSubimage(i, j, image.getWidth(), image.getHeight());
         if (compare(image, subimage, null, null)) {
           Pixel p = new Pixel(i, j);

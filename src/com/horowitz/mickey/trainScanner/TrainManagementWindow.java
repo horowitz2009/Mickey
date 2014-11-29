@@ -373,7 +373,7 @@ public class TrainManagementWindow extends JFrame {
             break;
           } else {
             _fancyTime = DateUtils.fancyTime2(_timeLeft) + " left to send int. trains...";
-            _tscanner.LOGGER.info(_fancyTime);
+            _tscanner.LOGGER.info(">>> " + _fancyTime);
             System.err.println(_fancyTime);
             _timeLabel.setText(_fancyTime);
           }
@@ -415,7 +415,12 @@ public class TrainManagementWindow extends JFrame {
         }
       }
       if (save) {
-        tv._train.setContractorsBeenSent(new ArrayList<>(contractorsToSend));
+        List<String> contractorsBeenSent = t.getContractorsBeenSent();
+        for (JToggleButton b : tv._buttons) {
+          if (b.isSelected()) {
+            contractorsBeenSent.add(b.getName());
+          }
+        }
       }
     }
   }
@@ -434,6 +439,16 @@ public class TrainManagementWindow extends JFrame {
   public boolean sendTrainsNow() {
     updateTrainStatus(true);
     return _tscanner.sendTrains(_trains);
+  }
+
+  public boolean isTrainWaiting() {
+    long now = System.currentTimeMillis();
+    for (Train t : _trains) {
+      if (!t.getContractorsToSend().isEmpty() && t.getSentTime() - now <= 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void updateView() {
