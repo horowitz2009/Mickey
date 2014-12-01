@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.825d";
+  private static final String APP_TITLE           = "v0.826";
 
   private boolean             _devMode            = false;
 
@@ -135,6 +135,8 @@ public final class MainFrame extends JFrame {
   private boolean             _scanMaterials2     = false;
 
   private List<BufferedImage> _lastImageList      = new ArrayList<>();
+
+  private JToggleButton       _sendInternational;
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
@@ -667,11 +669,12 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_resetAction);
     }
     // OC
-    {
-      _oneClick = new JToggleButton("OC");
-      _oneClick.setSelected(true);
-      mainToolbar2.add(_oneClick);
-    }
+    // {
+    // _oneClick = new JToggleButton("OC");
+    // _oneClick.setSelected(true);
+    // mainToolbar2.add(_oneClick);
+    // }
+
     // Refresh
     {
       mainToolbar2.add(_refreshClick);
@@ -691,7 +694,20 @@ public final class MainFrame extends JFrame {
         }
       });
     }
+    {
+      _sendInternational = new JToggleButton("SI");
+      _sendInternational.setSelected(true);
+      mainToolbar2.add(_sendInternational);
 
+      _sendInternational.addChangeListener(new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _commands.setProperty("sendInternational", "" + _sendInternational.isSelected());
+          _commands.saveSettingsSorted();
+        }
+      });
+    }
     // Resume
     {
       _resumeClick = new JToggleButton("Resume");
@@ -910,6 +926,7 @@ public final class MainFrame extends JFrame {
 
     boolean ping = "true".equalsIgnoreCase(_commands.getProperty("ping"));
     boolean resume = "true".equalsIgnoreCase(_commands.getProperty("resume"));
+    boolean sendInternational = "true".equalsIgnoreCase(_commands.getProperty("sendInternational"));
 
     if (ping != _pingClick.isSelected()) {
       _pingClick.setSelected(ping);
@@ -917,6 +934,10 @@ public final class MainFrame extends JFrame {
 
     if (resume != _resumeClick.isSelected()) {
       _resumeClick.setSelected(resume);
+    }
+
+    if (sendInternational != _sendInternational.isSelected()) {
+      _sendInternational.setSelected(sendInternational);
     }
   }
 
@@ -1422,9 +1443,10 @@ public final class MainFrame extends JFrame {
         scanOtherLocations(true);
 
         captureContracts();
-        sendInternational();
 
         if (_captureContractors.size() == 0) {
+          if (_sendInternational.isSelected())
+            sendInternational();
           scanOtherLocations(true);
 
           if (_pingClick.isSelected()) {
