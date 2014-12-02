@@ -38,7 +38,7 @@ public class TrainScanner {
     LOGGER = logger;
   }
 
-  public List<Train> analyzeIntTrains() {
+  public List<Train> analyzeIntTrains(boolean all) {
     List<Train> trains = null;
     try {
       int xx = (_scanner.getGameWidth() - 759) / 2;
@@ -65,7 +65,7 @@ public class TrainScanner {
         boolean hasScroller = upArrow.findImage(new Rectangle(x + 697, y + 116, 43, 58)) != null;
         xt = x + (hasScroller ? 26 : 41);
         // trains = scanIntTrains(x, y, xt, yt, hasScroller);
-        trains = scanIntTrainsNEW(x, y, xt, yt, hasScroller);
+        trains = scanIntTrainsNEW(x, y, xt, yt, hasScroller, all);
         // trains = scanIntTrains(x, y, xt, yt, false);
 
       } else {
@@ -81,7 +81,7 @@ public class TrainScanner {
     return trains;
   }
 
-  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller) throws RobotInterruptedException, IOException, AWTException {
+  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller, boolean all) throws RobotInterruptedException, IOException, AWTException {
     List<Train> trains = new ArrayList<>();
     if (hasScroller) {
       _mouse.mouseMove(x + 719, y + 157);// center of scrollball placed in the beginning
@@ -92,16 +92,16 @@ public class TrainScanner {
     yt += 63; // skip first slot
     xt += 3;
 
-    scanSlots(xt, yt, 1, trains);
+    scanSlots(xt, yt, 1, trains, all);
     if (hasScroller) {
       pageDown(x, y, 2);
       _mouse.delay(2000);
-      scanSlots(xt, yt, 2, trains);
+      scanSlots(xt, yt, 2, trains, all);
       _mouse.delay(1000);
 
       pageDown(x, y, 3);
       _mouse.delay(2000);
-      scanSlots(xt, yt, 3, trains);
+      scanSlots(xt, yt, 3, trains, all);
       _mouse.delay(1000);
 
       LOGGER.info("DONE");
@@ -109,71 +109,74 @@ public class TrainScanner {
     return trains;
   }
 
-  private void scanSlots(int xt, int yt, int page, List<Train> trains) throws AWTException, IOException, RobotInterruptedException {
+  private void scanSlots(int xt, int yt, int page, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
     for (int slot = 0; slot < 5; slot++) {
       _mouse.delay(400);
       Rectangle slotArea = new Rectangle(xt, yt + slot * 60, 666, 50);
-      int number = slot + 1 + ((page - 1) * 5);
-      String fullImageFilename = "data/int/train" + number + ".png";
-      writeImage(slotArea, fullImageFilename);
-      Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
-      String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
-      writeImage(newArea, scanImageFilename);
-      Robot robot = new Robot();
-      Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
-      train.setFullImageFilename(fullImageFilename);
-      train.setScanImageFilename(scanImageFilename);
-
       Rectangle delArea = new Rectangle(slotArea.x, slotArea.y + 24, 50, 20);
       ImageData delData = _scanner.generateImageData("int/Del.bmp");
-      if (delData.findImage(delArea) != null) {
-        LOGGER.info("Found Del.bmp in slot " + slot);
-        // scan additional info
-        _mouse.savePosition();
-        _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
-        _mouse.delay(800);
-        Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
-        String addInfoFilename = "trainInfo" + number + ".bmp";
-        writeImage(infoArea, addInfoFilename);
-        train.setAdditionalInfo(cutToEdge(robot.createScreenCapture(infoArea)));
+      boolean isIdle = delData.findImage(delArea) == null;
+      if (all || isIdle) {
+        int number = slot + 1 + ((page - 1) * 5);
+        String fullImageFilename = "data/int/train" + number + ".png";
+        writeImage(slotArea, fullImageFilename);
+        Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
+        String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
+        writeImage(newArea, scanImageFilename);
+        Robot robot = new Robot();
+        Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
+        train.setFullImageFilename(fullImageFilename);
+        train.setScanImageFilename(scanImageFilename);
 
-        train.setAdditionalInfoFilename(addInfoFilename);
+        if (!isIdle) {
+          LOGGER.info("Found Del.bmp in slot " + slot);
+          // scan additional info
+          _mouse.savePosition();
+          _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
+          _mouse.delay(800);
+          Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
+          String addInfoFilename = "trainInfo" + number + ".bmp";
+          writeImage(infoArea, addInfoFilename);
+          train.setAdditionalInfo(cutToEdge(robot.createScreenCapture(infoArea)));
 
-        // short info
-        ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
-        ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
-        Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
-        if (pwest == null) {
-          pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+          train.setAdditionalInfoFilename(addInfoFilename);
+
+          // short info
+          ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
+          ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
+          Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+          if (pwest == null) {
+            pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+          } else {
+            System.err.println("found westEnd");
+          }
+          if (pwest == null) {
+            pwest = new Pixel(13, 0);
+          } else {
+            System.err.println("found westEnd2");
+          }
+
+          System.err.println(pwest);
+
+          train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 60 + pwest.x - 1, train.getAdditionalInfo().getHeight()));
+
+          String shortFilename = "data/int/trainInfo" + number + "_short.png";
+          _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
+          train.setAdditionalInfoShortFilename(shortFilename);
+          train.setIdle(false);
+
+          List<String> contractorNames = scanContractorsSimple(train);
+
+          train.setContractorsBeenSent(contractorNames);
+          train.setSentTime(0l);// TODO ocr capture time and set it
+          _mouse.restorePosition();
         } else {
-          System.err.println("found westEnd");
+          train.setContractorsBeenSent(new ArrayList<String>());
+          train.setIdle(true);
+          train.setSentTime(0l);
         }
-        if (pwest == null) {
-          pwest = new Pixel(13, 0);
-        } else {
-          System.err.println("found westEnd2");
-        }
-
-        System.err.println(pwest);
-
-        train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 60 + pwest.x - 1, train.getAdditionalInfo().getHeight()));
-
-        String shortFilename = "data/int/trainInfo" + number + "_short.png";
-        _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
-        train.setAdditionalInfoShortFilename(shortFilename);
-        train.setIdle(false);
-
-        List<String> contractorNames = scanContractorsSimple(train);
-
-        train.setContractorsBeenSent(contractorNames);
-        train.setSentTime(0l);// TODO ocr capture time and set it
-        _mouse.restorePosition();
-      } else {
-        train.setContractorsBeenSent(new ArrayList<String>());
-        train.setIdle(true);
-        train.setSentTime(0l);
-      }
-      trains.add(train);
+        trains.add(train);
+      }// if all or is idle
     }
   }
 
@@ -298,7 +301,7 @@ public class TrainScanner {
         if (t.isIdle()) {
           for (Train train : trains) {
             long now = System.currentTimeMillis();
-            if (!train.getContractorsToSend().isEmpty() && train.getSentTime() - now <= 0) {
+            if (!train.getContractorsToSend().isEmpty()) {//obsolete && train.getSentTime() - now <= 0
               Pixel p = _comparator.findImage(train.getScanImage(), t.getScanImage());
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 60 + p.y)) {
@@ -320,10 +323,10 @@ public class TrainScanner {
 
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 72, y + 25);
-    _mouse.delay(300);
+    _mouse.delay(400);
     _mouse.mouseMove(x + 200, y + 25);
     _mouse.click();
-    _mouse.delay(300);
+    _mouse.delay(400);
     // it is expected a SendDialiog been opened
     int xx = (_scanner.getGameWidth() - 760) / 2;
     int yy = (_scanner.getGameHeight() - 550) / 2;

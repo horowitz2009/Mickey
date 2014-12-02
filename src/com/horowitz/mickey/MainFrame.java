@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.826b";
+  private static final String APP_TITLE           = "v0.827c";
 
   private boolean             _devMode            = false;
 
@@ -1676,7 +1676,7 @@ public final class MainFrame extends JFrame {
 
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
-      LOGGER.info("CHECKING FOR INTERNAIONAL... " + _trainManagementWindow.isTrainWaiting());
+      LOGGER.info("CHECKING FOR INTERNATIONAL... " + _trainManagementWindow.isTrainWaiting());
       if (_trainManagementWindow != null && _trainManagementWindow.isTrainWaiting()) {
         handlePopups();
         boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
@@ -2169,6 +2169,7 @@ public final class MainFrame extends JFrame {
                 stop = true;
                 break;
               }
+              huntLetters();
               if (scanOtherLocations(true)) {
                 hadOtherLocations = true;
                 p.x = _scanner.getBottomRight().x - 80;
@@ -2878,7 +2879,7 @@ public final class MainFrame extends JFrame {
   }
 
   private Pixel detectLetter() throws RobotInterruptedException {
-    ImageData white = _scanner._letterWhite2;
+    ImageData white = _scanner._letterWhite3;
     Pixel p = white.findImage(_scanner.getLetterArea());
     if (p != null) {
       _stats.registerWhiteLetter();
@@ -2886,7 +2887,7 @@ public final class MainFrame extends JFrame {
     }
     _mouse.checkUserMovement();
 
-    ImageData red = _scanner._letterRed2;
+    ImageData red = _scanner._letterRed3;
     p = red.findImage(_scanner.getLetterArea());
     if (p != null) {
       _stats.registerRedLetter();
@@ -2894,7 +2895,7 @@ public final class MainFrame extends JFrame {
     }
     _mouse.checkUserMovement();
 
-    ImageData brown = _scanner._letterBrown2;
+    ImageData brown = _scanner._letterBrown3;
     p = brown.findImage(_scanner.getLetterArea());
     if (p != null) {
       _stats.registerBrownLetter();

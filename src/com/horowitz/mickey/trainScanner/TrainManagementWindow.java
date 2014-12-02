@@ -135,11 +135,32 @@ public class TrainManagementWindow extends JFrame {
     box2.add(Box.createHorizontalStrut(10));
     box2.add(clearButton);
 
+    JButton removeButton = new JButton(new AbstractAction("Remove this train") {
+      
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+        removeThisTrain(trainView);
+      }
+    });
+    box2.add(Box.createHorizontalStrut(10));
+    box2.add(removeButton);
+
     buttonsPanel.add(box2, BorderLayout.SOUTH);
 
     panel.add(buttonsPanel); // center
 
     return trainView;
+  }
+
+  protected void removeThisTrain(TrainView trainView) {
+    //trainView._panel;
+    for (Train train : _trains) {
+      if (train.getFullImageFileName().equals(trainView._train.getFullImageFileName())) {
+        _trains.remove(train);
+        break;
+      }
+    }
+    updateView();
   }
 
   private void clear(TrainView tv) {
@@ -208,11 +229,22 @@ public class TrainManagementWindow extends JFrame {
       toolbar.add(button);
     }
     {
-      JButton button = new JButton(new AbstractAction("Rescan") {
+      JButton button = new JButton(new AbstractAction("Rescan ALL") {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan();
+          scan(true);
+        }
+      });
+
+      toolbar.add(button);
+    }
+    {
+      JButton button = new JButton(new AbstractAction("Rescan Idle") {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          scan(false);
         }
       });
 
@@ -318,24 +350,30 @@ public class TrainManagementWindow extends JFrame {
       }
   }
 
-  protected void scan() {
+  protected void scan(final boolean all) {
     Thread t = new Thread(new Runnable() {
       public void run() {
         TrainManagementWindow.this.setVisible(false);
-        File d = new File("data/int");
-        String[] list = d.list(new FilenameFilter() {
+        if (all) {
+          File d = new File("data/int");
+          String[] list = d.list(new FilenameFilter() {
 
-          @Override
-          public boolean accept(File f, String name) {
-            return name.endsWith(".bmp");
+            @Override
+            public boolean accept(File f, String name) {
+              return name.endsWith(".bmp");
+            }
+          });
+          for (String filename : list) {
+            File f = new File(d, filename);
+            f.delete();
           }
-        });
-        for (String filename : list) {
-          File f = new File(d, filename);
-          f.delete();
+          _trains = _tscanner.analyzeIntTrains(all);
+        } else {
+          List<Train> newTrains = _tscanner.analyzeIntTrains(all);
+          if (_trains != null) {
+            _trains.addAll(newTrains);
+          }
         }
-
-        _trains = _tscanner.analyzeIntTrains();
         updateView();
         save();
         TrainManagementWindow.this.setVisible(true);
