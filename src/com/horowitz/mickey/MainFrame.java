@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.826";
+  private static final String APP_TITLE           = "v0.826b";
 
   private boolean             _devMode            = false;
 
@@ -669,11 +669,11 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_resetAction);
     }
     // OC
-    // {
-    // _oneClick = new JToggleButton("OC");
-    // _oneClick.setSelected(true);
-    // mainToolbar2.add(_oneClick);
-    // }
+     {
+     _oneClick = new JToggleButton("OC");
+     _oneClick.setSelected(true);
+     //mainToolbar2.add(_oneClick);
+     }
 
     // Refresh
     {
@@ -1489,7 +1489,7 @@ public final class MainFrame extends JFrame {
 
           // HOME
           boolean flag;
-          if (_oneClick.isSelected())
+          if (true) //_oneClick.isSelected())
             flag = clickHomeOneClick();
           else
             flag = clickHome();
