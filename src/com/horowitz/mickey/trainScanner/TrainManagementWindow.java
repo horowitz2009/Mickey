@@ -371,7 +371,7 @@ public class TrainManagementWindow extends JFrame {
         } else {
           List<Train> newTrains = _tscanner.analyzeIntTrains(all);
           if (_trains != null) {
-            _trains.addAll(newTrains);
+            _tscanner.mergeTrains(_trains, newTrains);
           }
         }
         updateView();
@@ -381,6 +381,8 @@ public class TrainManagementWindow extends JFrame {
     });
     t.start();
   }
+
+
 
   protected void schedule() {
     if (_scheduleThread != null) {

@@ -81,7 +81,8 @@ public class TrainScanner {
     return trains;
   }
 
-  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller, boolean all) throws RobotInterruptedException, IOException, AWTException {
+  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller, boolean all) throws RobotInterruptedException, IOException,
+      AWTException {
     List<Train> trains = new ArrayList<>();
     if (hasScroller) {
       _mouse.mouseMove(x + 719, y + 157);// center of scrollball placed in the beginning
@@ -301,7 +302,7 @@ public class TrainScanner {
         if (t.isIdle()) {
           for (Train train : trains) {
             long now = System.currentTimeMillis();
-            if (!train.getContractorsToSend().isEmpty()) {//obsolete && train.getSentTime() - now <= 0
+            if (!train.getContractorsToSend().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
               Pixel p = _comparator.findImage(train.getScanImage(), t.getScanImage());
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 60 + p.y)) {
@@ -456,6 +457,68 @@ public class TrainScanner {
 
     _scanner.writeImage(area, filename);
 
+  }
+
+  public void mergeTrains(List<Train> trains, List<Train> newTrains) {
+    List<Train> notFound = new ArrayList<>();
+    List<Train> old = new ArrayList<>();
+    for (Train newTrain : newTrains) {
+      boolean found = false;
+      for (Train train : trains) {
+        Pixel p = _comparator.findImage(train.getScanImage(), newTrain.getScanImage());
+        if (p != null) {
+          train.setFullImageFilename(newTrain.getFullImageFileName());
+          train.setFullImage(newTrain.getFullImage());
+
+          train.setScanImageFilename(newTrain.getScanImageFileName());
+
+          train.setAdditionalInfoFilename(newTrain.getAdditionalInfoFileName());
+          train.setAdditionalInfo(newTrain.getAdditionalInfo());
+
+          train.setAdditionalInfoShortFilename(newTrain.getAdditionalInfoShortFileName());
+          train.setAdditionalInfoShort(newTrain.getAdditionalInfoShort());
+
+          train.setIdle(true);
+          train.setSentTime(0l);
+
+          found = true;
+
+          old.add(train);
+          trains.remove(train);
+          break;
+        }
+      }
+      if (!found) {
+        notFound.add(newTrain);
+      }
+    }// for newTrains
+    
+    trains.clear();
+    trains.addAll(old);
+    trains.addAll(notFound);
+
+  }
+
+  public static void main(String[] args) {
+    List<String> trains = new ArrayList<>();
+
+    trains.add("1");
+    trains.add("2");
+    trains.add("3");
+    trains.add("4");
+    trains.add("5");
+    String[] s = new String[]{"3", "1", "5"};
+    for (int i = 0; i < 3; i++) {
+      for (String t : trains) {
+        System.err.println(t);
+        if (t.equals(s[i])) {
+          trains.remove(t);
+          System.err.println("removing " + s[i]);
+          break;
+        }
+      }
+      System.err.println();
+    }
   }
 
 }
