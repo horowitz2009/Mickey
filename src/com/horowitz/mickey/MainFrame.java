@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.827d";
+  private static final String APP_TITLE           = "v0.827e";
 
   private boolean             _devMode            = false;
 
@@ -1991,7 +1991,7 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Scanning for locations...");
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
-      _mouse.delay(300);
+      _mouse.delay(700);
       LOGGER.fine("Going to location...");
 
       loadTrains(fast);
@@ -2362,7 +2362,7 @@ public final class MainFrame extends JFrame {
     }
     if (!fast)
       handlePopups();
-    goHome();
+    goHomeIfNeeded();
   }
 
   private void shootInTheDark(int startX) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
