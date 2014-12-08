@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.827e";
+  private static final String APP_TITLE           = "v0.828e";
 
   private boolean             _devMode            = false;
 
@@ -669,11 +669,11 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_resetAction);
     }
     // OC
-     {
-     _oneClick = new JToggleButton("OC");
-     _oneClick.setSelected(true);
-     //mainToolbar2.add(_oneClick);
-     }
+    {
+      _oneClick = new JToggleButton("OC");
+      _oneClick.setSelected(true);
+      // mainToolbar2.add(_oneClick);
+    }
 
     // Refresh
     {
@@ -1440,14 +1440,15 @@ public final class MainFrame extends JFrame {
         checkIsStuck();
 
         // OTHER LOCATIONS
-        scanOtherLocations(true);
+        boolean flag = scanOtherLocations(true, 1);
 
         captureContracts();
 
         if (_captureContractors.size() == 0) {
           if (_sendInternational.isSelected())
             sendInternational();
-          scanOtherLocations(true);
+
+          // scanOtherLocations(true, 2);
 
           if (_pingClick.isSelected()) {
             ping();
@@ -1476,11 +1477,15 @@ public final class MainFrame extends JFrame {
               fstart = start = System.currentTimeMillis();
             }
 
-            // check again has refresh gone well after 4 minutes
-            if (_lastTime != null && now - _lastTime >= 4 * 60 * 1000) {
-              handleRarePopups();
-              _lastTime = System.currentTimeMillis();
-            }
+            //
+            // No need since checkIsStuck works fine
+            //
+            // // check again has refresh gone well after 4 minutes
+            // if (_lastTime != null && now - _lastTime >= 4 * 60 * 1000) {
+            // handleRarePopups();
+            // _lastTime = System.currentTimeMillis();
+            // }
+            //
           }
 
           // POPUPS
@@ -1488,14 +1493,13 @@ public final class MainFrame extends JFrame {
           handlePopups();
 
           // HOME
-          boolean flag;
-          if (true) //_oneClick.isSelected())
+          if (true) // _oneClick.isSelected())
             flag = clickHomeOneClick();
           else
             flag = clickHome();
 
           // OTHER LOCATIONS
-          flag = scanOtherLocations(true) || flag;
+          // flag = scanOtherLocations(true, 3) || flag;
 
           if (flag) {
             // true means train has been sent or other locations've been visited. Refresh postponed.
@@ -1503,7 +1507,7 @@ public final class MainFrame extends JFrame {
           }
 
           _mouse.delay(200);
-        }
+        } // _captureContractors == 0
       } catch (AWTException | IOException e) {
         LOGGER.severe(e.getMessage());
         e.printStackTrace();
@@ -1543,7 +1547,7 @@ public final class MainFrame extends JFrame {
         // break; //please don't stop the music!
       }
 
-    }
+    } // while
     if (_stopThread) {
       LOGGER.info("Mickey has being stopped");
     }
@@ -1986,9 +1990,9 @@ public final class MainFrame extends JFrame {
     LOGGER.fine("time: " + (t2 - t1));
   }
 
-  private boolean scanOtherLocations(boolean fast) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
+  private boolean scanOtherLocations(boolean fast, int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
       DragFailureException {
-    LOGGER.info("Scanning for locations...");
+    LOGGER.info("Scanning for locations... " + number);
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
       _mouse.delay(700);
@@ -2148,7 +2152,7 @@ public final class MainFrame extends JFrame {
         _mouse.delay(250);
         trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
         _mouse.delay(250);
-        hadOtherLocations = scanOtherLocations(true);
+        hadOtherLocations = scanOtherLocations(true, 11);
 
         if (_captureContractors.size() == 0) {
           _mouse.delay(250);
@@ -2169,11 +2173,11 @@ public final class MainFrame extends JFrame {
                 stop = true;
                 break;
               }
-              
-              if ((i+1) % 2 == 0)
+
+              if ((i + 1) % 2 == 0)
                 huntLetters();
-              
-              if (scanOtherLocations(true)) {
+
+              if (scanOtherLocations(true, 22)) {
                 hadOtherLocations = true;
                 p.x = _scanner.getBottomRight().x - 80;
               }
@@ -2186,6 +2190,7 @@ public final class MainFrame extends JFrame {
       } else {
         // p == null -> no trains detected yet
         huntLetters();
+        hadOtherLocations = scanOtherLocations(true, 44);
       }
 
       _mouse.checkUserMovement();

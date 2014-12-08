@@ -169,12 +169,12 @@ public class TrainScanner {
           List<String> contractorNames = scanContractorsSimple(train);
 
           train.setContractorsBeenSent(contractorNames);
-          train.setSentTime(0l);// TODO ocr capture time and set it
+          train.setTimeToSendNext(0l);// TODO ocr capture time and set it
           _mouse.restorePosition();
         } else {
           train.setContractorsBeenSent(new ArrayList<String>());
           train.setIdle(true);
-          train.setSentTime(0l);
+          train.setTimeToSendNext(0l);
         }
         trains.add(train);
       }// if all or is idle
@@ -324,10 +324,12 @@ public class TrainScanner {
 
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 72, y + 25);
-    _mouse.delay(400);
+    _mouse.delay(800);
+    _mouse.mouseMove(x + 100, y + 25);
+    _mouse.delay(200);
     _mouse.mouseMove(x + 200, y + 25);
     _mouse.click();
-    _mouse.delay(400);
+    _mouse.delay(600);
     // it is expected a SendDialiog been opened
     int xx = (_scanner.getGameWidth() - 760) / 2;
     int yy = (_scanner.getGameHeight() - 550) / 2;
@@ -368,9 +370,9 @@ public class TrainScanner {
       _mouse.click();
       _mouse.delay(700);
       _mouse.click(tl.x + 475, tl.y + 490);
-      _mouse.delay(1000);
+      _mouse.delay(2000);
 
-      train.setSentTime(4 * 60 * 60000 + 2 * 60000 + System.currentTimeMillis()); // 4h 2m in the future
+      train.setTimeToSendNext(4 * 60 * 60000 + 2 * 60000 + System.currentTimeMillis()); // 4h 2m in the future
 
       return true;
       // at the end
@@ -459,27 +461,32 @@ public class TrainScanner {
 
   }
 
+  public void addNewTrains(List<Train> trains, List<Train> newTrains) {
+    List<Train> notFound = new ArrayList<>();
+    for (Train newTrain : newTrains) {
+      boolean found = false;
+      for (Train train : trains) {
+        if (_comparator.findImage(train.getScanImage(), newTrain.getScanImage()) != null) {
+          merge(train, newTrain);
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        notFound.add(newTrain);
+      }
+    }// for newTrains
+    trains.addAll(notFound);
+  }
+
   public void mergeTrains(List<Train> trains, List<Train> newTrains) {
     List<Train> notFound = new ArrayList<>();
     List<Train> old = new ArrayList<>();
     for (Train newTrain : newTrains) {
       boolean found = false;
       for (Train train : trains) {
-        Pixel p = _comparator.findImage(train.getScanImage(), newTrain.getScanImage());
-        if (p != null) {
-          train.setFullImageFilename(newTrain.getFullImageFileName());
-          train.setFullImage(newTrain.getFullImage());
-
-          train.setScanImageFilename(newTrain.getScanImageFileName());
-
-          train.setAdditionalInfoFilename(newTrain.getAdditionalInfoFileName());
-          train.setAdditionalInfo(newTrain.getAdditionalInfo());
-
-          train.setAdditionalInfoShortFilename(newTrain.getAdditionalInfoShortFileName());
-          train.setAdditionalInfoShort(newTrain.getAdditionalInfoShort());
-
-          train.setIdle(true);
-          train.setSentTime(0l);
+        if (_comparator.findImage(train.getScanImage(), newTrain.getScanImage()) != null) {
+          merge(train, newTrain);
 
           found = true;
 
@@ -492,11 +499,27 @@ public class TrainScanner {
         notFound.add(newTrain);
       }
     }// for newTrains
-    
+
     trains.clear();
     trains.addAll(old);
     trains.addAll(notFound);
 
+  }
+
+  private void merge(Train train, Train newTrain) {
+    train.setFullImageFilename(newTrain.getFullImageFileName());
+    train.setFullImage(newTrain.getFullImage());
+
+    train.setScanImageFilename(newTrain.getScanImageFileName());
+
+    train.setAdditionalInfoFilename(newTrain.getAdditionalInfoFileName());
+    train.setAdditionalInfo(newTrain.getAdditionalInfo());
+
+    train.setAdditionalInfoShortFilename(newTrain.getAdditionalInfoShortFileName());
+    train.setAdditionalInfoShort(newTrain.getAdditionalInfoShort());
+
+    train.setIdle(true);
+    train.setTimeToSendNext(0l);
   }
 
   public static void main(String[] args) {
@@ -507,7 +530,7 @@ public class TrainScanner {
     trains.add("3");
     trains.add("4");
     trains.add("5");
-    String[] s = new String[]{"3", "1", "5"};
+    String[] s = new String[] { "3", "1", "5" };
     for (int i = 0; i < 3; i++) {
       for (String t : trains) {
         System.err.println(t);

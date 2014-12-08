@@ -21,7 +21,7 @@ public class Train {
   private List<String>            _contractorsBeenSent;
   private List<String>            _contractorsToSend = new ArrayList<String>();
   private boolean                 _idle;
-  private long                    _sentTime;
+  private long                    _timeToSendNext;
 
   public BufferedImage getAdditionalInfo() {
     return _additionalInfo;
@@ -90,12 +90,12 @@ public class Train {
     return _idle;
   }
 
-  public void setSentTime(long time) {
-    _sentTime = time;
+  public void setTimeToSendNext(long time) {
+    _timeToSendNext = time;
   }
 
-  public long getSentTime() {
-    return _sentTime;
+  public long getTimeToSendNext() {
+    return _timeToSendNext;
   }
 
   public String getFullImageFileName() {
