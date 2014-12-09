@@ -20,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -59,10 +60,13 @@ public class TrainManagementWindow extends JFrame {
 
   TrainScanner            _tscanner;
 
+  private JCheckBox       _locoOnly;
+
   public TrainManagementWindow(List<Train> trains, TrainScanner tscanner) {
     super();
     _trains = trains;
     _tscanner = tscanner;
+    _tscanner.setLocoOnly(true);
 
     setDefaultCloseOperation(HIDE_ON_CLOSE);
     setTitle("Int. Train Manager");
@@ -145,7 +149,8 @@ public class TrainManagementWindow extends JFrame {
     box2.add(Box.createHorizontalStrut(10));
     box2.add(removeButton);
     long time = trainView._train.getTimeToSendNext() - System.currentTimeMillis();
-    box2.add(new JLabel("Scheduled for " + DateUtils.fancyTime2(time)));
+    if (time > 0)
+      box2.add(new JLabel("Scheduled for " + DateUtils.fancyTime2(time)));
 
     buttonsPanel.add(box2, BorderLayout.SOUTH);
 
@@ -234,7 +239,7 @@ public class TrainManagementWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan(true, true);
+          scan(true, true, _locoOnly.isSelected());
         }
       });
 
@@ -245,7 +250,7 @@ public class TrainManagementWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan(false, true);
+          scan(false, true, _locoOnly.isSelected());
         }
       });
 
@@ -256,11 +261,16 @@ public class TrainManagementWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan(false, false);
+          scan(false, false, _locoOnly.isSelected());
         }
       });
 
       toolbar.add(button);
+    }
+    {
+      _locoOnly = new JCheckBox("only locos");
+      _locoOnly.setSelected(true);
+      toolbar.add(_locoOnly);
     }
     {
       JButton button = new JButton(new AbstractAction("Save") {
@@ -362,7 +372,8 @@ public class TrainManagementWindow extends JFrame {
       }
   }
 
-  protected void scan(final boolean all, final boolean removeNotFound) {
+  protected void scan(final boolean all, final boolean removeNotFound, boolean locoOnly) {
+    _tscanner.setLocoOnly(locoOnly);
     Thread t = new Thread(new Runnable() {
       public void run() {
         TrainManagementWindow.this.setVisible(false);
@@ -390,8 +401,8 @@ public class TrainManagementWindow extends JFrame {
               _tscanner.addNewTrains(_trains, newTrains);
           }
         }
-        updateView();
         save();
+        reload();
         TrainManagementWindow.this.setVisible(true);
       }
     });
@@ -542,13 +553,13 @@ public class TrainManagementWindow extends JFrame {
   }
 
   public void reschedule(long time) {
-    time += System.currentTimeMillis();
-    setTimeLeft(time);
-    if (_trains != null) {
-      for (Train train : _trains) {
-        train.setTimeToSendNext(time);
-      }
-    }
+//    time += System.currentTimeMillis();
+//    setTimeLeft(time);
+//    if (_trains != null) {
+//      for (Train train : _trains) {
+//        train.setTimeToSendNext(time);
+//      }
+//    }
     runScheduleThread(time);
   }
 }

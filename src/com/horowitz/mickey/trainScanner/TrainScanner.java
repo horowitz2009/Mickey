@@ -22,6 +22,7 @@ import com.horowitz.mickey.data.DataStore;
 
 public class TrainScanner {
 
+  private boolean         _locoOnly;
   private ScreenScanner   _scanner;
   private ImageComparator _comparator;
   private MouseRobot      _mouse;
@@ -304,6 +305,12 @@ public class TrainScanner {
             long now = System.currentTimeMillis();
             if (!train.getContractorsToSend().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
               Pixel p = _comparator.findImage(train.getScanImage(), t.getScanImage());
+              if (p == null && isLocoOnly()) {
+                BufferedImage i1 = train.getScanImage();
+                BufferedImage i2 = t.getScanImage();
+                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - 93, 0, 93, i1.getHeight()),
+                    i2.getSubimage(i2.getWidth() - 93, 0, 93, i2.getHeight()));
+              }
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 60 + p.y)) {
                   atLeastOneSent = true;
@@ -346,7 +353,7 @@ public class TrainScanner {
       for (String cname : train.getContractorsToSend()) {
         for (int page = 0; page < 3; page++) {
           BufferedImage cimage = new Robot().createScreenCapture(carea);
-          writeImage(carea, "carea.bmp");
+          //writeImage(carea, "carea.bmp");
           BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
           Pixel cp = _comparator.findImage(contractorImage, cimage);
           if (cp != null) {
@@ -372,7 +379,7 @@ public class TrainScanner {
       _mouse.click(tl.x + 475, tl.y + 490);
       _mouse.delay(2000);
 
-      train.setTimeToSendNext(4 * 60 * 60000 + 2 * 60000 + System.currentTimeMillis()); // 4h 2m in the future
+      train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
 
       return true;
       // at the end
@@ -466,7 +473,15 @@ public class TrainScanner {
     for (Train newTrain : newTrains) {
       boolean found = false;
       for (Train train : trains) {
-        if (_comparator.findImage(train.getScanImage(), newTrain.getScanImage()) != null) {
+        Pixel p = _comparator.findImage(train.getScanImage(), newTrain.getScanImage());
+        if (p == null && isLocoOnly()) {
+          BufferedImage i1 = train.getScanImage();
+          BufferedImage i2 = newTrain.getScanImage();
+          p = _comparator.findImage(i1.getSubimage(i1.getWidth() - 93, 0, 93, i1.getHeight()),
+              i2.getSubimage(i2.getWidth() - 93, 0, 93, i2.getHeight()));
+
+        }
+        if (p != null) {
           merge(train, newTrain);
           found = true;
           break;
@@ -485,7 +500,15 @@ public class TrainScanner {
     for (Train newTrain : newTrains) {
       boolean found = false;
       for (Train train : trains) {
-        if (_comparator.findImage(train.getScanImage(), newTrain.getScanImage()) != null) {
+        Pixel p = _comparator.findImage(train.getScanImage(), newTrain.getScanImage());
+        if (p == null && isLocoOnly()) {
+          BufferedImage i1 = train.getScanImage();
+          BufferedImage i2 = newTrain.getScanImage();
+          p = _comparator.findImage(i1.getSubimage(i1.getWidth() - 93, 0, 93, i1.getHeight()),
+              i2.getSubimage(i2.getWidth() - 93, 0, 93, i2.getHeight()));
+
+        }
+        if (p != null) {
           merge(train, newTrain);
 
           found = true;
@@ -542,6 +565,14 @@ public class TrainScanner {
       }
       System.err.println();
     }
+  }
+
+  public boolean isLocoOnly() {
+    return _locoOnly;
+  }
+
+  public void setLocoOnly(boolean locoOnly) {
+    _locoOnly = locoOnly;
   }
 
 }

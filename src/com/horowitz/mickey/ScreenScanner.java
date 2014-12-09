@@ -46,7 +46,13 @@ public class ScreenScanner {
   public static final String   POINTER_DAILY_IMAGE            = "daily.png";
   public static final String   POINTER_LOADING_IMAGE          = "loading.png";
   public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement.png";
+  /**
+   * @deprecated
+   */
   public static final String   POINTER_NIGHTX                 = "nightX.bmp";
+  /**
+   * @deprecated
+   */
   public static final String   POINTER_DAYLIGHTX              = "daylightX.bmp";
   public static final String   POINTER_TIPSX                  = "tipsX.bmp";
   public static final String   POINTER_PROMOX                 = "promoX.bmp";
@@ -135,8 +141,8 @@ public class ScreenScanner {
       _loginWithFB = new ImageData("loginWithFB2.bmp", area, _comparator, 8, 8);
       _loginFB = new ImageData("loginFB.bmp", area, _comparator, 29, 6);
 
-      area = new Rectangle(216, 10, screenSize.width - 216 - 286, screenSize.height - 10 - 222);
-      _dailyRewards = new ImageData("dailyX.bmp", area, _comparator, 9, 9);
+      area = new Rectangle(183, 248, screenSize.width - 183 - 183, screenSize.height - 10 - 248);
+      _dailyRewards = new ImageData("publish3.bmp", area, _comparator, 40, 6);
 
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
       _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);

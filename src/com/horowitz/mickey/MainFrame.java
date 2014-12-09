@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.828e";
+  private static final String APP_TITLE           = "v0.830f";
 
   private boolean             _devMode            = false;
 
@@ -1681,13 +1681,14 @@ public final class MainFrame extends JFrame {
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
       LOGGER.info("CHECKING FOR INTERNATIONAL... " + _trainManagementWindow.isTrainWaiting());
-      if (_trainManagementWindow != null && _trainManagementWindow.isTrainWaiting()) {
+      if (_trainManagementWindow != null) {// && _trainManagementWindow.isTrainWaiting()
         handlePopups();
         boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
         // if (atLeastOneSent)
         // _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
         // else
-        // _trainManagementWindow.reschedule(10 * 60000);
+        if (!atLeastOneSent)
+          _trainManagementWindow.reschedule(6 * 60000);
       }
     }
   }
@@ -1951,11 +1952,11 @@ public final class MainFrame extends JFrame {
 
     area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
 
-    boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
-    found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
-    if (found)
-      _mouse.delay(300);
-    found = scanAndClick(_scanner.getNoButton(), null);
+//    boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
+//    found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
+//    if (found)
+//      _mouse.delay(300);
+    boolean found = scanAndClick(_scanner.getNoButton(), null);
 
     checkSession();
 
@@ -2205,12 +2206,44 @@ public final class MainFrame extends JFrame {
   private void huntLetters() throws RobotInterruptedException {
     LOGGER.info("Scanning for letters...");
     Pixel p = detectLetter();
+    int off = 2;
+    int d = 10;
     if (p != null) {
-      _mouse.click(p.x, p.y - 6);
-      _mouse.click(p.x, p.y - 22);
-      _mouse.checkUserMovement();
-      _mouse.click(p.x, p.y - 17);
-      _mouse.click(p.x, p.y - 13);
+      int y = _scanner.getBottomRight().y - p.y;
+      if (y < 188) {
+        // fast
+        _mouse.click(p.x, p.y - off - 12);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 12);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+      } else if (y < 230) {
+        // mid
+        _mouse.click(p.x, p.y - off - 9);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 9);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.click(p.x, p.y - off - 8);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 8);
+      } else {
+        // slow
+        _mouse.click(p.x, p.y - off - 6);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 5);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.click(p.x, p.y - off - 4);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 3);
+      }
       _mouse.checkUserMovement();
       LOGGER.info("Whites: " + _stats.getWhiteLetter() + "   Reds: " + _stats.getRedLetter() + "   Browns: " + _stats.getBrownLetter());
       // LOGGER.info("found letter: " + p);
@@ -2890,6 +2923,10 @@ public final class MainFrame extends JFrame {
     ImageData white = _scanner._letterWhite3;
     Pixel p = white.findImage(_scanner.getLetterArea());
     if (p != null) {
+      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+      Pixel p2 = white.findImage(tinyArea);
+      if (p2 != null)
+        p = p2;
       _stats.registerWhiteLetter();
       return p;
     }
@@ -2898,6 +2935,10 @@ public final class MainFrame extends JFrame {
     ImageData red = _scanner._letterRed3;
     p = red.findImage(_scanner.getLetterArea());
     if (p != null) {
+      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+      Pixel p2 = red.findImage(tinyArea);
+      if (p2 != null)
+        p = p2;
       _stats.registerRedLetter();
       return p;
     }
@@ -2906,6 +2947,11 @@ public final class MainFrame extends JFrame {
     ImageData brown = _scanner._letterBrown3;
     p = brown.findImage(_scanner.getLetterArea());
     if (p != null) {
+      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+      Pixel p2 = brown.findImage(tinyArea);
+      if (p2 != null)
+        p = p2;
+
       _stats.registerBrownLetter();
       return p;
     }
