@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.830f";
+  private static final String APP_TITLE           = "v0.830i";
 
   private boolean             _devMode            = false;
 
@@ -1680,15 +1680,15 @@ public final class MainFrame extends JFrame {
 
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
-      LOGGER.info("CHECKING FOR INTERNATIONAL... " + _trainManagementWindow.isTrainWaiting());
+      LOGGER.info("CHECKING FOR INTERNATIONAL... " + DateUtils.fancyTime2(_trainManagementWindow.getTimeLeft()));
       if (_trainManagementWindow != null) {// && _trainManagementWindow.isTrainWaiting()
         handlePopups();
         boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
         // if (atLeastOneSent)
         // _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
         // else
-        if (!atLeastOneSent)
-          _trainManagementWindow.reschedule(6 * 60000);
+        //if (!atLeastOneSent)
+        _trainManagementWindow.reschedule(7 * 60000 + System.currentTimeMillis());
       }
     }
   }

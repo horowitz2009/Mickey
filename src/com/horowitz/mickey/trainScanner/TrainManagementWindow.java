@@ -419,13 +419,13 @@ public class TrainManagementWindow extends JFrame {
   }
 
   private void runScheduleThread(final long time) {
-    long timeNext = time + System.currentTimeMillis();
-    if (_trains != null) {
-      for (Train train : _trains) {
-        train.setTimeToSendNext(timeNext);
-      }
-    }
-    save();
+//    long timeNext = time + System.currentTimeMillis();
+//    if (_trains != null) {
+//      for (Train train : _trains) {
+//        train.setTimeToSendNext(timeNext);
+//      }
+//    }
+//    save();
 
     _scheduleThread = new Thread(new Runnable() {
 
@@ -553,13 +553,12 @@ public class TrainManagementWindow extends JFrame {
   }
 
   public void reschedule(long time) {
-//    time += System.currentTimeMillis();
-//    setTimeLeft(time);
-//    if (_trains != null) {
-//      for (Train train : _trains) {
-//        train.setTimeToSendNext(time);
-//      }
-//    }
+    //setTimeLeft(time + System.currentTimeMillis() + 2000);
+    // if (_trains != null) {
+    // for (Train train : _trains) {
+    // train.setTimeToSendNext(time);
+    // }
+    // }
     runScheduleThread(time);
   }
 }

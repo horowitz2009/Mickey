@@ -2,7 +2,7 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project Mickey2">
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-	<property name="versionNumber" value="830f" />
+	<property name="versionNumber" value="830i" />
 
 	<property name="jarname" value="Mickey${versionNumber}.jar" description="" />
 
@@ -19,10 +19,11 @@
 		</jar>
 
 		<property name="home_subfolder" value="home" />
+		<property name="home_subfolder2" value="home2" />
 		<property name="office_subfolder" value="office" />
 		<property name="programs_subfolder" value="programs" />
 
-		<foreach list="${home_subfolder},${office_subfolder}" param="subfolder" target="copy" />
+		<foreach list="${home_subfolder},${home_subfolder2},${office_subfolder}" param="subfolder" target="copy" />
 		<!-- from list => ,${office_subfolder},${programs_subfolder} -->
 
 	</target>
