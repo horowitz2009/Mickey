@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.831";
+  private static final String APP_TITLE           = "v0.831f";
 
   private boolean             _devMode            = false;
 
@@ -1449,10 +1449,12 @@ public final class MainFrame extends JFrame {
           if (_sendInternational.isSelected())
             sendInternational();
 
-          // scanOtherLocations(true, 2);
+          scanOtherLocations(true, 2);
 
           if (_pingClick.isSelected()) {
-            ping();
+            if (ping())
+              scanOtherLocations(true, 3);;
+            
           }
 
           // REFRESH
@@ -1492,7 +1494,8 @@ public final class MainFrame extends JFrame {
           // POPUPS
 
           handlePopups();
-
+          scanOtherLocations(true, 4
+              );
           // HOME
           if (true) // _oneClick.isSelected())
             flag = clickHomeOneClick();
@@ -1588,7 +1591,8 @@ public final class MainFrame extends JFrame {
 
   private TrainManagementWindow _trainManagementWindow;
 
-  private void ping() {
+  private boolean ping() {
+    boolean res = false;
     long now = System.currentTimeMillis();
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
     String pingPrefix = "ping ";
@@ -1607,7 +1611,6 @@ public final class MainFrame extends JFrame {
           _mouse.delay(1300);
           _mouse.click(xx + 64, yy + 101);
           _mouse.delay(2300);
-
         } catch (RobotInterruptedException e) {
         }
       } else if (_pingTurn == 3) {
@@ -1618,7 +1621,6 @@ public final class MainFrame extends JFrame {
           _mouse.delay(1300);
           _mouse.click(xx + 127, yy + 101);
           _mouse.delay(2300);
-
         } catch (RobotInterruptedException e) {
         }
       }
@@ -1632,6 +1634,7 @@ public final class MainFrame extends JFrame {
           // need to close trains window
           _mouse.click(xx + 156, yy + 525);
           _mouse.delay(500);
+          res = true;
         } catch (RobotInterruptedException e) {
         }
       }
@@ -1643,6 +1646,7 @@ public final class MainFrame extends JFrame {
       deleteOlder("ping", 5);
       _lastPingTime = System.currentTimeMillis();
     }
+    return res;
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -1680,16 +1684,17 @@ public final class MainFrame extends JFrame {
   }
 
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
-    if (_trainManagementWindow != null && _trainManagementWindow.getTimeLeft() <= 0) {
-      LOGGER.info("CHECKING FOR INTERNATIONAL... " + DateUtils.fancyTime2(_trainManagementWindow.getTimeLeft()));
+    long timeLeft = _trainManagementWindow.getTimeLeft() - System.currentTimeMillis();
+    LOGGER.info("CHECKING FOR INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
+    if (_trainManagementWindow != null && timeLeft <= 0) {
       if (_trainManagementWindow != null) {// && _trainManagementWindow.isTrainWaiting()
         handlePopups();
         boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
         // if (atLeastOneSent)
         // _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
         // else
-        //if (!atLeastOneSent)
-        _trainManagementWindow.reschedule(7 * 60000 + System.currentTimeMillis());
+        // if (!atLeastOneSent)
+        _trainManagementWindow.reschedule(7 * 60000);
       }
     }
   }
@@ -1953,10 +1958,10 @@ public final class MainFrame extends JFrame {
 
     area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
 
-//    boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
-//    found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
-//    if (found)
-//      _mouse.delay(300);
+    // boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
+    // found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
+    // if (found)
+    // _mouse.delay(300);
     boolean found = scanAndClick(_scanner.getNoButton(), null);
 
     checkSession();

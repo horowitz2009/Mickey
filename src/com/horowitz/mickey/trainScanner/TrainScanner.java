@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.mickey.DateUtils;
 import com.horowitz.mickey.ImageComparator;
 import com.horowitz.mickey.ImageData;
 import com.horowitz.mickey.ImageManager;
@@ -66,7 +67,7 @@ public class TrainScanner {
         boolean hasScroller = upArrow.findImage(new Rectangle(x + 697, y + 116, 43, 58)) != null;
         xt = x + (hasScroller ? 26 : 41);
         // trains = scanIntTrains(x, y, xt, yt, hasScroller);
-        trains = scanIntTrainsNEW(x, y, xt, yt, hasScroller, all);
+        trains = scanIntTrains(x, y, xt, yt, hasScroller, all);
         // trains = scanIntTrains(x, y, xt, yt, false);
 
       } else {
@@ -82,7 +83,7 @@ public class TrainScanner {
     return trains;
   }
 
-  private List<Train> scanIntTrainsNEW(int x, int y, int xt, int yt, boolean hasScroller, boolean all) throws RobotInterruptedException, IOException,
+  private List<Train> scanIntTrains(int x, int y, int xt, int yt, boolean hasScroller, boolean all) throws RobotInterruptedException, IOException,
       AWTException {
     List<Train> trains = new ArrayList<>();
     if (hasScroller) {
@@ -120,10 +121,11 @@ public class TrainScanner {
       boolean isIdle = delData.findImage(delArea) == null;
       if (all || isIdle) {
         int number = slot + 1 + ((page - 1) * 5);
-        String fullImageFilename = "data/int/train" + number + ".png";
+        String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
+        String fullImageFilename = "data/int/train" + trainId + ".png";
         writeImage(slotArea, fullImageFilename);
         Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
-        String scanImageFilename = "data/int/train" + number + "_scanThis.bmp";
+        String scanImageFilename = "data/int/train" + trainId + "_scanThis.bmp";
         writeImage(newArea, scanImageFilename);
         Robot robot = new Robot();
         Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
@@ -137,7 +139,7 @@ public class TrainScanner {
           _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
           _mouse.delay(800);
           Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
-          String addInfoFilename = "trainInfo" + number + ".bmp";
+          String addInfoFilename = "trainInfo" + trainId + ".bmp";
           writeImage(infoArea, addInfoFilename);
           train.setAdditionalInfo(cutToEdge(robot.createScreenCapture(infoArea)));
 
@@ -162,7 +164,7 @@ public class TrainScanner {
 
           train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 60 + pwest.x - 1, train.getAdditionalInfo().getHeight()));
 
-          String shortFilename = "data/int/trainInfo" + number + "_short.png";
+          String shortFilename = "data/int/trainInfo" + trainId + "_short.png";
           _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
           train.setAdditionalInfoShortFilename(shortFilename);
           train.setIdle(false);
@@ -310,6 +312,7 @@ public class TrainScanner {
                 BufferedImage i2 = t.getScanImage();
                 p = _comparator.findImage(i1.getSubimage(i1.getWidth() - 93, 0, 93, i1.getHeight()),
                     i2.getSubimage(i2.getWidth() - 93, 0, 93, i2.getHeight()));
+                System.err.println("locoOnly " + p);
               }
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 60 + p.y)) {
@@ -353,7 +356,7 @@ public class TrainScanner {
       for (String cname : train.getContractorsToSend()) {
         for (int page = 0; page < 3; page++) {
           BufferedImage cimage = new Robot().createScreenCapture(carea);
-          //writeImage(carea, "carea.bmp");
+          // writeImage(carea, "carea.bmp");
           BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
           Pixel cp = _comparator.findImage(contractorImage, cimage);
           if (cp != null) {
@@ -398,8 +401,8 @@ public class TrainScanner {
       Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
 
       // for debug only
-      String scanImageFilename = "data/int/trainCOMPARE" + number + "_scanThis.bmp";
-      writeImage(newArea, scanImageFilename);
+      //String scanImageFilename = "data/int/trainCOMPARE" + number + "_scanThis.bmp";
+      //writeImage(newArea, scanImageFilename);
       //
 
       Robot robot = new Robot();
@@ -530,19 +533,26 @@ public class TrainScanner {
   }
 
   private void merge(Train train, Train newTrain) {
-    train.setFullImageFilename(newTrain.getFullImageFileName());
-    train.setFullImage(newTrain.getFullImage());
-
-    train.setScanImageFilename(newTrain.getScanImageFileName());
-
-    train.setAdditionalInfoFilename(newTrain.getAdditionalInfoFileName());
-    train.setAdditionalInfo(newTrain.getAdditionalInfo());
-
-    train.setAdditionalInfoShortFilename(newTrain.getAdditionalInfoShortFileName());
-    train.setAdditionalInfoShort(newTrain.getAdditionalInfoShort());
-
-    train.setIdle(true);
-    train.setTimeToSendNext(0l);
+    
+    train.mergeWith(newTrain);
+//    
+//    train.setFullImageFilename(newTrain.getFullImageFileName());
+//    train.setFullImage(newTrain.getFullImage());
+//
+//    if (newTrain.isIdle())
+//      train.setScanImageFilename(newTrain.getScanImageFileName());
+//    else {
+//      train.setContractorsBeenSent(newTrain.getContractorsBeenSent());
+//    }
+//
+//    train.setAdditionalInfoFilename(newTrain.getAdditionalInfoFileName());
+//    train.setAdditionalInfo(newTrain.getAdditionalInfo());
+//
+//    train.setAdditionalInfoShortFilename(newTrain.getAdditionalInfoShortFileName());
+//    train.setAdditionalInfoShort(newTrain.getAdditionalInfoShort());
+//
+//    train.setIdle(true);
+//    train.setTimeToSendNext(0l);
   }
 
   public static void main(String[] args) {

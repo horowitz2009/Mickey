@@ -42,6 +42,7 @@ public class TrainManagementWindow extends JFrame {
     public List<JToggleButton> _buttons;
     JPanel                     _panel;
     Train                      _train;
+    public JCheckBox           _checkBox;
 
   }
 
@@ -71,7 +72,7 @@ public class TrainManagementWindow extends JFrame {
     setDefaultCloseOperation(HIDE_ON_CLOSE);
     setTitle("Int. Train Manager");
     init();
-    setSize(700, 550);
+    setSize(740, 550);
     setLocationRelativeTo(null);
   }
 
@@ -80,11 +81,16 @@ public class TrainManagementWindow extends JFrame {
     JPanel panel = new JPanel(new BorderLayout());
     trainView._panel = panel;
     trainView._train = t;
+    trainView._checkBox = new JCheckBox();
 
     // train image
     JCanvas trainCanvas = new JCanvas();
     trainCanvas.setImage(t.getFullImage());
-    panel.add(trainCanvas, BorderLayout.NORTH);
+    Box b = Box.createHorizontalBox();
+    b.add(trainCanvas);
+    b.add(trainView._checkBox);
+    b.add(Box.createHorizontalGlue());
+    panel.add(b, BorderLayout.NORTH);
 
     // additional info image
     JCanvas addInfoCanvas = new JCanvas();
@@ -148,6 +154,17 @@ public class TrainManagementWindow extends JFrame {
     });
     box2.add(Box.createHorizontalStrut(10));
     box2.add(removeButton);
+
+    JButton mergeButton = new JButton(new AbstractAction("Merge") {
+
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+        mergeWithSelected(trainView);
+      }
+    });
+    box2.add(Box.createHorizontalStrut(10));
+    box2.add(mergeButton);
+
     long time = trainView._train.getTimeToSendNext() - System.currentTimeMillis();
     if (time > 0)
       box2.add(new JLabel("Scheduled for " + DateUtils.fancyTime2(time)));
@@ -168,6 +185,19 @@ public class TrainManagementWindow extends JFrame {
       }
     }
     updateView();
+  }
+
+  protected void mergeWithSelected(TrainView trainView) {
+    // trainView._panel;
+    for (TrainView tv : _trainViews) {
+      if (tv._checkBox.isSelected()) {
+        // tv._train vs trainView._train
+        trainView._train.mergeWith(tv._train);
+        removeThisTrain(tv);
+        break;
+      }
+    }
+    // updateView();
   }
 
   private void clear(TrainView tv) {
@@ -239,7 +269,7 @@ public class TrainManagementWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan(true, true, _locoOnly.isSelected());
+          scan(true, false, _locoOnly.isSelected());
         }
       });
 
@@ -377,30 +407,18 @@ public class TrainManagementWindow extends JFrame {
     Thread t = new Thread(new Runnable() {
       public void run() {
         TrainManagementWindow.this.setVisible(false);
-        if (all) {
-          File d = new File("data/int");
-          String[] list = d.list(new FilenameFilter() {
 
-            @Override
-            public boolean accept(File f, String name) {
-              return name.endsWith(".bmp");
-            }
-          });
-          for (String filename : list) {
-            File f = new File(d, filename);
-            f.delete();
-          }
-          _trains = _tscanner.analyzeIntTrains(all);
+        reload();
+        List<Train> newTrains = _tscanner.analyzeIntTrains(all);
+        if (_trains != null) {
+          if (removeNotFound)
+            _tscanner.mergeTrains(_trains, newTrains);
+          else
+            _tscanner.addNewTrains(_trains, newTrains);
         } else {
-          reload();
-          List<Train> newTrains = _tscanner.analyzeIntTrains(all);
-          if (_trains != null) {
-            if (removeNotFound)
-              _tscanner.mergeTrains(_trains, newTrains);
-            else
-              _tscanner.addNewTrains(_trains, newTrains);
-          }
+          _trains = newTrains;
         }
+
         save();
         reload();
         TrainManagementWindow.this.setVisible(true);
@@ -409,23 +427,18 @@ public class TrainManagementWindow extends JFrame {
     t.start();
   }
 
-  protected void schedule() {
-    if (_scheduleThread != null) {
-      _scheduleThread.interrupt();
-    }
-    final long time = Scheduler.parse(_timeTF.getText()) + System.currentTimeMillis();
-    _tscanner.LOGGER.info("Scheduling sending for " + _timeTF.getText());
-    runScheduleThread(time);
-  }
-
+  /**
+   * @deprecated
+   * @param time
+   */
   private void runScheduleThread(final long time) {
-//    long timeNext = time + System.currentTimeMillis();
-//    if (_trains != null) {
-//      for (Train train : _trains) {
-//        train.setTimeToSendNext(timeNext);
-//      }
-//    }
-//    save();
+    // long timeNext = time + System.currentTimeMillis();
+    // if (_trains != null) {
+    // for (Train train : _trains) {
+    // train.setTimeToSendNext(timeNext);
+    // }
+    // }
+    // save();
 
     _scheduleThread = new Thread(new Runnable() {
 
@@ -552,13 +565,13 @@ public class TrainManagementWindow extends JFrame {
     _timeLeft = timeLeft;
   }
 
+  protected void schedule() {
+    long timeLeft = Scheduler.parse(_timeTF.getText());
+    reschedule(timeLeft);
+  }
+
   public void reschedule(long time) {
-    //setTimeLeft(time + System.currentTimeMillis() + 2000);
-    // if (_trains != null) {
-    // for (Train train : _trains) {
-    // train.setTimeToSendNext(time);
-    // }
-    // }
-    runScheduleThread(time);
+    setTimeLeft(time + System.currentTimeMillis());
+    _tscanner.LOGGER.info("Scheduling sending for " + DateUtils.fancyTime2(time));
   }
 }

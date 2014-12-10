@@ -130,4 +130,21 @@ public class Train {
     _scanImageFileName = scanImageFileName;
   }
 
+  public void mergeWith(Train train) {
+    if (getAdditionalInfoFileName() == null || getAdditionalInfoFileName().length() == 0) {
+      setAdditionalInfoFilename(train.getAdditionalInfoFileName());
+    }
+    if (getAdditionalInfoShortFileName() == null || getAdditionalInfoShortFileName().length() == 0) {
+      setAdditionalInfoShortFilename(train.getAdditionalInfoShortFileName());
+    }
+    if (getContractorsBeenSent() != null || getContractorsBeenSent().isEmpty()) {
+      setContractorsBeenSent(train.getContractorsBeenSent());
+    }
+    if (getContractorsToSend().isEmpty()) {
+      setSame();
+    }
+
+    setIdle(train.isIdle());
+  }
+
 }
