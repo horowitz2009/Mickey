@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.830i";
+  private static final String APP_TITLE           = "v0.831";
 
   private boolean             _devMode            = false;
 
@@ -1310,12 +1310,13 @@ public final class MainFrame extends JFrame {
       } catch (SessionTimeOutException e) {
         LOGGER.info("Session time out. Stopping.");
       }
-
-      LOGGER.info("Refresh done");
+      if (done)
+        LOGGER.info("Refresh done");
+      else
+        refresh(bookmark);
     } catch (AWTException e) {
       e.printStackTrace();
     }
-
   }
 
   private void deleteOlder(String prefix, int amountFiles) {
