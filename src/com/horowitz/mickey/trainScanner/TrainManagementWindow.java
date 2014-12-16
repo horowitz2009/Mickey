@@ -63,6 +63,8 @@ public class TrainManagementWindow extends JFrame {
 
   private JCheckBox       _locoOnly;
 
+  private int             _numberTrains;
+
   public TrainManagementWindow(List<Train> trains, TrainScanner tscanner) {
     super();
     _trains = trains;
@@ -77,6 +79,7 @@ public class TrainManagementWindow extends JFrame {
   }
 
   private TrainView buildTrainView(Train t) {
+    _numberTrains++;
     final TrainView trainView = new TrainView();
     JPanel panel = new JPanel(new BorderLayout());
     trainView._panel = panel;
@@ -111,6 +114,7 @@ public class TrainManagementWindow extends JFrame {
 
     try {
       List<String> activeContractorNames = new DataStore().getActiveContractorNames();
+      activeContractorNames.add("Mahatma");
       for (String cname : activeContractorNames) {
         JToggleButton cbutton = createContractorButton(cname);
         box.add(Box.createHorizontalStrut(2));
@@ -126,6 +130,7 @@ public class TrainManagementWindow extends JFrame {
     buttonsPanel.add(new JScrollPane(box), BorderLayout.NORTH);
 
     Box box2 = Box.createHorizontalBox();
+    box2.add(new JLabel(" " + _numberTrains + "  "));
     JButton selectSameButton = new JButton(new AbstractAction("Select same") {
 
       @Override
@@ -303,6 +308,17 @@ public class TrainManagementWindow extends JFrame {
       toolbar.add(_locoOnly);
     }
     {
+      JButton button = new JButton(new AbstractAction("Remove all") {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          removeAllTrains();
+        }
+      });
+
+      toolbar.add(button);
+    }
+    {
       JButton button = new JButton(new AbstractAction("Save") {
 
         @Override
@@ -392,14 +408,60 @@ public class TrainManagementWindow extends JFrame {
     t.start();
   }
 
+  private void removeAllTrains() {
+    if (_trains != null) {
+      _trains.clear();
+      save();
+      updateView();
+    }
+  }
+
   private void save() {
     if (_trains != null)
       try {
         updateTrainStatus(true);
         new DataStore().writeTrains(_trains.toArray(new Train[0]));
+        new Thread(new Runnable() {
+          public void run() {
+            deleteUnUsedImages();
+          }
+        }).start();
+
       } catch (IOException e) {
         e.printStackTrace();
       }
+  }
+
+  private void deleteUnUsedImages() {
+    final List<String> usedImages = new ArrayList<>();
+    for (Train t : _trains) {
+      if (t.getAdditionalInfoFileName() != null) {
+        usedImages.add(t.getAdditionalInfoFileName());
+      }
+      if (t.getAdditionalInfoShortFileName() != null) {
+        usedImages.add(t.getAdditionalInfoShortFileName());
+      }
+      if (t.getFullImageFileName() != null) {
+        usedImages.add(t.getFullImageFileName());
+      }
+      if (t.getScanImageFileName() != null) {
+        usedImages.add(t.getScanImageFileName());
+      }
+    }
+
+    File d = new File("data/int");
+    File[] listFiles = d.listFiles(new FilenameFilter() {
+
+      @Override
+      public boolean accept(File f, String fn) {
+
+        return !usedImages.contains("data/int/" + fn) && !fn.endsWith("json");
+      }
+    });
+
+    for (File file : listFiles) {
+      file.delete();
+    }
   }
 
   protected void scan(final boolean all, final boolean removeNotFound, boolean locoOnly) {
@@ -545,6 +607,7 @@ public class TrainManagementWindow extends JFrame {
   private void updateView() {
     Box box = Box.createVerticalBox();
     _trainViews = new ArrayList<>();
+    _numberTrains = 0;
     if (_trains != null) {
       for (Train t : _trains) {
         TrainView tv = buildTrainView(t);

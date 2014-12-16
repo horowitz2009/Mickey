@@ -122,10 +122,10 @@ public class TrainScanner {
       if (all || isIdle) {
         int number = slot + 1 + ((page - 1) * 5);
         String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
-        String fullImageFilename = "data/int/train" + trainId + ".png";
+        String fullImageFilename = "data/int/train " + trainId + ".png";
         writeImage(slotArea, fullImageFilename);
         Rectangle newArea = new Rectangle(slotArea.x + 148, slotArea.y + 2, 512, 24);
-        String scanImageFilename = "data/int/train" + trainId + "_scanThis.bmp";
+        String scanImageFilename = "data/int/train " + trainId + "_scanThis.bmp";
         writeImage(newArea, scanImageFilename);
         Robot robot = new Robot();
         Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
@@ -139,7 +139,7 @@ public class TrainScanner {
           _mouse.mouseMove(slotArea.x + 9, slotArea.y + 9);
           _mouse.delay(800);
           Rectangle infoArea = new Rectangle(slotArea.x, slotArea.y + slotArea.height, 590, 110);
-          String addInfoFilename = "trainInfo" + trainId + ".bmp";
+          String addInfoFilename = "data/int/trainInfo " + trainId + ".bmp";
           writeImage(infoArea, addInfoFilename);
           train.setAdditionalInfo(cutToEdge(robot.createScreenCapture(infoArea)));
 
@@ -164,7 +164,7 @@ public class TrainScanner {
 
           train.setAdditionalInfoShort(train.getAdditionalInfo().getSubimage(0, 0, 60 + pwest.x - 1, train.getAdditionalInfo().getHeight()));
 
-          String shortFilename = "data/int/trainInfo" + trainId + "_short.png";
+          String shortFilename = "data/int/trainInfo " + trainId + "_short.png";
           _scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
           train.setAdditionalInfoShortFilename(shortFilename);
           train.setIdle(false);
