@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.832";
+  private static final String APP_TITLE           = "v0.832a";
 
   private boolean             _devMode            = false;
 
@@ -2832,7 +2832,7 @@ public final class MainFrame extends JFrame {
       // _mouse.mouseMove(p);
       int x1 = _scanner.getTopLeft().x + 5;
       int y = _scanner.getBottomRight().y - Locations.RAIL1;
-      _mouse.drag(x1, y, x1 + 320, y);
+      _mouse.drag(x1, y, x1 + 520, y);
       // _mouse.delay(500);
     } else {
       p = _scanner.getPointerRight().findImage();
@@ -2841,7 +2841,7 @@ public final class MainFrame extends JFrame {
         // _mouse.mouseMove(p);
         int x1 = _scanner.getBottomRight().x - 5;
         int y = _scanner.getBottomRight().y - Locations.RAIL1;
-        _mouse.drag(x1, y, x1 - 320, y);
+        _mouse.drag(x1, y, x1 - 520, y);
         // _mouse.delay(500);
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
