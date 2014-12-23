@@ -115,7 +115,7 @@ public class TrainManagementWindow extends JFrame {
 
     try {
       List<String> activeContractorNames = new DataStore().getActiveContractorNames();
-      activeContractorNames.add("Mahatma");
+      activeContractorNames.add("Bobby");
       for (String cname : activeContractorNames) {
         JToggleButton cbutton = createContractorButton(cname);
         box.add(Box.createHorizontalStrut(2));
@@ -423,11 +423,11 @@ public class TrainManagementWindow extends JFrame {
       try {
         updateTrainStatus(true);
         new DataStore().writeTrains(_trains.toArray(new Train[0]));
-        new Thread(new Runnable() {
-          public void run() {
-            deleteUnUsedImages();
-          }
-        }).start();
+        deleteUnUsedImages();
+//        new Thread(new Runnable() {
+//          public void run() {
+//          }
+//        }).start();
 
       } catch (IOException e) {
         e.printStackTrace();

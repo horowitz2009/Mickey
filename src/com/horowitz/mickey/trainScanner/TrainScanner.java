@@ -334,12 +334,12 @@ public class TrainScanner {
 
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 72, y + 25);
-    _mouse.delay(800);
+    _mouse.delay(850);
     _mouse.mouseMove(x + 100, y + 25);
-    _mouse.delay(200);
+    _mouse.delay(250);
     _mouse.mouseMove(x + 200, y + 25);
     _mouse.click();
-    _mouse.delay(600);
+    _mouse.delay(650);
     // it is expected a SendDialiog been opened
     int xx = (_scanner.getGameWidth() - 760) / 2;
     int yy = (_scanner.getGameHeight() - 550) / 2;
@@ -349,29 +349,33 @@ public class TrainScanner {
     ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
     Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 200, 75));
     if (p != null) {
-      // find and select contractors
-      final Pixel tl = new Pixel(p.x - 35, p.y - 32);
-      // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
-      Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
-      for (String cname : train.getContractorsToSend()) {
-        for (int page = 0; page < 3; page++) {
-          BufferedImage cimage = new Robot().createScreenCapture(carea);
-          // writeImage(carea, "carea.bmp");
-          BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
-          Pixel cp = _comparator.findImage(contractorImage, cimage);
-          if (cp != null) {
-            // found the contractor
-            _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
-            _mouse.delay(250);
-            _mouse.click();
-            _mouse.delay(750);
-            break;
-          } else {
-            _mouse.delay(250);
-            _mouse.click(tl.x + 739, tl.y + 131);
-            _mouse.delay(750);
+      Pixel tl = new Pixel(p.x - 35, p.y - 32);
+      try {
+        // find and select contractors
+        // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
+        Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
+        for (String cname : train.getContractorsToSend()) {
+          for (int page = 0; page < 3; page++) {
+            BufferedImage cimage = new Robot().createScreenCapture(carea);
+            // writeImage(carea, "carea.bmp");
+            BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
+            Pixel cp = _comparator.findImage(contractorImage, cimage);
+            if (cp != null) {
+              // found the contractor
+              _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
+              _mouse.delay(450);
+              _mouse.click();
+              _mouse.delay(950);
+              break;
+            } else {
+              _mouse.delay(350);
+              _mouse.click(tl.x + 739, tl.y + 131);
+              _mouse.delay(850);
+            }
           }
         }
+      } catch (Exception e) {
+        //no matter what try to send the bloody train
       }
 
       // TODO click send and choose 4h way
@@ -382,6 +386,7 @@ public class TrainScanner {
       _mouse.click(tl.x + 475, tl.y + 490);
       _mouse.delay(2000);
 
+      //not used
       train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
 
       return true;

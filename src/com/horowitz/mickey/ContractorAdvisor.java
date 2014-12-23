@@ -16,7 +16,7 @@ import com.horowitz.mickey.data.Need;
 
 public class ContractorAdvisor extends JPanel {
 
-  private static final String VERSION = "v.116";
+  private static final String VERSION = "v.117";
   private static final String TITLE   = "Contract Advisor " + VERSION;
 
   private ContractorsPanel    _contractorsPanel;

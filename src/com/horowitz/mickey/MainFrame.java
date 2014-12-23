@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.832a";
+  private static final String APP_TITLE           = "v0.833a";
 
   private boolean             _devMode            = false;
 
@@ -1453,8 +1453,9 @@ public final class MainFrame extends JFrame {
 
           if (_pingClick.isSelected()) {
             if (ping())
-              scanOtherLocations(true, 3);;
-            
+              scanOtherLocations(true, 3);
+            ;
+
           }
 
           // REFRESH
@@ -1494,8 +1495,7 @@ public final class MainFrame extends JFrame {
           // POPUPS
 
           handlePopups();
-          scanOtherLocations(true, 4
-              );
+          scanOtherLocations(true, 4);
           // HOME
           if (true) // _oneClick.isSelected())
             flag = clickHomeOneClick();
@@ -1687,15 +1687,12 @@ public final class MainFrame extends JFrame {
     long timeLeft = _trainManagementWindow != null ? _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() : 10000000;
     LOGGER.info("CHECKING FOR INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
     if (_trainManagementWindow != null && timeLeft <= 0) {
-      //if (_trainManagementWindow != null) {// && _trainManagementWindow.isTrainWaiting()
-        handlePopups();
-        boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
-        // if (atLeastOneSent)
-        // _trainManagementWindow.reschedule(4 * 60 * 60000 + 10 * 60000);
-        // else
-        // if (!atLeastOneSent)
+      handlePopups();
+      boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
+      if (atLeastOneSent)
+        _trainManagementWindow.reschedule(30000);//30 sec
+      else
         _trainManagementWindow.reschedule(7 * 60000);
-      //}
     }
   }
 
