@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.833a";
+  private static final String APP_TITLE           = "v0.833b";
 
   private boolean             _devMode            = false;
 
@@ -123,6 +123,7 @@ public final class MainFrame extends JFrame {
 
   private JToolBar            _frToolbar1;
   private JToolBar            _freeToolbar1;
+  private JToolBar            _freeToolbar2;
 
   private JToolBar            _frToolbar2;
 
@@ -286,11 +287,14 @@ public final class MainFrame extends JFrame {
 
     _frToolbar1 = new JToolBar();
     _freeToolbar1 = new JToolBar();
+    _freeToolbar2 = new JToolBar();
     _frToolbar2 = new JToolBar();
     JLabel frLabel = new JLabel("Freight     ");
     _frToolbar1.add(frLabel);
+    _frToolbar2.add(new JLabel("                  "));
     JLabel freeLabel = new JLabel("Free          ");
     _freeToolbar1.add(freeLabel);
+    _freeToolbar2.add(new JLabel("                  "));
     _exToolbar1 = new JToolBar();
     _exToolbar2 = new JToolBar();
     JLabel exLabel = new JLabel("Express  ");
@@ -312,23 +316,27 @@ public final class MainFrame extends JFrame {
     exLabel.setMaximumSize(d);
     exLabel2.setMaximumSize(d);
 
-    JPanel toolbars = new JPanel(new GridLayout(6, 1));
+    JPanel toolbars = new JPanel(new GridLayout(8, 1));
     toolbars.add(mainToolbar1);
     toolbars.add(mainToolbar2);
     mainToolbar1.setFloatable(false);
     mainToolbar2.setFloatable(false);
     _frToolbar1.setFloatable(false);
     _freeToolbar1.setFloatable(false);
+    _freeToolbar2.setFloatable(false);
     _frToolbar2.setFloatable(false);
     _exToolbar1.setFloatable(false);
     _exToolbar2.setFloatable(false);
     _frToolbar1.setBackground(new Color(201, 177, 133));
     _freeToolbar1.setBackground(new Color(201, 177, 183));// TODO
+    _freeToolbar2.setBackground(new Color(201, 177, 183));// TODO
     _frToolbar2.setBackground(new Color(201, 177, 133));
     _exToolbar1.setBackground(new Color(153, 173, 209));
     _exToolbar2.setBackground(new Color(153, 173, 209));
     toolbars.add(_frToolbar1);
+    toolbars.add(_frToolbar2);
     toolbars.add(_freeToolbar1);
+    toolbars.add(_freeToolbar2);
     toolbars.add(_exToolbar1);
     toolbars.add(_exToolbar2);
     Box north = Box.createVerticalBox();
@@ -726,8 +734,9 @@ public final class MainFrame extends JFrame {
     ButtonGroup bgFr = new ButtonGroup();
     ButtonGroup bgFree = new ButtonGroup();
     createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
+    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE_F2, "freight");
     createButtons(_freeToolbar1, bgFree, Locations.LOC_PAGE_F1, "free");
-    // createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE2, true);
+    createButtons(_freeToolbar2, bgFree, Locations.LOC_PAGE_F2, "free");
     // createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE3, true);
 
     ButtonGroup bgEx = new ButtonGroup();
@@ -873,6 +882,22 @@ public final class MainFrame extends JFrame {
           }
         }
       }
+      if (!found) {
+        components = _freeToolbar2.getComponents();
+        for (int i = 0; i < components.length && !found; i++) {
+          if (components[i] instanceof LocationToggleButton) {
+            LocationToggleButton b = (LocationToggleButton) components[i];
+            if (b.getTrainLocation().getTime() == free) {
+              if (!b.isSelected()) {
+                b.doClick();
+                b.invalidate();
+              }
+              found = true;
+            }
+          }
+        }
+      }
+
     }
 
     if (freight >= 0) {
@@ -887,6 +912,22 @@ public final class MainFrame extends JFrame {
               b.invalidate();
             }
             found = true;
+          }
+        }
+      }
+
+      if (!found) {
+        components = _frToolbar2.getComponents();
+        for (int i = 0; i < components.length && !found; i++) {
+          if (components[i] instanceof LocationToggleButton) {
+            LocationToggleButton b = (LocationToggleButton) components[i];
+            if (b.getTrainLocation().getTime() == freight) {
+              if (!b.isSelected()) {
+                b.doClick();
+                b.invalidate();
+              }
+              found = true;
+            }
           }
         }
       }
@@ -1690,7 +1731,7 @@ public final class MainFrame extends JFrame {
       handlePopups();
       boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
       if (atLeastOneSent)
-        _trainManagementWindow.reschedule(30000);//30 sec
+        _trainManagementWindow.reschedule(30000);// 30 sec
       else
         _trainManagementWindow.reschedule(7 * 60000);
     }
