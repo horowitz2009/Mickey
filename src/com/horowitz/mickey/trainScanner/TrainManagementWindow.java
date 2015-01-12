@@ -370,7 +370,7 @@ public class TrainManagementWindow extends JFrame {
     return isRunning;
   }
 
-  protected void reload() {
+  public void reload() {
     Thread t = new Thread(new Runnable() {
       public void run() {
         // TrainManagementWindow.this.setVisible(false);

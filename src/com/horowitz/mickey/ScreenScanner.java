@@ -176,13 +176,6 @@ public class ScreenScanner {
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
     _pointerDown = new ImageData(POINTER_DOWN_IMAGE, null, _comparator, 13, 19);
-    _letterRed = new ImageData("letters/red11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterWhite = new ImageData("letters/white11a.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterBrown = new ImageData("letters/brown11a.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-
-    _letterRed2 = new ImageData("letters/red9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterWhite2 = new ImageData("letters/white9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterBrown2 = new ImageData("letters/brown9b.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
     _letterRed3 = new ImageData("letters/red10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterWhite3 = new ImageData("letters/white10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown3 = new ImageData("letters/brown10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
