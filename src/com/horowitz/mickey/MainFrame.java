@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.833b";
+  private static final String APP_TITLE           = "v0.834d";
 
   private boolean             _devMode            = false;
 
@@ -1733,7 +1733,7 @@ public final class MainFrame extends JFrame {
       if (atLeastOneSent)
         _trainManagementWindow.reschedule(30000);// 30 sec
       else
-        _trainManagementWindow.reschedule(7 * 60000);
+        _trainManagementWindow.reschedule(2 * 60000);
     }
   }
 
@@ -2996,6 +2996,18 @@ public final class MainFrame extends JFrame {
       if (p2 != null)
         p = p2;
 
+      _stats.registerBrownLetter();
+      return p;
+    }
+
+    ImageData pink = _scanner._letterPink3;
+    p = pink.findImage(_scanner.getLetterArea());
+    if (p != null) {
+      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+      Pixel p2 = pink.findImage(tinyArea);
+      if (p2 != null)
+        p = p2;
+      
       _stats.registerBrownLetter();
       return p;
     }

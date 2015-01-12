@@ -171,11 +171,11 @@ public class TrainScanner {
 
           List<String> contractorNames = scanContractorsSimple(train);
 
-          train.setContractorsBeenSent(contractorNames);
+          train.setContractors(contractorNames);
           train.setTimeToSendNext(0l);// TODO ocr capture time and set it
           _mouse.restorePosition();
         } else {
-          train.setContractorsBeenSent(new ArrayList<String>());
+          train.setContractors(new ArrayList<String>());
           train.setIdle(true);
           train.setTimeToSendNext(0l);
         }
@@ -300,12 +300,12 @@ public class TrainScanner {
     do {
       List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
       atLeastOneSent = false;
-      for (int i = newTrains.size() - 1; i >= 0; --i) {
+      for (int i = newTrains.size() - 1; i >= 0 && !atLeastOneSent; --i) {
         Train t = newTrains.get(i);
         if (t.isIdle()) {
           for (Train train : trains) {
             long now = System.currentTimeMillis();
-            if (!train.getContractorsToSend().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
+            if (!train.getContractors().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
               Pixel p = _comparator.findImage(train.getScanImage(), t.getScanImage());
               if (p == null && isLocoOnly()) {
                 BufferedImage i1 = train.getScanImage();
@@ -322,11 +322,11 @@ public class TrainScanner {
                 break;
               }
             }
-          }
+          } //inner for
         } else {
           LOGGER.info("Train " + (i + 1) + " is not idle");
         }
-      }
+      } //for newTrains
       System.err.println("...");
     } while (atLeastOneSent);
     return atLeastOneSent;
@@ -354,7 +354,7 @@ public class TrainScanner {
         // find and select contractors
         // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
         Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
-        for (String cname : train.getContractorsToSend()) {
+        for (String cname : train.getContractors()) {
           for (int page = 0; page < 3; page++) {
             BufferedImage cimage = new Robot().createScreenCapture(carea);
             // writeImage(carea, "carea.bmp");

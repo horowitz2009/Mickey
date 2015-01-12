@@ -18,8 +18,8 @@ public class Train {
   private String                  _additionalInfoShortFileName;
   private String                  _additionalInfoFileName;
 
-  private List<String>            _contractorsBeenSent;
-  private List<String>            _contractorsToSend = new ArrayList<String>();
+  private List<String>            _contractors = new ArrayList<String>();
+
   private boolean                 _idle;
   private long                    _timeToSendNext;
 
@@ -54,24 +54,14 @@ public class Train {
     _scanImage = scanImage;
   }
 
-  public void setContractorsBeenSent(List<String> contractorsBeenSent) {
-    _contractorsBeenSent = contractorsBeenSent;
+  public void setContractors(List<String> contractors) {
+    _contractors = contractors;
   }
 
-  public List<String> getContractorsBeenSent() {
-    return _contractorsBeenSent;
-  }
-
-  public void setSame() {
-    _contractorsToSend.clear();
-    _contractorsToSend.addAll(_contractorsBeenSent);
-    // for (String cname : _contractorsBeenSent) {
-    // _contractorsToSend.add(cname);
-    // }
-  }
-
-  public List<String> getContractorsToSend() {
-    return _contractorsToSend;
+  public List<String> getContractors() {
+    if (_contractors == null)
+      _contractors = new ArrayList<>();
+    return _contractors;
   }
 
   public BufferedImage getAdditionalInfoShort() {
@@ -137,13 +127,11 @@ public class Train {
     if (getAdditionalInfoShortFileName() == null || getAdditionalInfoShortFileName().length() == 0) {
       setAdditionalInfoShortFilename(train.getAdditionalInfoShortFileName());
     }
-    if (getContractorsBeenSent() != null || getContractorsBeenSent().isEmpty()) {
-      setContractorsBeenSent(train.getContractorsBeenSent());
+    if (getContractors() != null && getContractors().isEmpty()) {
+      setContractors(train.getContractors());
+    } else if (getContractors() != null && !getContractors().isEmpty()) {
+      getContractors().addAll(train.getContractors());
     }
-    if (getContractorsToSend().isEmpty()) {
-      setSame();
-    }
-
     setIdle(train.isIdle());
   }
 

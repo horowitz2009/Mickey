@@ -81,6 +81,7 @@ public class ScreenScanner {
   public ImageData             _letterRed3                    = null;
   public ImageData             _letterWhite3                  = null;
   public ImageData             _letterBrown3                  = null;
+  public ImageData             _letterPink3                  = null;
 
   private ImageData            _pointerDownL                  = null;
   private ImageData            _pointerDownR                  = null;
@@ -182,9 +183,10 @@ public class ScreenScanner {
     _letterRed2 = new ImageData("letters/red9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterWhite2 = new ImageData("letters/white9b.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown2 = new ImageData("letters/brown9b.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    _letterRed3 = new ImageData("letters/redPostcard.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterWhite3 = new ImageData("letters/bluePostcard.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterBrown3 = new ImageData("letters/whitebluePostcard.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    _letterRed3 = new ImageData("letters/red10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterWhite3 = new ImageData("letters/white10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterBrown3 = new ImageData("letters/brown10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    _letterPink3 = new ImageData("letters/pink10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
 
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);

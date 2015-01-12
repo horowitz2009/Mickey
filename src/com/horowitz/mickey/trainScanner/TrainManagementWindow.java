@@ -115,14 +115,14 @@ public class TrainManagementWindow extends JFrame {
 
     try {
       List<String> activeContractorNames = new DataStore().getActiveContractorNames();
-      //activeContractorNames.add("Bobby");
+      // activeContractorNames.add("Bobby");
       for (String cname : activeContractorNames) {
         JToggleButton cbutton = createContractorButton(cname);
         box.add(Box.createHorizontalStrut(2));
         box.add(cbutton);
         trainView._buttons.add(cbutton);
       }
-      selectSame(trainView);
+      selectContractors(trainView);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -132,14 +132,6 @@ public class TrainManagementWindow extends JFrame {
 
     Box box2 = Box.createHorizontalBox();
     box2.add(new JLabel(" " + _numberTrains + "  "));
-    JButton selectSameButton = new JButton(new AbstractAction("Select same") {
-
-      @Override
-      public void actionPerformed(ActionEvent evt) {
-        selectSame(trainView);
-      }
-    });
-    box2.add(selectSameButton);
 
     JButton clearButton = new JButton(new AbstractAction("Clear") {
 
@@ -183,6 +175,7 @@ public class TrainManagementWindow extends JFrame {
   }
 
   protected void removeThisTrain(TrainView trainView) {
+    save();
     // trainView._panel;
     for (Train train : _trains) {
       if (train.getFullImageFileName().equals(trainView._train.getFullImageFileName())) {
@@ -421,13 +414,13 @@ public class TrainManagementWindow extends JFrame {
   private void save() {
     if (_trains != null)
       try {
-        updateTrainStatus(true);
+        updateTrainStatus();
         new DataStore().writeTrains(_trains.toArray(new Train[0]));
         deleteUnUsedImages();
-//        new Thread(new Runnable() {
-//          public void run() {
-//          }
-//        }).start();
+        // new Thread(new Runnable() {
+        // public void run() {
+        // }
+        // }).start();
 
       } catch (IOException e) {
         e.printStackTrace();
@@ -539,39 +532,28 @@ public class TrainManagementWindow extends JFrame {
     _scheduleThread.start();
   }
 
-  private void selectSame(TrainView tv) {
+  private void selectContractors(TrainView tv) {
     clear(tv);
-    List<String> contractorsBeenSent = tv._train.getContractorsBeenSent();
-    if (contractorsBeenSent != null)
-      for (String cname : contractorsBeenSent) {
-        for (JToggleButton button : tv._buttons) {
-          if (cname.equals(button.getName())) {
-            button.setSelected(true);
-            break;
-          }
+    List<String> contractors = tv._train.getContractors();
+    for (String cname : contractors) {
+      for (JToggleButton button : tv._buttons) {
+        if (cname.equals(button.getName())) {
+          button.setSelected(true);
+          break;
         }
       }
+    }
   }
 
-  private void updateTrainStatus(boolean save) {
+  private void updateTrainStatus() {
     for (TrainView tv : _trainViews) {
       Train t = tv._train;
-      List<String> contractorsToSend = t.getContractorsToSend();
-      contractorsToSend.clear();
+      List<String> contractors = t.getContractors();
+      contractors.clear();
 
       for (JToggleButton b : tv._buttons) {
         if (b.isSelected()) {
-          contractorsToSend.add(b.getName());
-        }
-      }
-      if (save) {
-        List<String> contractorsBeenSent = t.getContractorsBeenSent();
-        contractorsBeenSent.clear();
-
-        for (JToggleButton b : tv._buttons) {
-          if (b.isSelected()) {
-            contractorsBeenSent.add(b.getName());
-          }
+          contractors.add(b.getName());
         }
       }
     }
@@ -589,7 +571,7 @@ public class TrainManagementWindow extends JFrame {
   }
 
   public boolean sendTrainsNow() {
-    updateTrainStatus(true);
+    updateTrainStatus();
     boolean sendTrains = _tscanner.sendTrains(_trains);
     if (sendTrains)
       save();
@@ -599,7 +581,7 @@ public class TrainManagementWindow extends JFrame {
   public boolean isTrainWaiting() {
     long now = System.currentTimeMillis();
     for (Train t : _trains) {
-      if (!t.getContractorsToSend().isEmpty() && t.getTimeToSendNext() - now <= 0) {
+      if (!t.getContractors().isEmpty() && t.getTimeToSendNext() - now <= 0) {
         return true;
       }
     }
