@@ -258,11 +258,20 @@ public class ScreenScanner {
 
     area = new Rectangle(xx + 298, yy + 27, 111, 40);
     _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
-    area = new Rectangle(xx + 300, yy + 35, 160, 37);
-    _trainsAnchor = new ImageData("int/Trains.bmp", area, _comparator, 0, 0);
+    
 
     area = new Rectangle(xx, _br.y - 250, 760, 250);
     _share = new ImageData("share.bmp", area, _comparator, 23, 6);
+    
+    
+    
+    xx = (getGameWidth() - 780) / 2;
+    yy = (getGameHeight() - 585) / 2;
+    xx += _tl.x;
+    yy += _tl.y;
+    area = new Rectangle(xx + 30, yy + 20, 100, 30);
+    _trainsAnchor = new ImageData("int/Trains.bmp", area, _comparator, 0, 0);
+
   }
 
   public Pixel getTopPlayersPixel() {
