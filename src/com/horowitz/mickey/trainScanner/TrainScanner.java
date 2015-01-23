@@ -414,8 +414,8 @@ public class TrainScanner {
       Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
 
       // for debug only
-      String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-      writeImage(newArea, scanImageFilename);
+      //String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+      //writeImage(newArea, scanImageFilename);
 
       Robot robot = new Robot();
       Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));

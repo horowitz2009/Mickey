@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.901";
+  private static final String APP_TITLE           = "v0.902a";
 
   private boolean             _devMode            = false;
 
@@ -1651,8 +1651,8 @@ public final class MainFrame extends JFrame {
     long now = System.currentTimeMillis();
     long time = _settings.getInt("ping.time") * 60000; // from minutes to millseconds
     String pingPrefix = "ping ";
-    int xx = (_scanner.getGameWidth() - 759) / 2;
-    int yy = (_scanner.getGameHeight() - 550) / 2;
+    int xx = (_scanner.getGameWidth() - 780) / 2;
+    int yy = (_scanner.getGameHeight() - 585) / 2;
     xx += _scanner.getTopLeft().x;
     yy += _scanner.getTopLeft().y;
 
@@ -1664,7 +1664,7 @@ public final class MainFrame extends JFrame {
           pingPrefix += " trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
           _mouse.delay(1300);
-          _mouse.click(xx + 64, yy + 101);
+          _mouse.click(xx + 103, yy + 83);
           _mouse.delay(2300);
         } catch (RobotInterruptedException e) {
         }
@@ -1674,7 +1674,7 @@ public final class MainFrame extends JFrame {
           pingPrefix += " int trains ";
           _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
           _mouse.delay(1300);
-          _mouse.click(xx + 127, yy + 101);
+          _mouse.click(xx + 209, yy + 83);
           _mouse.delay(2300);
         } catch (RobotInterruptedException e) {
         }
@@ -1687,7 +1687,7 @@ public final class MainFrame extends JFrame {
       if (_pingTurn == 2 || _pingTurn == 3) {
         try {
           // need to close trains window
-          _mouse.click(xx + 156, yy + 525);
+          _mouse.click(xx + 764, yy + 22);
           _mouse.delay(500);
           res = true;
         } catch (RobotInterruptedException e) {
