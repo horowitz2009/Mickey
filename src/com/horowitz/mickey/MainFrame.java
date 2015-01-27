@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.902a";
+  private static final String APP_TITLE           = "v0.902b";
 
   private boolean             _devMode            = false;
 
@@ -1873,7 +1873,7 @@ public final class MainFrame extends JFrame {
             // click
             // _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
             // _mouse.delay(600);
-            goHomeIfNeeded();
+            /////////////////////////// goHomeIfNeeded();
           }
         } else {
           LOGGER.info("Couldn't find " + contractorName);
@@ -1983,7 +1983,7 @@ public final class MainFrame extends JFrame {
     _mouse.saveCurrentPosition();
     _mouse.click(_scanner.getTopLeft().x + 26, _scanner.getBottomRight().y - 45);
     _mouse.delay(500, false);
-    int diff = 60;
+    // int diff = 60;
     // if (!_lastDiffs.isEmpty()) {
     // diff = _lastDiffs.toArray(new Integer[0])[_lastDiffs.size() - 1];
     // }
@@ -2054,7 +2054,7 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Scanning for locations... " + number);
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
-      _mouse.delay(700);
+      _mouse.delay(1200);
       LOGGER.fine("Going to location...");
 
       loadTrains(fast);
