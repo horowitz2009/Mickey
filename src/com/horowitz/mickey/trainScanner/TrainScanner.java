@@ -29,11 +29,13 @@ public class TrainScanner {
   private ImageComparator _comparator;
   private MouseRobot      _mouse;
   Logger                  LOGGER;
+  private int             _takeABreak;
 
-  public TrainScanner(ScreenScanner scanner, Logger logger) {
+  public TrainScanner(ScreenScanner scanner, Logger logger, int takeABreak) {
     super();
     _scanner = scanner;
     _comparator = scanner.getComparator();
+    _takeABreak = takeABreak;
     try {
       _mouse = new MouseRobot();
     } catch (AWTException e) {
@@ -301,6 +303,7 @@ public class TrainScanner {
 
   private boolean sendIntTrains(List<Train> trains, int x, int y, int xt, int yt) throws RobotInterruptedException, IOException, AWTException {
 
+    int numberSent = 0;
     _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
     _mouse.click();
     _mouse.delay(1000);
@@ -325,6 +328,7 @@ public class TrainScanner {
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
                   atLeastOneSent = true;
+                  numberSent++;
                 }
                 break;
               }
@@ -335,7 +339,7 @@ public class TrainScanner {
         }
       } // for newTrains
       System.err.println("...");
-    } while (atLeastOneSent);
+    } while (atLeastOneSent && numberSent < _takeABreak);
     return atLeastOneSent;
   }
 
@@ -414,8 +418,8 @@ public class TrainScanner {
       Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
 
       // for debug only
-      //String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-      //writeImage(newArea, scanImageFilename);
+      // String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+      // writeImage(newArea, scanImageFilename);
 
       Robot robot = new Robot();
       Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));

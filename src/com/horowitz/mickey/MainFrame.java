@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.902b";
+  private static final String APP_TITLE           = "v0.903a";
 
   private boolean             _devMode            = false;
 
@@ -1025,14 +1025,18 @@ public final class MainFrame extends JFrame {
 
   private void reload(String r) {
     try {
-      if (_trainManagementWindow == null) {
-        TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
-        _trainManagementWindow = new TrainManagementWindow(null, tscanner);
-      }
-      _trainManagementWindow.reload();
+      reload();
     } finally {
       new Service().done(r);
     }
+  }
+
+  private void reload() {
+    if (_trainManagementWindow == null) {
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings.getInt("IntTrains.takeABreakAfter", 3));
+      _trainManagementWindow = new TrainManagementWindow(null, tscanner);
+    } else
+      _trainManagementWindow.reload();
   }
 
   private void processClick(String r) {
@@ -1265,6 +1269,9 @@ public final class MainFrame extends JFrame {
       public void run() {
         try {
           if (_scanner.isOptimized()) {
+            if (_sendInternational.isSelected()) {
+              reload();
+            }
             LOGGER.info("Let's get rolling...");
             Thread.sleep(200);
             doMagic();
@@ -1873,7 +1880,7 @@ public final class MainFrame extends JFrame {
             // click
             // _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
             // _mouse.delay(600);
-            /////////////////////////// goHomeIfNeeded();
+            // ///////////////////////// goHomeIfNeeded();
           }
         } else {
           LOGGER.info("Couldn't find " + contractorName);
@@ -3239,7 +3246,7 @@ public final class MainFrame extends JFrame {
       stopMagic();
     }
     if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER);
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings.getInt("IntTrains.takeABreakAfter", 3));
       _trainManagementWindow = new TrainManagementWindow(null, tscanner);
     }
     _trainManagementWindow.setVisible(true);
