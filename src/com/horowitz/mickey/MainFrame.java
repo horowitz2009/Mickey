@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.903a";
+  private static final String APP_TITLE           = "v0.904";
 
   private boolean             _devMode            = false;
 

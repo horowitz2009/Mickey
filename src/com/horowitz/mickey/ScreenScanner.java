@@ -198,7 +198,7 @@ public class ScreenScanner {
     int xx = (getGameWidth() - 275) / 2;
     int yy = (getGameHeight() - 386) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + yy + 50, 275, 75); // TODO to be widen if not working
-    _sessionTimeOut = new ImageData("session.bmp", area, _comparator, 0, 0);
+    _sessionTimeOut = new ImageData("session2.bmp", area, _comparator, 0, 0);
     Rectangle area2 = new Rectangle(_tl.x + xx, _tl.y + 310, getGameWidth() - 2 * xx, 200);
     _noButton = new ImageData("noButton2.bmp", area2, _comparator, 0, 0);
 
