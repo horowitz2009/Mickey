@@ -136,7 +136,7 @@ public class TrainScanner {
       _mouse.delay(400);
       Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
       Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
-      ImageData onRoadData = _scanner.generateImageData("int/onRoad.bmp");
+      ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
       boolean isIdle = onRoadData.findImage(onRoadArea) == null;
       if (all || isIdle) {
         int number = trains.size() + 1;
@@ -408,21 +408,25 @@ public class TrainScanner {
 
     List<Train> trains = new ArrayList<>();
     for (int slot = 0; slot < 5; slot++) {
-      _mouse.delay(400);
+      //_mouse.delay(400);
 
       Rectangle slotArea = new Rectangle(xt, yt + (slot) * 85, 685, 82);
       Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
-      ImageData onRoadData = _scanner.generateImageData("int/onRoad.bmp");
+      ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
       boolean isIdle = onRoadData.findImage(onRoadArea) == null;
+      Train train;
+      if(isIdle) {
+        Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
 
-      Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
+        // for debug only
+        // String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+        // writeImage(newArea, scanImageFilename);
 
-      // for debug only
-      // String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-      // writeImage(newArea, scanImageFilename);
-
-      Robot robot = new Robot();
-      Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
+        Robot robot = new Robot();
+        train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
+      } else {
+        train = new Train(null, null);
+      }
       train.setIdle(isIdle);
       trains.add(train);
     }

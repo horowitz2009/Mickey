@@ -370,35 +370,39 @@ public class TrainManagementWindow extends JFrame {
     return isRunning;
   }
 
+  public void reloadNow() {
+    _trains = new ArrayList<>();
+    try {
+      Train[] trains = new DataStore().readTrains();
+      if (trains != null)
+        for (Train train : trains) {
+          if (train.getFullImage() == null) {
+            BufferedImage image = ImageIO.read(new File(train.getFullImageFileName()));
+            train.setFullImage(image);
+            String additionalInfoShortFileName = train.getAdditionalInfoShortFileName();
+            if (additionalInfoShortFileName != null) {
+              image = ImageIO.read(new File(additionalInfoShortFileName));
+              train.setAdditionalInfoShort(image);
+            }
+            image = ImageIO.read(new File(train.getScanImageFileName()));
+            train.setScanImage(image);
+          }
+          _trains.add(train);
+        }
+    } catch (IOException e) {
+      //JOptionPane.showMessageDialog(null, "I/O Error!");
+      e.printStackTrace();
+    }
+    // TrainManagementWindow.this.setVisible(true);
+    updateView();
+  }
+  
   public void reload() {
     Thread t = new Thread(new Runnable() {
       public void run() {
-        // TrainManagementWindow.this.setVisible(false);
-        _trains = new ArrayList<>();
-        try {
-          Train[] trains = new DataStore().readTrains();
-          if (trains != null)
-            for (Train train : trains) {
-              if (train.getFullImage() == null) {
-                BufferedImage image = ImageIO.read(new File(train.getFullImageFileName()));
-                train.setFullImage(image);
-                String additionalInfoShortFileName = train.getAdditionalInfoShortFileName();
-                if (additionalInfoShortFileName != null) {
-                  image = ImageIO.read(new File(additionalInfoShortFileName));
-                  train.setAdditionalInfoShort(image);
-                }
-                image = ImageIO.read(new File(train.getScanImageFileName()));
-                train.setScanImage(image);
-              }
-              _trains.add(train);
-            }
-        } catch (IOException e) {
-          JOptionPane.showMessageDialog(null, "I/O Error!");
-          e.printStackTrace();
-        }
-        // TrainManagementWindow.this.setVisible(true);
-        updateView();
+        reloadNow();
       }
+
     });
     t.start();
   }
@@ -602,6 +606,7 @@ public class TrainManagementWindow extends JFrame {
     }
 
     _jScrollPane.getViewport().setView(box);
+    _jScrollPane.getVerticalScrollBar().setUnitIncrement(20);
   }
 
   public long getTimeLeft() {

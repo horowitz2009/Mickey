@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.904";
+  private static final String APP_TITLE           = "v0.906";
 
   private boolean             _devMode            = false;
 
@@ -1024,11 +1024,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void reload(String r) {
-    try {
-      reload();
-    } finally {
-      new Service().done(r);
-    }
+    reload();
   }
 
   private void reload() {
@@ -1750,6 +1746,8 @@ public final class MainFrame extends JFrame {
     LOGGER.info("CHECKING FOR INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
     if (_trainManagementWindow != null && timeLeft <= 0) {
       handlePopups();
+
+      _trainManagementWindow.reloadNow();
       boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
       if (atLeastOneSent)
         _trainManagementWindow.reschedule(30000);// 30 sec
