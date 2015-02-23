@@ -42,6 +42,7 @@ public class SimilarityImageComparator implements ImageComparator {
   private static final int MAX_Y     = 13;
   double                   roughness = .0;
   private int              precision;
+  private int              errors    = 4;
 
   /**
    * Creates a comparator with <code>roughness</code> allowed roughness.
@@ -186,7 +187,7 @@ public class SimilarityImageComparator implements ImageComparator {
             if (diff > precision)
               countErrors++;
 
-            if (countErrors > 4) {
+            if (countErrors > errors) {
               return false;
             }
             // count++;
@@ -400,6 +401,36 @@ public class SimilarityImageComparator implements ImageComparator {
       }
     }
     return null;
+  }
+
+  @Override
+  public double getRoughness() {
+    return roughness;
+  }
+
+  @Override
+  public void setRoughness(double roughness) {
+    this.roughness = roughness;
+  }
+
+  @Override
+  public int getPrecision() {
+    return precision;
+  }
+
+  @Override
+  public void setPrecision(int precision) {
+    this.precision = precision;
+  }
+
+  @Override
+  public int getErrors() {
+    return errors;
+  }
+
+  @Override
+  public void setErrors(int errors) {
+    this.errors = errors;
   }
 
 }

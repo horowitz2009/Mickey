@@ -195,14 +195,20 @@ public class ScreenScanner {
 
     _fullyOptimized = true;
 
-    int xx = (getGameWidth() - 275) / 2;
-    int yy = (getGameHeight() - 386) / 2;
-    area = new Rectangle(_tl.x + xx, _tl.y + yy + 50, 275, 75); // TODO to be widen if not working
+    
+    //SESSION 
+    int xx = (getGameWidth() - 80) / 2;
+    int yy = (getGameHeight() - 23) / 2;
+    area = new Rectangle(_tl.x + xx, _tl.y + 210, 80, 26); // TODO to be widen if not working
     _sessionTimeOut = new ImageData("session2.bmp", area, _comparator, 0, 0);
-    Rectangle area2 = new Rectangle(_tl.x + xx, _tl.y + 310, getGameWidth() - 2 * xx, 200);
-    _noButton = new ImageData("noButton2.bmp", area2, _comparator, 0, 0);
+    
+    //NO BUTTON
+    xx = (getGameWidth() - 144) / 2;
+    area = new Rectangle(_tl.x + xx, _tl.y + 423, 39, 25); // TODO to be widen if not working
+    _noButton = new ImageData("noButton2.bmp", area, _comparator, 0, 0);
 
-    area = new Rectangle(getGameWidth() / 2, _tl.y, getGameWidth() / 2, 112);
+    //SHOP X
+    area = new Rectangle(_br.x - 60, _tl.y + 24, 60, 42);
     _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
 
     if (getGameWidth() > 900) {
@@ -260,7 +266,9 @@ public class ScreenScanner {
     _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
     
 
-    area = new Rectangle(xx, _br.y - 250, 760, 250);
+    //SHARE
+    xx = (getGameWidth() - 60) / 2;
+    area = new Rectangle(_tl.x + xx, _br.y - 135, 60, 22);
     _share = new ImageData("share.bmp", area, _comparator, 23, 6);
     
     

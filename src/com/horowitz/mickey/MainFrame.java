@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.906";
+  private static final String APP_TITLE           = "v0.907";
 
   private boolean             _devMode            = false;
 
@@ -1507,13 +1507,11 @@ public final class MainFrame extends JFrame {
           if (_sendInternational.isSelected())
             sendInternational();
 
-          scanOtherLocations(true, 2);
+          //scanOtherLocations(true, 2);
 
           if (_pingClick.isSelected()) {
             if (ping())
               scanOtherLocations(true, 3);
-            ;
-
           }
 
           // REFRESH
@@ -1551,21 +1549,22 @@ public final class MainFrame extends JFrame {
           }
 
           // POPUPS
-
           handlePopups();
-          scanOtherLocations(true, 4);
-          // HOME
-          if (true) // _oneClick.isSelected())
-            flag = clickHomeOneClick();
-          else
-            flag = clickHome();
+          //scanOtherLocations(true, 4);
 
-          // OTHER LOCATIONS
-          // flag = scanOtherLocations(true, 3) || flag;
+          // HOME
+          boolean clickHomeFaster = "true".equalsIgnoreCase(_settings.getProperty("clickHomeFaster", "true"));
+          if (clickHomeFaster) {
+            flag = clickHomeFaster();
+          } else {
+            flag = clickHomeOneClick();
+          }
 
           if (flag) {
             // true means train has been sent or other locations've been visited. Refresh postponed.
             start = System.currentTimeMillis();
+          } else {
+            lookForPackages();
           }
 
           _mouse.delay(200);
@@ -1630,7 +1629,7 @@ public final class MainFrame extends JFrame {
         BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
 
-        SimilarityImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
+        ImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
         boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
         for (int i = 1; i < howMuch - 1; ++i) {
           uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
@@ -2001,43 +2000,56 @@ public final class MainFrame extends JFrame {
 
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     long t1 = System.currentTimeMillis();
-
+    long t2;
     LOGGER.info("Scanning for popups...");
 
-    // _mouse.savePosition();
-    // NO CLICK - it causes more trrouble than good
-    // _mouse.click(_scanner.getBottomRight().x - 8, _scanner.getBottomRight().y - 8);
-    // _mouse.delay(100);
     _mouse.mouseMove(_scanner.getBottomRight());
 
     // first scan popups that need to be closed
     Rectangle area;
 
-    area = new Rectangle(_scanner.getBottomRight().x - 32 - 53, _scanner.getTopLeft().y, 32 + 53, 55 + 15);
-
-    // boolean found = findAndClick(ScreenScanner.POINTER_NIGHTX, area, 8, 8, true, true);
-    // found = found || findAndClick(ScreenScanner.POINTER_DAYLIGHTX, area, 8, 8, true, true);
-    // if (found)
-    // _mouse.delay(300);
+    //NO BUTTON
     boolean found = scanAndClick(_scanner.getNoButton(), null);
-
+    ////long t2 = System.currentTimeMillis();
+    ////LOGGER.info("> handle No: " + (t2 - t1));
+    
+    ////t1 = t2 = System.currentTimeMillis();
+    //SESSION
     checkSession();
-
-    // NEXT LEVEL
+    ////t2 = System.currentTimeMillis();
+    ////LOGGER.info("> handle Session: " + (t2 - t1));
+    ////t1 = t2 = System.currentTimeMillis();
+    
+    //SHARE
     found = scanAndClick(_scanner.getShare(), null);
-    found = scanAndClick(_scanner.getPromoX(), null);
+    ////t2 = System.currentTimeMillis();
+    ////LOGGER.info("> handle Share: " + (t2 - t1));
+    ////t1 = t2 = System.currentTimeMillis();
+    
+    //MOVED TO RARE POPUPS
+    //found = scanAndClick(_scanner.getPromoX(), null);
+    //t2 = System.currentTimeMillis();
+    //LOGGER.info("> handle PromoX: " + (t2 - t1));
+    //t1 = t2 = System.currentTimeMillis();
 
     // SHOP
     found = scanAndClick(_scanner.getShopX(), null) || found;
+    ////t2 = System.currentTimeMillis();
+    ////LOGGER.info("> handle ShopX: " + (t2 - t1));
+    ////t1 = t2 = System.currentTimeMillis();
 
-    area = new Rectangle(_scanner.getTopLeft().x + 90, _scanner.getBottomRight().y - 100, _scanner.getGameWidth() - 180, 60);
-    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
+    //CLOSE
+    int xx = (_scanner.getGameWidth() - 544) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 64, 33);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-    // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
+    ////t2 = System.currentTimeMillis();
+    ////LOGGER.info("> handle Close: " + (t2 - t1));
+    ////t1 = t2 = System.currentTimeMillis();
 
+    
+    /*     
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
-    // found = findAndClick(ScreenScanner.POINTER_CLOSE1_IMAGE, area, 23, 10, true, true);
     found = findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
@@ -2046,12 +2058,14 @@ public final class MainFrame extends JFrame {
       _stats.registerRefresh();
       updateLabels();
     }
+    */
+    
+    
+    //area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
+    //findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
-    area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
-    findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
-
-    long t2 = System.currentTimeMillis();
-    LOGGER.fine("time: " + (t2 - t1));
+    t2 = System.currentTimeMillis();
+    LOGGER.info("HANDLE POPUP TIME: " + (t2 - t1));
   }
 
   private boolean scanOtherLocations(boolean fast, int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
@@ -2072,7 +2086,6 @@ public final class MainFrame extends JFrame {
     if (_scanner.isOptimized()) {
       Pixel p = _scanner.getSessionTimeOut().findImage();
       if (p != null) {
-        // TODO two ways of managing session timeout popup
         if (_resumeClick.isSelected()) {
           LOGGER.info("Session expired, but resume is ON.");
           int time = _settings.getInt("resume.time", 10);
@@ -2164,104 +2177,79 @@ public final class MainFrame extends JFrame {
     return trainHasBeenSent;
   }
 
-  private boolean clickHomeOneClick() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
-    long t1 = System.currentTimeMillis();
+  private void lookForPackages() throws RobotInterruptedException, AWTException, IOException {
+    LOGGER.info("Looking of mail packages...");
+    Pixel p = detectPointerDown();
+    if (p != null) {
+      Rectangle zone = null;
+      boolean found = false;
+      for (int i = 0; i < _scanner.getDangerousZones().length && !found; ++i) {
+        zone = _scanner.getDangerousZones()[i];
+        if (p.x >= zone.x && p.x <= zone.x + zone.width) {
+          found = true;
+        }
+      }
+      if (!found) {
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
+        clickCareful(p, true, true);
+      } else {
+        LOGGER.info("Package is in zone. Avoiding clicking...");
+      }
+    }
+  }
 
+  private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
     int timeGiven = 2000; // 2 secs
     long start = System.currentTimeMillis();
 
-    LOGGER.info("looking for pointer down...");
-
     Pixel p = null;
-    boolean done = false;
     long curr = start;
+
+    int maxTurns = _settings.getInt("clickHomeFaster.turns", 4);
+    int turn = 1;
+    
     do {
+      LOGGER.info("turn " + turn++);
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
-      moveIfNecessary();
+      p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 100);
+      p = getOutOfZone3(p);
 
-      p = detectPointerDown();
-      if (p != null) {
-        boolean danger = checkDangerousZones(p);
-        // Pixel p2 = detectPointerDown();
-        // if (p2 != null)
-        // p = p2;
-        start = System.currentTimeMillis();
-        _mouse.saveCurrentPosition();
+      int[] rails = _scanner.getRailsHome();
 
-        int[] rails = _scanner.getRailsHome();
+      // fast click all rails + street1 mainly for mail express trains
+      p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+      clickCareful(p, false, false);
 
-        if (!danger) {
-          // fast click all rails + street1 mainly for mail express trains
-          p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-          clickCareful(p, false, false);
-
-          for (int i = rails.length - 1; i >= 0; i--) {
-            p.y = _scanner.getBottomRight().y - rails[i] - 4;
-            clickCareful(p, false, false);
-          }
-          for (int i = 0; i < rails.length; i++) {
-            p.y = _scanner.getBottomRight().y - rails[i] - 4;
-            clickCareful(p, false, false);
-          }
-        }
-
-        // Try mail again. This time with adjusting
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
-        clickCareful(p, danger, true);
-
-        _mouse.delay(250);
-        trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
-        _mouse.delay(250);
-        hadOtherLocations = scanOtherLocations(true, 11);
-
-        if (_captureContractors.size() == 0) {
-          _mouse.delay(250);
-
-          // again all rails one by one now more carefully
-          boolean stop = false;
-          for (int i = 1; i < rails.length && !stop && !_stopThread; i++) {
-            try {
-              LOGGER.info("trying rail " + (i + 1));
-              p.y = _scanner.getBottomRight().y - rails[i] - 4;
-              trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
-              _mouse.delay(200);
-              trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
-              _mouse.checkUserMovement();
-
-              Pixel pp = detectPointerDown();
-              if (pp != null && Math.abs(pp.x - p.x) > 5) {
-                stop = true;
-                break;
-              }
-
-              if ((i + 1) % 2 == 0)
-                huntLetters();
-
-              if (scanOtherLocations(true, 22)) {
-                hadOtherLocations = true;
-                p.x = _scanner.getBottomRight().x - 80;
-              }
-            } catch (AWTException | IOException e) {
-              LOGGER.log(Level.SEVERE, "Critical error occured", e);
-            }
-          } // for
-        }
-
-      } else {
-        // p == null -> no trains detected yet
-        huntLetters();
-        hadOtherLocations = scanOtherLocations(true, 44);
+      for (int i = rails.length - 1; i >= 0; i--) {
+        p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        clickCareful(p, false, false);
+        _mouse.checkUserMovement();
+      }
+      for (int i = 0; i < rails.length; i++) {
+        p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        clickCareful(p, false, false);
+        _mouse.checkUserMovement();
       }
 
-      _mouse.checkUserMovement();
-    } while (!done && curr - start <= timeGiven && !_stopThread);
+      _mouse.saveCurrentPosition();// ???
 
-    long t2 = System.currentTimeMillis();
-    LOGGER.fine("time: " + (t2 - t1));
+      _mouse.delay(250);
+      trainHasBeenSent = checkTrainManagement();
+      if (trainHasBeenSent) {
+        //_mouse.delay(250);
+        start = System.currentTimeMillis();
+      }
+
+      if (turn % 2 == 0)
+        huntLetters();
+
+      hadOtherLocations = scanOtherLocations(true, 11);
+
+    } while (curr - start <= timeGiven && !_stopThread && turn <= maxTurns );
 
     return trainHasBeenSent || hadOtherLocations;
   }
@@ -2498,7 +2486,9 @@ public final class MainFrame extends JFrame {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
     }
 
-    // _mouse.delay(200);
+    _mouse.delay(300);
+    scanAndClick(_scanner.getNoButton(), null);
+    
     // int diff = 30;
     // int x1 = _scanner.getBottomRight().x - 57;
     // int y = _scanner.getBottomRight().y - 160;
@@ -2827,7 +2817,21 @@ public final class MainFrame extends JFrame {
     LOGGER.info("done");
   }
 
-  private boolean checkDangerousZones(Pixel p) throws RobotInterruptedException, DragFailureException {
+  private Pixel getOutOfZone3(Pixel p) {
+    return getOutOfZone(p, _scanner.getDangerousZones()[0]); // first zone is zone3
+  }
+
+  private Pixel getOutOfZone(Pixel p, Rectangle zone) {
+    int newX = p.x;
+    if (p.x >= zone.x && p.x <= zone.x + zone.width / 2) {
+      newX = p.x - 10;
+    } else if (p.x > zone.x + zone.width / 2 && p.x <= zone.x + zone.width) {
+      newX = zone.x + zone.width + 10;
+    }
+    return new Pixel(newX, p.y);
+  }
+
+  private boolean checkDangerousZones(Pixel p) throws RobotInterruptedException {
 
     // find which zone first
     Rectangle zone = null;
@@ -3248,6 +3252,108 @@ public final class MainFrame extends JFrame {
       _trainManagementWindow = new TrainManagementWindow(null, tscanner);
     }
     _trainManagementWindow.setVisible(true);
+  }
+
+  private boolean clickHomeOneClick() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
+    long t1 = System.currentTimeMillis();
+
+    boolean trainHasBeenSent = false;
+    boolean hadOtherLocations = false;
+    int timeGiven = 2000; // 2 secs
+    long start = System.currentTimeMillis();
+
+    LOGGER.info("looking for pointer down...");
+
+    Pixel p = null;
+    boolean done = false;
+    long curr = start;
+    do {
+      curr = System.currentTimeMillis();
+      _mouse.saveCurrentPosition();
+
+      moveIfNecessary();
+
+      p = detectPointerDown();
+      if (p != null) {
+        boolean danger = checkDangerousZones(p);
+        // Pixel p2 = detectPointerDown();
+        // if (p2 != null)
+        // p = p2;
+        start = System.currentTimeMillis();
+        _mouse.saveCurrentPosition();
+
+        int[] rails = _scanner.getRailsHome();
+
+        if (!danger) {
+          // fast click all rails + street1 mainly for mail express trains
+          p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+          clickCareful(p, false, false);
+
+          for (int i = rails.length - 1; i >= 0; i--) {
+            p.y = _scanner.getBottomRight().y - rails[i] - 4;
+            clickCareful(p, false, false);
+          }
+          for (int i = 0; i < rails.length; i++) {
+            p.y = _scanner.getBottomRight().y - rails[i] - 4;
+            clickCareful(p, false, false);
+          }
+        }
+
+        // Try mail again. This time with adjusting
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
+        clickCareful(p, danger, true);
+
+        _mouse.delay(250);
+        trainHasBeenSent = checkTrainManagement() || trainHasBeenSent;
+        _mouse.delay(250);
+        hadOtherLocations = scanOtherLocations(true, 11);
+
+        if (_captureContractors.size() == 0) {
+          _mouse.delay(250);
+
+          // again all rails one by one now more carefully
+          boolean stop = false;
+          for (int i = 1; i < rails.length && !stop && !_stopThread; i++) {
+            try {
+              LOGGER.info("trying rail " + (i + 1));
+              p.y = _scanner.getBottomRight().y - rails[i] - 4;
+              trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
+              _mouse.delay(200);
+              trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
+              _mouse.checkUserMovement();
+
+              Pixel pp = detectPointerDown();
+              if (pp != null && Math.abs(pp.x - p.x) > 5) {
+                stop = true;
+                break;
+              }
+
+              if ((i + 1) % 2 == 0)
+                huntLetters();
+
+              if (scanOtherLocations(true, 22)) {
+                hadOtherLocations = true;
+                p.x = _scanner.getBottomRight().x - 80;
+              }
+            } catch (AWTException | IOException e) {
+              LOGGER.log(Level.SEVERE, "Critical error occured", e);
+            }
+          } // for
+        }
+
+      } else {
+        // p == null -> no trains detected yet
+        huntLetters();
+        hadOtherLocations = scanOtherLocations(true, 44);
+      }
+
+      _mouse.checkUserMovement();
+    } while (!done && curr - start <= timeGiven && !_stopThread);
+
+    long t2 = System.currentTimeMillis();
+    LOGGER.fine("time: " + (t2 - t1));
+
+    return trainHasBeenSent || hadOtherLocations;
   }
 
 }

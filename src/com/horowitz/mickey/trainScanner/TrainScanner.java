@@ -35,6 +35,8 @@ public class TrainScanner {
     super();
     _scanner = scanner;
     _comparator = scanner.getComparator();
+    _comparator.setPrecision(5000);
+    _comparator.setErrors(25);
     _takeABreak = takeABreak;
     try {
       _mouse = new MouseRobot();
@@ -307,7 +309,7 @@ public class TrainScanner {
     _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
     _mouse.click();
     _mouse.delay(1000);
-
+    int locoOnlyLength = 110;
     boolean atLeastOneSent = false;
     do {
       List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
@@ -321,8 +323,8 @@ public class TrainScanner {
               if (p == null && isLocoOnly()) {
                 BufferedImage i1 = train.getScanImage();
                 BufferedImage i2 = t.getScanImage();
-                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - 93, 0, 93, i1.getHeight()),
-                    i2.getSubimage(i2.getWidth() - 93, 0, 93, i2.getHeight()));
+                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
+                    i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
                 System.err.println("locoOnly " + p);
               }
               if (p != null) {
@@ -419,8 +421,8 @@ public class TrainScanner {
         Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
 
         // for debug only
-        // String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-        // writeImage(newArea, scanImageFilename);
+        String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+        writeImage(newArea, scanImageFilename);
 
         Robot robot = new Robot();
         train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));

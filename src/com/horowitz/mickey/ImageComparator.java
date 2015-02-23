@@ -34,4 +34,16 @@ public interface ImageComparator {
 
   public Pixel findImage(BufferedImage image, BufferedImage area);
 
+  public abstract void setErrors(int errors);
+
+  public abstract int getErrors();
+
+  public abstract void setPrecision(int precision);
+
+  public abstract int getPrecision();
+
+  public abstract void setRoughness(double roughness);
+
+  public abstract double getRoughness();
+
 }

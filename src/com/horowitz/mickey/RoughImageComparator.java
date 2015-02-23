@@ -369,4 +369,28 @@ public class RoughImageComparator implements ImageComparator {
     }
     return null;
   }
+
+  public void setErrors(int errors) {
+  }
+
+  public int getErrors() {
+    return 4;
+  }
+
+  public double getRoughness() {
+    return roughness;
+  }
+
+  public void setRoughness(double roughness) {
+    this.roughness = roughness;
+  }
+
+  public int getPrecision() {
+    return precision;
+  }
+
+  public void setPrecision(int precision) {
+    this.precision = precision;
+  }
+
 }
