@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.910";
+  private static final String APP_TITLE           = "v0.913c";
 
   private boolean             _devMode            = false;
 
@@ -103,8 +103,8 @@ public final class MainFrame extends JFrame {
   private JButton             _doMagicAction;
 
   private Location            _freeTime           = Locations.LOC_6MIN;
-  private Location            _freightTime        = Locations.LOC_10MIN;
-  private Location            _expressTime        = Locations.LOC_30MIN;
+  private Location            _freightTime        = Locations.LOC_30MIN;
+  private Location            _expressTime        = Locations.LOC_1HOUR;
 
   private Long                _lastTime           = 0l;
   private Queue<Integer>      _lastDiffs          = new ArrayBlockingQueue<Integer>(3);
@@ -874,6 +874,7 @@ public final class MainFrame extends JFrame {
         if (components[i] instanceof LocationToggleButton) {
           LocationToggleButton b = (LocationToggleButton) components[i];
           if (b.getTrainLocation().getTime() == free) {
+            _freeTime = b.getTrainLocation();
             if (!b.isSelected()) {
               b.doClick();
               b.invalidate();
@@ -888,6 +889,7 @@ public final class MainFrame extends JFrame {
           if (components[i] instanceof LocationToggleButton) {
             LocationToggleButton b = (LocationToggleButton) components[i];
             if (b.getTrainLocation().getTime() == free) {
+              _freeTime = b.getTrainLocation();
               if (!b.isSelected()) {
                 b.doClick();
                 b.invalidate();
@@ -907,6 +909,7 @@ public final class MainFrame extends JFrame {
         if (components[i] instanceof LocationToggleButton) {
           LocationToggleButton b = (LocationToggleButton) components[i];
           if (b.getTrainLocation().getTime() == freight) {
+            _freightTime = b.getTrainLocation();
             if (!b.isSelected()) {
               b.doClick();
               b.invalidate();
@@ -922,6 +925,7 @@ public final class MainFrame extends JFrame {
           if (components[i] instanceof LocationToggleButton) {
             LocationToggleButton b = (LocationToggleButton) components[i];
             if (b.getTrainLocation().getTime() == freight) {
+              _freightTime = b.getTrainLocation();
               if (!b.isSelected()) {
                 b.doClick();
                 b.invalidate();
@@ -940,6 +944,7 @@ public final class MainFrame extends JFrame {
         if (components[i] instanceof LocationToggleButton) {
           LocationToggleButton b = (LocationToggleButton) components[i];
           if (b.getTrainLocation().getTime() == express) {
+            _expressTime = b.getTrainLocation();
             if (!b.isSelected()) {
               b.doClick();
               b.invalidate();
@@ -954,6 +959,7 @@ public final class MainFrame extends JFrame {
           if (components[i] instanceof LocationToggleButton) {
             LocationToggleButton b = (LocationToggleButton) components[i];
             if (b.getTrainLocation().getTime() == express) {
+              _expressTime = b.getTrainLocation();
               if (!b.isSelected()) {
                 b.doClick();
                 b.invalidate();
@@ -1349,7 +1355,7 @@ public final class MainFrame extends JFrame {
       try {
         for (int i = 0; i < 17 && !done; i++) {
           LOGGER.info("after refresh recovery try " + (i + 1));
-          handleRarePopups();
+          handleRarePopups(false);
 
           // OTHER POPUPS
           handlePopups();// hmm
@@ -1409,27 +1415,35 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private void handleRarePopups() throws InterruptedException, RobotInterruptedException {
+  private void handleRarePopups(boolean fast) throws InterruptedException, RobotInterruptedException {
     LOGGER.info("Checking for FB login and daily rewards...");
     _mouse.savePosition();
     _mouse.mouseMove(0, 0);
+    int wait = 100;
+    if (!fast) {
+      wait = 1000;
+      // FB LOGIN
+      if (scanAndClick(_scanner.getLoginWIthFB(), null))
+        _mouse.delay(2000);
 
-    // FB LOGIN
-    if (scanAndClick(_scanner.getLoginWIthFB(), null))
-      _mouse.delay(2000);
-
-    if (scanAndClick(_scanner.getLoginFB(), null))
-      _mouse.delay(5000);
-    else
-      _mouse.delay(3000);
-
+      if (scanAndClick(_scanner.getLoginFB(), null))
+        _mouse.delay(5000);
+      else
+        _mouse.delay(3000);
+    }
+    
     // DAILY
     if (scanAndClick(_scanner.getDailyRewards(), null))
-      _mouse.delay(1000);
+      _mouse.delay(wait);
 
     // PROMO
     if (scanAndClick(_scanner.getPromoX(), null))
-      _mouse.delay(1000);
+      _mouse.delay(wait);
+    
+    //SHOP X
+    if (scanAndClick(_scanner.getShopX(), null))
+      _mouse.delay(wait);
+    
     _mouse.restorePosition();
   }
 
@@ -1564,8 +1578,12 @@ public final class MainFrame extends JFrame {
             // true means train has been sent or other locations've been visited. Refresh postponed.
             start = System.currentTimeMillis();
           } else {
-            lookForPackages();
+            //lookForPackages();
           }
+          
+          huntLetters();
+          
+          lookForPackages();
 
           _mouse.delay(200);
         } // _captureContractors == 0
@@ -1615,12 +1633,47 @@ public final class MainFrame extends JFrame {
   }
 
   private void checkIsStuck() throws GameStuckException {
-    Pixel tl = _scanner.getTopLeft();
-    int w = (_scanner.getGameWidth() - 214) / 2;
-    Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
-    // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
+    int howMuch = 3;
+    putNewImage(howMuch);
+
+    if (_lastImageList.size() >= howMuch) {
+      ImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
+      boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
+      for (int i = 1; i < howMuch - 1; ++i) {
+        uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
+      }
+     
+      if (uhoh) {
+        try {
+          handleRarePopups(true);
+          _mouse.delay(200);
+          howMuch = 4;
+          putNewImage(howMuch);
+        } catch (InterruptedException e) {
+        } catch (RobotInterruptedException e) {
+        }
+      }
+    
+      //check again
+      uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
+      for (int i = 1; i < howMuch - 1; ++i) {
+        uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
+      }
+        
+      if (uhoh) {
+        _lastImageList.clear();
+        LOGGER.severe("THE GAME PROBABLY GOT STUCK");
+        throw new GameStuckException();
+      }
+    }
+  }
+
+  private void putNewImage(int howMuch) {
     try {
-      int howMuch = 4;
+      Pixel tl = _scanner.getTopLeft();
+      int w = (_scanner.getGameWidth() - 214) / 2;
+      // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
+      Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
       if (_lastImageList.size() < howMuch) {
         BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
@@ -1628,17 +1681,6 @@ public final class MainFrame extends JFrame {
         _lastImageList.remove(0);
         BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
-
-        ImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
-        boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
-        for (int i = 1; i < howMuch - 1; ++i) {
-          uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
-        }
-        if (uhoh) {
-          _lastImageList.clear();
-          LOGGER.severe("THE GAME PROBABLY GOT STUCK");
-          throw new GameStuckException();
-        }
       }
     } catch (AWTException e) {
     }
@@ -2032,16 +2074,24 @@ public final class MainFrame extends JFrame {
     //LOGGER.info("> handle PromoX: " + (t2 - t1));
     //t1 = t2 = System.currentTimeMillis();
 
-    // SHOP
-    found = scanAndClick(_scanner.getShopX(), null) || found;
+    //SHOP
+    found = found || scanAndClick(_scanner.getShopX(), null);
     ////t2 = System.currentTimeMillis();
     ////LOGGER.info("> handle ShopX: " + (t2 - t1));
     ////t1 = t2 = System.currentTimeMillis();
+
+    //PROMO
+    found = found || scanAndClick(_scanner.getPromoX(), null);
 
     //CLOSE
     int xx = (_scanner.getGameWidth() - 544) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 64, 33);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+
+    xx = (_scanner.getGameWidth() - 90) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 90, 33);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    
     ////t2 = System.currentTimeMillis();
     ////LOGGER.info("> handle Close: " + (t2 - t1));
     ////t1 = t2 = System.currentTimeMillis();
@@ -2060,9 +2110,9 @@ public final class MainFrame extends JFrame {
     }
     */
     
-    
-    //area = new Rectangle(_scanner.getBottomRight().x - 300, _scanner.getBottomRight().y - 125 - 30, _scanner.getGameWidth() - 600, 44 + 40);
-    //findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
+    xx = (_scanner.getGameWidth() - 144) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 239, 75, 40);
+    findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     t2 = System.currentTimeMillis();
     LOGGER.info("HANDLE POPUP TIME: " + (t2 - t1));
@@ -2179,29 +2229,41 @@ public final class MainFrame extends JFrame {
 
   private void lookForPackages() throws RobotInterruptedException, AWTException, IOException {
     LOGGER.info("Looking of mail packages...");
-    Pixel p = detectPointerDown();
+    Pixel p = null;
+    for(int i = 0; i < 2 && p == null; i++) {
+      p = _scanner.getPackage1().findImage();
+      if (p == null)
+        p = _scanner.getPackage2().findImage();
+    }
+    _scanner.writeImage(_scanner.getPackage1().getDefaultArea(), "packageArea.bmp");
     if (p != null) {
-      Rectangle zone = null;
-      boolean found = false;
-      for (int i = 0; i < _scanner.getDangerousZones().length && !found; ++i) {
-        zone = _scanner.getDangerousZones()[i];
-        if (p.x >= zone.x && p.x <= zone.x + zone.width) {
-          found = true;
-        }
-      }
-      if (!found) {
-        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
-        clickCareful(p, true, true);
-      } else {
-        LOGGER.info("Package is in zone. Avoiding clicking...");
-      }
+      _mouse.delay(300);
+      LOGGER.info("FOUND PACKAGE!!!");
+      _mouse.mouseMove(p);
+      _mouse.click();
+      _mouse.delay(300);
+      
+//      Rectangle zone = null;
+//      boolean found = false;
+//      for (int i = 0; i < _scanner.getDangerousZones().length && !found; ++i) {
+//        zone = _scanner.getDangerousZones()[i];
+//        if (p.x >= zone.x && p.x <= zone.x + zone.width) {
+//          found = true;
+//        }
+//      }
+//      if (!found) {
+//        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 3;
+//        clickCareful(p, true, true);
+//      } else {
+//        LOGGER.info("Package is in zone. Avoiding clicking...");
+//      }
     }
   }
 
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
-    int timeGiven = 2000; // 2 secs
+    int timeGiven = 3000; // 2 secs
     long start = System.currentTimeMillis();
 
     Pixel p = null;
@@ -2244,8 +2306,8 @@ public final class MainFrame extends JFrame {
         start = System.currentTimeMillis();
       }
 
-      if (turn % 2 == 0)
-        huntLetters();
+      //if (turn % 2 == 0)
+      //  huntLetters();
 
       hadOtherLocations = scanOtherLocations(true, 11);
 
@@ -2482,6 +2544,9 @@ public final class MainFrame extends JFrame {
   private void loadTrainsFast() throws RobotInterruptedException {
     int[] rails = _scanner.getRailsOut();
     int xx = _scanner.getBottomRight().x - 80; // safe zone
+    for (int i = 0; i < rails.length; i++) {
+      _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+    }
     for (int i = 0; i < rails.length; i++) {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
     }
@@ -3146,7 +3211,7 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      Rectangle area = new Rectangle(tm.x + 247, tm.y + 26, 169, 54);// height was 113 - 8
+      Rectangle area = new Rectangle(tm.x + 254, tm.y + 28, 169, 47);
       boolean isExpress = false;
       Pixel exP = _scanner.getExpressTrain().findImage(area);
       isExpress = exP != null;

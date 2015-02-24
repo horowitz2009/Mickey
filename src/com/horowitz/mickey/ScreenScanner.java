@@ -81,7 +81,9 @@ public class ScreenScanner {
   public ImageData             _letterRed3                    = null;
   public ImageData             _letterWhite3                  = null;
   public ImageData             _letterBrown3                  = null;
-  public ImageData             _letterPink3                  = null;
+  public ImageData             _letterPink3                   = null;
+  public ImageData             _package1                      = null;
+  public ImageData             _package2                      = null;
 
   private ImageData            _pointerDownL                  = null;
   private ImageData            _pointerDownR                  = null;
@@ -180,7 +182,8 @@ public class ScreenScanner {
     _letterWhite3 = new ImageData("letters/white10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown3 = new ImageData("letters/brown10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
     _letterPink3 = new ImageData("letters/pink10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-
+    
+    
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
     _expressTrain = new ImageData("expressTrain.bmp", null, _comparator, 0, 0);
@@ -192,13 +195,16 @@ public class ScreenScanner {
     int xx = (getGameWidth() - 760) / 2;
     int yy = (getGameHeight() - 550) / 2;
     //Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
-    Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);
-    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, 0, 0);
+    Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);//TODO IMPROVE IT!!!
+    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
     // top left image is used to determine whether the train is express
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, 0, 0);
 
     _fullyOptimized = true;
-
+    
+    area = new Rectangle(_tl.x, _br.y - 185, getGameWidth(), 45);
+    _package1     = new ImageData("package1.bmp", area, _comparator, 7, 4);
+    _package2     = new ImageData("package2.bmp", area, _comparator, 7, 4);
     
     //SESSION 
     xx = (getGameWidth() - 80) / 2;
@@ -212,9 +218,16 @@ public class ScreenScanner {
     _noButton = new ImageData("noButton2.bmp", area, _comparator, 0, 0);
 
     //SHOP X
-    area = new Rectangle(_br.x - 60, _tl.y + 24, 60, 42);
+    xx = (getGameWidth() - 780) / 2;
+    area = new Rectangle(_br.x - xx - 42, _tl.y + 24, xx + 42, 42);
     _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
 
+    //PROMO
+    xx = (getGameWidth() - 750) / 2;
+    area = new Rectangle(_br.x - xx - 50, _tl.y + 24, 50, 100);
+    _promoX = new ImageData("promoX.bmp", area, _comparator, 9, 9);
+    
+    
     if (getGameWidth() > 900) {
       zoom = "" + (Integer.parseInt(zoom) + 2);
       LOGGER.info("ZOOM 4!!!!!");
@@ -716,6 +729,14 @@ public class ScreenScanner {
 
   public ImageComparator getComparator() {
     return _comparator;
+  }
+
+  public ImageData getPackage1() {
+    return _package1;
+  }
+
+  public ImageData getPackage2() {
+    return _package2;
   }
 
 }
