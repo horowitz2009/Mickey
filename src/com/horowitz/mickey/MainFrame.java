@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.907";
+  private static final String APP_TITLE           = "v0.910";
 
   private boolean             _devMode            = false;
 
@@ -2220,9 +2220,9 @@ public final class MainFrame extends JFrame {
 
       int[] rails = _scanner.getRailsHome();
 
-      // fast click all rails + street1 mainly for mail express trains
-      p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-      clickCareful(p, false, false);
+      //DONT fast click all rails + street1 mainly for mail express trains
+      //p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
+      //clickCareful(p, false, false);
 
       for (int i = rails.length - 1; i >= 0; i--) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
@@ -3146,7 +3146,7 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      Rectangle area = new Rectangle(tm.x + 287, tm.y + 8, 422 - 287, 81);// height was 113 - 8
+      Rectangle area = new Rectangle(tm.x + 247, tm.y + 26, 169, 54);// height was 113 - 8
       boolean isExpress = false;
       Pixel exP = _scanner.getExpressTrain().findImage(area);
       isExpress = exP != null;

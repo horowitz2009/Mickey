@@ -20,6 +20,7 @@ import com.horowitz.mickey.MouseRobot;
 import com.horowitz.mickey.Pixel;
 import com.horowitz.mickey.RobotInterruptedException;
 import com.horowitz.mickey.ScreenScanner;
+import com.horowitz.mickey.SimilarityImageComparator;
 import com.horowitz.mickey.data.DataStore;
 
 public class TrainScanner {
@@ -34,9 +35,9 @@ public class TrainScanner {
   public TrainScanner(ScreenScanner scanner, Logger logger, int takeABreak) {
     super();
     _scanner = scanner;
-    _comparator = scanner.getComparator();
-    _comparator.setPrecision(5000);
-    _comparator.setErrors(25);
+    _comparator = new SimilarityImageComparator(0.04, 2000);
+    //_comparator.setPrecision(5000);
+    //_comparator.setErrors(25);
     _takeABreak = takeABreak;
     try {
       _mouse = new MouseRobot();
@@ -319,10 +320,10 @@ public class TrainScanner {
         if (t.isIdle()) {
           for (Train train : trains) {
             if (!train.getContractors().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
-              Pixel p = _comparator.findImage(train.getScanImage(), t.getScanImage());
+              Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
               if (p == null && isLocoOnly()) {
-                BufferedImage i1 = train.getScanImage();
-                BufferedImage i2 = t.getScanImage();
+                BufferedImage i1 = t.getScanImage();
+                BufferedImage i2 = train.getScanImage();
                 p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
                     i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
                 System.err.println("locoOnly " + p);
@@ -418,11 +419,11 @@ public class TrainScanner {
       boolean isIdle = onRoadData.findImage(onRoadArea) == null;
       Train train;
       if(isIdle) {
-        Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
+        Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9 + 6, 530, 25);
 
         // for debug only
-        String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-        writeImage(newArea, scanImageFilename);
+        //String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+        //writeImage(newArea, scanImageFilename);
 
         Robot robot = new Robot();
         train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));

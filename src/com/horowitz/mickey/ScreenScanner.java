@@ -188,6 +188,10 @@ public class ScreenScanner {
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
+    
+    int xx = (getGameWidth() - 760) / 2;
+    int yy = (getGameHeight() - 550) / 2;
+    //Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
     Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
@@ -197,8 +201,8 @@ public class ScreenScanner {
 
     
     //SESSION 
-    int xx = (getGameWidth() - 80) / 2;
-    int yy = (getGameHeight() - 23) / 2;
+    xx = (getGameWidth() - 80) / 2;
+    yy = (getGameHeight() - 23) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 210, 80, 26); // TODO to be widen if not working
     _sessionTimeOut = new ImageData("session2.bmp", area, _comparator, 0, 0);
     
