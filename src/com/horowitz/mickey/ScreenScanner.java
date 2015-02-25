@@ -131,6 +131,7 @@ public class ScreenScanner {
 
   private ImageData            _expressTrain;
   private ImageData            _freeTrain;
+  private ImageData            _xpTrain;
 
   private int                  _street1Y                      = 170;
 
@@ -186,8 +187,11 @@ public class ScreenScanner {
     
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
-    _expressTrain = new ImageData("expressTrain.bmp", null, _comparator, 0, 0);
-    _freeTrain = new ImageData("free.bmp", null, _comparator, 0, 0);
+    
+    SimilarityImageComparator specialComparator = new SimilarityImageComparator(0.08, 4000);
+    _expressTrain = new ImageData("expressTrain3.bmp", null, specialComparator, 0, 0);
+    _freeTrain = new ImageData("free.bmp", null, specialComparator, 0, 0);
+    _xpTrain = new ImageData("xpTrain.bmp", null, specialComparator, 0, 0);
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
@@ -667,6 +671,10 @@ public class ScreenScanner {
     return _freeTrain;
   }
 
+  public ImageData getXPTrain() {
+    return _xpTrain;
+  }
+  
   public ImageData getClose1() {
     return _close1;
   }

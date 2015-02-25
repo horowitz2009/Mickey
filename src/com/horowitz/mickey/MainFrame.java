@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.913c";
+  private static final String APP_TITLE           = "v0.914";
 
   private boolean             _devMode            = false;
 
@@ -103,6 +103,7 @@ public final class MainFrame extends JFrame {
   private JButton             _doMagicAction;
 
   private Location            _freeTime           = Locations.LOC_6MIN;
+  private Location            _xpTime             = Locations.LOC_6MIN;
   private Location            _freightTime        = Locations.LOC_30MIN;
   private Location            _expressTime        = Locations.LOC_1HOUR;
 
@@ -128,6 +129,7 @@ public final class MainFrame extends JFrame {
   private JToolBar            _frToolbar2;
 
   private JToolBar            _exToolbar1;
+  private JToolBar            _xpToolbar1;
 
   private JToolBar            _exToolbar2;
 
@@ -296,11 +298,15 @@ public final class MainFrame extends JFrame {
     _freeToolbar1.add(freeLabel);
     _freeToolbar2.add(new JLabel("                  "));
     _exToolbar1 = new JToolBar();
+    _xpToolbar1 = new JToolBar();
     _exToolbar2 = new JToolBar();
     JLabel exLabel = new JLabel("Express  ");
     _exToolbar1.add(exLabel);
     JLabel exLabel2 = new JLabel("         ");
     _exToolbar2.add(exLabel2);
+
+    JLabel xpLabel = new JLabel("XP  ");
+    _xpToolbar1.add(xpLabel);
 
     Dimension d = new Dimension(55, 20);
     frLabel.setPreferredSize(d);
@@ -315,8 +321,9 @@ public final class MainFrame extends JFrame {
     freeLabel.setMaximumSize(d);
     exLabel.setMaximumSize(d);
     exLabel2.setMaximumSize(d);
+    xpLabel.setMaximumSize(d);
 
-    JPanel toolbars = new JPanel(new GridLayout(8, 1));
+    JPanel toolbars = new JPanel(new GridLayout(9, 1));
     toolbars.add(mainToolbar1);
     toolbars.add(mainToolbar2);
     mainToolbar1.setFloatable(false);
@@ -327,18 +334,21 @@ public final class MainFrame extends JFrame {
     _frToolbar2.setFloatable(false);
     _exToolbar1.setFloatable(false);
     _exToolbar2.setFloatable(false);
+    _xpToolbar1.setFloatable(false);
     _frToolbar1.setBackground(new Color(201, 177, 133));
     _freeToolbar1.setBackground(new Color(201, 177, 183));// TODO
     _freeToolbar2.setBackground(new Color(201, 177, 183));// TODO
     _frToolbar2.setBackground(new Color(201, 177, 133));
     _exToolbar1.setBackground(new Color(153, 173, 209));
     _exToolbar2.setBackground(new Color(153, 173, 209));
+    _xpToolbar1.setBackground(new Color(233, 193, 189));
     toolbars.add(_frToolbar1);
     toolbars.add(_frToolbar2);
     toolbars.add(_freeToolbar1);
     toolbars.add(_freeToolbar2);
     toolbars.add(_exToolbar1);
     toolbars.add(_exToolbar2);
+    toolbars.add(_xpToolbar1);
     Box north = Box.createVerticalBox();
     north.add(toolbars);
 
@@ -731,21 +741,30 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_resumeClick);
     }
 
+    //freight
     ButtonGroup bgFr = new ButtonGroup();
-    ButtonGroup bgFree = new ButtonGroup();
     createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
     createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE_F2, "freight");
+    
+    //free
+    ButtonGroup bgFree = new ButtonGroup();
     createButtons(_freeToolbar1, bgFree, Locations.LOC_PAGE_F1, "free");
     createButtons(_freeToolbar2, bgFree, Locations.LOC_PAGE_F2, "free");
-    // createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE3, true);
 
+    //express
     ButtonGroup bgEx = new ButtonGroup();
     createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE_E1, "express");
     createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE_E2, "express");
     // createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
+    
+    //XP
+    ButtonGroup bgXP = new ButtonGroup();
+    createButtons(_xpToolbar1, bgXP, Locations.LOC_PAGE_F1, "xp");
+
     ((JToggleButton) _frToolbar1.getComponent(3)).setSelected(true);
     ((JToggleButton) _freeToolbar1.getComponent(2)).setSelected(true);
     ((JToggleButton) _exToolbar1.getComponent(4)).setSelected(true);
+    ((JToggleButton) _xpToolbar1.getComponent(2)).setSelected(true);
 
     /*
      * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ") {
@@ -857,118 +876,22 @@ public final class MainFrame extends JFrame {
     int free = _commands.getInt("free", -1);
     int freight = _commands.getInt("freight", -1);
     int express = _commands.getInt("express", -1);
-
-    // if (free >= 0) {
-    // for (Location loc : Locations.ALL) {
-    // if (loc.getTime() == free) {
-    // _freeTime = loc;
-    // break;
-    // }
-    // }
-    // }
+    int xp = _commands.getInt("xp", -1);
 
     if (free >= 0) {
-      Component[] components = _freeToolbar1.getComponents();
-      boolean found = false;
-      for (int i = 0; i < components.length && !found; i++) {
-        if (components[i] instanceof LocationToggleButton) {
-          LocationToggleButton b = (LocationToggleButton) components[i];
-          if (b.getTrainLocation().getTime() == free) {
-            _freeTime = b.getTrainLocation();
-            if (!b.isSelected()) {
-              b.doClick();
-              b.invalidate();
-            }
-            found = true;
-          }
-        }
-      }
-      if (!found) {
-        components = _freeToolbar2.getComponents();
-        for (int i = 0; i < components.length && !found; i++) {
-          if (components[i] instanceof LocationToggleButton) {
-            LocationToggleButton b = (LocationToggleButton) components[i];
-            if (b.getTrainLocation().getTime() == free) {
-              _freeTime = b.getTrainLocation();
-              if (!b.isSelected()) {
-                b.doClick();
-                b.invalidate();
-              }
-              found = true;
-            }
-          }
-        }
-      }
-
+      reapplyTimes(free, _freeToolbar1.getComponents(), _freeToolbar2.getComponents());
     }
 
     if (freight >= 0) {
-      Component[] components = _frToolbar1.getComponents();
-      boolean found = false;
-      for (int i = 0; i < components.length && !found; i++) {
-        if (components[i] instanceof LocationToggleButton) {
-          LocationToggleButton b = (LocationToggleButton) components[i];
-          if (b.getTrainLocation().getTime() == freight) {
-            _freightTime = b.getTrainLocation();
-            if (!b.isSelected()) {
-              b.doClick();
-              b.invalidate();
-            }
-            found = true;
-          }
-        }
-      }
-
-      if (!found) {
-        components = _frToolbar2.getComponents();
-        for (int i = 0; i < components.length && !found; i++) {
-          if (components[i] instanceof LocationToggleButton) {
-            LocationToggleButton b = (LocationToggleButton) components[i];
-            if (b.getTrainLocation().getTime() == freight) {
-              _freightTime = b.getTrainLocation();
-              if (!b.isSelected()) {
-                b.doClick();
-                b.invalidate();
-              }
-              found = true;
-            }
-          }
-        }
-      }
+      reapplyTimes(freight, _frToolbar1.getComponents(), _frToolbar2.getComponents());
     }
 
     if (express >= 0) {
-      boolean found = false;
-      Component[] components = _exToolbar1.getComponents();
-      for (int i = 0; i < components.length && !found; i++) {
-        if (components[i] instanceof LocationToggleButton) {
-          LocationToggleButton b = (LocationToggleButton) components[i];
-          if (b.getTrainLocation().getTime() == express) {
-            _expressTime = b.getTrainLocation();
-            if (!b.isSelected()) {
-              b.doClick();
-              b.invalidate();
-            }
-            found = true;
-          }
-        }
-      }
-      if (!found) {
-        components = _exToolbar2.getComponents();
-        for (int i = 0; i < components.length && !found; i++) {
-          if (components[i] instanceof LocationToggleButton) {
-            LocationToggleButton b = (LocationToggleButton) components[i];
-            if (b.getTrainLocation().getTime() == express) {
-              _expressTime = b.getTrainLocation();
-              if (!b.isSelected()) {
-                b.doClick();
-                b.invalidate();
-              }
-              found = true;
-            }
-          }
-        }
-      }
+      reapplyTimes(express, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+    }
+
+    if (xp >= 0) {
+      reapplyTimes(xp, _xpToolbar1.getComponents(), null);
     }
 
     boolean ping = "true".equalsIgnoreCase(_commands.getProperty("ping"));
@@ -985,6 +908,36 @@ public final class MainFrame extends JFrame {
 
     if (sendInternational != _sendInternational.isSelected()) {
       _sendInternational.setSelected(sendInternational);
+    }
+  }
+
+  private void reapplyTimes(int time, Component[] components1, Component[] components2) {
+    boolean found = false;
+    for (int i = 0; i < components1.length && !found; i++) {
+      if (components1[i] instanceof LocationToggleButton) {
+        LocationToggleButton b = (LocationToggleButton) components1[i];
+        if (b.getTrainLocation().getTime() == time) {
+          if (!b.isSelected()) {
+            b.doClick();
+            b.invalidate();
+          }
+          found = true;
+        }
+      }
+    }
+    if (!found && components2 != null) {
+      for (int i = 0; i < components2.length && !found; i++) {
+        if (components2[i] instanceof LocationToggleButton) {
+          LocationToggleButton b = (LocationToggleButton) components2[i];
+          if (b.getTrainLocation().getTime() == time) {
+            if (!b.isSelected()) {
+              b.doClick();
+              b.invalidate();
+            }
+            found = true;
+          }
+        }
+      }
     }
   }
 
@@ -1218,6 +1171,9 @@ public final class MainFrame extends JFrame {
             _freeTime = l;
           } else if (type.equals("freight")) {
             _freightTime = l;
+            
+          } else if (type.equals("xp")) {
+            _xpTime = l;
           } else {
             _expressTime = l;
           }
@@ -1784,7 +1740,7 @@ public final class MainFrame extends JFrame {
 
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     long timeLeft = _trainManagementWindow != null ? _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() : 10000000;
-    LOGGER.info("CHECKING FOR INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
+    LOGGER.info("INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
     if (_trainManagementWindow != null && timeLeft <= 0) {
       handlePopups();
 
@@ -2009,7 +1965,7 @@ public final class MainFrame extends JFrame {
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
-      LOGGER.info("Found pointer " + imageName);
+      LOGGER.fine("Found pointer " + imageName);
       _mouse.mouseMove(p);
       _mouse.delay(100);
       if (capture) {
@@ -2043,7 +1999,7 @@ public final class MainFrame extends JFrame {
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     long t1 = System.currentTimeMillis();
     long t2;
-    LOGGER.info("Scanning for popups...");
+    //LOGGER.info("Scanning for popups...");
 
     _mouse.mouseMove(_scanner.getBottomRight());
 
@@ -2115,12 +2071,12 @@ public final class MainFrame extends JFrame {
     findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
 
     t2 = System.currentTimeMillis();
-    LOGGER.info("HANDLE POPUP TIME: " + (t2 - t1));
+    LOGGER.info("POPUPS " + (t2 - t1));
   }
 
   private boolean scanOtherLocations(boolean fast, int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
       DragFailureException {
-    LOGGER.info("Scanning for locations... " + number);
+    LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
       _mouse.delay(1200);
@@ -2235,7 +2191,7 @@ public final class MainFrame extends JFrame {
       if (p == null)
         p = _scanner.getPackage2().findImage();
     }
-    _scanner.writeImage(_scanner.getPackage1().getDefaultArea(), "packageArea.bmp");
+    //////_scanner.writeImage(_scanner.getPackage1().getDefaultArea(), "packageArea.bmp");
     if (p != null) {
       _mouse.delay(300);
       LOGGER.info("FOUND PACKAGE!!!");
@@ -2794,17 +2750,21 @@ public final class MainFrame extends JFrame {
     // _mouse.mouseMove(p);
 
     try {
+      
       // handleRarePopups();
       // handlePopups();
 
       // captureContractors(true);
 
       // Pixel p = _scanner.generateImageData("trainStationBookmarkFirefox.bmp", 23, 8).findImage(new Rectangle(0, 0, 400, 200));
-      Pixel p = _scanner.generateImageData("tsFavicon.bmp", 8, 7).findImage(new Rectangle(0, 0, 400, 200));
+      //Pixel p = _scanner.generateImageData("expressTrain3.bmp", 0, 0).findImage(new Rectangle(0, 0, 910, 220));
+      Pixel p = _scanner.getXPTrain().findImage(new Rectangle(_scanner.getTopLeft().x, _scanner.getTopLeft().y, 910, 220));
       if (p != null) {
+        _mouse.savePosition();
         _mouse.mouseMove(p);
-        _mouse.click();
-        _mouse.delay(5000);
+        //_mouse.click();
+        _mouse.delay(2000);
+        _mouse.restorePosition();
       }
 
       // fixTheGame();
@@ -3211,21 +3171,26 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(200);
-      Rectangle area = new Rectangle(tm.x + 254, tm.y + 28, 169, 47);
+      Rectangle area = new Rectangle(tm.x + 254, tm.y + 28, 169, 72);
       boolean isExpress = false;
-      Pixel exP = _scanner.getExpressTrain().findImage(area);
-      isExpress = exP != null;
-      if (isExpress) {
-        time = _expressTime;
-        LOGGER.info("EXPRESS " + time.getTime());
+      Pixel xpP = _scanner.getXPTrain().findImage(area);
+      if (xpP != null) {
+        time = _xpTime;
+        LOGGER.info("XP " + time.getTime());
       } else {
-        Pixel freeP = _scanner.getFreeTrain().findImage(area);
-        if (freeP != null) {
-          time = _freeTime;
-          LOGGER.info("FREE " + time.getTime());
+        Pixel exP = _scanner.getExpressTrain().findImage(area);
+        if (exP != null) {
+          time = _expressTime;
+          LOGGER.info("EXPRESS " + time.getTime());
         } else {
-          time = _freightTime;
-          LOGGER.info("FREIGHT " + time.getTime());
+          Pixel freeP = _scanner.getFreeTrain().findImage(area);
+          if (freeP != null) {
+            time = _freeTime;
+            LOGGER.info("FREE " + time.getTime());
+          } else {
+            time = _freightTime;
+            LOGGER.info("FREIGHT " + time.getTime());
+          }
         }
       }
       // 1. ensure the page
@@ -3263,7 +3228,7 @@ public final class MainFrame extends JFrame {
         String msg = "Trains: " + _stats.getTotalTrainCount();
         // String date = getNow();
         // _trainsNumberLabel.setText(msg + "  (" + date + ")");
-        LOGGER.severe(msg);
+        ////LOGGER.severe(msg);
         // _trainsNumberLabel.invalidate();
         updateLabels();
         boolean weredone = false;
