@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.914";
+  private static final String APP_TITLE           = "v0.915e";
 
   private boolean             _devMode            = false;
 
@@ -1537,7 +1537,12 @@ public final class MainFrame extends JFrame {
             //lookForPackages();
           }
           
-          huntLetters();
+          int h = 4 - _settings.getInt("huntLetters", 2);
+          h = h < 0 ? 0 : h;
+          
+          for(int i = 0; i < h; i++) {
+            huntLetters();
+          }
           
           lookForPackages();
 
@@ -2227,13 +2232,15 @@ public final class MainFrame extends JFrame {
 
     int maxTurns = _settings.getInt("clickHomeFaster.turns", 4);
     int turn = 1;
+    int h = _settings.getInt("huntLetters", 2);
     
     do {
       LOGGER.info("turn " + turn++);
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
+      int xOff = _settings.getInt("xOff", 150);
 
-      p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 100);
+      p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
       p = getOutOfZone3(p);
 
       int[] rails = _scanner.getRailsHome();
@@ -2262,8 +2269,8 @@ public final class MainFrame extends JFrame {
         start = System.currentTimeMillis();
       }
 
-      //if (turn % 2 == 0)
-      //  huntLetters();
+      if (turn % h == 0)
+        huntLetters();
 
       hadOtherLocations = scanOtherLocations(true, 11);
 
@@ -3048,17 +3055,28 @@ public final class MainFrame extends JFrame {
       return p;
     }
 
-    ImageData pink = _scanner._letterPink3;
-    p = pink.findImage(_scanner.getLetterArea());
+    white = _scanner._letterWhite4;
+    p = white.findImage(_scanner.getLetterArea());
     if (p != null) {
       Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
-      Pixel p2 = pink.findImage(tinyArea);
+      Pixel p2 = white.findImage(tinyArea);
       if (p2 != null)
         p = p2;
-
-      _stats.registerBrownLetter();
+      _stats.registerWhiteLetter();
       return p;
     }
+
+//    ImageData pink = _scanner._letterPink3;
+//    p = pink.findImage(_scanner.getLetterArea());
+//    if (p != null) {
+//      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+//      Pixel p2 = pink.findImage(tinyArea);
+//      if (p2 != null)
+//        p = p2;
+//
+//      _stats.registerBrownLetter();
+//      return p;
+//    }
     return null;
   }
 

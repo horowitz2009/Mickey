@@ -36,8 +36,8 @@ public class TrainScanner {
     super();
     _scanner = scanner;
     _comparator = new SimilarityImageComparator(0.04, 2000);
-    //_comparator.setPrecision(5000);
-    //_comparator.setErrors(25);
+    // _comparator.setPrecision(5000);
+    // _comparator.setErrors(25);
     _takeABreak = takeABreak;
     try {
       _mouse = new MouseRobot();
@@ -365,23 +365,44 @@ public class TrainScanner {
         // find and select contractors
         // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
         Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
-        for (String cname : train.getContractors()) {
-          for (int page = 0; page < 3; page++) {
-            BufferedImage cimage = new Robot().createScreenCapture(carea);
-            // writeImage(carea, "carea.bmp");
-            BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
-            Pixel cp = _comparator.findImage(contractorImage, cimage);
-            if (cp != null) {
-              // found the contractor
-              _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
-              _mouse.delay(450);
-              _mouse.click();
-              _mouse.delay(950);
-              break;
-            } else {
-              _mouse.delay(350);
-              _mouse.click(tl.x + 739, tl.y + 131);
-              _mouse.delay(850);
+        String lastContractor = train.getContractors().get(train.getContractors().size() - 1);
+        if (lastContractor.equals("XP")) {
+          // do it fast
+          for(int i = 0; i < 4; i++) {
+            _mouse.mouseMove(p.x + 84 + i * 173, p.y + 97);
+            _mouse.delay(350);
+            _mouse.click();
+            _mouse.delay(150);
+          }
+          _mouse.click(tl.x + 739, tl.y + 131);
+          _mouse.delay(850);
+          for(int i = 0; i < 4; i++) {
+            _mouse.mouseMove(p.x + 84 + i * 173, p.y + 97);
+            _mouse.delay(350);
+            _mouse.click();
+            _mouse.delay(150);
+          }
+          
+        } else {
+
+          for (String cname : train.getContractors()) {
+            for (int page = 0; page < 3; page++) {
+              BufferedImage cimage = new Robot().createScreenCapture(carea);
+              // writeImage(carea, "carea.bmp");
+              BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
+              Pixel cp = _comparator.findImage(contractorImage, cimage);
+              if (cp != null) {
+                // found the contractor
+                _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
+                _mouse.delay(450);
+                _mouse.click();
+                _mouse.delay(950);
+                break;
+              } else {
+                _mouse.delay(350);
+                _mouse.click(tl.x + 739, tl.y + 131);
+                _mouse.delay(850);
+              }
             }
           }
         }
@@ -411,19 +432,19 @@ public class TrainScanner {
 
     List<Train> trains = new ArrayList<>();
     for (int slot = 0; slot < 5; slot++) {
-      //_mouse.delay(400);
+      // _mouse.delay(400);
 
       Rectangle slotArea = new Rectangle(xt, yt + (slot) * 85, 685, 82);
       Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
       ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
       boolean isIdle = onRoadData.findImage(onRoadArea) == null;
       Train train;
-      if(isIdle) {
+      if (isIdle) {
         Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9 + 6, 530, 25);
 
         // for debug only
-        //String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
-        //writeImage(newArea, scanImageFilename);
+        // String scanImageFilename = "data/int/trainCOMPARE" + (slot + 1) + "_scanThis.bmp";
+        // writeImage(newArea, scanImageFilename);
 
         Robot robot = new Robot();
         train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));

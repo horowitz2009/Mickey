@@ -80,6 +80,7 @@ public class ScreenScanner {
   public ImageData             _letterBrown2                  = null;
   public ImageData             _letterRed3                    = null;
   public ImageData             _letterWhite3                  = null;
+  public ImageData             _letterWhite4                  = null;
   public ImageData             _letterBrown3                  = null;
   public ImageData             _letterPink3                   = null;
   public ImageData             _package1                      = null;
@@ -183,6 +184,7 @@ public class ScreenScanner {
     _letterWhite3 = new ImageData("letters/white10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
     _letterBrown3 = new ImageData("letters/brown10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
     _letterPink3 = new ImageData("letters/pink10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    _letterWhite4 = new ImageData("letters/white8x5.bmp", null, new SimilarityImageComparator(0.04, 3000), 4, 3);
     
     
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
