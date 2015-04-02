@@ -27,8 +27,32 @@ import com.horowitz.mickey.common.MyImageIO;
 public class ScreenScanner {
 
   private final static Logger  LOGGER                         = Logger.getLogger(ScreenScanner.class.getName());
-
   private static final boolean DEBUG                          = false;
+
+  public static final String   DAILY_PUBLISH                  = "publish3.bmp";
+
+  private static final String  LOGIN_FB                       = "loginFB.bmp";
+  private static final String  LOGIN_WITH_FB                  = "loginWithFB2.bmp";
+  private static final String  INT_TRAINS                     = "int/Trains.bmp";
+  private static final String  SHARE                          = "share.bmp";
+  private static final String  MATERIALS                      = "materials.bmp";
+  private static final String  CONTRACTS                      = "contracts.bmp";
+  private static final String  POINTER_RIGHT_BLUE             = "pointerRightBlue.bmp";
+  private static final String  POINTER_LEFT_BLUE              = "pointerLeftBlue.bmp";
+  public static final String   CLOSE_X                        = "closeX.bmp";
+  private static final String  LETTERS_WHITE2                 = "letters/white8x5.bmp";
+  private static final String  LETTERS_PINK                   = "letters/pink10x6.bmp";
+  private static final String  LETTERS_BROWN                  = "letters/brown10x6.bmp";
+  private static final String  LETTERS_WHITE                  = "letters/white10x6.bmp";
+  private static final String  LETTERS_RED                    = "letters/red10x6.bmp";
+  private static final String  EXPRESS_TRAIN                  = "expressTrain3.bmp";
+  private static final String  FREE_TRAIN                     = "free2.bmp";
+  private static final String  XP_TRAIN                       = "xpTrain2.bmp";
+  public static final String   SHOP_X                         = "shopX.bmp";
+  private static final String  NO_BUTTON                      = "noButton2.bmp";
+  private static final String  SESSION                        = "session2.bmp";
+  private static final String  PACKAGE1                       = "package1.bmp";
+  private static final String  PACKAGE2                       = "package2.bmp";
 
   public static final String   POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
   public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
@@ -37,34 +61,18 @@ public class ScreenScanner {
   public static final String   ANCHOR_IMAGE                   = "anchorBill.bmp";
   public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeft.bmp";
 
-  public static final String   POINTER_SHOPX_IMAGE            = "shopX.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
   public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";
   public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
-  public static final String   POINTER_PUBLISH_IMAGE          = "publish.png";
-  public static final String   POINTER_DAILY_IMAGE            = "daily.png";
   public static final String   POINTER_LOADING_IMAGE          = "loading.png";
   public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement.png";
-  /**
-   * @deprecated
-   */
-  public static final String   POINTER_NIGHTX                 = "nightX.bmp";
-  /**
-   * @deprecated
-   */
-  public static final String   POINTER_DAYLIGHTX              = "daylightX.bmp";
-  public static final String   POINTER_TIPSX                  = "tipsX.bmp";
-  public static final String   POINTER_PROMOX                 = "promoX.bmp";
 
   private ImageComparator      _comparator;
 
   private Pixel                _br                            = null;
   private Pixel                _tl                            = null;
   private boolean              _fullyOptimized                = false;
-
-  private Pixel                _zoomOutPixel                  = null;
-  private Pixel                _zoomInPixel                   = null;
 
   private ImageData            _home                          = null;
   private ImageData            _close1                        = null;
@@ -143,23 +151,23 @@ public class ScreenScanner {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     Rectangle area = new Rectangle(20, 340, screenSize.width - 20 - 404, screenSize.height - 340 - 110);
     try {
-      _loginWithFB = new ImageData("loginWithFB2.bmp", area, _comparator, 8, 8);
-      _loginFB = new ImageData("loginFB.bmp", area, _comparator, 29, 6);
+      _loginWithFB = new ImageData(LOGIN_WITH_FB, area, _comparator, 8, 8);
+      _loginFB = new ImageData(LOGIN_FB, area, _comparator, 29, 6);
 
       area = new Rectangle(183, 248, screenSize.width - 183 - 183, screenSize.height - 10 - 248);
-      _dailyRewards = new ImageData("publish3.bmp", area, _comparator, 40, 6);
+      _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 40, 6);
 
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
-      _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
+      _shopX = new ImageData(SHOP_X, area, _comparator, 9, 9);
 
       area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height / 2 - 88);
-      _promoX = new ImageData(POINTER_PROMOX, area, _comparator, 14, 14);
+      _promoX = new ImageData(CLOSE_X, area, _comparator, 14, 14);
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
 
       area = new Rectangle(0, 0, 250, 87);
-      _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
+      _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -169,8 +177,6 @@ public class ScreenScanner {
   private void setKeyAreas() throws IOException {
     String zoom = _settings.getProperty("zoom");
 
-    _zoomInPixel = new Pixel(_br.x - 29, _tl.y + 136);
-    _zoomOutPixel = new Pixel(_br.x - 29, _tl.y + 161);
     _topPlayersPixel = new Pixel(_br.x - 24, _br.y - 23);
 
     // pointerDown
@@ -180,60 +186,57 @@ public class ScreenScanner {
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
     _pointerDown = new ImageData(POINTER_DOWN_IMAGE, null, _comparator, 13, 19);
-    _letterRed3 = new ImageData("letters/red10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterWhite3 = new ImageData("letters/white10x6.bmp", null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterBrown3 = new ImageData("letters/brown10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    _letterPink3 = new ImageData("letters/pink10x6.bmp", null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    _letterWhite4 = new ImageData("letters/white8x5.bmp", null, new SimilarityImageComparator(0.04, 3000), 4, 3);
-    
-    
+    _letterRed3 = new ImageData(LETTERS_RED, null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterWhite3 = new ImageData(LETTERS_WHITE, null, new SimilarityImageComparator(0.04, 5000), 5, 3);
+    _letterBrown3 = new ImageData(LETTERS_BROWN, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    _letterPink3 = new ImageData(LETTERS_PINK, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    _letterWhite4 = new ImageData(LETTERS_WHITE2, null, new SimilarityImageComparator(0.04, 3000), 4, 3);
+
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
-    
+
     SimilarityImageComparator specialComparator = new SimilarityImageComparator(0.08, 4000);
-    _expressTrain = new ImageData("expressTrain3.bmp", null, specialComparator, 0, 0);
-    _freeTrain = new ImageData("free.bmp", null, specialComparator, 0, 0);
-    _xpTrain = new ImageData("xpTrain.bmp", null, specialComparator, 0, 0);
+    _expressTrain = new ImageData(EXPRESS_TRAIN, null, specialComparator, 0, 0);
+    _freeTrain = new ImageData(FREE_TRAIN, null, specialComparator, 0, 0);
+    _xpTrain = new ImageData(XP_TRAIN, null, specialComparator, 0, 0);
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
-    
     int xx = (getGameWidth() - 760) / 2;
     int yy = (getGameHeight() - 550) / 2;
-    //Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
-    Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);//TODO IMPROVE IT!!!
+    // Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
+    Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);// TODO IMPROVE IT!!!
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
     // top left image is used to determine whether the train is express
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, 0, 0);
 
     _fullyOptimized = true;
-    
-    area = new Rectangle(_tl.x, _br.y - 185, getGameWidth(), 45);
-    _package1     = new ImageData("package1.bmp", area, _comparator, 7, 4);
-    _package2     = new ImageData("package2.bmp", area, _comparator, 7, 4);
-    
-    //SESSION 
+
+    area = new Rectangle(_tl.x, _br.y - 205, getGameWidth(), 45);
+    _package1 = new ImageData(PACKAGE1, area, _comparator, 7, 4);
+    _package2 = new ImageData(PACKAGE2, area, _comparator, 7, 4);
+
+    // SESSION
     xx = (getGameWidth() - 80) / 2;
     yy = (getGameHeight() - 23) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 210, 80, 26); // TODO to be widen if not working
-    _sessionTimeOut = new ImageData("session2.bmp", area, _comparator, 0, 0);
-    
-    //NO BUTTON
+    _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
+
+    // NO BUTTON
     xx = (getGameWidth() - 144) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 423, 39, 25); // TODO to be widen if not working
-    _noButton = new ImageData("noButton2.bmp", area, _comparator, 0, 0);
+    _noButton = new ImageData(NO_BUTTON, area, _comparator, 0, 0);
 
-    //SHOP X
+    // SHOP X
     xx = (getGameWidth() - 780) / 2;
     area = new Rectangle(_br.x - xx - 42, _tl.y + 24, xx + 42, 42);
-    _shopX = new ImageData("shopX.bmp", area, _comparator, 9, 9);
+    _shopX = new ImageData(SHOP_X, area, _comparator, 9, 9);
 
-    //PROMO
-    xx = (getGameWidth() - 750) / 2;
-    area = new Rectangle(_br.x - xx - 50, _tl.y + 24, 50, 100);
-    _promoX = new ImageData("promoX.bmp", area, _comparator, 9, 9);
-    
-    
+    // PROMO
+    xx = (getGameWidth() - 747) / 2;
+    area = new Rectangle(_br.x - xx - 60, _tl.y + 24, 70, 180);
+    _promoX = new ImageData(CLOSE_X, area, _comparator, 7, 7);
+
     if (getGameWidth() > 900) {
       zoom = "" + (Integer.parseInt(zoom) + 2);
       LOGGER.info("ZOOM 4!!!!!");
@@ -267,10 +270,10 @@ public class ScreenScanner {
     _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
-    _pointerLeft = new ImageData("pointerLeftBlue.bmp", area, _comparator, 0, 0);
+    _pointerLeft = new ImageData(POINTER_LEFT_BLUE, area, _comparator, 0, 0);
 
     area = new Rectangle(_br.x - 130, _br.y - getRailsHome()[0] - 195, 130, 195);
-    _pointerRight = new ImageData("pointerRightBlue.bmp", area, _comparator, 0, 0);
+    _pointerRight = new ImageData(POINTER_RIGHT_BLUE, area, _comparator, 0, 0);
 
     xx = (getGameWidth() - 780) / 2;
     yy = (getGameHeight() - 585) / 2;
@@ -278,7 +281,7 @@ public class ScreenScanner {
     yy += _tl.y;
 
     area = new Rectangle(xx + 30, yy + 25, 65, 20);
-    _contracts = new ImageData("contracts.bmp", area, _comparator, 1, 0);
+    _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
 
     xx = (getGameWidth() - 760) / 2;
     yy = (getGameHeight() - 550) / 2;
@@ -286,22 +289,27 @@ public class ScreenScanner {
     yy += _tl.y;
 
     area = new Rectangle(xx + 298, yy + 27, 111, 40);
-    _materials = new ImageData("materials.bmp", area, _comparator, 0, 0);
-    
+    _materials = new ImageData(MATERIALS, area, _comparator, 0, 0);
 
-    //SHARE
+    // SHARE
     xx = (getGameWidth() - 60) / 2;
     area = new Rectangle(_tl.x + xx, _br.y - 135, 60, 22);
-    _share = new ImageData("share.bmp", area, _comparator, 23, 6);
-    
-    
-    
+    _share = new ImageData(SHARE, area, _comparator, 23, 6);
+
     xx = (getGameWidth() - 780) / 2;
     yy = (getGameHeight() - 585) / 2;
     xx += _tl.x;
     yy += _tl.y;
     area = new Rectangle(xx + 30, yy + 20, 100, 30);
-    _trainsAnchor = new ImageData("int/Trains.bmp", area, _comparator, 0, 0);
+    _trainsAnchor = new ImageData(INT_TRAINS, area, _comparator, 0, 0);
+
+    xx = (getGameWidth() - 167) / 2;
+    yy = (getGameHeight() - 282) / 2;
+    xx += _tl.x;
+    yy += _tl.y + 218;
+
+    area = new Rectangle(xx, yy, 167, 62);
+    _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 40, 6);
 
   }
 
@@ -453,14 +461,6 @@ public class ScreenScanner {
 
   public boolean isOptimized() {
     return _fullyOptimized && _br != null && _tl != null;
-  }
-
-  public Pixel getZoomOutPixel() {
-    return _zoomOutPixel;
-  }
-
-  public Pixel getZoomInPixel() {
-    return _zoomInPixel;
   }
 
   private List<Pixel> findEdge(final BufferedImage targetImage, final BufferedImage area, ImageComparator comparator, Map<Integer, Color[]> colors,
@@ -676,7 +676,7 @@ public class ScreenScanner {
   public ImageData getXPTrain() {
     return _xpTrain;
   }
-  
+
   public ImageData getClose1() {
     return _close1;
   }

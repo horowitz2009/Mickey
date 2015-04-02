@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.915e";
+  private static final String APP_TITLE           = "v0.917";
 
   private boolean             _devMode            = false;
 
@@ -955,6 +955,7 @@ public final class MainFrame extends JFrame {
           hook(r);
         } else {
           if (r.startsWith("captureAll")) {
+            _scanMaterials2 = true;
             resetContractors();
             hook(r);
           } else if (r.startsWith("captureHome")) {
@@ -1420,29 +1421,6 @@ public final class MainFrame extends JFrame {
     return date;
   }
 
-  private void fixTheGame() {
-    Pixel p = _scanner.getZoomOutPixel();
-    _mouse.mouseMove(p);
-    try {
-      for (int i = 0; i < 7; i++) {
-        _mouse.click();
-        _mouse.delay(200, false);
-      }
-      _mouse.delay(200, false);
-      int x1 = _scanner.getBottomRight().x - 5;
-      int y = _scanner.getBottomRight().y - Locations.RAIL1;
-      _mouse.drag(x1, y, x1 - 640, y);
-      _mouse.delay(200, false);
-      p = _scanner.getTopPlayersPixel();
-      _mouse.mouseMove(p);
-      _mouse.click();
-      _mouse.delay(200, false);
-    } catch (RobotInterruptedException e) {
-      LOGGER.log(Level.SEVERE, "Interrupted by user7", e);
-      _stopThread = true;
-    }
-  }
-
   public void doMagic() {
     setTitle(APP_TITLE + " RUNNING");
     _lastPingTime = System.currentTimeMillis();
@@ -1544,7 +1522,7 @@ public final class MainFrame extends JFrame {
             huntLetters();
           }
           
-          lookForPackages();
+          lookForPackages2();
 
           _mouse.delay(200);
         } // _captureContractors == 0
@@ -1859,6 +1837,7 @@ public final class MainFrame extends JFrame {
               _mouse.delay(300);
 
               boolean scanMaterials2 = false;
+              
               if (_scanMaterials2) {
                 scanMaterials2 = new DataStore().getContractor(contractorName).isScanMaterials2();
               }
@@ -1877,10 +1856,9 @@ public final class MainFrame extends JFrame {
             _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
             _mouse.delay(600);
 
-            // click
-            // _mouse.click(_scanner.getTopLeft().x + 197, _scanner.getBottomRight().y - 42);
-            // _mouse.delay(600);
-            // ///////////////////////// goHomeIfNeeded();
+            goHomeIfNeeded();
+            _mouse.delay(300);
+            handlePopups();
           }
         } else {
           LOGGER.info("Couldn't find " + contractorName);
@@ -2023,6 +2001,10 @@ public final class MainFrame extends JFrame {
     ////LOGGER.info("> handle Session: " + (t2 - t1));
     ////t1 = t2 = System.currentTimeMillis();
     
+    
+    //DAILY REWARDS
+    found = scanAndClick(_scanner.getDailyRewards(), null);
+
     //SHARE
     found = scanAndClick(_scanner.getShare(), null);
     ////t2 = System.currentTimeMillis();
@@ -2073,7 +2055,7 @@ public final class MainFrame extends JFrame {
     
     xx = (_scanner.getGameWidth() - 144) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 239, 75, 40);
-    findAndClick(ScreenScanner.POINTER_PUBLISH_IMAGE, area, 23, 10, true, true);
+    findAndClick(ScreenScanner.DAILY_PUBLISH, area, 23, 10, true, true);
 
     t2 = System.currentTimeMillis();
     LOGGER.info("POPUPS " + (t2 - t1));
@@ -2218,6 +2200,46 @@ public final class MainFrame extends JFrame {
 //      } else {
 //        LOGGER.info("Package is in zone. Avoiding clicking...");
 //      }
+    }
+  }
+  
+  private void lookForPackages2() throws RobotInterruptedException, AWTException, IOException, DragFailureException, SessionTimeOutException {
+    LOGGER.info("Looking of mail packages...");
+    int timeGiven = 2000; // 2 secs
+    long start = System.currentTimeMillis();
+
+    LOGGER.info("looking for pointer down...");
+
+    Pixel p = null;
+    boolean done = false;
+    long curr = start;
+    boolean moved = false;
+    do {
+      curr = System.currentTimeMillis();
+      _mouse.saveCurrentPosition();
+
+      moved = moveIfNecessary();
+
+      p = detectPointerDown();
+      if (p != null) {
+        p.x = p.x + 2;
+        p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4 - 10;
+        clickCareful(p, false, true);
+        p.y = p.y + 10;
+        clickCareful(p, false, true);
+        done = true;
+      }
+    } while (!done && curr - start <= timeGiven && !_stopThread);
+    
+    _mouse.delay(500);
+    
+    if(moved) {
+      if(!scanOtherLocations(true, 33)){
+        //go to somewhere and go back just to reposition the game
+        _mouse.click(_scanner.getBottomRight().x - 63, _scanner.getBottomRight().y - 48);
+        _mouse.delay(1000);
+        goHomeIfNeeded();
+      };  
     }
   }
 
@@ -2917,8 +2939,8 @@ public final class MainFrame extends JFrame {
     return false;
   }
 
-  private void moveIfNecessary() throws RobotInterruptedException {
-
+  private boolean moveIfNecessary() throws RobotInterruptedException {
+    boolean moved = false;
     Pixel p = _scanner.getPointerLeft().findImage();
     if (p != null) {
       LOGGER.info("Found left arrow. moving a bit...");
@@ -2927,6 +2949,7 @@ public final class MainFrame extends JFrame {
       int y = _scanner.getBottomRight().y - Locations.RAIL1;
       _mouse.drag(x1, y, x1 + 520, y);
       // _mouse.delay(500);
+      moved = true;
     } else {
       p = _scanner.getPointerRight().findImage();
       if (p != null) {
@@ -2936,6 +2959,7 @@ public final class MainFrame extends JFrame {
         int y = _scanner.getBottomRight().y - Locations.RAIL1;
         _mouse.drag(x1, y, x1 - 520, y);
         // _mouse.delay(500);
+        moved = true;
       } else {
         ImageData pointerDown = _scanner.getPointerDownL();
         Rectangle area = new Rectangle(_scanner.getBottomRight().x - 26, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 26, 150);
@@ -2944,6 +2968,7 @@ public final class MainFrame extends JFrame {
           int x1 = _scanner.getBottomRight().x - 5;
           int y = _scanner.getBottomRight().y - Locations.RAIL1;
           _mouse.drag(x1, y, x1 - 30, y);
+          moved = true;
         }
         if (p == null) {
           pointerDown = _scanner.getPointerDownR();
@@ -2953,10 +2978,12 @@ public final class MainFrame extends JFrame {
             int x1 = _scanner.getTopLeft().x + 5;
             int y = _scanner.getBottomRight().y - Locations.RAIL1;
             _mouse.drag(x1, y, x1 + 30, y);
+            moved = true;
           }
         }
       }
     }
+    return moved;
   }
 
   private Pixel detectPointerDown() throws RobotInterruptedException {

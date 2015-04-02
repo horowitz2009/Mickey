@@ -92,12 +92,12 @@ public class TrainScanner {
     _mouse.delay(1000);
 
     // scan first five
-    scanSlots(xt, yt, 1, trains, all);
+    boolean isIdle = scanSlots(xt, yt, 1, trains, all);
 
-    while (!reachedEnd(x, y)) {
+    while (!reachedEnd(x, y) && (all || isIdle)) {
       scrollDown(x, y, 2); // two clicks on down arrow
       yt = findExactlyWhere(x, y);
-      scanSlots(xt, yt, 5, trains, all);
+      isIdle = scanSlots(xt, yt, 5, trains, all);
     }
 
     // scanSlots(xt, yt, 1, trains, all);
@@ -134,13 +134,14 @@ public class TrainScanner {
     return yt;
   }
 
-  private void scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
+  private boolean scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
+    boolean isIdle = false;
     for (int slot = firstSlot; slot <= 5; slot++) {
       _mouse.delay(400);
       Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
       Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
       ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
-      boolean isIdle = onRoadData.findImage(onRoadArea) == null;
+      isIdle = onRoadData.findImage(onRoadArea) == null;
       if (all || isIdle) {
         int number = trains.size() + 1;
         String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
@@ -205,6 +206,7 @@ public class TrainScanner {
         trains.add(train);
       }// if all or is idle
     }
+    return isIdle;
   }
 
   private BufferedImage cutToEdge(BufferedImage image) {
