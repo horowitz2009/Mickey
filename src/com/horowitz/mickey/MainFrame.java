@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.917";
+  private static final String APP_TITLE           = "v0.918";
 
   private boolean             _devMode            = false;
 
@@ -104,8 +104,8 @@ public final class MainFrame extends JFrame {
 
   private Location            _freeTime           = Locations.LOC_6MIN;
   private Location            _xpTime             = Locations.LOC_6MIN;
-  private Location            _freightTime        = Locations.LOC_30MIN;
-  private Location            _expressTime        = Locations.LOC_1HOUR;
+  private Location            _freightTime        = Locations.LOC_10MIN;
+  private Location            _expressTime        = Locations.LOC_30MIN;
 
   private Long                _lastTime           = 0l;
   private Queue<Integer>      _lastDiffs          = new ArrayBlockingQueue<Integer>(3);
@@ -2220,7 +2220,7 @@ public final class MainFrame extends JFrame {
 
       moved = moveIfNecessary();
 
-      p = detectPointerDown();
+      p = detectPointerDown(_scanner.getPackagesArea());
       if (p != null) {
         p.x = p.x + 2;
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4 - 10;
@@ -2986,9 +2986,9 @@ public final class MainFrame extends JFrame {
     return moved;
   }
 
-  private Pixel detectPointerDown() throws RobotInterruptedException {
+  private Pixel detectPointerDown(Rectangle area) throws RobotInterruptedException {
     ImageData pointerDown = _scanner.getPointerDown();
-    Pixel p = pointerDown.findImage(_scanner.getTrainArea());
+    Pixel p = pointerDown.findImage(area == null ? _scanner.getTrainArea() : area);
     if (p != null && p.x >= 2)
       p.x -= 2;// DOUBLE LOCO problem
     return p;
@@ -3348,7 +3348,7 @@ public final class MainFrame extends JFrame {
 
       moveIfNecessary();
 
-      p = detectPointerDown();
+      p = detectPointerDown(null);
       if (p != null) {
         boolean danger = checkDangerousZones(p);
         // Pixel p2 = detectPointerDown();
@@ -3397,7 +3397,7 @@ public final class MainFrame extends JFrame {
               trainHasBeenSent = clickCareful(p, true, false) || trainHasBeenSent;
               _mouse.checkUserMovement();
 
-              Pixel pp = detectPointerDown();
+              Pixel pp = detectPointerDown(null);
               if (pp != null && Math.abs(pp.x - p.x) > 5) {
                 stop = true;
                 break;

@@ -92,12 +92,15 @@ public class TrainScanner {
     _mouse.delay(1000);
 
     // scan first five
-    boolean isIdle = scanSlots(xt, yt, 1, trains, all);
+    
+    Train lastAdded = scanSlots(xt, yt, 1, trains, all);
+    boolean isIdle = lastAdded != null ? lastAdded.isIdle() : false;
 
-    while (!reachedEnd(x, y) && (all || isIdle)) {
+    while (!reachedEnd(x, y) && lastAdded != null && (all || isIdle)) {
       scrollDown(x, y, 2); // two clicks on down arrow
       yt = findExactlyWhere(x, y);
-      isIdle = scanSlots(xt, yt, 5, trains, all);
+      lastAdded =  scanSlots(xt, yt, 5, trains, all);
+      isIdle = lastAdded != null ? lastAdded.isIdle() : false;
     }
 
     // scanSlots(xt, yt, 1, trains, all);
@@ -134,15 +137,20 @@ public class TrainScanner {
     return yt;
   }
 
-  private boolean scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
+  private Train scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
     boolean isIdle = false;
+    boolean isFreeSlot = false;
+    Train lastAdded = null;
     for (int slot = firstSlot; slot <= 5; slot++) {
       _mouse.delay(400);
       Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
       Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
       ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
+      ImageData freeSlotData = _scanner.generateImageData("int/Add.bmp");
       isIdle = onRoadData.findImage(onRoadArea) == null;
-      if (all || isIdle) {
+      isFreeSlot = freeSlotData.findImage(onRoadArea) != null;
+      
+      if (!isFreeSlot && (all || isIdle)) {
         int number = trains.size() + 1;
         String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
         String fullImageFilename = "data/int/train " + trainId + ".png";
@@ -204,9 +212,10 @@ public class TrainScanner {
           train.setTimeToSendNext(0l);
         }
         trains.add(train);
+        lastAdded = train;
       }// if all or is idle
     }
-    return isIdle;
+    return lastAdded;
   }
 
   private BufferedImage cutToEdge(BufferedImage image) {

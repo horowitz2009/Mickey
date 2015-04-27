@@ -118,6 +118,7 @@ public class ScreenScanner {
   private Rectangle            _homeArea                      = null;
   private Rectangle            _trainArea                     = null;
   private Rectangle            _letterArea                    = null;
+  private Rectangle            _packagesArea                  = null;
 
   private int[]                _railsOut;
   private int[]                _railsHome;
@@ -250,7 +251,8 @@ public class ScreenScanner {
     _homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 
     _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 150, getGameWidth(), 150);
-    _letterArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 190, getGameWidth(), 190);
+    _letterArea = new Rectangle(_tl.x, _br.y - 157 - 200, getGameWidth(), 200);
+    _packagesArea = new Rectangle(_tl.x, _br.y - 157 - 170, getGameWidth(), 170);
 
     int diff = getGameWidth() - 760;
     diff = diff / 2;
@@ -556,6 +558,10 @@ public class ScreenScanner {
     return _letterArea;
   }
 
+  public Rectangle getPackagesArea() {
+    return _packagesArea;
+  }
+  
   public int getXOffset() {
     return _xOffset;
   }
