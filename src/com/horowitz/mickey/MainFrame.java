@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.918";
+  private static final String APP_TITLE           = "v0.919";
 
   private boolean             _devMode            = false;
 
@@ -845,10 +845,13 @@ public final class MainFrame extends JFrame {
             // }
             // }
             // }
-            reapplySettings();
-            processCommands();
-            processRequests();
-
+            try {
+              reapplySettings();
+              processCommands();
+              processRequests();
+            } catch (Throwable t) {
+              //hmm
+            }
             // if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
             // final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             // _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
