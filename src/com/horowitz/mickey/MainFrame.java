@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.919";
+  private static final String APP_TITLE           = "v0.920";
 
   private boolean             _devMode            = false;
 
@@ -2043,18 +2043,19 @@ public final class MainFrame extends JFrame {
     ////t1 = t2 = System.currentTimeMillis();
 
     
-    /*     
+    xx = (_scanner.getGameWidth() - 200) / 2;
+         
     // now check other popups that need to refresh the game
-    area = new Rectangle(_scanner.getTopLeft().x + 300, _scanner.getBottomRight().y - 240, _scanner.getGameWidth() - 600, 150);
-    found = findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getTopLeft().y + 184, 200, 80);
+    found = findAndClick("sync.bmp", area, 84, 263, true, true);
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
-      LOGGER.info("Game probably crashed and needs refresh...");
-      refresh(false);
+      LOGGER.info("Game out of sync! Refreshing...");
+      //refresh(false);
       _stats.registerRefresh();
       updateLabels();
     }
-    */
+    
     
     xx = (_scanner.getGameWidth() - 144) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 239, 75, 40);
