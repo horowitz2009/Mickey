@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.920";
+  private static final String APP_TITLE           = "v0.921";
 
   private boolean             _devMode            = false;
 
@@ -3230,6 +3230,7 @@ public final class MainFrame extends JFrame {
         Pixel exP = _scanner.getExpressTrain().findImage(area);
         if (exP != null) {
           time = _expressTime;
+          isExpress = true;
           LOGGER.info("EXPRESS " + time.getTime());
         } else {
           Pixel freeP = _scanner.getFreeTrain().findImage(area);
