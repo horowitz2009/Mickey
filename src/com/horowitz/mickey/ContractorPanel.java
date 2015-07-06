@@ -412,14 +412,18 @@ public final class ContractorPanel extends JPanel implements PropertyChangeListe
       }
       _currentMission = ds.getCurrentMission(_contractorName, mni);
       _missionDB = ds.getMissionWithExtra(_contractorName, mni);
+      if (_missionDB == null) {
+        System.err.println("missionDB for " + _contractorName + " " + mni + " not found!");
+      } else {
 
-      if (_currentMission != null && _missionDB != null && _currentMission.getNumber() != _missionDB.getNumber()) {
-        _currentMission = _missionDB.copy();
+        if (_currentMission != null && _missionDB != null && _currentMission.getNumber() != _missionDB.getNumber()) {
+          _currentMission = _missionDB.copy();
+        }
+        if (_currentMission == null)
+          _currentMission = _missionDB.copy();
+
+        updateView();
       }
-      if (_currentMission == null)
-        _currentMission = _missionDB.copy();
-
-      updateView();
     } catch (IOException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();

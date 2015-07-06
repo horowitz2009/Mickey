@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.921";
+  private static final String APP_TITLE           = "v0.924";
 
   private boolean             _devMode            = false;
 
@@ -2007,6 +2007,18 @@ public final class MainFrame extends JFrame {
     
     //DAILY REWARDS
     found = scanAndClick(_scanner.getDailyRewards(), null);
+    if (found) {
+      //check for FB Share popup
+      try {
+        LOGGER.info("found Daily Rewards. Sleep a while and look for FB share popup...");
+        Thread.sleep(8000);
+      } catch (InterruptedException e) {
+      }
+      found = scanAndClick(_scanner.getFBShare(), null);
+    }
+    
+    //FB SHARE
+    found = scanAndClick(_scanner.getFBShare(), null);
 
     //SHARE
     found = scanAndClick(_scanner.getShare(), null);
@@ -2785,20 +2797,21 @@ public final class MainFrame extends JFrame {
     try {
       
       // handleRarePopups();
-      // handlePopups();
+      handlePopups();
 
       // captureContractors(true);
 
       // Pixel p = _scanner.generateImageData("trainStationBookmarkFirefox.bmp", 23, 8).findImage(new Rectangle(0, 0, 400, 200));
       //Pixel p = _scanner.generateImageData("expressTrain3.bmp", 0, 0).findImage(new Rectangle(0, 0, 910, 220));
-      Pixel p = _scanner.getXPTrain().findImage(new Rectangle(_scanner.getTopLeft().x, _scanner.getTopLeft().y, 910, 220));
-      if (p != null) {
-        _mouse.savePosition();
-        _mouse.mouseMove(p);
-        //_mouse.click();
-        _mouse.delay(2000);
-        _mouse.restorePosition();
-      }
+      
+//      Pixel p = _scanner.getXPTrain().findImage(new Rectangle(_scanner.getTopLeft().x, _scanner.getTopLeft().y, 910, 220));
+//      if (p != null) {
+//        _mouse.savePosition();
+//        _mouse.mouseMove(p);
+//        //_mouse.click();
+//        _mouse.delay(2000);
+//        _mouse.restorePosition();
+//      }
 
       // fixTheGame();
     } catch (Throwable e) {

@@ -322,6 +322,40 @@ public class ContractAnalysis {
     return null;
   }
 
+  public Map<String, Map<String, Need>> collectCurrentNeedsMAT() {
+    try {
+      Material[] allMats = Material.createArray();
+      Map<String, Map<String, Need>> map = new Hashtable<>();
+
+      DataStore ds = new DataStore();
+      Contractor[] contractors = ds.readContractors();
+
+      for (Material material : allMats) {
+        Map<String, Need> innerMap = new Hashtable<String, Need>();
+        map.put(material.getName(), innerMap);
+
+        for (Contractor contractor : contractors) {
+          Material[] cmaterials = contractor.getMaterials();
+          for (Material cmat : cmaterials) {
+            if (material.getName().equals(cmat.getName())) {
+              Objective objective = new Objective("b", cmat.getName(), cmat.getAmount());
+              objective.setNeededAmount(cmat.getAmount());
+              objective.setInitialAmount(0);
+              objective.setCurrentAmount(0);
+              Need need = new Need(objective, contractor.getName());
+              innerMap.put(need.getContractorName(), need);
+            }
+          }
+        }
+      }
+
+      return map;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   private void consolidate(Material mat, Material[] materials) {
     for (Material m : materials) {
       if (mat.getName().equals(m.getName())) {

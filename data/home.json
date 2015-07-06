@@ -8,111 +8,104 @@
   "_materials": [
     {
       "_name": "Wood",
-      "_amount": 2401327
+      "_amount": 14480120
     },
     {
       "_name": "Nails",
-      "_amount": 2130487
+      "_amount": 24758602
     },
     {
       "_name": "Bricks",
-      "_amount": 976762
+      "_amount": 40769732
     },
     {
       "_name": "Glass",
-      "_amount": 3065728
+      "_amount": 36755743
     },
     {
       "_name": "Fuel",
-      "_amount": 3185668
+      "_amount": 15626124
     },
     {
       "_name": "Steel",
-      "_amount": 1566758
+      "_amount": 35226533
     },
     {
       "_name": "Gravel",
-      "_amount": 1661694
+      "_amount": 23038569
     },
     {
       "_name": "U-235",
-      "_amount": 320087
+      "_amount": 24574150
     },
     {
       "_name": "Cement",
-      "_amount": 181417
+      "_amount": 38031344
     },
     {
       "_name": "Rubber",
-      "_amount": 349022
+      "_amount": 24816035
     },
     {
       "_name": "Carbon",
-      "_amount": 1208577
+      "_amount": 19014223
     },
     {
       "_name": "Titanium",
-      "_amount": 599718
+      "_amount": 37464552
     },
     {
       "_name": "Marble",
-      "_amount": 367026
+      "_amount": 22145664
     },
     {
       "_name": "Wires",
-      "_amount": 743551
+      "_amount": 24654104
     },
     {
       "_name": "Plastics",
-      "_amount": 781043
+      "_amount": 33776073
     },
     {
       "_name": "Silicon",
-      "_amount": 2689372
+      "_amount": 38258860
     }
   ],
   "_currentMission": {
     "_objectives": [
       {
         "_type": "b",
-        "_material": "Gold",
-        "_neededAmount": 8000000,
-        "_currentAmount": 0,
+        "_material": "Steel",
+        "_neededAmount": 1400000,
+        "_currentAmount": 35226533,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Gravel",
-        "_neededAmount": 660000,
-        "_currentAmount": 1661694,
+        "_material": "Rubber",
+        "_neededAmount": 1400000,
+        "_currentAmount": 24816035,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "U-235",
-        "_neededAmount": 710000,
-        "_currentAmount": 320087,
-        "_initialAmount": 0
-      },
-      {
-        "_type": "b",
-        "_material": "Cement",
-        "_neededAmount": 649600,
-        "_currentAmount": 181417,
+        "_material": "Marble",
+        "_neededAmount": 2144000,
+        "_currentAmount": 22145664,
         "_initialAmount": 0
       },
       {
         "_type": "b",
         "_material": "Wires",
-        "_neededAmount": 1040000,
-        "_currentAmount": 743551,
+        "_neededAmount": 3512000,
+        "_currentAmount": 24654104,
         "_initialAmount": 0
       },
       {
         "_type": "b",
-        "_material": "Silicon",
-        "_neededAmount": 1040000,
-        "_currentAmount": 2689372,
+        "_material": "Plastics",
+        "_neededAmount": 2080000,
+        "_currentAmount": 33776073,
         "_initialAmount": 0
       }
     ],
@@ -121,6 +114,7 @@
     "_description": "MIX",
     "_selected": true,
     "_done": false,
+    "_level": 0,
     "_any": false
   }
 }

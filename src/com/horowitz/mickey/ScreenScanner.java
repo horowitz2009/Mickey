@@ -29,7 +29,7 @@ public class ScreenScanner {
   private final static Logger  LOGGER                         = Logger.getLogger(ScreenScanner.class.getName());
   private static final boolean DEBUG                          = false;
 
-  public static final String   DAILY_PUBLISH                  = "publish3.bmp";
+  public static final String   DAILY_PUBLISH                  = "Sure.bmp";
 
   private static final String  LOGIN_FB                       = "loginFB.bmp";
   private static final String  LOGIN_WITH_FB                  = "loginWithFB2.bmp";
@@ -130,6 +130,7 @@ public class ScreenScanner {
   private ImageData            _loginFB;
 
   private ImageData            _dailyRewards;
+  private ImageData            _fbShare;
 
   private ImageData            _shopX;
 
@@ -155,8 +156,11 @@ public class ScreenScanner {
       _loginWithFB = new ImageData(LOGIN_WITH_FB, area, _comparator, 8, 8);
       _loginFB = new ImageData(LOGIN_FB, area, _comparator, 29, 6);
 
-      area = new Rectangle(183, 248, screenSize.width - 183 - 183, screenSize.height - 10 - 248);
-      _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 40, 6);
+      area = new Rectangle(187, 233, screenSize.width - 187 - 187, screenSize.height - 233 - 17);
+      _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
+      
+      area = new Rectangle(450, 289, screenSize.width - 450, screenSize.height - 289);
+      _fbShare = new ImageData("FBShare.bmp", area, _comparator, 15, 5);
 
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
       _shopX = new ImageData(SHOP_X, area, _comparator, 9, 9);
@@ -169,6 +173,10 @@ public class ScreenScanner {
 
       area = new Rectangle(0, 0, 250, 87);
       _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
+      
+      area = new Rectangle(_tl.x + 72, _tl.y + 423, screenSize.width - 72, screenSize.height - 423);
+      _noButton = new ImageData(NO_BUTTON, area, _comparator, 0, 0);
+      
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -305,14 +313,19 @@ public class ScreenScanner {
     area = new Rectangle(xx + 30, yy + 20, 100, 30);
     _trainsAnchor = new ImageData(INT_TRAINS, area, _comparator, 0, 0);
 
-    xx = (getGameWidth() - 167) / 2;
-    yy = (getGameHeight() - 282) / 2;
+    xx = (getGameWidth() - 520) / 2;
+    yy = (getGameHeight() - 280) / 2;
     xx += _tl.x;
-    yy += _tl.y + 218;
+    yy += _tl.y;
 
-    area = new Rectangle(xx, yy, 167, 62);
-    _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 40, 6);
+    area = new Rectangle(xx + 187, yy + 233, 150, 30);
+    _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
 
+    xx = (getGameWidth() + 250 - 595) / 2;
+    yy = 290 + _tl.y;
+    final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    area = new Rectangle(_tl.x + xx + 450, yy, screenSize.width - _tl.x - 2 * xx - 450 - 75, screenSize.height - yy - 20);
+    _fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -645,6 +658,10 @@ public class ScreenScanner {
 
   public ImageData getDailyRewards() {
     return _dailyRewards;
+  }
+
+  public ImageData getFBShare() {
+    return _fbShare;
   }
 
   public ImageData getSessionTimeOut() {

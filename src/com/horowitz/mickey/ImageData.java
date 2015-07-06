@@ -106,7 +106,7 @@ public class ImageData {
   }
 
   public String getName() {
-    return _filename.substring(0, _filename.length() - 5);
+    return _filename.substring(0, _filename.length() - 4);
   }
 
   public Rectangle getDefaultArea() {

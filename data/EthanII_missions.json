@@ -1,0 +1,306 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 1,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 1,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 1000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 2,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "U-235",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 3,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "U-235",
+        "_neededAmount": 2500000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Carbon",
+        "_neededAmount": 1800000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Plastics",
+        "_neededAmount": 1500000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 4,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "Wagon",
+        "_neededAmount": 80,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 5,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Glass",
+        "_neededAmount": 2500000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 6,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gravel",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 7,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Gold",
+        "_neededAmount": 250000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 8,
+    "_contractor": "Ethan",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Glass",
+        "_neededAmount": 3000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Steel",
+        "_neededAmount": 2000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Gravel",
+        "_neededAmount": 3000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 9,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Wires",
+        "_neededAmount": 5000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 10,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "TS",
+        "_neededAmount": 3,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 11,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 400000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 12,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "d",
+        "_material": "Silicon",
+        "_neededAmount": 3000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 13,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "s",
+        "_material": "XP",
+        "_neededAmount": 720,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 14,
+    "_contractor": "EthanII",
+    "_description": "",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  },
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Wires",
+        "_neededAmount": 6000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      },
+      {
+        "_type": "b",
+        "_material": "Silicon",
+        "_neededAmount": 5000000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 15,
+    "_contractor": "EthanII",
+    "_selected": false,
+    "_done": false,
+    "_level": 0,
+    "_any": false
+  }
+]

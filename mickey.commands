@@ -1,8 +1,11 @@
-command=none
-express=10
-free=6
+command=refresh_ok
+command.done=11-25  18 13
+contractor.scan=running
+express=30
+free=10
 freight=10
-ping=true
+ping=false
 refresh=true
 resume=false
 sendInternational=false
+xp=10

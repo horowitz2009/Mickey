@@ -1,0 +1,18 @@
+[
+  {
+    "_objectives": [
+      {
+        "_type": "b",
+        "_material": "Gold",
+        "_neededAmount": 1000,
+        "_currentAmount": 0,
+        "_initialAmount": 0
+      }
+    ],
+    "_number": 1000,
+    "_contractor": "EthanII",
+    "_description": "TODO",
+    "_selected": false,
+    "_any": false
+  }
+]
