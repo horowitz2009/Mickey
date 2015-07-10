@@ -10,7 +10,13 @@ import com.horowitz.mickey.DateUtils;
 
 public class Service {
 
+  private String _inprogress = "_inprogress";
+
   public Service() {
+  }
+
+  public Service(String inprogress) {
+    _inprogress = inprogress;
   }
 
   public String request(String request) {
@@ -34,7 +40,7 @@ public class Service {
   public boolean done(String request) {
     String fname = "requests/" + request;
 
-    File f = new File(fname + "_inprogress");
+    File f = new File(fname + _inprogress);
     if (f.exists()) {
       return f.renameTo(new File(fname + "_done"));
     }
@@ -46,7 +52,7 @@ public class Service {
 
     File f = new File(fname);
     if (f.exists()) {
-      return f.renameTo(new File(fname + "_inprogress"));
+      return f.renameTo(new File(fname + _inprogress));
     }
     return false;
   }
@@ -61,7 +67,7 @@ public class Service {
     File[] listFiles = d.listFiles(new FileFilter() {
       @Override
       public boolean accept(File f) {
-        return !f.isDirectory() && !f.getName().endsWith("_done") && !f.getName().endsWith("_inprogress");
+        return !f.isDirectory() && !f.getName().endsWith("_done") && !f.getName().endsWith(_inprogress);
       }
     });
     List<String> res = new ArrayList<>();
@@ -122,5 +128,13 @@ public class Service {
       for (File file : listFiles) {
         file.delete();
       }
+  }
+
+  public String getInprogress() {
+    return _inprogress;
+  }
+
+  public void setInprogress(String inprogress) {
+    this._inprogress = inprogress;
   }
 }

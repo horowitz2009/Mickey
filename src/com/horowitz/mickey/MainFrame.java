@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.924";
+  private static final String APP_TITLE           = "v0.926";
 
   private boolean             _devMode            = false;
 
@@ -847,7 +847,7 @@ public final class MainFrame extends JFrame {
             // }
             try {
               reapplySettings();
-              processCommands();
+              //processCommands();
               processRequests();
             } catch (Throwable t) {
               //hmm
@@ -949,8 +949,9 @@ public final class MainFrame extends JFrame {
 
     String[] requests = service.getActiveRequests();
     for (String r : requests) {
-      service.inProgress(r);
+      
       if (r.startsWith("capture")) {
+        service.inProgress(r);
         String[] ss = r.split("_");
         if (ss.length > 2) {
           // _captureContractors.clear();
@@ -968,10 +969,12 @@ public final class MainFrame extends JFrame {
 
         }
       } else if (r.startsWith("click")) {
+        service.inProgress(r);
         processClick(r);
-      } else if (r.startsWith("refresh")) {
+      } else if (r.startsWith("refresh")||r.startsWith("r")) {
+        service.inProgress(r);
         String[] ss = r.split("_");
-        Boolean bookmark = Boolean.parseBoolean(ss[1]);
+        Boolean bookmark = ss.length > 1 ? Boolean.parseBoolean(ss[1]) : false;
         try {
           stopMagic();
           refresh(bookmark);
@@ -979,6 +982,7 @@ public final class MainFrame extends JFrame {
         } catch (RobotInterruptedException e) {
         }
       } else if (r.startsWith("reload")) {
+        service.inProgress(r);
         reload(r);
       }
     }
@@ -1325,6 +1329,8 @@ public final class MainFrame extends JFrame {
           if (_scanner.locateGameArea()) {
             LOGGER.info("Game located successfully!");
             done = true;
+          } else {
+            processRequests();
           }
         }
       } catch (AWTException | IOException e) {
@@ -1337,7 +1343,7 @@ public final class MainFrame extends JFrame {
       if (done)
         LOGGER.info("Refresh done");
       else
-        refresh(bookmark);
+        LOGGER.info("Refresh failed");
     } catch (AWTException e) {
       e.printStackTrace();
     }
@@ -1684,7 +1690,7 @@ public final class MainFrame extends JFrame {
       if (_pingTurn >= 4)
         _pingTurn = 1;
 
-      deleteOlder("ping", 5);
+      deleteOlder("ping", 12);
       _lastPingTime = System.currentTimeMillis();
     }
     return res;

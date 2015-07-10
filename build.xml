@@ -2,9 +2,10 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project Mickey2">
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
-	<property name="versionNumber" value="924" />
+	<property name="versionNumber" value="926" />
 
 	<property name="jarname" value="Mickey${versionNumber}.jar" description="" />
+	<property name="dropboxjarname" value="DropboxRemote${versionNumber}.jar" description="" />
 
 	<property name="dropbox" location="${user.home}/Dropbox" />
 
@@ -21,9 +22,36 @@
 		<property name="home_subfolder" value="home" />
 		<property name="home_subfolder2" value="home2" />
 		<property name="office_subfolder" value="office" />
+		<property name="office2_subfolder" value="office2" />
 		<property name="programs_subfolder" value="programs" />
 
-		<foreach list="${office_subfolder}" param="subfolder" target="copy" />
+		<foreach list="${office_subfolder},${office2_subfolder}" param="subfolder" target="copy" />
+		<!-- from list => ,${office_subfolder},${programs_subfolder} -->
+
+	</target>
+
+	<target name="create_dropbox_remote_jar">
+		<jar destfile="${dropboxjarname}">
+			<manifest>
+				<attribute name="Main-Class" value="com.horowitz.mickey.DropboxRemote" />
+			</manifest>
+			<fileset dir="bin">
+			  <include name="**/DropboxRemote*.class"/>
+			  <include name="**/Service*.class"/>
+			  <include name="**/DateUtils*.class"/>
+			  <include name="**/MyImageIO.class"/>
+			  <include name="**/MouseRobot.class"/>
+			  <include name="**/RobotInter*.class"/>
+			</fileset>
+		</jar>
+
+		<property name="home_subfolder" value="home" />
+		<property name="home_subfolder2" value="home2" />
+		<property name="office_subfolder" value="office" />
+		<property name="office2_subfolder" value="office2" />
+		<property name="programs_subfolder" value="programs" />
+
+		<foreach list="${office_subfolder},${office2_subfolder}" param="subfolder" target="copyDropboxRemote" />
 		<!-- from list => ,${office_subfolder},${programs_subfolder} -->
 
 	</target>
@@ -43,4 +71,10 @@
 		</copy>
 		-->
 	</target>
+	
+	<target name="copyDropboxRemote">
+		<mkdir dir="${dropbox}/${subfolder}" />
+		<copy todir="${dropbox}/${subfolder}" file="${dropboxjarname}" />
+	</target>
+	
 </project>
