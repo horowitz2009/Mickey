@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.926";
+  private static final String APP_TITLE           = "v0.931";
 
   private boolean             _devMode            = false;
 
@@ -984,6 +984,10 @@ public final class MainFrame extends JFrame {
       } else if (r.startsWith("reload")) {
         service.inProgress(r);
         reload(r);
+      } else if (r.startsWith("reset")) {
+        service.inProgress(r);
+        _stats.reset();
+        updateLabels();
       }
     }
 
@@ -1307,7 +1311,7 @@ public final class MainFrame extends JFrame {
         robot.keyRelease(KeyEvent.VK_F5);
       } else {
         try {
-          p = _scanner.generateImageData("tsFavicon.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
+          p = _scanner.generateImageData("tsFavicon2.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
           _mouse.click(p.x, p.y);
         } catch (IOException e) {
         }
@@ -1342,8 +1346,13 @@ public final class MainFrame extends JFrame {
       }
       if (done)
         LOGGER.info("Refresh done");
-      else
+      else {
         LOGGER.info("Refresh failed");
+        if (!bookmark) {
+          LOGGER.info("Trying refresh through bookmark");
+          refresh(true);
+        }
+      }
     } catch (AWTException e) {
       e.printStackTrace();
     }
@@ -1398,6 +1407,10 @@ public final class MainFrame extends JFrame {
         _mouse.delay(3000);
     }
     
+    // INVITE
+    if (scanAndClick(_scanner.getInvite(), null))
+      _mouse.delay(wait);
+
     // DAILY
     if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(wait);
@@ -1444,7 +1457,11 @@ public final class MainFrame extends JFrame {
     NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setMaximumFractionDigits(3);
     nf.setMinimumFractionDigits(0);
+    int turn = 1;
     while (!_stopThread) {
+      turn *= 2;
+      if (turn > 8) turn = 1;
+      LOGGER.info("T: " + turn);
       int timeForRefresh = (getShortestTime() * 60000 / 2);
       int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
       try {
@@ -1507,6 +1524,7 @@ public final class MainFrame extends JFrame {
 
           // POPUPS
           handlePopups();
+          goHomeIfNeeded();
           //scanOtherLocations(true, 4);
 
           // HOME
@@ -1524,14 +1542,20 @@ public final class MainFrame extends JFrame {
             //lookForPackages();
           }
           
-          int h = 4 - _settings.getInt("huntLetters", 2);
-          h = h < 0 ? 0 : h;
-          
-          for(int i = 0; i < h; i++) {
+          //LETTERS
+          int h = _settings.getInt("huntLetters", 2);
+          if (h > 0)
             huntLetters();
+          
+          //PACKAGES
+          int hp = _settings.getInt("huntPackages", 1);
+          int n = 16;
+          for(int i = 0; i < hp; i++) {
+            n = n / 2;
           }
           
-          lookForPackages2();
+          if ( turn % n == 0)
+            lookForPackages2();
 
           _mouse.delay(200);
         } // _captureContractors == 0
@@ -1739,9 +1763,9 @@ public final class MainFrame extends JFrame {
       _trainManagementWindow.reloadNow();
       boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
       if (atLeastOneSent)
-        _trainManagementWindow.reschedule(30000);// 30 sec
+        _trainManagementWindow.reschedule(_settings.getInt("IntTrains.rescheduleAgain", 30) * 1000);// 30 sec
       else
-        _trainManagementWindow.reschedule(2 * 60000);
+        _trainManagementWindow.reschedule(_settings.getInt("IntTrains.reschedule", 2 * 60) * 1000);
     }
   }
 
@@ -2011,6 +2035,12 @@ public final class MainFrame extends JFrame {
     ////t1 = t2 = System.currentTimeMillis();
     
     
+    //INVITE
+    found = scanAndClick(_scanner.getInvite(), null);
+    if (found) {
+      LOGGER.info("found Invite popup...");
+    }
+    
     //DAILY REWARDS
     found = scanAndClick(_scanner.getDailyRewards(), null);
     if (found) {
@@ -2088,7 +2118,7 @@ public final class MainFrame extends JFrame {
     LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
-      _mouse.delay(1200);
+      _mouse.delay(200);
       LOGGER.fine("Going to location...");
 
       loadTrains(fast);
@@ -2268,16 +2298,19 @@ public final class MainFrame extends JFrame {
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
-    int timeGiven = 3000; // 2 secs
+    int timeGiven = _settings.getInt("clickHomeFaster.time", 4000);
     long start = System.currentTimeMillis();
 
     Pixel p = null;
     long curr = start;
 
-    int maxTurns = _settings.getInt("clickHomeFaster.turns", 4);
+    int maxTurns = _settings.getInt("clickHomeFaster.turns", 4) + 1;
     int turn = 1;
     int h = _settings.getInt("huntLetters", 2);
-    
+    int nn = (int) Math.pow(2, maxTurns + 1);
+    int n = nn;
+    for(int i = 0; i < h; i++)
+      n = n / 2;
     do {
       LOGGER.info("turn " + turn++);
       curr = System.currentTimeMillis();
@@ -2288,10 +2321,6 @@ public final class MainFrame extends JFrame {
       p = getOutOfZone3(p);
 
       int[] rails = _scanner.getRailsHome();
-
-      //DONT fast click all rails + street1 mainly for mail express trains
-      //p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4;
-      //clickCareful(p, false, false);
 
       for (int i = rails.length - 1; i >= 0; i--) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
@@ -2313,12 +2342,17 @@ public final class MainFrame extends JFrame {
         start = System.currentTimeMillis();
       }
 
-      if (turn % h == 0)
+      //LETTERS
+      int t = (int) Math.pow(2, turn);
+      if (t % n == 0) {
         huntLetters();
+      }
+      
+      //LOCATIONS
+      if (turn % _settings.getInt("checkLocations", 2) == 0)
+        hadOtherLocations = scanOtherLocations(true, 11);
 
-      hadOtherLocations = scanOtherLocations(true, 11);
-
-    } while (curr - start <= timeGiven && !_stopThread && turn <= maxTurns );
+    } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns );
 
     return trainHasBeenSent || hadOtherLocations;
   }
@@ -3262,15 +3296,31 @@ public final class MainFrame extends JFrame {
           }
         }
       }
+      
       // 1. ensure the page
       Pixel leftArrow = new Pixel(tm.x - 292, tm.y + 302);
       Pixel rightArrow = new Pixel(tm.x + 393, tm.y + 302);
+      boolean firstPage = false;
+      int tries = 3;
+      do {
+        Pixel sixMinutes = _scanner.getSixMinutes().findImage(new Rectangle(tm.x - 242, tm.y + 225, 77, 22));
+        if (sixMinutes != null)
+          firstPage = true;
+        else {
+          tries--;
+          _mouse.mouseMove(leftArrow);
+          _mouse.click();
+          _mouse.delay(200);
+        }
+        
+      } while (!firstPage && tries > 0);
 
-      _mouse.mouseMove(leftArrow);
-      for (int i = 0; i < 3; i++) {
-        _mouse.click();
-        _mouse.delay(200);
-      }
+//      _mouse.mouseMove(leftArrow);
+//      for (int i = 0; i < 3; i++) {
+//        _mouse.click();
+//        _mouse.delay(200);
+//      }
+
       // 2. now, go to desired page
       if (time.getPage() > 1) {
         _mouse.mouseMove(rightArrow);
@@ -3279,6 +3329,8 @@ public final class MainFrame extends JFrame {
           _mouse.delay(200);
         }
       }
+      
+      
       // 3. click the destination
 
       _mouse.mouseMove(tm.x + time.getCoordinates().x, tm.y + time.getCoordinates().y);

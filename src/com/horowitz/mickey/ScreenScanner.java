@@ -103,6 +103,7 @@ public class ScreenScanner {
   private ImageData            _share                         = null;
 
   private ImageData            _trainManagementAnchor         = null;
+  private ImageData            _sixMinutes                    = null;
   private ImageData            _trainsAnchor                  = null;
   private ImageData            _materials                     = null;
 
@@ -129,6 +130,7 @@ public class ScreenScanner {
   private ImageData            _loginWithFB;
   private ImageData            _loginFB;
 
+  private ImageData            _invite;
   private ImageData            _dailyRewards;
   private ImageData            _fbShare;
 
@@ -158,6 +160,9 @@ public class ScreenScanner {
 
       area = new Rectangle(187, 233, screenSize.width - 187 - 187, screenSize.height - 233 - 17);
       _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
+      
+      area = new Rectangle(100, 122, screenSize.width - 200, 500);
+      _invite = new ImageData("Invite.bmp", area, _comparator, 583, 5);
       
       area = new Rectangle(450, 289, screenSize.width - 450, screenSize.height - 289);
       _fbShare = new ImageData("FBShare.bmp", area, _comparator, 15, 5);
@@ -216,6 +221,7 @@ public class ScreenScanner {
     // Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
     Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);// TODO IMPROVE IT!!!
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
+    _sixMinutes = new ImageData("sixMinutes.bmp", area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, 0, 0);
 
@@ -656,10 +662,14 @@ public class ScreenScanner {
     return _loginFB;
   }
 
+  public ImageData getInvite() {
+    return _invite;
+  }
+
   public ImageData getDailyRewards() {
     return _dailyRewards;
   }
-
+  
   public ImageData getFBShare() {
     return _fbShare;
   }
@@ -678,6 +688,10 @@ public class ScreenScanner {
 
   public ImageData getTrainManagementAnchor() {
     return _trainManagementAnchor;
+  }
+
+  public ImageData getSixMinutes() {
+    return _sixMinutes;
   }
 
   public ImageData getTrainsAnchor() {

@@ -116,6 +116,7 @@ public class TrainManagementWindow extends JFrame {
     try {
       List<String> activeContractorNames = new DataStore().getActiveContractorNames();
       activeContractorNames.add("XP");
+      activeContractorNames.add("Special");
       for (String cname : activeContractorNames) {
         JToggleButton cbutton = createContractorButton(cname);
         box.add(Box.createHorizontalStrut(2));

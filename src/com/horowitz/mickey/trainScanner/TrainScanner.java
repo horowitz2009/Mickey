@@ -337,7 +337,7 @@ public class TrainScanner {
                 BufferedImage i2 = train.getScanImage();
                 p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
                     i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
-                System.err.println("locoOnly " + p);
+                //System.err.println("locoOnly " + p);
               }
               if (p != null) {
                 if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
@@ -393,6 +393,12 @@ public class TrainScanner {
             _mouse.click();
             _mouse.delay(150);
           }
+          
+        } else if(lastContractor.equals("Special")) {
+          _mouse.mouseMove(p.x + 84, p.y + 97);
+          _mouse.delay(350);
+          _mouse.click();
+          _mouse.delay(150);
           
         } else {
 
