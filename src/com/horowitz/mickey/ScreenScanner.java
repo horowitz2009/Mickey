@@ -40,11 +40,11 @@ public class ScreenScanner {
   private static final String  POINTER_RIGHT_BLUE             = "pointerRightBlue.bmp";
   private static final String  POINTER_LEFT_BLUE              = "pointerLeftBlue.bmp";
   public static final String   CLOSE_X                        = "closeX.bmp";
-  private static final String  LETTERS_WHITE2                 = "letters/white8x5.bmp";
-  private static final String  LETTERS_PINK                   = "letters/pink10x6.bmp";
-  private static final String  LETTERS_BROWN                  = "letters/brown10x6.bmp";
-  private static final String  LETTERS_WHITE                  = "letters/white10x6.bmp";
-  private static final String  LETTERS_RED                    = "letters/red10x6.bmp";
+  //private static final String  LETTERS_WHITE2                 = "letters/white8x5.bmp";
+  //private static final String  LETTERS_PINK                   = "letters/pink8x5.bmp";
+  private static final String  LETTERS_BROWN                  = "letters/brown8x5.bmp";
+  private static final String  LETTERS_WHITE                  = "letters/white8x5.bmp";
+  private static final String  LETTERS_RED                    = "letters/red8x5.bmp";
   private static final String  EXPRESS_TRAIN                  = "expressTrain3.bmp";
   private static final String  FREE_TRAIN                     = "free2.bmp";
   private static final String  XP_TRAIN                       = "xpTrain2.bmp";
@@ -59,7 +59,7 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
   public static final String   ANCHOR_IMAGE                   = "anchorBill.bmp";
-  public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeft.bmp";
+  public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftLETTER.bmp";
 
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
@@ -200,11 +200,11 @@ public class ScreenScanner {
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
 
     _pointerDown = new ImageData(POINTER_DOWN_IMAGE, null, _comparator, 13, 19);
-    _letterRed3 = new ImageData(LETTERS_RED, null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterWhite3 = new ImageData(LETTERS_WHITE, null, new SimilarityImageComparator(0.04, 5000), 5, 3);
-    _letterBrown3 = new ImageData(LETTERS_BROWN, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    _letterPink3 = new ImageData(LETTERS_PINK, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    _letterWhite4 = new ImageData(LETTERS_WHITE2, null, new SimilarityImageComparator(0.04, 3000), 4, 3);
+    _letterRed3 = new ImageData(LETTERS_RED, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
+    _letterWhite3 = new ImageData(LETTERS_WHITE, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
+    _letterBrown3 = new ImageData(LETTERS_BROWN, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
+    //_letterPink3 = new ImageData(LETTERS_PINK, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    //_letterWhite4 = new ImageData(LETTERS_WHITE2, null, new SimilarityImageComparator(0.04, 3000), 4, 3);
 
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
@@ -265,8 +265,8 @@ public class ScreenScanner {
     _homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 
     _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 150, getGameWidth(), 150);
-    _letterArea = new Rectangle(_tl.x, _br.y - 157 - 200, getGameWidth(), 200);
-    _packagesArea = new Rectangle(_tl.x, _br.y - 157 - 170, getGameWidth(), 170);
+    _letterArea = new Rectangle(_tl.x, _br.y - _street1Y - 200, getGameWidth(), 200);
+    _packagesArea = new Rectangle(_tl.x, _br.y - _street1Y - 170, getGameWidth(), 170);
 
     int diff = getGameWidth() - 760;
     diff = diff / 2;
@@ -369,7 +369,7 @@ public class ScreenScanner {
     int turns = 0;
     do {
       turns++;
-      _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE, areaTL, -9, -5);
+      _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE, areaTL, -11, -37);
       if (_tl != null) {
         Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
             new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),

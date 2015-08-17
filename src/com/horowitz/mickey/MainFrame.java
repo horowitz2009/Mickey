@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.931";
+  private static final String APP_TITLE           = "v0.934";
 
   private boolean             _devMode            = false;
 
@@ -136,6 +136,7 @@ public final class MainFrame extends JFrame {
   private List<String>        _captureContractors = new ArrayList<String>();
   private boolean             _captureHome        = false;
   private boolean             _scanMaterials2     = false;
+  private boolean             _homeClicked        = false;
 
   private List<BufferedImage> _lastImageList      = new ArrayList<>();
 
@@ -1448,7 +1449,7 @@ public final class MainFrame extends JFrame {
     _lastPingTime = System.currentTimeMillis();
 
     _stopThread = false;
-
+    _homeClicked = false;
     if (_refreshClick.isSelected())
       updateLabels();
 
@@ -1910,7 +1911,20 @@ public final class MainFrame extends JFrame {
   private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
     Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 50, 60, 50);
     Pixel p = _scanner.getHome().findImage(area);
-    if (p != null) {
+    if (p != null && !_homeClicked) {
+      _homeClicked = true;
+      new Thread(new Runnable() {
+        public void run() {
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+          }  
+          _homeClicked = false;
+        }
+      }).start();
+      
       goHome();
       // _mouse.click(p.x, p.y);
     }
@@ -2351,6 +2365,10 @@ public final class MainFrame extends JFrame {
       //LOCATIONS
       if (turn % _settings.getInt("checkLocations", 2) == 0)
         hadOtherLocations = scanOtherLocations(true, 11);
+      
+      //SHOP POPUP CHECK
+      if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
+        scanAndClick(_scanner.getShopX(), null);
 
     } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns );
 
@@ -2824,7 +2842,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
-
+    
     // Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
     // _mouse.mouseMove(p);
     //
@@ -3139,16 +3157,16 @@ public final class MainFrame extends JFrame {
       return p;
     }
 
-    white = _scanner._letterWhite4;
-    p = white.findImage(_scanner.getLetterArea());
-    if (p != null) {
-      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
-      Pixel p2 = white.findImage(tinyArea);
-      if (p2 != null)
-        p = p2;
-      _stats.registerWhiteLetter();
-      return p;
-    }
+//    white = _scanner._letterWhite4;
+//    p = white.findImage(_scanner.getLetterArea());
+//    if (p != null) {
+//      Rectangle tinyArea = new Rectangle(p.x - 6, p.y - 200, 13, 203);
+//      Pixel p2 = white.findImage(tinyArea);
+//      if (p2 != null)
+//        p = p2;
+//      _stats.registerWhiteLetter();
+//      return p;
+//    }
 
 //    ImageData pink = _scanner._letterPink3;
 //    p = pink.findImage(_scanner.getLetterArea());
