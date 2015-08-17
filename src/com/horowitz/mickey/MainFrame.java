@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.935";
+  private static final String APP_TITLE           = "v0.936";
 
   private boolean             _devMode            = false;
 
@@ -2102,6 +2102,10 @@ public final class MainFrame extends JFrame {
     xx = (_scanner.getGameWidth() - 90) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 90, 33);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+
+    xx = (_scanner.getGameWidth() - 783) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx + 224, _scanner.getTopLeft().y + 546, 96, 40);
+    found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 8, true, true);
     
     ////t2 = System.currentTimeMillis();
     ////LOGGER.info("> handle Close: " + (t2 - t1));

@@ -65,6 +65,7 @@ public class ScreenScanner {
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
   public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";
   public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
+  public static final String   POINTER_CANCEL_IMAGE           = "cancel.bmp";
   public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
   public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement.png";
 
