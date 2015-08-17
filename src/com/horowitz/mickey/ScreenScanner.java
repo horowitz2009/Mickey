@@ -58,14 +58,14 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
-  public static final String   ANCHOR_IMAGE                   = "anchorBill.bmp";
-  public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftLETTER.bmp";
+  public static final String   ANCHOR_IMAGE                   = "anchorInvite.bmp";
+  public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftTRAIN.bmp";
 
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
   public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";
   public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
-  public static final String   POINTER_LOADING_IMAGE          = "loading.png";
+  public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
   public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement.png";
 
   private ImageComparator      _comparator;
@@ -194,7 +194,7 @@ public class ScreenScanner {
     _topPlayersPixel = new Pixel(_br.x - 24, _br.y - 23);
 
     // pointerDown
-    _home = new ImageData("home.bmp", null, _comparator, 17, 0);
+    _home = new ImageData("home.bmp", null, _comparator, 11, 12);
     _close1 = new ImageData(POINTER_CLOSE1_IMAGE, null, _comparator, 23, 10);
     _close3 = new ImageData(POINTER_CLOSE3_IMAGE, null, _comparator, 23, 10);
     _close4 = new ImageData(POINTER_CLOSE4_IMAGE, null, _comparator, 23, 10);
@@ -223,7 +223,7 @@ public class ScreenScanner {
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
     _sixMinutes = new ImageData("sixMinutes.bmp", area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
-    _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, 0, 0);
+    _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, -12, -12);
 
     _fullyOptimized = true;
 
@@ -369,14 +369,14 @@ public class ScreenScanner {
     int turns = 0;
     do {
       turns++;
-      _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE, areaTL, -11, -37);
+      _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE, areaTL, -12, -12);
       if (_tl != null) {
         Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
             new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),
             new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
         LOGGER.info("Found top left corner...");
         // good, we're still in the game
-        _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 79, 20);
+        _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 32+19, 39);
         if (_br != null) {
           LOGGER.info("Found bottom right corner...");
           done = true;
@@ -415,6 +415,18 @@ public class ScreenScanner {
     }
   }
 
+  public void writeImage2(Rectangle rect, String filename) {
+    try {
+      SimpleDateFormat sdf = new SimpleDateFormat("MM-dd  HH-mm-ss-SSS");
+      String date = sdf.format(Calendar.getInstance().getTime());
+      String filename2 = filename + " " + date + ".png";
+
+      writeImage(new Robot().createScreenCapture(rect), filename2);
+    } catch (AWTException e) {
+      e.printStackTrace();
+    }
+  }
+  
   public void writeImage(BufferedImage image, String filename) {
 
     try {

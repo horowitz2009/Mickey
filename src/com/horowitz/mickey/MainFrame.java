@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.934";
+  private static final String APP_TITLE           = "v0.935";
 
   private boolean             _devMode            = false;
 
@@ -1646,7 +1646,8 @@ public final class MainFrame extends JFrame {
       Pixel tl = _scanner.getTopLeft();
       int w = (_scanner.getGameWidth() - 214) / 2;
       // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
-      Rectangle rect = new Rectangle(tl.x + w + 102, tl.y + 82, 65, 15);
+      Rectangle rect = new Rectangle(tl.x + 61, tl.y + 14, 28, 9);
+      
       if (_lastImageList.size() < howMuch) {
         BufferedImage image = new Robot().createScreenCapture(rect);
         _lastImageList.add(image);
@@ -1679,7 +1680,7 @@ public final class MainFrame extends JFrame {
         try {
           // capture trains
           pingPrefix += " trains ";
-          _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+          _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
           _mouse.delay(1300);
           _mouse.click(xx + 103, yy + 83);
           _mouse.delay(2300);
@@ -1992,6 +1993,8 @@ public final class MainFrame extends JFrame {
 
   private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture) throws AWTException,
       IOException, RobotInterruptedException {
+    
+    //FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
@@ -2013,7 +2016,7 @@ public final class MainFrame extends JFrame {
 
   private void goHome() throws AWTException, IOException, RobotInterruptedException {
     _mouse.saveCurrentPosition();
-    _mouse.click(_scanner.getTopLeft().x + 26, _scanner.getBottomRight().y - 45);
+    _mouse.click(_scanner.getTopLeft().x + 42, _scanner.getBottomRight().y - 30);
     _mouse.delay(500, false);
     // int diff = 60;
     // if (!_lastDiffs.isEmpty()) {
@@ -2130,8 +2133,8 @@ public final class MainFrame extends JFrame {
   private boolean scanOtherLocations(boolean fast, int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
       DragFailureException {
     LOGGER.info("Locations... ");// + number
-    Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 50, 193 + 88, 50);
-    if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 23, 13, true)) {
+    Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 85, 148, 28);
+    if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 10, 10, true)) {
       _mouse.delay(200);
       LOGGER.fine("Going to location...");
 

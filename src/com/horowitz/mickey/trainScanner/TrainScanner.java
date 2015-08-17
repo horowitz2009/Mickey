@@ -54,7 +54,8 @@ public class TrainScanner {
       xx += _scanner.getTopLeft().x;
       yy += _scanner.getTopLeft().y;
 
-      _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+      //click Trains management icon
+      _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
       _mouse.delay(1300);
       _mouse.click(xx + 206, yy + 78);
       _mouse.delay(2300);
@@ -260,7 +261,8 @@ public class TrainScanner {
       xx += _scanner.getTopLeft().x;
       yy += _scanner.getTopLeft().y;
 
-      _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+      //click Trains management icon
+      _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
       _mouse.delay(1300);
       _mouse.click(xx + 206, yy + 78);
       _mouse.delay(2300, false);
