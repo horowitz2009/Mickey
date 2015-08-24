@@ -49,7 +49,7 @@ public class ScreenScanner {
   private static final String  FREE_TRAIN                     = "free2.bmp";
   private static final String  XP_TRAIN                       = "xpTrain2.bmp";
   public static final String   SHOP_X                         = "shopX.bmp";
-  private static final String  NO_BUTTON                      = "noButton2.bmp";
+  private static final String  NO_BUTTON                      = "noButton.bmp";
   private static final String  SESSION                        = "session2.bmp";
   private static final String  PACKAGE1                       = "package1.bmp";
   private static final String  PACKAGE2                       = "package2.bmp";
@@ -61,6 +61,7 @@ public class ScreenScanner {
   public static final String   ANCHOR_IMAGE                   = "anchorInvite2.bmp";
   public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftTRAIN.bmp";
 
+  public static final String   POINTER_CLOSE_IMAGE            = "Close.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
   public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
   public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";

@@ -2073,43 +2073,25 @@ public final class MainFrame extends JFrame {
     //FB SHARE
     found = scanAndClick(_scanner.getFBShare(), null);
 
-    //SHARE
+    //TODO SHARE -> HOORREY!!
     found = scanAndClick(_scanner.getShare(), null);
-    ////t2 = System.currentTimeMillis();
-    ////LOGGER.info("> handle Share: " + (t2 - t1));
-    ////t1 = t2 = System.currentTimeMillis();
-    
-    //MOVED TO RARE POPUPS
-    //found = scanAndClick(_scanner.getPromoX(), null);
-    //t2 = System.currentTimeMillis();
-    //LOGGER.info("> handle PromoX: " + (t2 - t1));
-    //t1 = t2 = System.currentTimeMillis();
 
     //SHOP
     found = found || scanAndClick(_scanner.getShopX(), null);
-    ////t2 = System.currentTimeMillis();
-    ////LOGGER.info("> handle ShopX: " + (t2 - t1));
-    ////t1 = t2 = System.currentTimeMillis();
 
     //PROMO
     found = found || scanAndClick(_scanner.getPromoX(), null);
 
-    //CLOSE
-    int xx = (_scanner.getGameWidth() - 544) / 2;
-    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 64, 33);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
+    //CLOSE - no passengers
+    int xx = (_scanner.getGameWidth() - 262) / 2;
+    int yy = (_scanner.getGameHeight() - 280) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx + 85, _scanner.getTopLeft().y + yy + 225, 90, 32);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
 
-    xx = (_scanner.getGameWidth() - 90) / 2;
-    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 92, 90, 33);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE3_IMAGE, area, 23, 10, true, true);
-
-    xx = (_scanner.getGameWidth() - 783) / 2;
-    area = new Rectangle(_scanner.getTopLeft().x + xx + 224, _scanner.getTopLeft().y + 546, 96, 40);
-    found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 8, true, true);
-    
-    ////t2 = System.currentTimeMillis();
-    ////LOGGER.info("> handle Close: " + (t2 - t1));
-    ////t1 = t2 = System.currentTimeMillis();
+    //CLOSE button of train Management
+    xx = (_scanner.getGameWidth() - 760) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
 
     
     xx = (_scanner.getGameWidth() - 200) / 2;
@@ -2125,11 +2107,6 @@ public final class MainFrame extends JFrame {
       updateLabels();
     }
     
-    
-    xx = (_scanner.getGameWidth() - 144) / 2;
-    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getBottomRight().y - 239, 75, 40);
-    findAndClick(ScreenScanner.DAILY_PUBLISH, area, 23, 10, true, true);
-
     t2 = System.currentTimeMillis();
     LOGGER.info("POPUPS " + (t2 - t1));
   }
