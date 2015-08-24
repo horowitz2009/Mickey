@@ -58,7 +58,7 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
-  public static final String   ANCHOR_IMAGE                   = "anchorInvite.bmp";
+  public static final String   ANCHOR_IMAGE                   = "anchorInvite2.bmp";
   public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftTRAIN.bmp";
 
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
@@ -67,7 +67,7 @@ public class ScreenScanner {
   public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
   public static final String   POINTER_CANCEL_IMAGE           = "cancel.bmp";
   public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
-  public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement.png";
+  public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement2.bmp";
 
   private ImageComparator      _comparator;
 
@@ -222,7 +222,7 @@ public class ScreenScanner {
     // Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
     Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);// TODO IMPROVE IT!!!
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
-    _sixMinutes = new ImageData("sixMinutes.bmp", area, _comparator, 0, 0);
+    _sixMinutes = new ImageData("sixMinutes2.bmp", area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, -12, -12);
 
@@ -377,7 +377,7 @@ public class ScreenScanner {
             new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
         LOGGER.info("Found top left corner...");
         // good, we're still in the game
-        _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 32+19, 39);
+        _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 51, 36);
         if (_br != null) {
           LOGGER.info("Found bottom right corner...");
           done = true;
