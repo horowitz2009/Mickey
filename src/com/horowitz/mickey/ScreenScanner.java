@@ -59,7 +59,8 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
   public static final String   ANCHOR_IMAGE                   = "anchorInvite2.bmp";
-  public static final String   ANCHOR_TOPLEFT_IMAGE           = "anchorTopLeftTRAIN.bmp";
+  public static final String   ANCHOR_TOPLEFT_IMAGE1          = "anchorTopLeftTSLOGO.bmp";
+  public static final String   ANCHOR_TOPLEFT_IMAGE2          = "anchorTopLeftNEW.bmp";
 
   public static final String   POINTER_CLOSE_IMAGE            = "Close.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
@@ -225,7 +226,7 @@ public class ScreenScanner {
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
     _sixMinutes = new ImageData("sixMinutes2.bmp", area, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
-    _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE, null, _comparator, -12, -12);
+    _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
 
     _fullyOptimized = true;
 
@@ -371,37 +372,48 @@ public class ScreenScanner {
     int turns = 0;
     do {
       turns++;
-      _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE, areaTL, -12, -12);
-      if (_tl != null) {
-        Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
-            new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),
-            new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
-        LOGGER.info("Found top left corner...");
-        // good, we're still in the game
-        _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 51, 36);
-        if (_br != null) {
-          LOGGER.info("Found bottom right corner...");
-          done = true;
-        } else {
-          LOGGER.info("Move a bit and try again...");
-          Pixel p = new Pixel(_tl.x, _tl.y - 2);
-          MouseRobot mouse = new MouseRobot();
-          mouse.mouseMove(p.x, p.y);
-          mouse.saveCurrentPosition();
-          mouse.click();
-          mouse.delay(200);
-          Robot robot = new Robot();
-
-          robot.keyPress(40);// arrow down
-          mouse.delay(1000);
+      Pixel tslogo = locateImageCoords(ANCHOR_TOPLEFT_IMAGE1, areaTL, -24, 46);
+      if (tslogo != null) {
+        if (tslogo.x < 0) tslogo.x = 0;
+        _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE2, new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
+        
+        if (_tl != null) {
+          if (tslogo.x + 24 < _tl.x)
+            _tl.x -= 162;
+          else
+            _tl.x -= 21;
+          if (_tl.x < 0) _tl.x = 0;
+          Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
+              new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),
+              new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
+          LOGGER.info("Found top left corner...");
+          // good, we're still in the game
+          _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 51, 36);
+          if (_br != null) {
+            LOGGER.info("Found bottom right corner...");
+            done = true;
+          } else {
+            LOGGER.info("Move a bit and try again...");
+            Pixel p = new Pixel(_tl.x, _tl.y - 2);
+            MouseRobot mouse = new MouseRobot();
+            mouse.mouseMove(p.x, p.y);
+            mouse.saveCurrentPosition();
+            mouse.click();
+            mouse.delay(200);
+            Robot robot = new Robot();
+  
+            robot.keyPress(40);// arrow down
+            mouse.delay(1000);
+          }
         }
       }
-
     } while (!done && turns < 3);
 
     if (_br != null && _tl != null) {
+      LOGGER.info("Top left    : " + _tl);
+      LOGGER.info("Bottom Right: " + _br);
       setKeyAreas();
-      return true;
+      return done;
     } else {
       _tl = new Pixel(0, 0);
       _br = new Pixel(1600, 1000);
