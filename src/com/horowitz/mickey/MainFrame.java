@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.938";
+  private static final String APP_TITLE           = "v0.939";
 
   private boolean             _devMode            = false;
 
@@ -2094,17 +2094,32 @@ public final class MainFrame extends JFrame {
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
 
     
-    xx = (_scanner.getGameWidth() - 200) / 2;
+    xx = (_scanner.getGameWidth() - 277) / 2;
          
     // now check other popups that need to refresh the game
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getTopLeft().y + 184, 200, 80);
-    found = findAndClick("sync.bmp", area, 84, 263, true, true);
+    found = findAndClick("sync.bmp", area, 84, 256, true, true);
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game out of sync! Refreshing...");
       //refresh(false);
       _stats.registerRefresh();
       updateLabels();
+    }
+    
+    //CANCEL
+    xx = (_scanner.getGameWidth() - 782) / 2;
+    area = new Rectangle(_scanner.getTopLeft().x + xx + 227, _scanner.getBottomRight().y - 105, 100, 44);
+    found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 7, true, true);
+    if (found) {
+      try {
+        Thread.sleep(500);
+      } catch (InterruptedException e) {
+      }
+      //CLOSE button of train Management
+      xx = (_scanner.getGameWidth() - 760) / 2;
+      area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
+      found = findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
     }
     
     t2 = System.currentTimeMillis();
