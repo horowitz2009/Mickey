@@ -20,6 +20,7 @@ import com.horowitz.mickey.MouseRobot;
 import com.horowitz.mickey.Pixel;
 import com.horowitz.mickey.RobotInterruptedException;
 import com.horowitz.mickey.ScreenScanner;
+import com.horowitz.mickey.Settings;
 import com.horowitz.mickey.SimilarityImageComparator;
 import com.horowitz.mickey.data.DataStore;
 
@@ -31,6 +32,7 @@ public class TrainScanner {
   private MouseRobot      _mouse;
   Logger                  LOGGER;
   private int             _takeABreak;
+  private Settings        _settings;
 
   public TrainScanner(ScreenScanner scanner, Logger logger, int takeABreak) {
     super();
@@ -77,7 +79,6 @@ public class TrainScanner {
 
     } catch (RobotInterruptedException | IOException | AWTException e) {
       LOGGER.severe("Scanning interrupted! The data is incomplete!!!");
-      e.printStackTrace();
     } finally {
       closeTrains();
     }
@@ -87,6 +88,7 @@ public class TrainScanner {
   private List<Train> scanIntTrains(int x, int y, int xt, int yt, boolean all) throws RobotInterruptedException, IOException, AWTException {
     List<Train> trains = new ArrayList<>();
 
+    try {
     // click the beginning of the scroller
     _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
     _mouse.click();
@@ -118,6 +120,10 @@ public class TrainScanner {
     //
     // LOGGER.info("DONE");
     // }
+    } catch (RobotInterruptedException e) {
+      LOGGER.info("Enough is enough");
+      LOGGER.info("Scanned " + trains.size() + " trains");
+    }
     return trains;
   }
 
@@ -138,83 +144,89 @@ public class TrainScanner {
     return yt;
   }
 
-  private Train scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException, RobotInterruptedException {
+  private Train scanSlots(int xt, int yt, int firstSlot, List<Train> trains, boolean all) throws AWTException, IOException {
     boolean isIdle = false;
     boolean isFreeSlot = false;
     Train lastAdded = null;
-    for (int slot = firstSlot; slot <= 5; slot++) {
-      _mouse.delay(400);
-      Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
-      Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
-      ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
-      ImageData freeSlotData = _scanner.generateImageData("int/Add.bmp");
-      isIdle = onRoadData.findImage(onRoadArea) == null;
-      isFreeSlot = freeSlotData.findImage(onRoadArea) != null;
-      
-      if (!isFreeSlot && (all || isIdle)) {
-        int number = trains.size() + 1;
-        String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
-        String fullImageFilename = "data/int/train " + trainId + ".png";
-        writeImage(slotArea, fullImageFilename);
-        Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
-        String scanImageFilename = "data/int/train " + trainId + "_scanThis.bmp";
-        writeImage(newArea, scanImageFilename);
-        Robot robot = new Robot();
-        Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
-        train.setFullImageFilename(fullImageFilename);
-        train.setScanImageFilename(scanImageFilename);
+    
+    try {
+      for (int slot = firstSlot; slot <= 5; slot++) {
+        _mouse.delay(400);
+        Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
+        Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
+        ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
+        ImageData freeSlotData = _scanner.generateImageData("int/Add.bmp");
+        isIdle = onRoadData.findImage(onRoadArea) == null;
+        isFreeSlot = freeSlotData.findImage(onRoadArea) != null;
+        
+        if (!isFreeSlot && (all || isIdle)) {
+          int number = trains.size() + 1;
+          String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
+          String fullImageFilename = "data/int/train " + trainId + ".png";
+          writeImage(slotArea, fullImageFilename);
+          Rectangle newArea = new Rectangle(slotArea.x + 151, slotArea.y + 9, 530, 38);
+          String scanImageFilename = "data/int/train " + trainId + "_scanThis.bmp";
+          writeImage(newArea, scanImageFilename);
+          Robot robot = new Robot();
+          Train train = new Train(robot.createScreenCapture(slotArea), robot.createScreenCapture(newArea));
+          train.setFullImageFilename(fullImageFilename);
+          train.setScanImageFilename(scanImageFilename);
 
-        if (!isIdle) {
-          LOGGER.info("The train is on road " + slot);
-          // scan additional info
-          _mouse.savePosition();
-          _mouse.mouseMove(slotArea.x + 120 + 15, slotArea.y + 41);
-          _mouse.click();
-          _mouse.delay(800);
-          Rectangle infoArea = new Rectangle(slotArea.x + 151, slotArea.y, slotArea.width - 151, 50);
-          String addInfoFilename = "data/int/trainInfo " + trainId + ".bmp";
-          writeImage(infoArea, addInfoFilename);
-          train.setAdditionalInfo((robot.createScreenCapture(infoArea)));// cutToEdge was here
+          if (!isIdle) {
+            LOGGER.info("The train is on road " + slot);
+            // scan additional info
+            _mouse.savePosition();
+            _mouse.mouseMove(slotArea.x + 120 + 15, slotArea.y + 41);
+            _mouse.click();
+            _mouse.delay(800);
+            Rectangle infoArea = new Rectangle(slotArea.x + 151, slotArea.y, slotArea.width - 151, 50);
+            String addInfoFilename = "data/int/trainInfo " + trainId + ".bmp";
+            writeImage(infoArea, addInfoFilename);
+            train.setAdditionalInfo((robot.createScreenCapture(infoArea)));// cutToEdge was here
 
-          train.setAdditionalInfoFilename(addInfoFilename);
+            train.setAdditionalInfoFilename(addInfoFilename);
 
-          // // short info
-          // ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
-          // ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
-          // Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
-          // if (pwest == null) {
-          // pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
-          // } else {
-          // System.err.println("found westEnd");
-          // }
-          // if (pwest == null) {
-          // pwest = new Pixel(13, 0);
-          // } else {
-          // System.err.println("found westEnd2");
-          // }
-          //
-          // System.err.println(pwest);
-          //
-          // //train.setAdditionalInfoShort(train.getAdditionalInfo());
-          //
-          // //String shortFilename = "data/int/trainInfo " + trainId + "_short.png";
-          // //_scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
-          // //train.setAdditionalInfoShortFilename(shortFilename);
-          train.setIdle(false);
+            // // short info
+            // ImageData westEnd = _scanner.generateImageData("int/westEnd.bmp");
+            // ImageData westEnd2 = _scanner.generateImageData("int/westEnd2.bmp");
+            // Pixel pwest = westEnd.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+            // if (pwest == null) {
+            // pwest = westEnd2.findImage(train.getAdditionalInfo().getSubimage(60, 0, 64, train.getAdditionalInfo().getHeight()));
+            // } else {
+            // System.err.println("found westEnd");
+            // }
+            // if (pwest == null) {
+            // pwest = new Pixel(13, 0);
+            // } else {
+            // System.err.println("found westEnd2");
+            // }
+            //
+            // System.err.println(pwest);
+            //
+            // //train.setAdditionalInfoShort(train.getAdditionalInfo());
+            //
+            // //String shortFilename = "data/int/trainInfo " + trainId + "_short.png";
+            // //_scanner.writeImage(train.getAdditionalInfoShort(), shortFilename);
+            // //train.setAdditionalInfoShortFilename(shortFilename);
+            train.setIdle(false);
 
-          List<String> contractorNames = scanContractorsSimple(train);
+            List<String> contractorNames = scanContractorsSimple(train);
 
-          train.setContractors(contractorNames);
-          train.setTimeToSendNext(0l);// TODO ocr capture time and set it OR DEPRECATE IT!
-          _mouse.restorePosition();
-        } else {
-          train.setContractors(new ArrayList<String>());
-          train.setIdle(true);
-          train.setTimeToSendNext(0l);
-        }
-        trains.add(train);
-        lastAdded = train;
-      }// if all or is idle
+            train.setContractors(contractorNames);
+            train.setTimeToSendNext(0l);// TODO ocr capture time and set it OR DEPRECATE IT!
+            _mouse.restorePosition();
+          } else {
+            train.setContractors(new ArrayList<String>());
+            train.setIdle(true);
+            train.setTimeToSendNext(0l);
+          }
+          trains.add(train);
+          lastAdded = train;
+        }// if all or is idle
+      }
+    } catch (RobotInterruptedException e) {
+      LOGGER.info("Interrupted by user! Data may be incomplete!");
+      LOGGER.info("So far " + trains.size() + " have been scanned");
     }
     return lastAdded;
   }
@@ -262,7 +274,7 @@ public class TrainScanner {
       yy += _scanner.getTopLeft().y;
 
       //click Trains management icon
-      _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
+      _mouse.click(_scanner.getTopLeft().x + 54, _scanner.getBottomRight().y - 39);
       _mouse.delay(1300);
       _mouse.click(xx + 206, yy + 78);
       _mouse.delay(2300, false);
@@ -325,40 +337,69 @@ public class TrainScanner {
     _mouse.delay(1000);
     int locoOnlyLength = 110;
     boolean atLeastOneSent = false;
+    String defaultContractor = getDefaultContractor(); 
     do {
       List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
       atLeastOneSent = false;
-      for (int i = newTrains.size() - 1; i >= 0 && !atLeastOneSent; --i) {
-        Train t = newTrains.get(i);
-        if (t.isIdle()) {
-          for (Train train : trains) {
-            if (!train.getContractors().isEmpty()) {// obsolete && train.getSentTime() - now <= 0
-              Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
-              if (p == null && isLocoOnly()) {
-                BufferedImage i1 = t.getScanImage();
-                BufferedImage i2 = train.getScanImage();
-                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
-                    i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
-                //System.err.println("locoOnly " + p);
-              }
-              if (p != null) {
-                if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
-                  atLeastOneSent = true;
-                  numberSent++;
+      
+      if (trains.isEmpty()) {
+        if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
+          LOGGER.info("Sending to default contractor: " + defaultContractor);
+          if (sendTrain(null, xt, yt)) {
+            atLeastOneSent = true;
+            numberSent++;
+          }
+          break;
+        }
+      } else {
+
+        for (int i = newTrains.size() - 1; i >= 0 && !atLeastOneSent; --i) {
+          Train t = newTrains.get(i);
+          if (t.isIdle()) {
+            boolean found = false;
+            for (Train train : trains) {
+              if (!train.getContractors().isEmpty()) {
+                Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
+                if (p == null && isLocoOnly()) {
+                  BufferedImage i1 = t.getScanImage();
+                  BufferedImage i2 = train.getScanImage();
+                  p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
+                      i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
+                  //System.err.println("locoOnly " + p);
                 }
-                break;
+                if (p != null) {
+                  if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
+                    atLeastOneSent = true;
+                    found = true;
+                    numberSent++;
+                  }
+                  break;
+                }
+              }
+            } // inner for
+            
+            if (!found && defaultContractor != null) {
+              LOGGER.info("Can't find a match. Sending to default: " + defaultContractor);
+              if (sendTrain(null, xt, yt + (i) * 85)) {
+                atLeastOneSent = true;
+                numberSent++;
               }
             }
-          } // inner for
-        } else {
-          LOGGER.info("Train " + (i + 1) + " is not idle");
-        }
-      } // for newTrains
+            
+          } else {
+            LOGGER.info("Train " + (i + 1) + " is not idle");
+          }
+        } // for newTrains
+      }
       System.err.println("...");
     } while (atLeastOneSent && numberSent < _takeABreak);
     return atLeastOneSent;
   }
 
+  public String getDefaultContractor() {
+    return _settings.getProperty("IntTrains.defaultContractor", null);
+  }
+  
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 64, y + 60);
     _mouse.delay(250);
@@ -373,12 +414,15 @@ public class TrainScanner {
     ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
     Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 200, 75));
     if (p != null) {
+      String defaultContractor = getDefaultContractor();
+      if (defaultContractor == null) defaultContractor = "";
+      
       Pixel tl = new Pixel(p.x - 35, p.y - 32);
       try {
         // find and select contractors
         // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
         Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
-        String lastContractor = train.getContractors().get(train.getContractors().size() - 1);
+        String lastContractor = train == null ? defaultContractor : train.getContractors().get(train.getContractors().size() - 1);
         if (lastContractor.equals("XP")) {
           // do it fast
           for(int i = 0; i < 4; i++) {
@@ -403,25 +447,11 @@ public class TrainScanner {
           _mouse.delay(150);
           
         } else {
-
-          for (String cname : train.getContractors()) {
-            for (int page = 0; page < 3; page++) {
-              BufferedImage cimage = new Robot().createScreenCapture(carea);
-              // writeImage(carea, "carea.bmp");
-              BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + cname + "_name.bmp"));
-              Pixel cp = _comparator.findImage(contractorImage, cimage);
-              if (cp != null) {
-                // found the contractor
-                _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
-                _mouse.delay(450);
-                _mouse.click();
-                _mouse.delay(950);
-                break;
-              } else {
-                _mouse.delay(350);
-                _mouse.click(tl.x + 739, tl.y + 131);
-                _mouse.delay(850);
-              }
+          if (train == null) {
+            sendToContractor(defaultContractor, carea, tl);
+          } else {
+            for (String cname : train.getContractors()) {
+              sendToContractor(cname, carea, tl);
             }
           }
         }
@@ -438,13 +468,35 @@ public class TrainScanner {
       _mouse.delay(2000);
 
       // not used
-      train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
+      //////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
 
       return true;
       // at the end
       // train.setSentTime(System.currentTimeMillis());
     }
     return false;
+  }
+  
+  private void sendToContractor(String contractorName, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
+    for (int page = 0; page < 3; page++) {
+      BufferedImage cimage = new Robot().createScreenCapture(carea);
+      // writeImage(carea, "carea.bmp");
+      BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + contractorName + "_name.bmp"));
+      Pixel cp = _comparator.findImage(contractorImage, cimage);
+      if (cp != null) {
+        // found the contractor
+        _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
+        _mouse.delay(450);
+        _mouse.click();
+        _mouse.delay(950);
+        break;
+      } else {
+        _mouse.delay(350);
+        _mouse.click(tl.x + 739, tl.y + 131);
+        _mouse.delay(850);
+      }
+    }
+
   }
 
   private List<Train> scanSlotsForCompare(final int xt, final int yt, final int page) throws AWTException, IOException, RobotInterruptedException {
@@ -657,6 +709,10 @@ public class TrainScanner {
 
   public void setLocoOnly(boolean locoOnly) {
     _locoOnly = locoOnly;
+  }
+
+  public void setSettings(Settings settings) {
+    _settings = settings;
   }
 
 }

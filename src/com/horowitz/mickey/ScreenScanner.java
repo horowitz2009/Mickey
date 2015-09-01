@@ -235,9 +235,9 @@ public class ScreenScanner {
     _package2 = new ImageData(PACKAGE2, area, _comparator, 7, 4);
 
     // SESSION
-    xx = (getGameWidth() - 80) / 2;
-    yy = (getGameHeight() - 23) / 2;
-    area = new Rectangle(_tl.x + xx, _tl.y + 210, 80, 26); // TODO to be widen if not working
+    xx = (getGameWidth() - 279) / 2;
+    yy = (getGameHeight() - 382) / 2;
+    area = new Rectangle(_tl.x + xx + 90, _tl.y + yy + 73, 97, 66);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
 
     // NO BUTTON
@@ -388,7 +388,7 @@ public class ScreenScanner {
               new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
           LOGGER.info("Found top left corner...");
           // good, we're still in the game
-          _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 51, 36);
+          _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 61, 46);
           if (_br != null) {
             LOGGER.info("Found bottom right corner...");
             done = true;

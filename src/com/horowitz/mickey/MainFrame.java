@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.939";
+  private static final String APP_TITLE           = "v0.942a";
 
   private boolean             _devMode            = false;
 
@@ -1646,7 +1646,7 @@ public final class MainFrame extends JFrame {
       Pixel tl = _scanner.getTopLeft();
       int w = (_scanner.getGameWidth() - 214) / 2;
       // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
-      Rectangle rect = new Rectangle(tl.x + 61, tl.y + 14, 28, 9);
+      Rectangle rect = new Rectangle(tl.x + 61, tl.y + 43, 50, 10);
       
       if (_lastImageList.size() < howMuch) {
         BufferedImage image = new Robot().createScreenCapture(rect);
@@ -1680,7 +1680,7 @@ public final class MainFrame extends JFrame {
         try {
           // capture trains
           pingPrefix += " trains ";
-          _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
+          _mouse.click(_scanner.getTopLeft().x + 54, _scanner.getBottomRight().y - 39);
           _mouse.delay(1300);
           _mouse.click(xx + 103, yy + 83);
           _mouse.delay(2300);
@@ -1690,7 +1690,7 @@ public final class MainFrame extends JFrame {
         try {
           // capture international trains
           pingPrefix += " int trains ";
-          _mouse.click(_scanner.getTopLeft().x + 56, _scanner.getTopLeft().y + 72);
+          _mouse.click(_scanner.getTopLeft().x + 54, _scanner.getBottomRight().y - 39);
           _mouse.delay(1300);
           _mouse.click(xx + 209, yy + 83);
           _mouse.delay(2300);
@@ -1910,7 +1910,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void goHomeIfNeeded() throws AWTException, IOException, RobotInterruptedException {
-    Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 50, 60, 50);
+    Rectangle area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - 85, 100, 85);
     Pixel p = _scanner.getHome().findImage(area);
     if (p != null && !_homeClicked) {
       _homeClicked = true;
@@ -2016,7 +2016,7 @@ public final class MainFrame extends JFrame {
 
   private void goHome() throws AWTException, IOException, RobotInterruptedException {
     _mouse.saveCurrentPosition();
-    _mouse.click(_scanner.getTopLeft().x + 42, _scanner.getBottomRight().y - 30);
+    _mouse.click(_scanner.getTopLeft().x + 54, _scanner.getBottomRight().y - 38);
     _mouse.delay(500, false);
     // int diff = 60;
     // if (!_lastDiffs.isEmpty()) {
@@ -3418,6 +3418,7 @@ public final class MainFrame extends JFrame {
     if (_trainManagementWindow == null) {
       TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings.getInt("IntTrains.takeABreakAfter", 3));
       _trainManagementWindow = new TrainManagementWindow(null, tscanner);
+      tscanner.setSettings(_settings);
     }
     _trainManagementWindow.setVisible(true);
   }

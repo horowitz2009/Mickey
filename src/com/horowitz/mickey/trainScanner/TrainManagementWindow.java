@@ -265,6 +265,17 @@ public class TrainManagementWindow extends JFrame {
       toolbar.add(button);
     }
     {
+      JButton button = new JButton(new AbstractAction("Put default to all") {
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          putDefaultToAll();
+        }
+      });
+      
+      toolbar.add(button);
+    }
+    {
       JButton button = new JButton(new AbstractAction("Rescan ALL") {
 
         @Override
@@ -275,17 +286,17 @@ public class TrainManagementWindow extends JFrame {
 
       toolbar.add(button);
     }
-    {
-      JButton button = new JButton(new AbstractAction("Rescan Idle") {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          scan(false, true, _locoOnly.isSelected());
-        }
-      });
-
-      toolbar.add(button);
-    }
+//    {
+//      JButton button = new JButton(new AbstractAction("Rescan Idle") {
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//          scan(false, true, _locoOnly.isSelected());
+//        }
+//      });
+//
+//      toolbar.add(button);
+//    }
     {
       JButton button = new JButton(new AbstractAction("ADD Idle") {
 
@@ -397,6 +408,16 @@ public class TrainManagementWindow extends JFrame {
     // TrainManagementWindow.this.setVisible(true);
     updateView();
   }
+
+  public void putDefaultNow() {
+    reloadNow();
+    if (_trains != null)
+      for (Train train : _trains) {
+        train.getContractors().add(_tscanner.getDefaultContractor());
+      }
+    save();
+    updateView();
+  }
   
   public void reload() {
     Thread t = new Thread(new Runnable() {
@@ -404,6 +425,16 @@ public class TrainManagementWindow extends JFrame {
         reloadNow();
       }
 
+    });
+    t.start();
+  }
+
+  public void putDefaultToAll() {
+    Thread t = new Thread(new Runnable() {
+      public void run() {
+        putDefaultNow();
+      }
+      
     });
     t.start();
   }
