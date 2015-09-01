@@ -358,7 +358,7 @@ public class TrainScanner {
           if (t.isIdle()) {
             boolean found = false;
             for (Train train : trains) {
-              if (!train.getContractors().isEmpty()) {
+              
                 Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
                 if (p == null && isLocoOnly()) {
                   BufferedImage i1 = t.getScanImage();
@@ -368,14 +368,18 @@ public class TrainScanner {
                   //System.err.println("locoOnly " + p);
                 }
                 if (p != null) {
-                  if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
-                    atLeastOneSent = true;
-                    found = true;
-                    numberSent++;
+                  found = true;
+                  if (!train.getContractors().isEmpty()) {
+                    if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
+                      atLeastOneSent = true;
+                      numberSent++;
+                    }
+                  } else {
+                    LOGGER.info("Found match, but contractor not set");
                   }
                   break;
                 }
-              }
+              
             } // inner for
             
             if (!found && defaultContractor != null) {
