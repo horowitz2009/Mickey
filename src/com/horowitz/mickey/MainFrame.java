@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.942c";
+  private static final String APP_TITLE           = "v0.944";
 
   private boolean             _devMode            = false;
 
@@ -141,6 +141,11 @@ public final class MainFrame extends JFrame {
   private List<BufferedImage> _lastImageList      = new ArrayList<>();
 
   private JToggleButton       _sendInternational;
+  
+  private int                   _pingTurn = 1;
+
+  private TrainManagementWindow _trainManagementWindow;
+
 
   private boolean isOneClick() {
     return _oneClick.isSelected();
@@ -1283,20 +1288,9 @@ public final class MainFrame extends JFrame {
 
   private void refresh(boolean bookmark) throws RobotInterruptedException {
     _lastTime = System.currentTimeMillis();
-    try {
-      String dateStr = DateUtils.formatDateForFile2(System.currentTimeMillis());
-      Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      MyImageIO.write(new Robot().createScreenCapture(new Rectangle(screenSize)), "PNG", new File("refresh " + dateStr + ".png"));
-      deleteOlder("refresh", 5);
-    } catch (HeadlessException e1) {
-      e1.printStackTrace();
-    } catch (IOException e1) {
-      e1.printStackTrace();
-      LOGGER.severe(e1.getMessage());
-    } catch (AWTException e1) {
-      e1.printStackTrace();
-    }
+    deleteOlder("refresh", 5);
     LOGGER.info("Time to refresh...");
+    captureScreen("refresh ");
     try {
       Pixel p;
       if (!bookmark) {
@@ -1338,6 +1332,9 @@ public final class MainFrame extends JFrame {
           } else {
             processRequests();
           }
+          if (i > 8) {
+            captureScreen("refresh trouble ");
+          }
         }
       } catch (AWTException | IOException e) {
         LOGGER.info("whaaaat again?");
@@ -1346,9 +1343,10 @@ public final class MainFrame extends JFrame {
       } catch (SessionTimeOutException e) {
         LOGGER.info("Session time out. Stopping.");
       }
-      if (done)
+      if (done) {
         LOGGER.info("Refresh done");
-      else {
+        captureScreen("refresh done ");
+      } else {
         LOGGER.info("Refresh failed");
         if (!bookmark) {
           LOGGER.info("Trying refresh through bookmark");
@@ -1463,7 +1461,7 @@ public final class MainFrame extends JFrame {
     while (!_stopThread) {
       turn *= 2;
       if (turn > 8) turn = 1;
-      LOGGER.info("T: " + turn);
+      LOGGER.fine("T: " + turn);
       int timeForRefresh = (getShortestTime() * 60000 / 2);
       int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
       try {
@@ -1607,37 +1605,41 @@ public final class MainFrame extends JFrame {
   }
 
   private void checkIsStuck() throws GameStuckException {
-    int howMuch = 3;
-    putNewImage(howMuch);
-
-    if (_lastImageList.size() >= howMuch) {
-      ImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
-      boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
-      for (int i = 1; i < howMuch - 1; ++i) {
-        uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
-      }
-     
-      if (uhoh) {
-        try {
-          handleRarePopups(true);
-          _mouse.delay(200);
-          howMuch = 4;
-          putNewImage(howMuch);
-        } catch (InterruptedException e) {
-        } catch (RobotInterruptedException e) {
+    boolean check = "true".equalsIgnoreCase(_settings.getProperty("checkIsStuck", "true"));
+    if (check) {
+      LOGGER.info("checking is game stuck...");
+      int howMuch = 3;
+      putNewImage(howMuch);
+  
+      if (_lastImageList.size() >= howMuch) {
+        ImageComparator comparator = new SimilarityImageComparator(0.01, 1000);
+        boolean uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
+        for (int i = 1; i < howMuch - 1; ++i) {
+          uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
         }
-      }
-    
-      //check again
-      uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
-      for (int i = 1; i < howMuch - 1; ++i) {
-        uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
-      }
-        
-      if (uhoh) {
-        _lastImageList.clear();
-        LOGGER.severe("THE GAME PROBABLY GOT STUCK");
-        throw new GameStuckException();
+       
+        if (uhoh) {
+          try {
+            handleRarePopups(true);
+            _mouse.delay(200);
+            howMuch = 4;
+            putNewImage(howMuch);
+          } catch (InterruptedException e) {
+          } catch (RobotInterruptedException e) {
+          }
+        }
+      
+        //check again
+        uhoh = comparator.compare(_lastImageList.get(0), _lastImageList.get(1));
+        for (int i = 1; i < howMuch - 1; ++i) {
+          uhoh = uhoh && comparator.compare(_lastImageList.get(i), _lastImageList.get(i + 1));
+        }
+          
+        if (uhoh) {
+          _lastImageList.clear();
+          LOGGER.severe("THE GAME PROBABLY GOT STUCK");
+          throw new GameStuckException();
+        }
       }
     }
   }
@@ -1647,7 +1649,7 @@ public final class MainFrame extends JFrame {
       Pixel tl = _scanner.getTopLeft();
       int w = (_scanner.getGameWidth() - 214) / 2;
       // Rectangle rect = new Rectangle(tl.x + 33, tl.y + 7, 104, 15);
-      Rectangle rect = new Rectangle(tl.x + 61, tl.y + 43, 50, 10);
+      Rectangle rect = new Rectangle(tl.x + 61, tl.y + 13, 50, 40);
       
       if (_lastImageList.size() < howMuch) {
         BufferedImage image = new Robot().createScreenCapture(rect);
@@ -1660,10 +1662,6 @@ public final class MainFrame extends JFrame {
     } catch (AWTException e) {
     }
   }
-
-  private int                   _pingTurn = 1;
-
-  private TrainManagementWindow _trainManagementWindow;
 
   private boolean ping() {
     boolean res = false;
@@ -1699,9 +1697,7 @@ public final class MainFrame extends JFrame {
         }
       }
 
-      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-          pingPrefix + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+      captureScreen(pingPrefix);
 
       if (_pingTurn == 2 || _pingTurn == 3) {
         try {
@@ -1721,6 +1717,12 @@ public final class MainFrame extends JFrame {
       _lastPingTime = System.currentTimeMillis();
     }
     return res;
+  }
+
+  private void captureScreen(String filename) {
+    final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+        filename + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -2302,7 +2304,7 @@ public final class MainFrame extends JFrame {
     if(moved) {
       if(!scanOtherLocations(true, 33)){
         //go to somewhere and go back just to reposition the game
-        _mouse.click(_scanner.getBottomRight().x - 63, _scanner.getBottomRight().y - 48);
+        _mouse.click(_scanner.getBottomRight().x - 138, _scanner.getBottomRight().y - 40);
         _mouse.delay(1000);
         goHomeIfNeeded();
       };  

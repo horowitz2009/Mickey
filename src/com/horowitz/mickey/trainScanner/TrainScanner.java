@@ -410,46 +410,39 @@ public class TrainScanner {
     _mouse.click();
     _mouse.delay(650);
     // it is expected a SendDialiog been opened
-    int xx = (_scanner.getGameWidth() - 760) / 2;
-    int yy = (_scanner.getGameHeight() - 550) / 2;
+    int xx = (_scanner.getGameWidth() - 781) / 2;
+    int yy = (_scanner.getGameHeight() - 587) / 2;
     xx += _scanner.getTopLeft().x;
     yy += _scanner.getTopLeft().y;
 
     ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
-    Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 200, 75));
+    Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 175, 75));
     if (p != null) {
       String defaultContractor = getDefaultContractor();
       if (defaultContractor == null) defaultContractor = "";
       
-      Pixel tl = new Pixel(p.x - 35, p.y - 32);
+      Pixel tl = new Pixel(p.x - 2, p.y + 62);
       try {
+        
+        //scroll to top
+        _mouse.mouseMove(tl.x + 347, tl.y + 30);
+        _mouse.click();
+        _mouse.delay(400);
+        
         // find and select contractors
-        // Rectangle carea = new Rectangle(tl.x + 41, tl.y + 90, 678, 96);
-        Rectangle carea = new Rectangle(tl.x + 42, tl.y + 72, 676, 20);
+        Rectangle carea = new Rectangle(tl.x, tl.y, 147, 260);
         String lastContractor = train == null ? defaultContractor : train.getContractors().get(train.getContractors().size() - 1);
         if (lastContractor.equals("XP")) {
           // do it fast
-          for(int i = 0; i < 4; i++) {
-            _mouse.mouseMove(p.x + 84 + i * 173, p.y + 97);
-            _mouse.delay(350);
+          _mouse.mouseMove(tl.x + 20, tl.y + 20);
+          for(int i = 0; i < 8; i++) {
             _mouse.click();
-            _mouse.delay(150);
-          }
-          _mouse.click(tl.x + 739, tl.y + 131);
-          _mouse.delay(850);
-          for(int i = 0; i < 4; i++) {
-            _mouse.mouseMove(p.x + 84 + i * 173, p.y + 97);
             _mouse.delay(350);
-            _mouse.click();
-            _mouse.delay(150);
           }
-          
         } else if(lastContractor.equals("Special")) {
-          _mouse.mouseMove(p.x + 84, p.y + 97);
-          _mouse.delay(350);
+          _mouse.mouseMove(tl.x + 20, tl.y + 20);
           _mouse.click();
-          _mouse.delay(150);
-          
+          _mouse.delay(350);
         } else {
           if (train == null) {
             sendToContractor(defaultContractor, carea, tl);
@@ -463,12 +456,12 @@ public class TrainScanner {
         // no matter what try to send the bloody train
       }
 
-      // TODO click send and choose 4h way
-      _mouse.mouseMove(tl.x + 475, tl.y + 517);
+      //click send and choose 4h way
+      _mouse.mouseMove(tl.x + 350, tl.y + 417);
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
-      _mouse.click(tl.x + 475, tl.y + 490);
+      _mouse.click(tl.x + 455, tl.y + 414);
       _mouse.delay(2000);
 
       // not used
@@ -482,22 +475,25 @@ public class TrainScanner {
   }
   
   private void sendToContractor(String contractorName, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
-    for (int page = 0; page < 3; page++) {
+    for (int page = 0; page < 2; page++) {
       BufferedImage cimage = new Robot().createScreenCapture(carea);
       // writeImage(carea, "carea.bmp");
       BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + contractorName + "_name.bmp"));
       Pixel cp = _comparator.findImage(contractorImage, cimage);
       if (cp != null) {
         // found the contractor
-        _mouse.mouseMove(carea.x + cp.x + 20, carea.y + cp.y + 50);
+        _mouse.mouseMove(carea.x + cp.x, carea.y + cp.y + 4);
         _mouse.delay(450);
         _mouse.click();
         _mouse.delay(950);
         break;
       } else {
-        _mouse.delay(350);
-        _mouse.click(tl.x + 739, tl.y + 131);
-        _mouse.delay(850);
+        //scrolldown
+        _mouse.delay(200);
+        for(int clicks = 0; clicks < 10; clicks++) {
+          _mouse.click(tl.x + 347, tl.y + 250);
+          _mouse.delay(150);
+        }
       }
     }
 
