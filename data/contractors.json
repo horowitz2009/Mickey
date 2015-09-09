@@ -959,11 +959,11 @@
       },
       {
         "_name": "Wood",
-        "_amount": 0
+        "_amount": 666058
       },
       {
         "_name": "Nails",
-        "_amount": 48862
+        "_amount": 768862
       },
       {
         "_name": "Bricks",
@@ -979,7 +979,7 @@
       },
       {
         "_name": "Steel",
-        "_amount": 24688
+        "_amount": 744688
       },
       {
         "_name": "Gravel",
@@ -1100,7 +1100,7 @@
     "_materialsMore": [
       {
         "_name": "Gold",
-        "_amount": 0
+        "_amount": 8945120
       },
       {
         "_name": "Wood",
@@ -1128,7 +1128,7 @@
       },
       {
         "_name": "Gravel",
-        "_amount": 4972081
+        "_amount": 7105081
       },
       {
         "_name": "U-235",
@@ -1140,7 +1140,7 @@
       },
       {
         "_name": "Rubber",
-        "_amount": 4555154
+        "_amount": 6688154
       },
       {
         "_name": "Carbon",
@@ -1446,7 +1446,7 @@
       },
       {
         "_name": "Marble",
-        "_amount": 324963
+        "_amount": 579963
       },
       {
         "_name": "Wires",
@@ -1458,7 +1458,7 @@
       },
       {
         "_name": "Silicon",
-        "_amount": 0
+        "_amount": 180875
       }
     ],
     "_currentMissionNumber": 90,
@@ -1716,11 +1716,11 @@
       },
       {
         "_name": "Steel",
-        "_amount": 1972535
+        "_amount": 0
       },
       {
         "_name": "Gravel",
-        "_amount": 1357601
+        "_amount": 0
       },
       {
         "_name": "U-235",
@@ -1853,11 +1853,11 @@
       },
       {
         "_name": "Bricks",
-        "_amount": 8528114
+        "_amount": 278114
       },
       {
         "_name": "Glass",
-        "_amount": 6131778
+        "_amount": 0
       },
       {
         "_name": "Fuel",
@@ -1877,7 +1877,7 @@
       },
       {
         "_name": "Cement",
-        "_amount": 1277911
+        "_amount": 0
       },
       {
         "_name": "Rubber",
@@ -1897,7 +1897,7 @@
       },
       {
         "_name": "Wires",
-        "_amount": 7096885
+        "_amount": 346885
       },
       {
         "_name": "Plastics",
@@ -1905,7 +1905,7 @@
       },
       {
         "_name": "Silicon",
-        "_amount": 5900137
+        "_amount": 0
       }
     ],
     "_currentMissionNumber": 103,

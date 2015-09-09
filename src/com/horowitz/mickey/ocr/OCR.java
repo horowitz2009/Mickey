@@ -51,7 +51,7 @@ public class OCR {
     BufferedImage subimage = image.getSubimage(0, 0, image.getWidth(), image.getHeight());
     writeImage(subimage, 1);
     //subimage = cutEdges(subimage, _foreground);
-    writeImage(subimage, 2);
+    //writeImage(subimage, 2);
     BufferedImage subimage2 = subimage.getSubimage(0, 0, subimage.getWidth(), subimage.getHeight());
     String result = "";
 
@@ -353,6 +353,11 @@ public class OCR {
     System.out.println(expectedText.equals(res) ? "ok" : "KO");
     System.out.println();
 
+  }
+
+  public void setForegroundColor(Color color) {
+    _foreground = color;
+    _colors.put(1, color);
   }
 
 }

@@ -72,35 +72,49 @@ public class ContractTablePanel extends JPanel {
           nf.setMaximumFractionDigits(0);
           Long v1 = Long.parseLong(ss[0]);
 
+          Double t1 = 0d, t2 = 0d, t3 = 0d, t4 = 0d;
+          Double t1a = null, t2a = null, t3a = null, t4a = null;
+          Double v2 = Long.parseLong(ss[1]) / 1.10;
+          if (v2 > 0) {
+            t1a = v2;
+            t2a = t1a / 2;
+            t3a = t1a / 3;
+            t4a = t1a / 4;
+          }
           if (v1 > 0) {
-            Double t1 = v1 / 1.10;
-            Double t2 = t1 / 2;
-            Double t3 = t1 / 3;
-            Double t4 = t1 / 4;
-            
-            Double t2a = t1 / 1.15;
-            Double t3a = t1 / 1.30;
-            Double t4a = t1 / 1.45;
-            
-            
+            t1 = v1 / 1.10;
+            t2 = t1 / 2;
+            t3 = t1 / 3;
+            t4 = t1 / 4;
+          }
+          {
             NumberFormat nf2 = NumberFormat.getNumberInstance();
             nf2.setMaximumFractionDigits(0);
-            String tt1 = nf2.format(t1);
-            String tt2 = nf2.format(t2);
-            String tt2a = nf2.format(t2a);
-            String tt3 = nf2.format(t3);
-            String tt3a = nf2.format(t3a);
-            String tt4 = nf2.format(t4);
-            String tt4a = nf2.format(t4a);
-            label.setToolTipText("<html>" + tt1 + 
-                "<br>" + tt2 + " (" + tt2a + ")" + 
-            "<br>" + tt3 + " (" + tt3a + ")" + 
-            "<br>" + tt4 + " (" + tt4a + ")" + 
-                "</html>");
+            
+            String res = "<html><table><tr>";
+            res += "<td>" + nf2.format(t1) + "</td>";
+            
+            if (t1a != null) 
+              res += "<td>" + nf2.format(t1a) + "</td>";
+            
+            res += "</tr><tr><td>" + nf2.format(t2) + "</td>";
+            if (t2a != null) 
+              res += "<td>" + nf2.format(t2a) + "</td>";
+            
+            res += "</tr><tr><td>" + nf2.format(t3) + "</td>";
+            if (t3a != null) 
+              res += "<td>" + nf2.format(t3a) + "</td>";
+            
+            res += "</tr><tr><td>" + nf2.format(t4) + "</td>";
+            if (t4a != null) 
+              res += "<td>" + nf2.format(t4a) + "<td>";
+            
+            res += "</tr></table></html>";
+            label.setToolTipText(res);
 
           }
 
-          Long v2 = Long.parseLong(ss[1]);
+          
           Double vv1 = v1 > 900 ? v1 / 1000.0 : v1;
           Double vv2 = v2 > 900 ? v2 / 1000.0 : v2;
 

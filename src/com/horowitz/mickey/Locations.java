@@ -113,27 +113,27 @@ public class Locations {
   public static Location[]         ALL             = new Location[] { LOC_0MIN, LOC_6MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS, LOC_3HOURS,
       LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, };
 
-  public static MaterialLocation   MAT_1_1         = new MaterialLocation("Gold", "Wood", new Rectangle(53 + 30, 83 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_1_2         = new MaterialLocation("Wood", "Nails", new Rectangle(216 + 30, 83 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_1_3         = new MaterialLocation("Nails", "Bricks", new Rectangle(379 + 30, 83 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_1_4         = new MaterialLocation("Bricks", "Glass", new Rectangle(542 + 30, 83 + 24, 110, 10), 1);
+  public static MaterialLocation   MAT_1_1         = new MaterialLocation("Gold", "Wood",    new Rectangle( 46, 140, 156, 28), 1);
+  public static MaterialLocation   MAT_1_2         = new MaterialLocation("Wood", "Nails",   new Rectangle(222, 140, 156, 28), 1);
+  public static MaterialLocation   MAT_1_3         = new MaterialLocation("Nails", "Bricks", new Rectangle(398, 140, 156, 28), 1);
+  public static MaterialLocation   MAT_1_4         = new MaterialLocation("Bricks", "Glass", new Rectangle(574, 140, 156, 28), 1);
 
-  public static MaterialLocation   MAT_2_1         = new MaterialLocation("Glass", "Fuel", new Rectangle(53 + 30, 188 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_2_2         = new MaterialLocation("Fuel", "Steel", new Rectangle(216 + 30, 188 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_2_3         = new MaterialLocation("Steel", "Gravel", new Rectangle(379 + 30, 188 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_2_4         = new MaterialLocation("Gravel", "U-235", new Rectangle(542 + 30, 188 + 24, 110, 10), 1);
+  public static MaterialLocation   MAT_2_1         = new MaterialLocation("Glass", "Fuel",   new Rectangle( 46, 261, 156, 28), 1);
+  public static MaterialLocation   MAT_2_2         = new MaterialLocation("Fuel", "Steel",   new Rectangle(222, 261, 156, 28), 1);
+  public static MaterialLocation   MAT_2_3         = new MaterialLocation("Steel", "Gravel", new Rectangle(398, 261, 156, 28), 1);
+  public static MaterialLocation   MAT_2_4         = new MaterialLocation("Gravel", "U-235", new Rectangle(574, 261, 156, 28), 1);
 
-  public static MaterialLocation   MAT_3_1         = new MaterialLocation("U-235", "Cement", new Rectangle(53 + 30, 293 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_3_2         = new MaterialLocation("Cement", "Rubber", new Rectangle(216 + 30, 293 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_3_3         = new MaterialLocation("Rubber", "Carbon", new Rectangle(379 + 30, 293 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_3_4         = new MaterialLocation("Carbon", "Titanium", new Rectangle(542 + 30, 293 + 24, 110, 10), 1);
+  public static MaterialLocation   MAT_3_1         = new MaterialLocation("U-235", "Cement",    new Rectangle( 46, 382, 156, 28), 1);
+  public static MaterialLocation   MAT_3_2         = new MaterialLocation("Cement", "Rubber",   new Rectangle(222, 382, 156, 28), 1);
+  public static MaterialLocation   MAT_3_3         = new MaterialLocation("Rubber", "Carbon",   new Rectangle(398, 382, 156, 28), 1);
+  public static MaterialLocation   MAT_3_4         = new MaterialLocation("Carbon", "Titanium", new Rectangle(574, 382, 156, 28), 1);
 
-  public static MaterialLocation   MAT_4_1         = new MaterialLocation("Titanium", "Marble", new Rectangle(53 + 30, 398 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_4_2         = new MaterialLocation("Marble", "Wires", new Rectangle(216 + 30, 398 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_4_3         = new MaterialLocation("Wires", "Plastics", new Rectangle(379 + 30, 398 + 24, 110, 10), 1);
-  public static MaterialLocation   MAT_4_4         = new MaterialLocation("Plastics", "Silicon", new Rectangle(542 + 30, 398 + 24, 110, 10), 1);
+  public static MaterialLocation   MAT_4_1         = new MaterialLocation("Titanium", "Marble",  new Rectangle( 46, 503, 156, 28), 1);
+  public static MaterialLocation   MAT_4_2         = new MaterialLocation("Marble", "Wires",     new Rectangle(222, 503, 156, 28), 1);
+  public static MaterialLocation   MAT_4_3         = new MaterialLocation("Wires", "Plastics",   new Rectangle(398, 503, 156, 28), 1);
+  public static MaterialLocation   MAT_4_4         = new MaterialLocation("Plastics", "Silicon", new Rectangle(574, 503, 156, 28), 1);
 
-  public static MaterialLocation   MAT_1_1_2       = new MaterialLocation("Silicon", "Silicon", new Rectangle(53 + 30, 83 + 24, 110, 10), 2);
+  public static MaterialLocation   MAT_1_1_2       = new MaterialLocation("Silicon", "Silicon", new Rectangle( 46, 140, 156, 28), 2);
 
   public static MaterialLocation[] MATERIALS_1     = new MaterialLocation[] { MAT_1_1, MAT_1_2, MAT_1_3, MAT_1_4, MAT_2_1, MAT_2_2, MAT_2_3, MAT_2_4,
       MAT_3_1, MAT_3_2, MAT_3_3, MAT_3_4, MAT_4_1, MAT_4_2, MAT_4_3, MAT_4_4, };

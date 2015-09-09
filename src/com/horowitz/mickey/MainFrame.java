@@ -76,7 +76,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.944";
+  private static final String APP_TITLE           = "v0.945";
 
   private boolean             _devMode            = false;
 
@@ -1728,35 +1728,44 @@ public final class MainFrame extends JFrame {
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
     handlePopups();
     goHomeIfNeeded();
-    // open contracts
-    _mouse.click(_scanner.getBottomRight().x - 61, _scanner.getTopLeft().y + 73);
-    _mouse.delay(1000);
-
-    Pixel pm = null;
-    int tries = 0;
-    do {
-      pm = _scanner.getMaterials().findImage();
-      if (pm == null) {
-        // try again after 1 second
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
-      }
-      tries++;
-    } while (pm == null && tries < 3);
-
-    if (pm != null) {
-      pm = new Pixel(pm.x - 313, pm.y - 31);
-      Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
-      _scanner.writeImage(rect, "data/Home_materials.bmp");
-      _mouse.delay(300);
+    
+    Pixel p = _scanner.getGoldIcon().findImage();
+    if (p != null) {
+      Rectangle rect = new Rectangle(p.x, p.y, 100, 13);
+      _scanner.writeImage(rect, "data/Home_gold.bmp");
     }
-
-    // click close
-    _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
-    _mouse.delay(600);
-    _captureHome = false;
+    
+    p = _scanner.getMaterialsButton().findImage();
+    if (p != null) {    
+      _mouse.click(p.x, p.y);
+      _mouse.delay(1000);
+  
+      Pixel pm = null;
+      int tries = 0;
+      do {
+        pm = _scanner.getMaterials().findImage();
+        if (pm == null) {
+          // try again after 1 second
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+          }
+        }
+        tries++;
+      } while (pm == null && tries < 3);
+  
+      if (pm != null) {
+        pm = new Pixel(pm.x - 40, pm.y - 28);
+        Rectangle rect = new Rectangle(pm.x, pm.y, 780, 585);
+        _scanner.writeImage(rect, "data/Home_materials.bmp");
+        _mouse.delay(300);
+      }
+  
+      // click close
+      scanAndClick(_scanner.getShopX(), null);
+      _mouse.delay(200);
+      _captureHome = false;
+    }
   }
 
   private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
@@ -1786,7 +1795,7 @@ public final class MainFrame extends JFrame {
       handlePopups();
 
       // open contracts
-      _mouse.click(_scanner.getTopLeft().x + 234, _scanner.getBottomRight().y - 42);
+      _mouse.click(_scanner.getTopLeft().x + 352, _scanner.getBottomRight().y - 38);
       _mouse.delay(1000);
 
       Pixel p = _scanner.getContracts().findImage();
@@ -1839,18 +1848,36 @@ public final class MainFrame extends JFrame {
 
           // _scanner.captureGame("status " + index + "A " + contractor + ".bmp");
           _mouse.delay(100);
-          if (true) {// _withMaterials
-            // click visit
-            _mouse.click(p.x + 267, p.y + 335);
-            _mouse.delay(200);
-            _mouse.click(p.x + 267, p.y + 335 + 154);
+          
+          // click visit
+          _mouse.click(p.x + 267, p.y + 335);
+          _mouse.delay(200);
+          _mouse.click(p.x + 267, p.y + 335 + 154);
+          _mouse.delay(2000);
+          
+          Pixel p2 = null;
+          int tries = 0;
+          do {
+            tries++;
+            p2 = _scanner.getGoldIcon().findImage();
+            LOGGER.info("Looking for gold: " + p2);
             _mouse.delay(2000);
+          } while (p2 == null && tries < 3);
+          
+          if (p2 != null) {
+            LOGGER.info("found it: " + p2);
+            Rectangle rect = new Rectangle(p2.x, p2.y, 100, 13);
+            _scanner.writeImage(rect, fname + "_gold.bmp");
+          }
 
-            // click materials
-            _mouse.click(_scanner.getTopLeft().x + 114, _scanner.getBottomRight().y - 42);
+          // click materials
+          p2 = _scanner.getMaterialsButton().findImage();
+          if (p2 != null) {
+            _mouse.click(p2.x, p2.y);
             _mouse.delay(1000);
+
             Pixel pm = null;
-            int tries = 0;
+            tries = 0;
             do {
               pm = _scanner.getMaterials().findImage();
               if (pm == null) {
@@ -1864,35 +1891,15 @@ public final class MainFrame extends JFrame {
             } while (pm == null && tries < 3);
 
             if (pm != null) {
-              // _mouse.mouseMove(pm);
-              // _mouse.delay(2000);
-              pm = new Pixel(pm.x - 313, pm.y - 31);
-              // _mouse.mouseMove(pm);
-              Rectangle rect = new Rectangle(pm.x, pm.y, 760, 550);
-
+              pm = new Pixel(pm.x - 40, pm.y - 28);
+              Rectangle rect = new Rectangle(pm.x, pm.y, 780, 585);
               _scanner.writeImage(rect, fname + "_materials.bmp");
-              // _scanner.captureGame("status " + index + "B " + contractor + " materials" + ".bmp");
               _mouse.delay(300);
-
-              boolean scanMaterials2 = false;
-              
-              if (_scanMaterials2) {
-                scanMaterials2 = new DataStore().getContractor(contractorName).isScanMaterials2();
-              }
-              if (scanMaterials2) {
-                // click next page of materials
-                _mouse.click(pm.x + 724, pm.y + 292);
-                _mouse.delay(500);
-                _scanner.writeImage(rect, fname + "_materials2.bmp");
-                // _scanner.captureGame("status " + index + "C " + contractor + " materials" + ".bmp");
-                _mouse.delay(300);
-
-              }
             }
 
             // click close
-            _mouse.click(_scanner.getTopLeft().x + _scanner.getGameWidth() / 2, _scanner.getBottomRight().y - 75);
-            _mouse.delay(600);
+            scanAndClick(_scanner.getShopX(), null);
+            _mouse.delay(200);
 
             goHomeIfNeeded();
             _mouse.delay(300);
@@ -2845,6 +2852,15 @@ public final class MainFrame extends JFrame {
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
     
+    Pixel p = _scanner.getGoldIcon().findImage();
+    if (p != null) {
+      _mouse.savePosition();
+      _mouse.mouseMove(p);
+      // _mouse.click();
+      _mouse.delay(2000);
+      _mouse.restorePosition();
+    }
+    
     // Pixel p = new Pixel(_scanner.getBottomRight().x - 100, _scanner.getBottomRight().y - 140);
     // _mouse.mouseMove(p);
     //
@@ -2857,7 +2873,7 @@ public final class MainFrame extends JFrame {
     try {
       
       // handleRarePopups();
-      handlePopups();
+      //////////////////////////////handlePopups();
 
       // captureContractors(true);
 

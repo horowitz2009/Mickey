@@ -109,6 +109,8 @@ public class ScreenScanner {
   private ImageData            _sixMinutes                    = null;
   private ImageData            _trainsAnchor                  = null;
   private ImageData            _materials                     = null;
+  private ImageData            _materialsButton               = null;
+  private ImageData            _goldIcon                      = null;
 
   private ImageData            _topLeftImage                  = null;
 
@@ -302,14 +304,19 @@ public class ScreenScanner {
     area = new Rectangle(xx + 30, yy + 25, 65, 20);
     _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
 
-    xx = (getGameWidth() - 760) / 2;
-    yy = (getGameHeight() - 550) / 2;
+    xx = (getGameWidth() - 780) / 2;
+    yy = (getGameHeight() - 585) / 2;
     xx += _tl.x;
     yy += _tl.y;
 
-    area = new Rectangle(xx + 298, yy + 27, 111, 40);
+    area = new Rectangle(xx+17, yy+17, 237, 37);
     _materials = new ImageData(MATERIALS, area, _comparator, 0, 0);
-
+    area = new Rectangle(_br.x - 181, _tl.y, 181, 66);
+    _materialsButton = new ImageData("Materials2.bmp", area, _comparator, 9, 6);
+    xx = (getGameWidth() - 104) / 2;
+    area = new Rectangle(_br.x - xx, _tl.y, xx, 36);
+    _goldIcon = new ImageData("goldIcon.bmp", area, _comparator, 16, -1);
+    
     // SHARE
     xx = (getGameWidth() - 60) / 2;
     area = new Rectangle(_tl.x + xx, _br.y - 135, 60, 22);
@@ -790,6 +797,14 @@ public class ScreenScanner {
 
   public ImageData getMaterials() {
     return _materials;
+  }
+  
+  public ImageData getMaterialsButton() {
+    return _materialsButton;
+  }
+
+  public ImageData getGoldIcon() {
+    return _goldIcon;
   }
 
   public ImageData generateImageData(String imageFilename) throws IOException {

@@ -10,15 +10,19 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import com.horowitz.mickey.data.Material;
-import com.horowitz.mickey.ocr.OCR;
+import com.horowitz.mickey.ocr.OCRB;
 
 public class MaterialsScanner {
 
-  private OCR _ocr;
+  private OCRB _ocr;
 
   public MaterialsScanner() {
     super();
-    _ocr = new OCR("masks.txt");
+    try {
+      _ocr = new OCRB("digit");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public Material[] scanMaterials(BufferedImage materialsImage, MaterialLocation[] materials, boolean isHome) {
@@ -27,7 +31,7 @@ public class MaterialsScanner {
       Rectangle area = materials[i].getArea();
       BufferedImage subimage = materialsImage.getSubimage(area.x, area.y, area.width, area.height);
       String resAmount = _ocr.scanImage(subimage);
-      String name = isHome ? materials[i].getHomeName() : materials[i].getName();
+      String name = materials[i].getHomeName();
       System.out.println(name + ": " + resAmount);
       Integer amount = 0;
       if (resAmount.length() > 0)
