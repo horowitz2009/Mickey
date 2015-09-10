@@ -154,6 +154,12 @@ public class Settings {
     return _properties.getProperty(key, defaultValue);
   }
 
+  public boolean getBoolean(String key, boolean defaultValue) {
+    String v =  _properties.getProperty(key, defaultValue ? "true": "false");
+    return "true".equalsIgnoreCase(v);
+  }
+  
+
   /**
    * @deprecated use saveSettingsSorted
    */

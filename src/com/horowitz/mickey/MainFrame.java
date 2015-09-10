@@ -32,6 +32,7 @@ import java.io.OutputStreamWriter;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -60,10 +61,10 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.Contractor;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Material;
+import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
@@ -76,7 +77,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.945";
+  private static final String APP_TITLE           = "v0.947ab";
 
   private boolean             _devMode            = false;
 
@@ -121,6 +122,7 @@ public final class MainFrame extends JFrame {
   private long                _lastPingTime;
 
   private JToggleButton       _resumeClick;
+  private JToggleButton       _autoPassClick;
 
   private JToolBar            _frToolbar1;
   private JToolBar            _freeToolbar1;
@@ -145,6 +147,8 @@ public final class MainFrame extends JFrame {
   private int                   _pingTurn = 1;
 
   private TrainManagementWindow _trainManagementWindow;
+
+  private OCRB _ocrb;
 
 
   private boolean isOneClick() {
@@ -248,6 +252,12 @@ public final class MainFrame extends JFrame {
   }
 
   private void init() {
+    try {
+      _ocrb = new OCRB("g");
+    } catch (IOException e2) {
+      e2.printStackTrace();
+    }
+    
     setTitle(APP_TITLE);
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -734,8 +744,8 @@ public final class MainFrame extends JFrame {
     }
     // Resume
     {
-      _resumeClick = new JToggleButton("Resume");
-      _resumeClick.setSelected(Boolean.parseBoolean(_settings.getProperty("resume", "false")));
+      _resumeClick = new JToggleButton("R");
+      _resumeClick.setSelected(_commands.getBoolean("resume", false));
       _resumeClick.addChangeListener(new ChangeListener() {
 
         @Override
@@ -745,6 +755,19 @@ public final class MainFrame extends JFrame {
         }
       });
       mainToolbar2.add(_resumeClick);
+    }
+    {
+      _autoPassClick = new JToggleButton("AP");
+      _autoPassClick.setSelected(_commands.getBoolean("autoPassengers", false));
+      _autoPassClick.addChangeListener(new ChangeListener() {
+        
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _commands.setProperty("autoPassengers", "" + _autoPassClick.isSelected());
+          _commands.saveSettingsSorted();
+        }
+      });
+      mainToolbar2.add(_autoPassClick);
     }
 
     //freight
@@ -905,6 +928,7 @@ public final class MainFrame extends JFrame {
 
     boolean ping = "true".equalsIgnoreCase(_commands.getProperty("ping"));
     boolean resume = "true".equalsIgnoreCase(_commands.getProperty("resume"));
+    boolean autoPassengers = "true".equalsIgnoreCase(_commands.getProperty("autoPassengers"));
     boolean sendInternational = "true".equalsIgnoreCase(_commands.getProperty("sendInternational"));
 
     if (ping != _pingClick.isSelected()) {
@@ -913,6 +937,10 @@ public final class MainFrame extends JFrame {
 
     if (resume != _resumeClick.isSelected()) {
       _resumeClick.setSelected(resume);
+    }
+
+    if (autoPassengers != _autoPassClick.isSelected()) {
+      _autoPassClick.setSelected(autoPassengers);
     }
 
     if (sendInternational != _sendInternational.isSelected()) {
@@ -1454,17 +1482,31 @@ public final class MainFrame extends JFrame {
 
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
-    NumberFormat nf = NumberFormat.getNumberInstance();
+    /*NumberFormat nf = NumberFormat.getNumberInstance();
     nf.setMaximumFractionDigits(3);
     nf.setMinimumFractionDigits(0);
+    */
     int turn = 1;
     while (!_stopThread) {
       turn *= 2;
       if (turn > 8) turn = 1;
       LOGGER.fine("T: " + turn);
-      int timeForRefresh = (getShortestTime() * 60000 / 2);
-      int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
+      
       try {
+        if (_autoPassClick.isSelected()) {
+          try {
+            scanPassengers();
+          } catch (Throwable t) {
+            LOGGER.info("DAMN IT! " + t.getMessage());
+            LOGGER.info(t.toString());
+            LOGGER.log(Level.SEVERE, t.getMessage(), t);
+            t.printStackTrace();
+          }
+        }
+        
+        int timeForRefresh = (getShortestTime() * 60000 / 2);
+        int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time") * 60000;
+        
         updateLabels();
 
         goHomeIfNeeded();
@@ -1601,6 +1643,52 @@ public final class MainFrame extends JFrame {
     } // while
     if (_stopThread) {
       LOGGER.info("Mickey has being stopped");
+    }
+  }
+
+  private void scanPassengers() throws AWTException, IOException {
+    Rectangle area = _scanner.getPassengersArea();
+    Robot robot = new Robot();
+    BufferedImage screen = robot.createScreenCapture(area);
+    //    try {
+    //      ImageIO.write(screen, "PNG", new File("passengers.png"));
+    //    } catch (IOException e) {
+    //      e.printStackTrace();
+    //    }
+    String pass = _ocrb.scanImage(screen);
+    if (pass != null && pass.length() > 0) {
+      Long passNumber = Long.parseLong(pass);
+      int min = _commands.getInt("autoPassengers.min", 1000000);
+      int max = _commands.getInt("autoPassengers.max", 4000000);
+      int normal = _commands.getInt("express.default", 30);
+      int expressMin = _commands.getInt("express.min", 10);
+      int expressMax = _commands.getInt("express.max", 60);
+      LOGGER.info("passengers: " + pass);
+      LOGGER.info("min: " + min + "  max: " + max);
+      if (passNumber < min) {
+        //slow down trains
+        if (_expressTime.getTime() != expressMax) {
+          LOGGER.info("Passengers get under " + min);
+          LOGGER.info("Slowing down express trains to " + expressMax);
+          reapplyTimes(expressMax, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+        }
+      } else {
+        if (passNumber > max) {
+          //speed up trains
+          if (_expressTime.getTime() != expressMin) {
+            LOGGER.info("Passengers get over " + max);
+            LOGGER.info("Speeding up express trains to " + expressMin);
+            reapplyTimes(expressMin, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+          }
+        } else {
+          //it is in the middle
+          if (_expressTime.getTime() != normal) {
+            LOGGER.info("Passengers between " + min + " and " + max);
+            LOGGER.info("Setting trains to " + normal);
+            reapplyTimes(normal, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+          }
+        }
+      }
     }
   }
 
@@ -2081,10 +2169,10 @@ public final class MainFrame extends JFrame {
     }
     
     //FB SHARE
-    found = scanAndClick(_scanner.getFBShare(), null);
+    //found = scanAndClick(_scanner.getFBShare(), null);
 
     //TODO SHARE -> HOORREY!!
-    found = scanAndClick(_scanner.getShare(), null);
+    //found = scanAndClick(_scanner.getShare(), null);
 
     //SHOP
     found = found || scanAndClick(_scanner.getShopX(), null);
@@ -2294,8 +2382,11 @@ public final class MainFrame extends JFrame {
       _mouse.saveCurrentPosition();
 
       moved = moveIfNecessary();
-
-      p = detectPointerDown(_scanner.getPackagesArea());
+      Rectangle leftArea = new Rectangle(_scanner.getPackagesArea().x, _scanner.getPackagesArea().y, 36, _scanner.getPackagesArea().height);
+      p = _scanner.getPointerDownR().findImage(leftArea);
+      if (p == null) {
+        p = detectPointerDown(_scanner.getPackagesArea());
+      }
       if (p != null) {
         p.x = p.x + 2;
         p.y = _scanner.getBottomRight().y - _scanner.getStreet1Y() - 4 - 10;
@@ -2306,7 +2397,7 @@ public final class MainFrame extends JFrame {
       }
     } while (!done && curr - start <= timeGiven && !_stopThread);
     
-    _mouse.delay(500);
+    _mouse.delay(200);
     
     if(moved) {
       if(!scanOtherLocations(true, 33)){
@@ -2317,7 +2408,11 @@ public final class MainFrame extends JFrame {
       };  
     }
   }
-
+  
+  private Thread _tmThread = null;
+  private boolean _trainManagementOpen = false;
+  private boolean _clickingDone = false;
+  
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
@@ -2344,21 +2439,41 @@ public final class MainFrame extends JFrame {
       p = getOutOfZone3(p);
 
       int[] rails = _scanner.getRailsHome();
-
-      for (int i = rails.length - 1; i >= 0; i--) {
+      _trainManagementOpen = false;
+      _clickingDone = false;
+      
+      if (_tmThread == null || !_tmThread.isAlive()) {
+        _tmThread = new Thread(new Runnable() {
+          public void run() {
+            int i = 0;
+            for(; !_trainManagementOpen && !_clickingDone; i++) {//
+              try {
+                _mouse.delay(25, false);
+              } catch (RobotInterruptedException e) {
+              }
+              Pixel tm = _scanner.getTrainManagementAnchor().findImage();
+              _trainManagementOpen = tm != null;
+            }
+            //LOGGER.info("Checked TM " + i + " times: " + _trainManagementOpen + " " + _clickingDone);
+          }
+        }, "TRAIN_MAN");
+        _tmThread.start();
+      }
+      for (int i = rails.length - 1; !_trainManagementOpen && i >= 0; i--) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
         clickCareful(p, false, false);
         _mouse.checkUserMovement();
       }
-      for (int i = 0; i < rails.length; i++) {
+      for (int i = 0; !_trainManagementOpen && i < rails.length; i++) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
         clickCareful(p, false, false);
         _mouse.checkUserMovement();
       }
-
+      _clickingDone = true;
       _mouse.saveCurrentPosition();// ???
 
-      _mouse.delay(250);
+      if (!_trainManagementOpen)
+        _mouse.delay(150);
       trainHasBeenSent = checkTrainManagement();
       if (trainHasBeenSent) {
         //_mouse.delay(250);
@@ -3308,7 +3423,7 @@ public final class MainFrame extends JFrame {
 
     if (tm != null) {
       // is it freight or express?
-      _mouse.delay(200);
+      _mouse.delay(150);
       Rectangle area = new Rectangle(tm.x + 254, tm.y + 28, 169, 72);
       boolean isExpress = false;
       Pixel xpP = _scanner.getXPTrain().findImage(area);
@@ -3346,7 +3461,7 @@ public final class MainFrame extends JFrame {
           tries--;
           _mouse.mouseMove(leftArrow);
           _mouse.click();
-          _mouse.delay(200);
+          _mouse.delay(150);
         }
         
       } while (!firstPage && tries > 0);
@@ -3362,7 +3477,7 @@ public final class MainFrame extends JFrame {
         _mouse.mouseMove(rightArrow);
         for (int i = 1; i < time.getPage(); i++) {
           _mouse.click();
-          _mouse.delay(200);
+          _mouse.delay(150);
         }
       }
       
@@ -3376,7 +3491,7 @@ public final class MainFrame extends JFrame {
         String filename = "train " + date + ".png";
         _scanner.captureGame(filename);
       }
-      _mouse.delay(500, false); // give chance to change the location without
+      _mouse.delay(200, false); // give chance to change the location without
       _mouse.savePosition(); // stopping the magic.
 
       if (!_devMode) {

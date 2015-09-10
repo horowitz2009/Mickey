@@ -5,6 +5,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MyLogger {
@@ -22,13 +23,13 @@ public class MyLogger {
 			logger.removeHandler(handlers[0]);
 		}
 
-		// logger.setLevel(Level.INFO);
-		// fh = new FileHandler("mickey.log", 2048*1024, 5, true);
-		//
-		// // create an HTML formatter
-		// formatter = new MyLogFormatter();
-		// fh.setFormatter(formatter);
-		//
-		// logger.addHandler(fh);
+//		 logger.setLevel(Level.WARNING);
+//		 fh = new FileHandler("mickey.log", 2048*1024, 5, true);
+//		
+//		 // create an HTML formatter
+//		 formatter = new MyLogFormatter();
+//		 fh.setFormatter(formatter);
+//		
+//		 logger.addHandler(fh);
 	}
 }

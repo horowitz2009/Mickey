@@ -150,6 +150,7 @@ public class ScreenScanner {
   private ImageData            _expressTrain;
   private ImageData            _freeTrain;
   private ImageData            _xpTrain;
+  private Rectangle            _passengersArea;
 
   private int                  _street1Y                      = 170;
 
@@ -271,7 +272,7 @@ public class ScreenScanner {
 
     _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 150, getGameWidth(), 150);
     _letterArea = new Rectangle(_tl.x, _br.y - _street1Y - 200, getGameWidth(), 200);
-    _packagesArea = new Rectangle(_tl.x, _br.y - _street1Y - 170, getGameWidth(), 170);
+    _packagesArea = new Rectangle(_tl.x, _br.y - _street1Y - 38 - 88, getGameWidth(), 88);
 
     int diff = getGameWidth() - 760;
     diff = diff / 2;
@@ -337,11 +338,11 @@ public class ScreenScanner {
     area = new Rectangle(xx + 187, yy + 233, 150, 30);
     _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
 
-    xx = (getGameWidth() + 250 - 595) / 2;
-    yy = 290 + _tl.y;
-    final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    area = new Rectangle(_tl.x + xx + 450, yy, screenSize.width - _tl.x - 2 * xx - 450 - 75, screenSize.height - yy - 20);
-    _fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
+    //xx = (getGameWidth() + 250 - 595) / 2;
+    //yy = 290 + _tl.y;
+    //final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    //area = new Rectangle(0, yy, screenSize.width, screenSize.height - yy - 20);
+    //_fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -385,10 +386,12 @@ public class ScreenScanner {
         _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE2, new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
         
         if (_tl != null) {
-          if (tslogo.x + 24 < _tl.x)
+          _passengersArea = new Rectangle(_tl.x + 13, _tl.y + 11, 104, 14);
+          if (tslogo.x + 24 < _tl.x) {
             _tl.x -= 162;
-          else
+          } else {
             _tl.x -= 21;
+          }
           if (_tl.x < 0) _tl.x = 0;
           Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
               new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),
@@ -825,6 +828,10 @@ public class ScreenScanner {
 
   public ImageData getPackage2() {
     return _package2;
+  }
+
+  public Rectangle getPassengersArea() {
+    return _passengersArea;
   }
 
 }
