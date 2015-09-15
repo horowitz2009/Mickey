@@ -51,8 +51,6 @@ public class ScreenScanner {
   public static final String   SHOP_X                         = "shopX.bmp";
   private static final String  NO_BUTTON                      = "noButton.bmp";
   private static final String  SESSION                        = "session2.bmp";
-  private static final String  PACKAGE1                       = "package1.bmp";
-  private static final String  PACKAGE2                       = "package2.bmp";
 
   public static final String   POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
   public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
@@ -232,10 +230,6 @@ public class ScreenScanner {
     _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
 
     _fullyOptimized = true;
-
-    area = new Rectangle(_tl.x, _br.y - 205, getGameWidth(), 45);
-    _package1 = new ImageData(PACKAGE1, area, _comparator, 7, 4);
-    _package2 = new ImageData(PACKAGE2, area, _comparator, 7, 4);
 
     // SESSION
     xx = (getGameWidth() - 279) / 2;

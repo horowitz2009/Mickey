@@ -59,7 +59,7 @@ public class ImageLocator extends JPanel {
 //    registerImageButton("loginFB.bmp");
       registerImageButton("int/Del.bmp");
       registerImageButton("int/brEdge.bmp");
-      registerImageButton("publish3.bmp");
+      //registerImageButton("publish3.bmp");
 
   }
 
