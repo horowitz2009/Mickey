@@ -87,23 +87,25 @@ public class Locations {
   public static int                STREET6THEME    = 148;
 
   public static Location           LOC_0MIN        = new Location(" 0 ", 0, new Point(-196, 487), 1);
-  public static Location           LOC_6MIN        = new Location(" 6m ", 6, new Point(-103, 267), 1);
-  public static Location           LOC_10MIN       = new Location(" 10m ", 10, new Point(121, 267), 1);
-  public static Location           LOC_30MIN       = new Location(" 30m ", 30, new Point(341, 267), 1);
-  public static Location           LOC_1HOUR       = new Location(" 1h ", 60, new Point(-103, 267 + 169), 1);
-  public static Location           LOC_2HOURS      = new Location(" 2h ", 120, new Point(121, 267 + 169), 1);
-  public static Location           LOC_3HOURS      = new Location(" 3h ", 180, new Point(341, 267 + 169), 1);
+  
+  public static Location           LOC_6MIN        = new Location(" 6m ", 6, new Point(85, 447), 1);
+  public static Location           LOC_10MIN       = new Location(" 10m ", 10, new Point(263, 447), 1);
+  public static Location           LOC_30MIN       = new Location(" 30m ", 30, new Point(441, 447), 1);
+  public static Location           LOC_1HOUR       = new Location(" 1h ", 60, new Point(619, 447), 1);
+  
+  public static Location           LOC_2HOURS      = new Location(" 2h ", 120, new Point(85, 447), 2);
+  public static Location           LOC_3HOURS      = new Location(" 3h ", 180, new Point(263, 447), 2);
+  public static Location           LOC_4HOURS      = new Location(" 4h ", 4 * 60, new Point(441, 447), 2);
+  public static Location           LOC_6HOURS      = new Location(" 6h ", 6 * 60, new Point(619, 447), 2);
+  
+  public static Location           LOC_8HOURS      = new Location(" 8h ", 8 * 60, new Point(85, 447), 3);
+  public static Location           LOC_10HOURS     = new Location("10h", 10 * 60, new Point(263, 447), 3);
+  public static Location           LOC_12HOURS     = new Location("12h", 12 * 60, new Point(441, 447), 3);
+  public static Location           LOC_18HOURS     = new Location("18h", 18 * 60, new Point(619, 447), 3);
 
-  public static Location           LOC_4HOURS      = new Location(" 4h ", 4 * 60, new Point(-103, 267), 2);
-  public static Location           LOC_6HOURS      = new Location(" 6h ", 6 * 60, new Point(121, 267), 2);
-  public static Location           LOC_8HOURS      = new Location(" 8h ", 8 * 60, new Point(341, 267), 2);
-  public static Location           LOC_10HOURS     = new Location("10h", 10 * 60, new Point(-103, 267 + 169), 2);
-  public static Location           LOC_12HOURS     = new Location("12h", 12 * 60, new Point(121, 267 + 169), 2);
-  public static Location           LOC_18HOURS     = new Location("18h", 18 * 60, new Point(341, 267 + 169), 2);
-
-  public static Location           LOC_1DAY        = new Location(" 1d ", 24 * 60, new Point(-103, 267), 3);
-  public static Location           LOC_2DAYS       = new Location(" 2d ", 48 * 60, new Point(121, 267), 3);
-  public static Location           LOC_1WEEK       = new Location(" 1w ", 168 * 60, new Point(341, 267), 3);
+  public static Location           LOC_1DAY        = new Location(" 1d ", 24 * 60, new Point(263, 447), 4);
+  public static Location           LOC_2DAYS       = new Location(" 2d ", 48 * 60, new Point(441, 447), 4);
+  public static Location           LOC_1WEEK       = new Location(" 1w ", 168 * 60, new Point(619, 447), 4);
 
   public static Location[]         LOC_PAGE_F1     = new Location[] { LOC_0MIN, LOC_6MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR };
   public static Location[]         LOC_PAGE_F2     = new Location[] { LOC_2HOURS, LOC_3HOURS, LOC_4HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS };

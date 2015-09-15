@@ -46,6 +46,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -77,7 +78,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.947";
+  private static final String APP_TITLE           = "v0.948";
 
   private boolean             _devMode            = false;
 
@@ -2967,7 +2968,9 @@ public final class MainFrame extends JFrame {
 
   private void locate() throws RobotInterruptedException, AWTException, IOException {
     
-    Pixel p = _scanner.getGoldIcon().findImage();
+    Pixel p = _scanner.getTrainManagementAnchor().findImage();
+    Rectangle defaultArea = _scanner.getTrainManagementAnchor().getDefaultArea();
+    _scanner.writeImage(defaultArea, "defaultarea.bmp");
     if (p != null) {
       _mouse.savePosition();
       _mouse.mouseMove(p);
@@ -3424,20 +3427,22 @@ public final class MainFrame extends JFrame {
     if (tm != null) {
       // is it freight or express?
       _mouse.delay(150);
-      Rectangle area = new Rectangle(tm.x + 254, tm.y + 28, 169, 72);
+      Rectangle areaXP = new Rectangle(tm.x, tm.y + 281, 31, 56);
+      Rectangle areaFree = new Rectangle(tm.x + 604, tm.y + 74, 100, 30);
+      Rectangle areaExpress = new Rectangle(tm.x + 459, tm.y + 74, 33, 33);
       boolean isExpress = false;
-      Pixel xpP = _scanner.getXPTrain().findImage(area);
+      Pixel xpP = _scanner.getXPTrain().findImage(areaXP);
       if (xpP != null) {
         time = _xpTime;
         LOGGER.info("XP " + time.getTime());
       } else {
-        Pixel exP = _scanner.getExpressTrain().findImage(area);
+        Pixel exP = _scanner.getExpressTrain().findImage(areaExpress);
         if (exP != null) {
           time = _expressTime;
           isExpress = true;
           LOGGER.info("EXPRESS " + time.getTime());
         } else {
-          Pixel freeP = _scanner.getFreeTrain().findImage(area);
+          Pixel freeP = _scanner.getFreeTrain().findImage(areaFree);
           if (freeP != null) {
             time = _freeTime;
             LOGGER.info("FREE " + time.getTime());
@@ -3449,21 +3454,21 @@ public final class MainFrame extends JFrame {
       }
       
       // 1. ensure the page
-      Pixel leftArrow = new Pixel(tm.x - 292, tm.y + 302);
-      Pixel rightArrow = new Pixel(tm.x + 393, tm.y + 302);
+      Pixel leftArrow = new Pixel(tm.x - 19, tm.y + 308);
+      Pixel leftStartArrow = new Pixel(tm.x - 19, tm.y + 366);
+      Pixel rightArrow = new Pixel(tm.x + 723, tm.y + 308);
       boolean firstPage = false;
       int tries = 3;
       do {
-        Pixel sixMinutes = _scanner.getSixMinutes().findImage(new Rectangle(tm.x - 242, tm.y + 225, 77, 22));
+        Pixel sixMinutes = _scanner.getSixMinutes().findImage(new Rectangle(tm.x + 69, tm.y + 433, 67, 29));
         if (sixMinutes != null)
           firstPage = true;
         else {
           tries--;
-          _mouse.mouseMove(leftArrow);
+          _mouse.mouseMove(leftStartArrow);
           _mouse.click();
           _mouse.delay(150);
         }
-        
       } while (!firstPage && tries > 0);
 
 //      _mouse.mouseMove(leftArrow);
@@ -3497,7 +3502,7 @@ public final class MainFrame extends JFrame {
       if (!_devMode) {
         _mouse.click();
         _stats.registerTrain(isExpress);
-        String msg = "Trains: " + _stats.getTotalTrainCount();
+        // String msg = "Trains: " + _stats.getTotalTrainCount();
         // String date = getNow();
         // _trainsNumberLabel.setText(msg + "  (" + date + ")");
         ////LOGGER.severe(msg);

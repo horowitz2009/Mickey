@@ -110,7 +110,7 @@ public class ScreenScanner {
   private ImageData            _materialsButton               = null;
   private ImageData            _goldIcon                      = null;
 
-  private ImageData            _topLeftImage                  = null;
+  //private ImageData            _topLeftImage                  = null;
 
   private ImageData            _pointerLeft                   = null;
   private ImageData            _pointerRight                  = null;
@@ -220,16 +220,16 @@ public class ScreenScanner {
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
-    int xx = (getGameWidth() - 760) / 2;
-    int yy = (getGameHeight() - 550) / 2;
-    // Rectangle area = new Rectangle(_tl.x + xx + 320, _tl.y + yy+ 32, 160, 38);
-    Rectangle area = new Rectangle(_tl.x + 305, _tl.y + 47, 450 + 130, 90);// TODO IMPROVE IT!!!
-    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -2, 0);
-    _sixMinutes = new ImageData("sixMinutes2.bmp", area, _comparator, 0, 0);
-    // top left image is used to determine whether the train is express
-    _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
-
     _fullyOptimized = true;
+    
+    int xx = (getGameWidth() - 780) / 2;
+    int yy = (getGameHeight() - 585) / 2;
+    Rectangle area = new Rectangle(_tl.x + xx + 53, _tl.y + yy + 22, 171, 24);
+    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -46, 32);
+    _sixMinutes = new ImageData("sixMinutes2.bmp", null, _comparator, 0, 0);
+    // top left image is used to determine whether the train is express
+    //_topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
+
 
     // SESSION
     xx = (getGameWidth() - 279) / 2;
@@ -712,9 +712,9 @@ public class ScreenScanner {
     LOGGER.addHandler(handler);
   }
 
-  public ImageData getTopLeftImage() {
-    return _topLeftImage;
-  }
+//  public ImageData getTopLeftImage() {
+//    return _topLeftImage;
+//  }
 
   public ImageData getTrainManagementAnchor() {
     return _trainManagementAnchor;
