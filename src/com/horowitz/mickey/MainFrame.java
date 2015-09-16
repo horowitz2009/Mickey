@@ -78,7 +78,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String APP_TITLE           = "v0.948";
+  private static final String APP_TITLE           = "v0.949";
 
   private boolean             _devMode            = false;
 
@@ -2167,6 +2167,14 @@ public final class MainFrame extends JFrame {
       } catch (InterruptedException e) {
       }
       found = scanAndClick(_scanner.getFBShare(), null);
+      if (found) {
+        try {
+          LOGGER.info("Wait 1sec and relocate the game...");
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        _scanner.locateGameArea();
+      }
     }
     
     //FB SHARE
