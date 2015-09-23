@@ -2,7 +2,6 @@ package com.horowitz.mickey;
 
 import java.awt.AWTException;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;

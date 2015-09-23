@@ -1,9 +1,0 @@
-command=stop_ok
-command.done=11-18  21 19
-contractor.scan=running
-express=30
-free=30
-freight=30
-ping=true
-refresh=false
-resume=true

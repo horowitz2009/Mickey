@@ -100,6 +100,7 @@ public class ScreenScanner {
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
   private ImageData            _promoX                        = null;
+  private ImageData            _hooray                        = null;
   private ImageData            _noButton                      = null;
   private ImageData            _share                         = null;
 
@@ -124,12 +125,6 @@ public class ScreenScanner {
   private Rectangle            _letterArea                    = null;
   private Rectangle            _packagesArea                  = null;
 
-  private int[]                _railsOut;
-  private int[]                _railsHome;
-
-  private float                _railYOffset                   = 5;
-  private int                  _xOffset                       = 22;
-
   private ImageData            _loginWithFB;
   private ImageData            _loginFB;
 
@@ -142,8 +137,6 @@ public class ScreenScanner {
   private Pixel                _topPlayersPixel;
 
   private Settings             _settings;
-
-  private Rectangle[]          _dangerousZones;
 
   private ImageData            _expressTrain;
   private ImageData            _freeTrain;
@@ -193,7 +186,6 @@ public class ScreenScanner {
   }
 
   private void setKeyAreas() throws IOException {
-    String zoom = _settings.getProperty("zoom");
 
     _topPlayersPixel = new Pixel(_br.x - 24, _br.y - 23);
 
@@ -241,6 +233,7 @@ public class ScreenScanner {
     xx = (getGameWidth() - 144) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 423, 39, 25); // TODO to be widen if not working
     _noButton = new ImageData(NO_BUTTON, area, _comparator, 0, 0);
+    
 
     // SHOP X
     xx = (getGameWidth() - 780) / 2;
@@ -251,16 +244,9 @@ public class ScreenScanner {
     xx = (getGameWidth() - 747) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, 70, 180);
     _promoX = new ImageData(CLOSE_X, area, _comparator, 7, 7);
+    
 
-    if (getGameWidth() > 900) {
-      zoom = "" + (Integer.parseInt(zoom) + 2);
-      LOGGER.info("ZOOM 4!!!!!");
-    }
-    _railsOut = _settings.getArray("railsOut" + zoom);// Locations.RAILS4_SMIX;
-    _railsHome = _settings.getArray("railsHome" + zoom);// Locations.RAILS4A;
-    _railYOffset = _settings.getInt("railYOffset" + zoom);// Locations.RAIL_Y_OFFSET;
-    _xOffset = _settings.getInt("xOffset" + zoom);// 22;
-    _street1Y = _settings.getInt("street1Y");
+    _street1Y = _settings.getInt("street1Y", 204);
 
     _homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 
@@ -282,8 +268,6 @@ public class ScreenScanner {
     diff = getGameHeight() - 551;
     diff = diff / 2;
     y = _br.y - diff + 1;
-
-    _dangerousZones = new Rectangle[] { _settings.getArea("zone3", brTM), _settings.getArea("zone2", brTM), _settings.getArea("zone1", brTM), };
 
     area = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 195, 130, 195);// 130
     _pointerLeft = new ImageData(POINTER_LEFT_BLUE, area, _comparator, 0, 0);
@@ -311,6 +295,16 @@ public class ScreenScanner {
     xx = (getGameWidth() - 104) / 2;
     area = new Rectangle(_br.x - xx, _tl.y, xx, 36);
     _goldIcon = new ImageData("goldIcon.bmp", area, _comparator, 16, -1);
+    
+    //HOORAY
+    xx = (getGameWidth() - 580) / 2;
+    yy = (getGameHeight() - 453) / 2;
+    xx += _tl.x;
+    yy += _tl.y;
+    area = new Rectangle(xx + 194, yy + 397, 192, 39);
+    
+    _hooray = new ImageData("Hooray.bmp", area, _comparator, 23, 6);
+
     
     // SHARE
     xx = (getGameWidth() - 60) / 2;
@@ -610,21 +604,14 @@ public class ScreenScanner {
   public Rectangle getPackagesArea() {
     return _packagesArea;
   }
-  
-  public int getXOffset() {
-    return _xOffset;
-  }
-
-  public float getRailYOffset() {
-    return _railYOffset;
-  }
 
   public int[] getRailsOut() {
-    return _railsOut;
+    return _settings.getArray("railsOut");
   }
 
   public int[] getRailsHome() {
-    return _railsHome;
+    return _settings.getArray("railsHome");
+    //return _railsHome;
   }
 
   public Pixel getBottomRight() {
@@ -728,10 +715,6 @@ public class ScreenScanner {
     return _trainsAnchor;
   }
 
-  public Rectangle[] getDangerousZones() {
-    return _dangerousZones;
-  }
-
   public ImageData getExpressTrain() {
     return _expressTrain;
   }
@@ -761,6 +744,7 @@ public class ScreenScanner {
   }
 
   public int getStreet1Y() {
+    _street1Y = _settings.getInt("street1Y", 204);
     return _street1Y;
   }
 
@@ -774,6 +758,10 @@ public class ScreenScanner {
 
   public ImageData getPromoX() {
     return _promoX;
+  }
+
+  public ImageData getHooray() {
+    return _hooray;
   }
 
   public ImageData getNoButton() {
@@ -826,6 +814,10 @@ public class ScreenScanner {
 
   public Rectangle getPassengersArea() {
     return _passengersArea;
+  }
+  
+  public ImageData generateLetterImageData(int index) throws IOException {
+    return new ImageData("letters/letter" + index + ".bmp", null, new SimilarityImageComparator(0.04, 2000), 4, 2);
   }
 
 }

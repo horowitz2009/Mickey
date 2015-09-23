@@ -717,33 +717,6 @@ public class InitialMassLoader {
     }
   }
 
-  private static void readContractors() {
-    try {
-      Contractor[] readContractors = new DataStore().readContractors();
-      for (Contractor contractor : readContractors) {
-        System.out.println(contractor);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void generateContractors() {
-    Contractor[] contractors = new Contractor[] { new Contractor("Bobby", Material.createArray()), new Contractor("Mahatma", Material.createArray()),
-        new Contractor("George", Material.createArray()), new Contractor("Otto", Material.createArray()),
-        new Contractor("Sam", Material.createArray()), new Contractor("Alan", Material.createArray()),
-        new Contractor("Wolfgang", Material.createArray()), new Contractor("Mizuki", Material.createArray()),
-        new Contractor("Lucy", Material.createArray()), new Contractor("Giovanni", Material.createArray()), };
-
-    // try to save it to file
-    try {
-      new DataStore().writeContractors(contractors);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-  }
-  
   private static void addNewContractor(String contractorName) {
     try {
       Contractor contractor = new Contractor(contractorName, Material.createArray());
@@ -756,21 +729,6 @@ public class InitialMassLoader {
       e.printStackTrace();
     }
     
-  }
-
-  private static void generateMissions() {
-    String[] contractors = new String[] { "Bobby", "Mahatma", "George", "Otto", "Sam", "Alan", "Wolfgang", "Mizuki", "Lucy", "Giovanni", };
-
-    try {
-      for (String contractor : contractors) {
-        Mission[] missions = readMissions(contractor);
-        new DataStore().writeMissions(contractor, missions);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
   }
 
   private static Mission[] readMissions(String contractor) throws Exception {

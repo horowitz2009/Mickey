@@ -61,50 +61,21 @@ public class Settings {
 
   public void setDefaults() {
 
-    _properties.setProperty("refresh", "true");
-    _properties.setProperty("mandatoryRefresh.time", "210");// 3.5h
-
-    _properties.setProperty("zoom", "2");
+    _properties.setProperty("mandatoryRefresh.time", "45");
 
     _properties.setProperty("railsHome", "5");
-    _properties.setProperty("railsHome1", "103, 105, 114, 119, 124");
-    _properties.setProperty("railsHome2", "103, 105, 111, 117, 130");
-    _properties.setProperty("railsHome3", "103, 107, 114, 121, 135");
-    _properties.setProperty("railsHome4", "104, 108, 116, 124, 143");
+    _properties.setProperty("railsHome", "104, 108, 116, 124, 143");
 
     _properties.setProperty("railsOut", "6");
-    _properties.setProperty("railsOut1", "100, 104, 108, 112, 116, 117");// maglev rail reduced with 3px
-    _properties.setProperty("railsOut2", "100, 107, 114, 122, 129, 138, 148");// back with 3px here
-    _properties.setProperty("railsOut3", "100, 110, 119, 129, 138, 145");
-    _properties.setProperty("railsOut4", "100, 112, 124, 136, 148, 157");
+    _properties.setProperty("railsOut", "100, 112, 124, 136, 148, 157");
 
-    _properties.setProperty("railYOffset1", "3");
-    _properties.setProperty("railYOffset2", "4");
-    _properties.setProperty("railYOffset3", "7");
-    _properties.setProperty("railYOffset4", "9");
-    _properties.setProperty("xOffset1", "20");
-    _properties.setProperty("xOffset2", "22");
-    _properties.setProperty("xOffset3", "26");
-    _properties.setProperty("xOffset4", "32");
-
-    // dangerous zones
-    _properties.setProperty("zone1", "-497, -52, 74, 74");
-    _properties.setProperty("zone2", "-277, -52, 74, 74");
-    _properties.setProperty("zone3", "-57, -52, 74, 74");
-    // _properties.setProperty("zone1b", "-522, -118, 74, 74");
-    // _properties.setProperty("zone2b", "-292, -118, 74, 74");
-    // _properties.setProperty("zone3b", "-62, -118, 74, 74");
-    // _properties.setProperty("zone1a", "-390, -56, 74, 74");
-    // _properties.setProperty("zone2a", "-170, -56, 74, 74");
+    _properties.setProperty("railYOffset", "9");
+    _properties.setProperty("xOffset", "32");
 
     _properties.setProperty("street1Y", "150");
 
-    _properties.setProperty("ping", "true");
     _properties.setProperty("ping.time", "5");
-    _properties.setProperty("resume", "false");
     _properties.setProperty("resume.time", "10");
-
-    _properties.setProperty("contractors", "bobby, mahatma, george, otto, sam, alan, wolfgang, mizuki, lucy, giovanni");
   }
 
   public int getInt(String key) {
