@@ -15,5 +15,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CatalanoCore"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CatalanoImage"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CatalanoMath"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CatalanoStatistics"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

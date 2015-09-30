@@ -15,7 +15,6 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -52,6 +51,9 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Catalano.Core.IntPoint;
+import Catalano.Imaging.Tools.Blob;
+
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
@@ -66,7 +68,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.951";
+  private static final String   APP_TITLE           = "v0.953";
 
   private boolean               _devMode            = false;
 
@@ -1435,9 +1437,7 @@ public final class MainFrame extends JFrame {
 
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
-    /*
-     * NumberFormat nf = NumberFormat.getNumberInstance(); nf.setMaximumFractionDigits(3); nf.setMinimumFractionDigits(0);
-     */
+    
     int turn = 1;
     while (!_stopThread) {
       turn *= 2;
@@ -2078,7 +2078,7 @@ public final class MainFrame extends JFrame {
     }
 
     // FB SHARE
-    // found = scanAndClick(_scanner.getFBShare(), null);
+    found = scanAndClick(_scanner.getFBShare(), null);
 
     // SHOP
     found = found || scanAndClick(_scanner.getShopX(), null);
@@ -2297,59 +2297,109 @@ public final class MainFrame extends JFrame {
     return trainHasBeenSent || hadOtherLocations;
   }
 
-  private void huntLetters() throws RobotInterruptedException {
+  private void huntLetters() throws RobotInterruptedException, AWTException {
     LOGGER.info("Scanning for letters...");
-    try {
-      Pixel p = detectLetter();
-      int off = 2;
-      int d = 10;
-      if (p != null) {
-        int y = _scanner.getBottomRight().y - p.y;
-        if (y < 188) {
-          // fast
-          _mouse.click(p.x, p.y - off - 12);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 12);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 11);
-          _mouse.delay(d);
-          _mouse.checkUserMovement();
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 11);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 11);
-        } else if (y < 230) {
-          // mid
-          _mouse.click(p.x, p.y - off - 9);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 9);
-          _mouse.delay(d);
-          _mouse.checkUserMovement();
-          _mouse.click(p.x, p.y - off - 8);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 8);
-        } else {
-          // slow
-          _mouse.click(p.x, p.y - off - 6);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 5);
-          _mouse.delay(d);
-          _mouse.checkUserMovement();
-          _mouse.click(p.x, p.y - off - 4);
-          _mouse.delay(d);
-          _mouse.click(p.x, p.y - off - 3);
+    Rectangle letterArea = _scanner.getLetterArea();
+    long start = System.currentTimeMillis();
+    boolean success = false;
+    do {
+      BufferedImage image1 = new Robot().createScreenCapture(letterArea);
+      _mouse.delay(170, true);
+      BufferedImage image2 = new Robot().createScreenCapture(letterArea);
+      
+      List<Blob> blobs = new MotionDetector(_settings).detect(image1, image2);
+      //LOGGER.info("blobs found: " + blobs.size());
+      //System.err.println(blobs);
+      if (blobs.size() > 0) {
+        //we have movement
+        for (Blob blob : blobs) {
+          IntPoint c = blob.getCenter();
+          Pixel p = new Pixel(letterArea.x + c.y, letterArea.y +  c.x);
+          //LOGGER.info("COORDS: " + p);
+          _stats.registerRedLetter();
+          clickLetter(p);
+          //registerBlob(blob, image1, image2);
         }
-        _mouse.checkUserMovement();
-        LOGGER.info("Letters cought: " + _stats.getRedLetter());
-        // LOGGER.info("found letter: " + p);
-        _mouse.mouseMove(_scanner.getBottomRight());
+        success = true;
+        //_mouse.delay(500);
+        
+        
       }
-    } catch (AWTException e) {
-      LOGGER.warning("error hunting letters");
-      e.printStackTrace();
-    } catch (IOException e) {
-      LOGGER.warning("error hunting letters: " + e.getMessage());
-      e.printStackTrace();
+      
+    } while (!success && System.currentTimeMillis() - start < 5500);
+    //}
+    
+//    for (BlobInfo blobInfo : _blobs) {
+//      //FastBitmap fb1 = new FastBitmap(blobInfo.image1);
+//      FastBitmap fb2 = new FastBitmap(blobInfo.image2);
+//      fb2.saveAsPNG("blob_" + blobInfo.blob.getCenter().y + "_" + blobInfo.blob.getCenter().x + "_" + System.currentTimeMillis()+".png");
+//    }
+    
+  }
+
+  static class BlobInfo {
+    Blob blob;
+    BufferedImage image1;
+    BufferedImage image2;
+    public BlobInfo(Blob blob, BufferedImage image1, BufferedImage image2) {
+      super();
+      this.blob = blob;
+      this.image1 = image1;
+      this.image2 = image2;
+    }
+    
+  }
+  
+  private List<BlobInfo> _blobs = new ArrayList<MainFrame.BlobInfo>();
+  
+  private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
+    _blobs.add(new BlobInfo(blob, image1, image2));
+  }
+
+  private void clickLetter(Pixel p) throws RobotInterruptedException {
+    int off = 2;
+    int d = 10;
+    if (p != null) {
+      int y = _scanner.getBottomRight().y - p.y;
+      if (y < 188) {
+        // fast
+        _mouse.click(p.x, p.y - off - 12);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 12);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 11);
+      } else if (y < 230) {
+        // mid
+        _mouse.click(p.x, p.y - off - 9);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 9);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.click(p.x, p.y - off - 8);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 8);
+      } else {
+        // slow
+        _mouse.click(p.x, p.y - off - 6);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 5);
+        _mouse.delay(d);
+        _mouse.checkUserMovement();
+        _mouse.click(p.x, p.y - off - 4);
+        _mouse.delay(d);
+        _mouse.click(p.x, p.y - off - 3);
+      }
+      _mouse.checkUserMovement();
+      LOGGER.info("Letters cought: " + _stats.getRedLetter());
+      // LOGGER.info("found letter: " + p);
+      _mouse.mouseMove(_scanner.getBottomRight());
+
     }
   }
 

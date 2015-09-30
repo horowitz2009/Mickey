@@ -161,7 +161,7 @@ public class ScreenScanner {
       area = new Rectangle(100, 122, screenSize.width - 200, 500);
       _invite = new ImageData("Invite.bmp", area, _comparator, 583, 5);
       
-      area = new Rectangle(450, 289, screenSize.width - 450, screenSize.height - 289);
+      area = new Rectangle(450, 270, screenSize.width - 450, screenSize.height - 270);
       _fbShare = new ImageData("FBShare.bmp", area, _comparator, 15, 5);
 
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
@@ -251,7 +251,7 @@ public class ScreenScanner {
     _homeArea = new Rectangle(_tl.x, _br.y - 44 - 154, 70, 154);
 
     _trainArea = new Rectangle(_tl.x, _br.y - getRailsHome()[0] - 150, getGameWidth(), 150);
-    _letterArea = new Rectangle(_tl.x, _br.y - _street1Y - 200, getGameWidth(), 200);
+    _letterArea = new Rectangle(_tl.x + 70, _br.y - _street1Y - 120, getGameWidth() - 70 - 37, 120);
     _packagesArea = new Rectangle(_tl.x, _br.y - _street1Y - 38 - 88, getGameWidth(), 88);
 
     int diff = getGameWidth() - 760;

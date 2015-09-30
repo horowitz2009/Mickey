@@ -33,7 +33,7 @@ public interface ImageComparator {
   public Point findPoint(BufferedImage image, Pixel[] mask, Color[] colors);
 
   public Pixel findImage(BufferedImage image, BufferedImage area);
-
+  
   public abstract void setErrors(int errors);
 
   public abstract int getErrors();
