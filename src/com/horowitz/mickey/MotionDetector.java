@@ -124,14 +124,14 @@ public class MotionDetector {
     BlobDetection bd = new BlobDetection(BlobDetection.Algorithm.EightWay);
     bd.setMinArea(4);
     bd.setMaxArea(12*8);
-    bd.ProcessImage(fb2);
+    return bd.ProcessImage(fb2);
 //    if (bd.getBlobs().size() > 0) {
 //      for (Blob blob : bd.getBlobs()) {
 //        fb2.saveAsPNG("BLOB_" + blob.getCenter().y + "_" + blob.getCenter().x + "_" + System.currentTimeMillis());
 //      }
 //    }
     
-    return bd.getBlobs();
+    //return bd.getBlobs();
   }
 
 }
