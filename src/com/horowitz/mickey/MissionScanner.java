@@ -244,7 +244,7 @@ public class MissionScanner {
     System.out.println("Testing " + cont1);
     try {
       BufferedImage image = ImageIO.read(new File(image1));
-      Settings settings = new Settings();
+      Settings settings = new Settings("mickey.properties");
       settings.loadSettings();
       ScreenScanner sscanner = new ScreenScanner(settings);
 

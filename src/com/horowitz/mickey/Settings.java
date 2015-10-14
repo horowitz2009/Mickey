@@ -14,14 +14,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Settings {
-  private static final String SETTINGS_FILENAME = "mickey.properties";
-
   Properties                  _properties;
   String                      _filename;
-
-  public Settings() {
-    this(SETTINGS_FILENAME);
-  }
 
   public Settings(String filename) {
     super();
@@ -29,36 +23,36 @@ public class Settings {
     _filename = filename;
   }
 
-  public static Settings createCommands() {
-    Settings c = new Settings("mickey.commands");
-    c.loadSettings();
-    return c;
-  }
-
-  public static Settings createDefaultSettings() {
-    Settings s = new Settings();
+  public static Settings createSettings(String filename) {
+    Settings s = new Settings(filename);
     s.loadSettings();
     return s;
   }
-
-  public void loadSettings() {
+  
+  public boolean loadSettings() {
 
     try {
       File file = new File(_filename);
       if (file.exists()) {
         FileInputStream fis = new FileInputStream(file);
         _properties.load(fis);
+        return true;
       } else {
-        System.err.println("Settings file " + _filename + " does not exist! Setting defaults");
-        setDefaults();
+        //System.err.println("Settings file " + _filename + " does not exist! Setting defaults");
+        //setDefaults();
+        return false;
       }
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
+    return false;
   }
-
+  
+  /**
+   * @deprecated
+   */
   public void setDefaults() {
 
     _properties.setProperty("mandatoryRefresh.time", "45");
@@ -130,14 +124,10 @@ public class Settings {
     return "true".equalsIgnoreCase(v);
   }
   
-
-  /**
-   * @deprecated use saveSettingsSorted
-   */
   public void saveSettings() {
     try {
       FileOutputStream fos = new FileOutputStream(new File(_filename));
-      _properties.store(fos, "Settings of Mickey");
+      _properties.store(fos, "");
       fos.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -182,11 +172,4 @@ public class Settings {
     _properties.setProperty(key, value);
   }
 
-  public static void main(String[] args) {
-    Settings settings = new Settings();
-    settings.setDefaults();
-    settings.saveSettingsSorted();
-    System.out.println("Settings reset to defaults");
-
-  }
 }

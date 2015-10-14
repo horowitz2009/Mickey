@@ -68,7 +68,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.954";
+  private static final String   APP_TITLE           = "v0.955";
 
   private boolean               _devMode            = false;
 
@@ -138,8 +138,8 @@ public final class MainFrame extends JFrame {
 
   public MainFrame() throws HeadlessException {
     super();
-    _settings = Settings.createDefaultSettings();
-    _commands = Settings.createCommands();
+    _settings = Settings.createSettings("mickey.properties");
+    _commands = Settings.createSettings("mickey.commands");
     _stats = new Statistics();
 
     setupLogger();

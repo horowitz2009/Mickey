@@ -35,7 +35,7 @@ public class ImageLocator extends JPanel {
     add(new JScrollPane(_console), BorderLayout.SOUTH);
     
     
-    _settings = Settings.createDefaultSettings();
+    _settings = Settings.createSettings("mickey.properties");
     _scanner = new ScreenScanner(_settings);
     try {
       _mouse = new MouseRobot();

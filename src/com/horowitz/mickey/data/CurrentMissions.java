@@ -30,7 +30,7 @@ public class CurrentMissions {
   private Mission[] generateInitial() {
     List<Mission> currentMissions = new ArrayList<>();
 
-    Settings settings = new Settings();
+    Settings settings = new Settings("mickey.properties");
     settings.loadSettings();
     String[] contractors = settings.getProperty("contractors").split(",");
     for (String c : contractors) {
