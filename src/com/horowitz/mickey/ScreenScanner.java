@@ -224,9 +224,9 @@ public class ScreenScanner {
 
 
     // SESSION
-    xx = (getGameWidth() - 279) / 2;
-    yy = (getGameHeight() - 382) / 2;
-    area = new Rectangle(_tl.x + xx + 90, _tl.y + yy + 73, 97, 66);
+    xx = (getGameWidth() - 523) / 2;
+    yy = (getGameHeight() - 281) / 2;
+    area = new Rectangle(_tl.x + xx + 80, _tl.y + yy + 80, 120, 50);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
 
     // NO BUTTON
