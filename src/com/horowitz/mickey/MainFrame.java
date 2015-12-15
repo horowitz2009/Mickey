@@ -68,7 +68,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.955";
+  private static final String   APP_TITLE           = "v0.956";
 
   private boolean               _devMode            = false;
 
@@ -110,7 +110,7 @@ public final class MainFrame extends JFrame {
   private JToggleButton         _resumeClick;
   private JToggleButton         _autoPassClick;
   private JToggleButton         _lettersClick;
-  
+
   private JToolBar              _frToolbar1;
   private JToolBar              _freeToolbar1;
   private JToolBar              _freeToolbar2;
@@ -709,7 +709,7 @@ public final class MainFrame extends JFrame {
       _lettersClick = new JToggleButton("L");
       _lettersClick.setSelected(_commands.getBoolean("huntLetters", false));
       _lettersClick.addChangeListener(new ChangeListener() {
-        
+
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("huntLetters", "" + _lettersClick.isSelected());
@@ -897,7 +897,7 @@ public final class MainFrame extends JFrame {
     if (letters != _lettersClick.isSelected()) {
       _lettersClick.setSelected(letters);
     }
-    
+
     if (sendInternational != _sendInternational.isSelected()) {
       _sendInternational.setSelected(sendInternational);
     }
@@ -1437,7 +1437,7 @@ public final class MainFrame extends JFrame {
 
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
-    
+
     int turn = 1;
     while (!_stopThread) {
       turn *= 2;
@@ -1533,7 +1533,7 @@ public final class MainFrame extends JFrame {
           }
 
           // LETTERS
-          //int h = _settings.getInt("huntLetters", 2);
+          // int h = _settings.getInt("huntLetters", 2);
           if (_lettersClick.isSelected())
             huntLetters();
 
@@ -1981,7 +1981,6 @@ public final class MainFrame extends JFrame {
     return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
   }
 
-
   private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
       RobotInterruptedException {
     return findAndClick(imageName, area, xOff, yOff, click, false);
@@ -2314,52 +2313,52 @@ public final class MainFrame extends JFrame {
       BufferedImage image1 = new Robot().createScreenCapture(letterArea);
       _mouse.delay(170, true);
       BufferedImage image2 = new Robot().createScreenCapture(letterArea);
-      
+
       List<Blob> blobs = new MotionDetector(_settings).detect(image1, image2);
-      //LOGGER.info("blobs found: " + blobs.size());
-      //System.err.println(blobs);
+      // LOGGER.info("blobs found: " + blobs.size());
+      // System.err.println(blobs);
       if (blobs.size() > 0) {
-        //we have movement
+        // we have movement
         for (Blob blob : blobs) {
           IntPoint c = blob.getCenter();
-          Pixel p = new Pixel(letterArea.x + c.y, letterArea.y +  c.x);
-          //LOGGER.info("COORDS: " + p);
+          Pixel p = new Pixel(letterArea.x + c.y, letterArea.y + c.x);
+          // LOGGER.info("COORDS: " + p);
           _stats.registerRedLetter();
           clickLetter(p);
-          //registerBlob(blob, image1, image2);
+          // registerBlob(blob, image1, image2);
         }
         success = true;
-        //_mouse.delay(500);
-        
-        
+        // _mouse.delay(500);
+
       }
-      
+
     } while (!success && System.currentTimeMillis() - start < 5500);
-    //}
-    
-//    for (BlobInfo blobInfo : _blobs) {
-//      //FastBitmap fb1 = new FastBitmap(blobInfo.image1);
-//      FastBitmap fb2 = new FastBitmap(blobInfo.image2);
-//      fb2.saveAsPNG("blob_" + blobInfo.blob.getCenter().y + "_" + blobInfo.blob.getCenter().x + "_" + System.currentTimeMillis()+".png");
-//    }
-    
+    // }
+
+    // for (BlobInfo blobInfo : _blobs) {
+    // //FastBitmap fb1 = new FastBitmap(blobInfo.image1);
+    // FastBitmap fb2 = new FastBitmap(blobInfo.image2);
+    // fb2.saveAsPNG("blob_" + blobInfo.blob.getCenter().y + "_" + blobInfo.blob.getCenter().x + "_" + System.currentTimeMillis()+".png");
+    // }
+
   }
 
   static class BlobInfo {
-    Blob blob;
+    Blob          blob;
     BufferedImage image1;
     BufferedImage image2;
+
     public BlobInfo(Blob blob, BufferedImage image1, BufferedImage image2) {
       super();
       this.blob = blob;
       this.image1 = image1;
       this.image2 = image2;
     }
-    
+
   }
-  
+
   private List<BlobInfo> _blobs = new ArrayList<MainFrame.BlobInfo>();
-  
+
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
   }
@@ -2646,20 +2645,19 @@ public final class MainFrame extends JFrame {
   private Pixel detectLetter() throws RobotInterruptedException, AWTException, IOException {
     Rectangle area = _scanner.getLetterArea();
     Pixel p = null;
-    for(int i = 0; i < 3 && p == null; i++) {
-      for(int l = 1; l <= 8 && p == null; l++) {
+    for (int i = 0; i < 3 && p == null; i++) {
+      for (int l = 1; l <= 8 && p == null; l++) {
         ImageData letter = _scanner.generateLetterImageData(l);
         p = letter.findImage(area);
         _mouse.checkUserMovement();
       }
-      //_mouse.checkUserMovement();
+      // _mouse.checkUserMovement();
     }
     if (p != null) {
       _stats.registerRedLetter();
       return p;
     }
-    
-    
+
     return null;
   }
 
@@ -2800,6 +2798,16 @@ public final class MainFrame extends JFrame {
       // _mouse.delay(200);
       // }
 
+      // MAGLEV FIRST
+      if (_settings.getBoolean("maglevsGoToMars", true)) {
+        Pixel maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372, tm.y + 433, 34, 29));
+        if (maglevDestOK != null) {
+          _mouse.mouseMove(maglevDestOK.x + 63, maglevDestOK.y + 16);
+          _mouse.delay(150);
+          clickTrain(isExpress);
+          return true;
+        }
+      }
       // 2. now, go to desired page
       if (time.getPage() > 1) {
         _mouse.mouseMove(rightArrow);
@@ -2822,33 +2830,38 @@ public final class MainFrame extends JFrame {
       _mouse.savePosition(); // stopping the magic.
 
       if (!_devMode) {
-        _mouse.click();
-        _stats.registerTrain(isExpress);
-        // String msg = "Trains: " + _stats.getTotalTrainCount();
-        // String date = getNow();
-        // _trainsNumberLabel.setText(msg + "  (" + date + ")");
-        // //LOGGER.severe(msg);
-        // _trainsNumberLabel.invalidate();
-        updateLabels();
-        boolean weredone = false;
-        int turns = 0;
-        do {
-          turns++;
-          LOGGER.fine("Check TM again " + turns);
-          tm = _scanner.getTrainManagementAnchor().findImage();
-          if (tm != null) {
-            _mouse.delay(300);
-          } else {
-            // we're done
-            weredone = true;
-            LOGGER.fine("Check TM again DONE ");
-          }
-        } while (!weredone && turns < 6);
+        clickTrain(isExpress);
       }
       return true;
     }
 
     return false;
+  }
+
+  private void clickTrain(boolean isExpress) throws RobotInterruptedException {
+    Pixel tm;
+    _mouse.click();
+    _stats.registerTrain(isExpress);
+    // String msg = "Trains: " + _stats.getTotalTrainCount();
+    // String date = getNow();
+    // _trainsNumberLabel.setText(msg + "  (" + date + ")");
+    // //LOGGER.severe(msg);
+    // _trainsNumberLabel.invalidate();
+    updateLabels();
+    boolean weredone = false;
+    int turns = 0;
+    do {
+      turns++;
+      LOGGER.fine("Check TM again " + turns);
+      tm = _scanner.getTrainManagementAnchor().findImage();
+      if (tm != null) {
+        _mouse.delay(300);
+      } else {
+        // we're done
+        weredone = true;
+        LOGGER.fine("Check TM again DONE ");
+      }
+    } while (!weredone && turns < 6);
   }
 
   private int getMaxY(Pixel p) throws RobotInterruptedException {
