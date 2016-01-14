@@ -68,7 +68,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.956";
+  private static final String   APP_TITLE           = "v0.957";
 
   private boolean               _devMode            = false;
 
@@ -135,6 +135,8 @@ public final class MainFrame extends JFrame {
   private TrainManagementWindow _trainManagementWindow;
 
   private OCRB                  _ocrb;
+
+  private JToggleButton _maglevClick;
 
   public MainFrame() throws HeadlessException {
     super();
@@ -716,9 +718,23 @@ public final class MainFrame extends JFrame {
           _commands.saveSettingsSorted();
         }
       });
-      mainToolbar2.add(_lettersClick);
+      //mainToolbar2.add(_lettersClick);
     }
 
+    {
+      _maglevClick = new JToggleButton("M15");
+      _maglevClick.setSelected(_commands.getBoolean("maglev15", false));
+      _maglevClick.addChangeListener(new ChangeListener() {
+        
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _commands.setProperty("maglev15", "" + _maglevClick.isSelected());
+          _commands.saveSettingsSorted();
+        }
+      });
+      mainToolbar2.add(_maglevClick);
+    }
+    
     // freight
     ButtonGroup bgFr = new ButtonGroup();
     createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
@@ -881,6 +897,7 @@ public final class MainFrame extends JFrame {
     boolean sendInternational = "true".equalsIgnoreCase(_commands.getProperty("sendInternational"));
     boolean autoRefresh = "true".equalsIgnoreCase(_commands.getProperty("autoRefresh"));
     boolean letters = "true".equalsIgnoreCase(_commands.getProperty("huntLetters"));
+    boolean maglev15 = "true".equalsIgnoreCase(_commands.getProperty("maglev15"));
 
     if (ping != _pingClick.isSelected()) {
       _pingClick.setSelected(ping);
@@ -898,6 +915,10 @@ public final class MainFrame extends JFrame {
       _lettersClick.setSelected(letters);
     }
 
+    if (maglev15 != _maglevClick.isSelected()) {
+      _maglevClick.setSelected(maglev15);
+    }
+    
     if (sendInternational != _sendInternational.isSelected()) {
       _sendInternational.setSelected(sendInternational);
     }
@@ -2799,7 +2820,7 @@ public final class MainFrame extends JFrame {
       // }
 
       // MAGLEV FIRST
-      if (_settings.getBoolean("maglevsGoToMars", true)) {
+      if (_commands.getBoolean("maglev15", true)) {
         Pixel maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372, tm.y + 433, 34, 29));
         if (maglevDestOK != null) {
           _mouse.mouseMove(maglevDestOK.x + 63, maglevDestOK.y + 16);
