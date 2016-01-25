@@ -32,7 +32,7 @@ public class ScreenScanner {
   public static final String   DAILY_PUBLISH                  = "Sure.bmp";
 
   private static final String  LOGIN_FB                       = "loginFB.bmp";
-  private static final String  LOGIN_WITH_FB                  = "loginWithFB2.bmp";
+  private static final String  LOGIN_WITH_FB                  = "loginWithFB3.bmp";
   private static final String  INT_TRAINS                     = "int/Trains.bmp";
   private static final String  SHARE                          = "share.bmp";
   private static final String  MATERIALS                      = "materials.bmp";
@@ -370,15 +370,15 @@ public class ScreenScanner {
     int turns = 0;
     do {
       turns++;
-      Pixel tslogo = locateImageCoords(ANCHOR_TOPLEFT_IMAGE1, areaTL, -24, 46);
+      Pixel tslogo = locateImageCoords(ANCHOR_TOPLEFT_IMAGE1, areaTL, -20, 46);
       if (tslogo != null) {
         if (tslogo.x < 0) tslogo.x = 0;
         _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE2, new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
         
         if (_tl != null) {
           _passengersArea = new Rectangle(_tl.x + 13, _tl.y + 11, 104, 14);
-          if (tslogo.x + 24 < _tl.x) {
-            _tl.x -= 162;
+          if (Math.abs(tslogo.x - _tl.x) > 20) {
+            _tl.x = tslogo.x;
           } else {
             _tl.x -= 21;
           }

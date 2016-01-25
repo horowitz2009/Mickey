@@ -424,15 +424,20 @@ public class TrainScanner {
       Pixel tl = new Pixel(p.x - 2, p.y + 62);
       try {
         
-        //scroll to top
-        _mouse.mouseMove(tl.x + 347, tl.y + 30);
-        _mouse.click();
-        _mouse.delay(400);
+//        //scroll to top
+//        _mouse.mouseMove(tl.x + 347, tl.y + 30);
+//        _mouse.click();
+//        _mouse.delay(400);
         
         // find and select contractors
         Rectangle carea = new Rectangle(tl.x, tl.y, 147, 260);
         String lastContractor = train == null ? defaultContractor : train.getContractors().get(train.getContractors().size() - 1);
         if (lastContractor.equals("XP")) {
+          //scroll to top
+          _mouse.mouseMove(tl.x + 347, tl.y + 30);
+          _mouse.click();
+          _mouse.delay(400);
+          
           // do it fast
           _mouse.mouseMove(tl.x + 20, tl.y + 20);
           for(int i = 0; i < 8; i++) {
@@ -440,6 +445,11 @@ public class TrainScanner {
             _mouse.delay(350);
           }
         } else if(lastContractor.equals("Special")) {
+          //scroll to top
+          _mouse.mouseMove(tl.x + 347, tl.y + 30);
+          _mouse.click();
+          _mouse.delay(400);
+          
           _mouse.mouseMove(tl.x + 20, tl.y + 20);
           _mouse.click();
           _mouse.delay(350);
@@ -475,28 +485,47 @@ public class TrainScanner {
   }
   
   private void sendToContractor(String contractorName, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
-    for (int page = 0; page < 2; page++) {
-      BufferedImage cimage = new Robot().createScreenCapture(carea);
-      // writeImage(carea, "carea.bmp");
-      BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + contractorName + "_name.bmp"));
-      Pixel cp = _comparator.findImage(contractorImage, cimage);
-      if (cp != null) {
-        // found the contractor
-        _mouse.mouseMove(carea.x + cp.x, carea.y + cp.y + 4);
-        _mouse.delay(450);
-        _mouse.click();
-        _mouse.delay(950);
-        break;
-      } else {
-        //scrolldown
-        _mouse.delay(200);
-        for(int clicks = 0; clicks < 10; clicks++) {
-          _mouse.click(tl.x + 347, tl.y + 250);
-          _mouse.delay(150);
+    BufferedImage cimage = new Robot().createScreenCapture(carea);
+    // writeImage(carea, "carea.bmp");
+    BufferedImage contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + contractorName + "_name.bmp"));
+    Pixel cp = _comparator.findImage(contractorImage, cimage);
+    if (cp != null) {
+      // found the contractor
+      _mouse.mouseMove(carea.x + cp.x, carea.y + cp.y + 4);
+      _mouse.delay(450);
+      _mouse.click();
+      _mouse.delay(950);
+    } else {
+      //scroll to top
+      _mouse.mouseMove(tl.x + 347, tl.y + 30);
+      _mouse.click();
+      _mouse.delay(400);
+      
+      for (int page = 0; page < 2; page++) {
+        cimage = new Robot().createScreenCapture(carea);
+        // writeImage(carea, "carea.bmp");
+        contractorImage = ImageIO.read(ImageManager.getImageURL("int/" + contractorName + "_name.bmp"));
+        cp = _comparator.findImage(contractorImage, cimage);
+        if (cp != null) {
+          // found the contractor
+          _mouse.mouseMove(carea.x + cp.x, carea.y + cp.y + 4);
+          _mouse.delay(450);
+          _mouse.click();
+          _mouse.delay(950);
+          break;
+        } else {
+          //scrolldown
+          _mouse.delay(200);
+          for(int clicks = 0; clicks < 8; clicks++) {//was 10
+            _mouse.click(tl.x + 347, tl.y + 250);
+            _mouse.delay(150);
+          }
+          _mouse.delay(250);
         }
       }
-    }
 
+      
+    }
   }
 
   private List<Train> scanSlotsForCompare(final int xt, final int yt, final int page) throws AWTException, IOException, RobotInterruptedException {

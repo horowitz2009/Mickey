@@ -68,7 +68,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.957";
+  private static final String   APP_TITLE           = "v0.960";
 
   private boolean               _devMode            = false;
 
@@ -136,7 +136,7 @@ public final class MainFrame extends JFrame {
 
   private OCRB                  _ocrb;
 
-  private JToggleButton _maglevClick;
+  private JToggleButton         _maglevClick;
 
   public MainFrame() throws HeadlessException {
     super();
@@ -718,14 +718,14 @@ public final class MainFrame extends JFrame {
           _commands.saveSettingsSorted();
         }
       });
-      //mainToolbar2.add(_lettersClick);
+      // mainToolbar2.add(_lettersClick);
     }
 
     {
       _maglevClick = new JToggleButton("M15");
       _maglevClick.setSelected(_commands.getBoolean("maglev15", false));
       _maglevClick.addChangeListener(new ChangeListener() {
-        
+
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("maglev15", "" + _maglevClick.isSelected());
@@ -734,7 +734,7 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar2.add(_maglevClick);
     }
-    
+
     // freight
     ButtonGroup bgFr = new ButtonGroup();
     createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
@@ -918,7 +918,7 @@ public final class MainFrame extends JFrame {
     if (maglev15 != _maglevClick.isSelected()) {
       _maglevClick.setSelected(maglev15);
     }
-    
+
     if (sendInternational != _sendInternational.isSelected()) {
       _sendInternational.setSelected(sendInternational);
     }
@@ -984,6 +984,16 @@ public final class MainFrame extends JFrame {
       } else if (r.startsWith("click")) {
         service.inProgress(r);
         processClick(r);
+      } else if (r.startsWith("ping")) {
+        service.inProgress(r);
+        captureScreen("ping requested ");
+      } else if (r.startsWith("reload")) {
+        service.inProgress(r);
+        reload(r);
+      } else if (r.startsWith("reset")) {
+        service.inProgress(r);
+        _stats.reset();
+        updateLabels();
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
         String[] ss = r.split("_");
@@ -994,13 +1004,6 @@ public final class MainFrame extends JFrame {
           runMagic();
         } catch (RobotInterruptedException e) {
         }
-      } else if (r.startsWith("reload")) {
-        service.inProgress(r);
-        reload(r);
-      } else if (r.startsWith("reset")) {
-        service.inProgress(r);
-        _stats.reset();
-        updateLabels();
       }
     }
 
@@ -1300,8 +1303,8 @@ public final class MainFrame extends JFrame {
       if (!bookmark) {
         if (_scanner.isOptimized()) {
           p = _scanner.getBottomRight();
-          p.y = _scanner.getTopLeft().y + 100;
-          p.x = _scanner.getBottomRight().x + 4;
+          p.y += 2; 
+          p.x -= 2;
         } else {
           p = new Pixel(0, 110);
         }
@@ -1311,7 +1314,7 @@ public final class MainFrame extends JFrame {
         robot.keyRelease(KeyEvent.VK_F5);
       } else {
         try {
-          p = _scanner.generateImageData("tsFavicon2.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
+          p = _scanner.generateImageData("tsFaviconFB.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
           _mouse.click(p.x, p.y);
         } catch (IOException e) {
         }
@@ -2614,7 +2617,7 @@ public final class MainFrame extends JFrame {
     if (p != null) {
       LOGGER.info("Found left arrow. moving a bit...");
       // _mouse.mouseMove(p);
-      int x1 = _scanner.getTopLeft().x + 5;
+      int x1 = _scanner.getTopLeft().x + 25;
       int y = _scanner.getBottomRight().y - Locations.RAIL1;
       _mouse.drag(x1, y, x1 + 520, y);
       // _mouse.delay(500);
@@ -2624,7 +2627,7 @@ public final class MainFrame extends JFrame {
       if (p != null) {
         LOGGER.info("Found right arrow. moving a bit...");
         // _mouse.mouseMove(p);
-        int x1 = _scanner.getBottomRight().x - 5;
+        int x1 = _scanner.getBottomRight().x - 25;
         int y = _scanner.getBottomRight().y - Locations.RAIL1;
         _mouse.drag(x1, y, x1 - 520, y);
         // _mouse.delay(500);
@@ -2634,7 +2637,7 @@ public final class MainFrame extends JFrame {
         Rectangle area = new Rectangle(_scanner.getBottomRight().x - 26, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 26, 150);
         p = findPointerDownInt(area, pointerDown, 4);
         if (p != null) {
-          int x1 = _scanner.getBottomRight().x - 5;
+          int x1 = _scanner.getBottomRight().x - 25;
           int y = _scanner.getBottomRight().y - Locations.RAIL1;
           _mouse.drag(x1, y, x1 - 30, y);
           moved = true;
@@ -2644,7 +2647,7 @@ public final class MainFrame extends JFrame {
           area = new Rectangle(_scanner.getTopLeft().x, _scanner.getBottomRight().y - Locations.RAIL1 - 150, 26, 150);
           p = findPointerDownInt(area, pointerDown, 4);
           if (p != null) {
-            int x1 = _scanner.getTopLeft().x + 5;
+            int x1 = _scanner.getTopLeft().x + 25;
             int y = _scanner.getBottomRight().y - Locations.RAIL1;
             _mouse.drag(x1, y, x1 + 30, y);
             moved = true;
