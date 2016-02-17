@@ -56,7 +56,7 @@ public class TrainScanner {
       xx += _scanner.getTopLeft().x;
       yy += _scanner.getTopLeft().y;
 
-      //click Trains management icon
+      // click Trains management icon
       _mouse.click(_scanner.getTopLeft().x + 37, _scanner.getBottomRight().y - 33);
       _mouse.delay(1300);
       _mouse.click(xx + 206, yy + 78);
@@ -89,37 +89,37 @@ public class TrainScanner {
     List<Train> trains = new ArrayList<>();
 
     try {
-    // click the beginning of the scroller
-    _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
-    _mouse.click();
-    _mouse.delay(1000);
+      // click the beginning of the scroller
+      _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
+      _mouse.click();
+      _mouse.delay(1000);
 
-    // scan first five
-    
-    Train lastAdded = scanSlots(xt, yt, 1, trains, all);
-    boolean isIdle = lastAdded != null ? lastAdded.isIdle() : false;
+      // scan first five
 
-    while (!reachedEnd(x, y) && lastAdded != null && (all || isIdle)) {
-      scrollDown(x, y, 2); // two clicks on down arrow
-      yt = findExactlyWhere(x, y);
-      lastAdded =  scanSlots(xt, yt, 5, trains, all);
-      isIdle = lastAdded != null ? lastAdded.isIdle() : false;
-    }
+      Train lastAdded = scanSlots(xt, yt, 1, trains, all);
+      boolean isIdle = lastAdded != null ? lastAdded.isIdle() : false;
 
-    // scanSlots(xt, yt, 1, trains, all);
-    // if (hasScroller) {
-    // pageDown(x, y, 2);
-    // _mouse.delay(2000);
-    // scanSlots(xt, yt, 2, trains, all);
-    // _mouse.delay(1000);
-    //
-    // pageDown(x, y, 3);
-    // _mouse.delay(2000);
-    // scanSlots(xt, yt, 3, trains, all);
-    // _mouse.delay(1000);
-    //
-    // LOGGER.info("DONE");
-    // }
+      while (!reachedEnd(x, y) && lastAdded != null && (all || isIdle)) {
+        scrollDown(x, y, 2); // two clicks on down arrow
+        yt = findExactlyWhere(x, y);
+        lastAdded = scanSlots(xt, yt, 5, trains, all);
+        isIdle = lastAdded != null ? lastAdded.isIdle() : false;
+      }
+
+      // scanSlots(xt, yt, 1, trains, all);
+      // if (hasScroller) {
+      // pageDown(x, y, 2);
+      // _mouse.delay(2000);
+      // scanSlots(xt, yt, 2, trains, all);
+      // _mouse.delay(1000);
+      //
+      // pageDown(x, y, 3);
+      // _mouse.delay(2000);
+      // scanSlots(xt, yt, 3, trains, all);
+      // _mouse.delay(1000);
+      //
+      // LOGGER.info("DONE");
+      // }
     } catch (RobotInterruptedException e) {
       LOGGER.info("Enough is enough");
       LOGGER.info("Scanned " + trains.size() + " trains");
@@ -148,7 +148,7 @@ public class TrainScanner {
     boolean isIdle = false;
     boolean isFreeSlot = false;
     Train lastAdded = null;
-    
+
     try {
       for (int slot = firstSlot; slot <= 5; slot++) {
         _mouse.delay(400);
@@ -158,7 +158,7 @@ public class TrainScanner {
         ImageData freeSlotData = _scanner.generateImageData("int/Add.bmp");
         isIdle = onRoadData.findImage(onRoadArea) == null;
         isFreeSlot = freeSlotData.findImage(onRoadArea) != null;
-        
+
         if (!isFreeSlot && (all || isIdle)) {
           int number = trains.size() + 1;
           String trainId = number + "  " + DateUtils.formatDateForFile(System.currentTimeMillis());
@@ -273,7 +273,7 @@ public class TrainScanner {
       xx += _scanner.getTopLeft().x;
       yy += _scanner.getTopLeft().y;
 
-      //click Trains management icon
+      // click Trains management icon
       _mouse.click(_scanner.getTopLeft().x + 54, _scanner.getBottomRight().y - 39);
       _mouse.delay(1300);
       _mouse.click(xx + 206, yy + 78);
@@ -337,19 +337,21 @@ public class TrainScanner {
     _mouse.delay(1000);
     int locoOnlyLength = 110;
     boolean atLeastOneSent = false;
-    String defaultContractor = getDefaultContractor(); 
+    String defaultContractor = getDefaultContractor();
     do {
       List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
       atLeastOneSent = false;
-      
+
       if (trains.isEmpty()) {
-        if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
-          LOGGER.info("Sending to default contractor: " + defaultContractor);
-          if (sendTrain(null, xt, yt)) {
-            atLeastOneSent = true;
-            numberSent++;
+        for (int i = 0; i < _takeABreak; i++) {
+          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
+            LOGGER.info("Sending to default contractor: " + defaultContractor);
+            if (sendTrain(null, xt, yt)) {
+              atLeastOneSent = true;
+              numberSent++;
+            }
+            break;
           }
-          break;
         }
       } else {
 
@@ -358,30 +360,30 @@ public class TrainScanner {
           if (t.isIdle()) {
             boolean found = false;
             for (Train train : trains) {
-              
-                Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
-                if (p == null && isLocoOnly()) {
-                  BufferedImage i1 = t.getScanImage();
-                  BufferedImage i2 = train.getScanImage();
-                  p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
-                      i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
-                  //System.err.println("locoOnly " + p);
-                }
-                if (p != null) {
-                  found = true;
-                  if (!train.getContractors().isEmpty()) {
-                    if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
-                      atLeastOneSent = true;
-                      numberSent++;
-                    }
-                  } else {
-                    LOGGER.info("Found match, but contractor not set");
+
+              Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
+              if (p == null && isLocoOnly()) {
+                BufferedImage i1 = t.getScanImage();
+                BufferedImage i2 = train.getScanImage();
+                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
+                    i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
+                // System.err.println("locoOnly " + p);
+              }
+              if (p != null) {
+                found = true;
+                if (!train.getContractors().isEmpty()) {
+                  if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
+                    atLeastOneSent = true;
+                    numberSent++;
                   }
-                  break;
+                } else {
+                  LOGGER.info("Found match, but contractor not set");
                 }
-              
+                break;
+              }
+
             } // inner for
-            
+
             if (!found && defaultContractor != null) {
               LOGGER.info("Can't find a match. Sending to default: " + defaultContractor);
               if (sendTrain(null, xt, yt + (i) * 85)) {
@@ -389,13 +391,13 @@ public class TrainScanner {
                 numberSent++;
               }
             }
-            
+
           } else {
             LOGGER.info("Train " + (i + 1) + " is not idle");
           }
         } // for newTrains
       }
-      System.err.println("...");
+      //System.err.println("...");
     } while (atLeastOneSent && numberSent < _takeABreak);
     return atLeastOneSent;
   }
@@ -403,7 +405,7 @@ public class TrainScanner {
   public String getDefaultContractor() {
     return _settings.getProperty("IntTrains.defaultContractor", null);
   }
-  
+
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 64, y + 60);
     _mouse.delay(250);
@@ -419,37 +421,38 @@ public class TrainScanner {
     Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 175, 75));
     if (p != null) {
       String defaultContractor = getDefaultContractor();
-      if (defaultContractor == null) defaultContractor = "";
-      
+      if (defaultContractor == null)
+        defaultContractor = "";
+
       Pixel tl = new Pixel(p.x - 2, p.y + 62);
       try {
-        
-//        //scroll to top
-//        _mouse.mouseMove(tl.x + 347, tl.y + 30);
-//        _mouse.click();
-//        _mouse.delay(400);
-        
+
+        // //scroll to top
+        // _mouse.mouseMove(tl.x + 347, tl.y + 30);
+        // _mouse.click();
+        // _mouse.delay(400);
+
         // find and select contractors
         Rectangle carea = new Rectangle(tl.x, tl.y, 147, 260);
         String lastContractor = train == null ? defaultContractor : train.getContractors().get(train.getContractors().size() - 1);
         if (lastContractor.equals("XP")) {
-          //scroll to top
+          // scroll to top
           _mouse.mouseMove(tl.x + 347, tl.y + 30);
           _mouse.click();
           _mouse.delay(400);
-          
+
           // do it fast
           _mouse.mouseMove(tl.x + 20, tl.y + 20);
-          for(int i = 0; i < 8; i++) {
+          for (int i = 0; i < 8; i++) {
             _mouse.click();
             _mouse.delay(350);
           }
-        } else if(lastContractor.equals("Special")) {
-          //scroll to top
+        } else if (lastContractor.equals("Special")) {
+          // scroll to top
           _mouse.mouseMove(tl.x + 347, tl.y + 30);
           _mouse.click();
           _mouse.delay(400);
-          
+
           _mouse.mouseMove(tl.x + 20, tl.y + 20);
           _mouse.click();
           _mouse.delay(350);
@@ -466,7 +469,7 @@ public class TrainScanner {
         // no matter what try to send the bloody train
       }
 
-      //click send and choose 4h way
+      // click send and choose 4h way
       _mouse.mouseMove(tl.x + 350, tl.y + 417);
       _mouse.delay(300);
       _mouse.click();
@@ -475,7 +478,7 @@ public class TrainScanner {
       _mouse.delay(2000);
 
       // not used
-      //////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
+      // ////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
 
       return true;
       // at the end
@@ -483,7 +486,7 @@ public class TrainScanner {
     }
     return false;
   }
-  
+
   private void sendToContractor(String contractorName, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
     BufferedImage cimage = new Robot().createScreenCapture(carea);
     // writeImage(carea, "carea.bmp");
@@ -496,11 +499,11 @@ public class TrainScanner {
       _mouse.click();
       _mouse.delay(950);
     } else {
-      //scroll to top
+      // scroll to top
       _mouse.mouseMove(tl.x + 347, tl.y + 30);
       _mouse.click();
       _mouse.delay(400);
-      
+
       for (int page = 0; page < 2; page++) {
         cimage = new Robot().createScreenCapture(carea);
         // writeImage(carea, "carea.bmp");
@@ -514,9 +517,9 @@ public class TrainScanner {
           _mouse.delay(950);
           break;
         } else {
-          //scrolldown
+          // scrolldown
           _mouse.delay(200);
-          for(int clicks = 0; clicks < 8; clicks++) {//was 10
+          for (int clicks = 0; clicks < 8; clicks++) {// was 10
             _mouse.click(tl.x + 347, tl.y + 250);
             _mouse.delay(150);
           }
@@ -524,7 +527,6 @@ public class TrainScanner {
         }
       }
 
-      
     }
   }
 
