@@ -67,7 +67,7 @@ public class ScreenScanner {
   public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
   public static final String   POINTER_CANCEL_IMAGE           = "cancel.bmp";
   public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
-  public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "trainManagement2.bmp";
+  public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "dispa.bmp";
 
   private ImageComparator      _comparator;
 
@@ -218,7 +218,7 @@ public class ScreenScanner {
     int xx = (getGameWidth() - 780) / 2;
     int yy = (getGameHeight() - 585) / 2;
     Rectangle area = new Rectangle(_tl.x + xx + 53, _tl.y + yy + 22, 171, 24);
-    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -46, 32);
+    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -53, 32);//was -46
     _sixMinutes = new ImageData("sixMinutes2.bmp", null, _comparator, 0, 0);
     _maglevDest = new ImageData("maglevDest.bmp", null, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
