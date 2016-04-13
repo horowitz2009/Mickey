@@ -15,6 +15,8 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
@@ -51,14 +53,14 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import Catalano.Core.IntPoint;
-import Catalano.Imaging.Tools.Blob;
-
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
+
+import Catalano.Core.IntPoint;
+import Catalano.Imaging.Tools.Blob;
 
 /**
  * @author zhristov
@@ -68,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.963";
+  private static final String   APP_TITLE           = "v0.964";
 
   private boolean               _devMode            = false;
 
@@ -148,8 +150,7 @@ public final class MainFrame extends JFrame {
 
     init();
 
-    // KEYS TURNED OFF. NO NEED AT THIS POINT
-    // KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
+    KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
 
     runSettingsListener();
   }
@@ -1007,7 +1008,7 @@ public final class MainFrame extends JFrame {
       }
     }
 
-    //service.purgeOld(1000 * 60 * 60);// 1 hour old
+    // service.purgeOld(1000 * 60 * 60);// 1 hour old
   }
 
   private void reload(String r) {
@@ -1303,7 +1304,7 @@ public final class MainFrame extends JFrame {
       if (!bookmark) {
         if (_scanner.isOptimized()) {
           p = _scanner.getBottomRight();
-          p.y += 2; 
+          p.y += 2;
           p.x -= 2;
         } else {
           p = new Pixel(0, 110);
@@ -1781,8 +1782,8 @@ public final class MainFrame extends JFrame {
 
   private void captureScreen(String filename) {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height), filename + DateUtils.formatDateForFile2(System.currentTimeMillis())
-        + ".png");
+    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+        filename + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -2005,13 +2006,13 @@ public final class MainFrame extends JFrame {
     return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
-      RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click)
+      throws AWTException, IOException, RobotInterruptedException {
     return findAndClick(imageName, area, xOff, yOff, click, false);
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture) throws AWTException,
-      IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture)
+      throws AWTException, IOException, RobotInterruptedException {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
@@ -2160,8 +2161,8 @@ public final class MainFrame extends JFrame {
     LOGGER.info("POPUPS " + (t2 - t1));
   }
 
-  private boolean scanOtherLocations(int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
-      DragFailureException {
+  private boolean scanOtherLocations(int number)
+      throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 85, 148, 28);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 10, 10, true)) {
@@ -2868,7 +2869,7 @@ public final class MainFrame extends JFrame {
     _stats.registerTrain(isExpress);
     // String msg = "Trains: " + _stats.getTotalTrainCount();
     // String date = getNow();
-    // _trainsNumberLabel.setText(msg + "  (" + date + ")");
+    // _trainsNumberLabel.setText(msg + " (" + date + ")");
     // //LOGGER.severe(msg);
     // _trainsNumberLabel.invalidate();
     updateLabels();
@@ -2919,6 +2920,37 @@ public final class MainFrame extends JFrame {
       tscanner.setSettings(_settings);
     }
     _trainManagementWindow.setVisible(true);
+  }
+
+  private final class MyKeyEventDispatcher implements KeyEventDispatcher {
+
+    public boolean dispatchKeyEvent(KeyEvent e) {
+      if (!e.isConsumed()) {
+        if (e.getKeyCode() == 119 || e.getKeyCode() == 65) {// F8 or a
+
+          if (!isRunning("HMM")) {
+            Thread t = new Thread(new Runnable() {
+              public void run() {
+                clickCrazy();
+              }
+            }, "HMM");
+            t.start();
+          }
+        }
+      }
+      return false;
+    }
+
+    private void clickCrazy() {
+      try {
+        do {
+          _mouse.click();
+          _mouse.delay(100);
+        } while (true);
+      } catch (RobotInterruptedException e1) {
+      }
+    }
+
   }
 
 }
