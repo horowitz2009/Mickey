@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.966";
+  private static final String   APP_TITLE           = "v0.967";
 
   private boolean               _devMode            = false;
 
@@ -2330,13 +2330,19 @@ public final class MainFrame extends JFrame {
         }, "TRAIN_MAN");
         _tmThread.start();
       }
+      int xold = p.x;
+      int xoff2 = _settings.getInt("xOff2", 4);
+      p.x += (rails.length + 1) * xoff2;
       for (int i = rails.length - 1; !_trainManagementOpen && i >= 0; i--) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        p.x = p.x - xoff2;
         clickCareful(p, false, false);
         _mouse.checkUserMovement();
       }
+      p.x = xold;
       for (int i = 0; !_trainManagementOpen && i < rails.length; i++) {
         p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        p.x = p.x + xoff2;
         clickCareful(p, false, false);
         _mouse.checkUserMovement();
       }
