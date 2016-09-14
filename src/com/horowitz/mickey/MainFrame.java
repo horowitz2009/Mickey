@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.964";
+  private static final String   APP_TITLE           = "v0.966";
 
   private boolean               _devMode            = false;
 
@@ -1556,6 +1556,13 @@ public final class MainFrame extends JFrame {
           } else {
             // lookForPackages();
           }
+          int whistles = _settings.getInt("clickWhistles", 2);
+          if (whistles > 0) {
+            for (int i = 0; i < whistles; i++) {
+              _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
+              _mouse.delay(20);
+            }
+          }
 
           // LETTERS
           // int h = _settings.getInt("huntLetters", 2);
@@ -2050,9 +2057,12 @@ public final class MainFrame extends JFrame {
   }
 
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+    long t11 = System.currentTimeMillis();
     long t1 = System.currentTimeMillis();
     long t2;
-    // LOGGER.info("Scanning for popups...");
+    boolean debug = false;
+    if (debug)
+      LOGGER.info("Scanning for popups...");
 
     _mouse.mouseMove(_scanner.getBottomRight());
 
@@ -2061,27 +2071,36 @@ public final class MainFrame extends JFrame {
 
     // NO BUTTON
     boolean found = scanAndClick(_scanner.getNoButton(), null);
-    // //long t2 = System.currentTimeMillis();
-    // //LOGGER.info("> handle No: " + (t2 - t1));
+    t2 = System.currentTimeMillis();
+    if (debug)
+      LOGGER.info("> handle No: " + (t2 - t1));
 
-    // //t1 = t2 = System.currentTimeMillis();
+    t1 = t2 = System.currentTimeMillis();
     // SESSION
     checkSession();
-    // //t2 = System.currentTimeMillis();
-    // //LOGGER.info("> handle Session: " + (t2 - t1));
-    // //t1 = t2 = System.currentTimeMillis();
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle Session: " + (t2 - t1));
 
-    // INVITE
-    found = scanAndClick(_scanner.getInvite(), null);
-    if (found) {
-      LOGGER.info("found Invite popup...");
-    }
+//    // INVITE
+//    t1 = t2 = System.currentTimeMillis();
+//    found = scanAndClick(_scanner.getInvite(), null);
+//    t2 = System.currentTimeMillis();
+//    if (debug) LOGGER.info("> handle invite " + (t2 - t1));
+//    if (found) {
+//      LOGGER.info("found Invite popup...");
+//    }
 
     // DAILY REWARDS
+    t1 = t2 = System.currentTimeMillis();
     found = scanAndClick(_scanner.getDailyRewards(), null);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle daily rewards " + (t2 - t1));
 
-    // HOORREY!!
+    // HOORRAY!!
+    t1 = t2 = System.currentTimeMillis();
     found = scanAndClick(_scanner.getHooray(), null);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle hooray " + (t2 - t1));
 
     if (found) {
       // check for FB Share popup
@@ -2101,39 +2120,58 @@ public final class MainFrame extends JFrame {
       }
     }
 
-    // FB SHARE
-    found = scanAndClick(_scanner.getFBShare(), null);
-    if (found) {
-      try {
-        LOGGER.info("Wait 1sec and relocate the game...");
-        Thread.sleep(1000);
-      } catch (InterruptedException e) {
-      }
-      _scanner.locateGameArea();
-    }
+//    // FB SHARE
+//    t1 = t2 = System.currentTimeMillis();
+//    found = scanAndClick(_scanner.getFBShare(), null);
+//    t2 = System.currentTimeMillis();
+//    if (debug) LOGGER.info("> handle FBshare " + (t2 - t1));
+//    if (found) {
+//      try {
+//        LOGGER.info("Wait 1sec and relocate the game...");
+//        Thread.sleep(1000);
+//      } catch (InterruptedException e) {
+//      }
+//      _scanner.locateGameArea();
+//    }
 
     // SHOP
+    t1 = t2 = System.currentTimeMillis();
     found = found || scanAndClick(_scanner.getShopX(), null);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle shop " + (t2 - t1));
 
     // PROMO
+    t1 = t2 = System.currentTimeMillis();
     found = found || scanAndClick(_scanner.getPromoX(), null);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle promoX " + (t2 - t1));
 
     // CLOSE - no passengers
+    t1 = t2 = System.currentTimeMillis();
     int xx = (_scanner.getGameWidth() - 262) / 2;
     int yy = (_scanner.getGameHeight() - 280) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 85, _scanner.getTopLeft().y + yy + 225, 90, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle no passengers " + (t2 - t1));
 
     // CLOSE button of train Management
+    t1 = t2 = System.currentTimeMillis();
     xx = (_scanner.getGameWidth() - 760) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle train management " + (t2 - t1));
 
     xx = (_scanner.getGameWidth() - 277) / 2;
 
     // now check other popups that need to refresh the game
+    t1 = t2 = System.currentTimeMillis();
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getTopLeft().y + 184, 200, 80);
     found = findAndClick("sync.bmp", area, 84, 256, true, true);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle sync " + (t2 - t1));
+
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game out of sync! Refreshing...");
@@ -2143,9 +2181,12 @@ public final class MainFrame extends JFrame {
     }
 
     // CANCEL
+    t1 = t2 = System.currentTimeMillis();
     xx = (_scanner.getGameWidth() - 782) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 227, _scanner.getBottomRight().y - 105, 100, 44);
     found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 7, true, true);
+    t2 = System.currentTimeMillis();
+    if (debug) LOGGER.info("> handle cancel " + (t2 - t1));
     if (found) {
       try {
         Thread.sleep(500);
@@ -2158,7 +2199,7 @@ public final class MainFrame extends JFrame {
     }
 
     t2 = System.currentTimeMillis();
-    LOGGER.info("POPUPS " + (t2 - t1));
+    LOGGER.info("POPUPS " + (t2 - t11));
   }
 
   private boolean scanOtherLocations(int number)

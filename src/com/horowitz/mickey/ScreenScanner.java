@@ -145,6 +145,7 @@ public class ScreenScanner {
   private Rectangle            _passengersArea;
 
   private int                  _street1Y                      = 170;
+  private Pixel _whistlesPoint;
 
   public ScreenScanner(Settings settings) {
     _settings = settings;
@@ -333,6 +334,8 @@ public class ScreenScanner {
     //final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     //area = new Rectangle(0, yy, screenSize.width, screenSize.height - yy - 20);
     //_fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
+    
+    _whistlesPoint = new Pixel(_tl.x + 36, _tl.y + 310);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -824,6 +827,10 @@ public class ScreenScanner {
 
   public ImageData getMaglevDest() {
     return _maglevDest;
+  }
+
+  public Pixel getWhistlesPoint() {
+    return _whistlesPoint;
   }
 
 }
