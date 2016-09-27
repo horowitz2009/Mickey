@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.967";
+  private static final String   APP_TITLE           = "v0.968";
 
   private boolean               _devMode            = false;
 
@@ -998,7 +998,7 @@ public final class MainFrame extends JFrame {
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
         String[] ss = r.split("_");
-        Boolean bookmark = ss.length > 1 ? Boolean.parseBoolean(ss[1]) : false;
+        Boolean bookmark = ss.length > 1 ? ss[1].startsWith("true") : false;
         try {
           stopMagic();
           refresh(bookmark);
@@ -1297,7 +1297,7 @@ public final class MainFrame extends JFrame {
 
   private void refresh(boolean bookmark) throws RobotInterruptedException {
     deleteOlder("refresh", 5);
-    LOGGER.info("Time to refresh...");
+    LOGGER.info("Time to refresh: " + bookmark);
     captureScreen("refresh ");
     try {
       Pixel p;
@@ -1315,7 +1315,7 @@ public final class MainFrame extends JFrame {
         robot.keyRelease(KeyEvent.VK_F5);
       } else {
         try {
-          p = _scanner.generateImageData("tsFaviconFB.bmp", 8, 7).findImage(new Rectangle(0, 30, 400, 200));
+          p = _scanner.generateImageData("tsFaviconFB2.bmp", 4, 3).findImage(new Rectangle(0, 30, 400, 200));
           _mouse.click(p.x, p.y);
         } catch (IOException e) {
         }
@@ -1325,7 +1325,7 @@ public final class MainFrame extends JFrame {
       _mouse.delay(10000);
       boolean done = false;
       try {
-        for (int i = 0; i < 17 && !done; i++) {
+        for (int i = 0; i < 11 && !done; i++) {
           LOGGER.info("after refresh recovery try " + (i + 1));
           handleRarePopups(false);
 
