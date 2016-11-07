@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.968";
+  private static final String   APP_TITLE           = "v0.970";
 
   private boolean               _devMode            = false;
 
@@ -2503,12 +2503,15 @@ public final class MainFrame extends JFrame {
 
   private void loadTrainsFast() throws RobotInterruptedException {
     int[] rails = _scanner.getRailsOut();
-    int xx = _scanner.getBottomRight().x - 80; // safe zone
+    int xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations", 80); // safe zone
     for (int i = 0; i < rails.length; i++) {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+      _mouse.checkUserMovement();
     }
+    xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations2", 75); // safe zone
     for (int i = 0; i < rails.length; i++) {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+      _mouse.checkUserMovement();
     }
 
     _mouse.delay(300);
