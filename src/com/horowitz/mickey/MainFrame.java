@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.970";
+  private static final String   APP_TITLE           = "v0.971";
 
   private boolean               _devMode            = false;
 
@@ -967,7 +967,7 @@ public final class MainFrame extends JFrame {
 
       if (r.startsWith("capture")) {
         service.inProgress(r);
-        String[] ss = r.split("_");
+        String[] ss = r.split("[_-]");
         if (ss.length > 2) {
           // _captureContractors.clear();
           _captureContractors.add(ss[1]);
@@ -997,7 +997,7 @@ public final class MainFrame extends JFrame {
         updateLabels();
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
-        String[] ss = r.split("_");
+        String[] ss = r.split("[_-]");
         Boolean bookmark = ss.length > 1 ? ss[1].startsWith("true") : false;
         try {
           stopMagic();
@@ -1026,7 +1026,7 @@ public final class MainFrame extends JFrame {
 
   private void processClick(String r) {
     try {
-      String[] ss = r.split("_");
+      String[] ss = r.split("[_-]");
       int x = Integer.parseInt(ss[1]);
       int y = Integer.parseInt(ss[2]);
       _mouse.click(x, y);
@@ -1046,7 +1046,7 @@ public final class MainFrame extends JFrame {
         boolean done = false;
         do {
           n++;
-          String[] ss = request.split("_");
+          String[] ss = request.split("[_-]");
           String c = null;
           if (ss.length > 2) {
             c = ss[1];
@@ -1079,7 +1079,7 @@ public final class MainFrame extends JFrame {
         boolean done = false;
         do {
           n++;
-          String[] ss = request.split("_");
+          String[] ss = request.split("[_-]");
           String c = null;
           if (ss.length > 2) {
             c = ss[1];
@@ -1315,7 +1315,7 @@ public final class MainFrame extends JFrame {
         robot.keyRelease(KeyEvent.VK_F5);
       } else {
         try {
-          p = _scanner.generateImageData("tsFaviconFB2.bmp", 4, 3).findImage(new Rectangle(0, 30, 400, 200));
+          p = _scanner.generateImageData("tsFaviconFB2.bmp", 7, 7).findImage(new Rectangle(0, 30, 400, 200));
           _mouse.click(p.x, p.y);
         } catch (IOException e) {
         }
@@ -2252,7 +2252,7 @@ public final class MainFrame extends JFrame {
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
-      moved = moveIfNecessary();
+      moved = false; //BUGGY moveIfNecessary();
       Rectangle leftArea = new Rectangle(_scanner.getPackagesArea().x, _scanner.getPackagesArea().y, 36, _scanner.getPackagesArea().height);
       p = _scanner.getPointerDownR().findImage(leftArea);
       if (p == null) {
