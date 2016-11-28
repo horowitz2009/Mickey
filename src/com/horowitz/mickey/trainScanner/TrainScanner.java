@@ -474,7 +474,7 @@ public class TrainScanner {
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
-      _mouse.click(tl.x + 455, tl.y + 414);
+      _mouse.click(tl.x + 355, tl.y + 414);
       _mouse.delay(2000);
 
       // not used
