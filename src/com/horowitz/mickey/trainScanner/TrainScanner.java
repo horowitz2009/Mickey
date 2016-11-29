@@ -153,7 +153,7 @@ public class TrainScanner {
       for (int slot = firstSlot; slot <= 5; slot++) {
         _mouse.delay(400);
         Rectangle slotArea = new Rectangle(xt, yt + (slot - 1) * 85, 685, 82);
-        Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
+        Rectangle onRoadArea = new Rectangle(slotArea.x + 11, slotArea.y + 43, 46, 32);
         ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
         ImageData freeSlotData = _scanner.generateImageData("int/Add.bmp");
         isIdle = onRoadData.findImage(onRoadArea) == null;
