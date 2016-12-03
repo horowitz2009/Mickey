@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.973";
+  private static final String   APP_TITLE           = "v0.974";
 
   private boolean               _devMode            = false;
 
@@ -1523,6 +1523,7 @@ public final class MainFrame extends JFrame {
             }
 
             if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
+              lookForPackages2();
               LOGGER.info("Mandatory refresh");
               refresh(false);
               _stats.registerMandatoryRefresh();
@@ -2278,8 +2279,8 @@ public final class MainFrame extends JFrame {
     } while (!done && curr - start <= timeGiven && !_stopThread);
 
     if (_settings.getBoolean("packages.clickBlind", true)) {
-      p = _scanner.getPointerLeft().findImage();
-      if (p != null) {
+//      p = _scanner.getPointerLeft().findImage();
+//      if (p != null) {
         int step = _settings.getInt("packages.step", 14);
         int width = _scanner.getGameWidth() - 40 - step / 2;
         int y = _scanner.getBottomRight().y - _settings.getInt("packages.y", 234);
@@ -2289,7 +2290,7 @@ public final class MainFrame extends JFrame {
           _mouse.click(x + i * step, y);
           _mouse.checkUserMovement();
         }
-      }
+//      }
     }
     _mouse.delay(200);
 
