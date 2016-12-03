@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.972";
+  private static final String   APP_TITLE           = "v0.973";
 
   private boolean               _devMode            = false;
 
@@ -2079,28 +2079,31 @@ public final class MainFrame extends JFrame {
     // SESSION
     checkSession();
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle Session: " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle Session: " + (t2 - t1));
 
-//    // INVITE
-//    t1 = t2 = System.currentTimeMillis();
-//    found = scanAndClick(_scanner.getInvite(), null);
-//    t2 = System.currentTimeMillis();
-//    if (debug) LOGGER.info("> handle invite " + (t2 - t1));
-//    if (found) {
-//      LOGGER.info("found Invite popup...");
-//    }
+    // // INVITE
+    // t1 = t2 = System.currentTimeMillis();
+    // found = scanAndClick(_scanner.getInvite(), null);
+    // t2 = System.currentTimeMillis();
+    // if (debug) LOGGER.info("> handle invite " + (t2 - t1));
+    // if (found) {
+    // LOGGER.info("found Invite popup...");
+    // }
 
     // DAILY REWARDS
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick(_scanner.getDailyRewards(), null);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle daily rewards " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle daily rewards " + (t2 - t1));
 
     // HOORRAY!!
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick(_scanner.getHooray(), null);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle hooray " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle hooray " + (t2 - t1));
 
     if (found) {
       // check for FB Share popup
@@ -2120,31 +2123,33 @@ public final class MainFrame extends JFrame {
       }
     }
 
-//    // FB SHARE
-//    t1 = t2 = System.currentTimeMillis();
-//    found = scanAndClick(_scanner.getFBShare(), null);
-//    t2 = System.currentTimeMillis();
-//    if (debug) LOGGER.info("> handle FBshare " + (t2 - t1));
-//    if (found) {
-//      try {
-//        LOGGER.info("Wait 1sec and relocate the game...");
-//        Thread.sleep(1000);
-//      } catch (InterruptedException e) {
-//      }
-//      _scanner.locateGameArea();
-//    }
+    // // FB SHARE
+    // t1 = t2 = System.currentTimeMillis();
+    // found = scanAndClick(_scanner.getFBShare(), null);
+    // t2 = System.currentTimeMillis();
+    // if (debug) LOGGER.info("> handle FBshare " + (t2 - t1));
+    // if (found) {
+    // try {
+    // LOGGER.info("Wait 1sec and relocate the game...");
+    // Thread.sleep(1000);
+    // } catch (InterruptedException e) {
+    // }
+    // _scanner.locateGameArea();
+    // }
 
     // SHOP
     t1 = t2 = System.currentTimeMillis();
     found = found || scanAndClick(_scanner.getShopX(), null);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle shop " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle shop " + (t2 - t1));
 
     // PROMO
     t1 = t2 = System.currentTimeMillis();
     found = found || scanAndClick(_scanner.getPromoX(), null);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle promoX " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle promoX " + (t2 - t1));
 
     // CLOSE - no passengers
     t1 = t2 = System.currentTimeMillis();
@@ -2153,7 +2158,8 @@ public final class MainFrame extends JFrame {
     area = new Rectangle(_scanner.getTopLeft().x + xx + 85, _scanner.getTopLeft().y + yy + 225, 90, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle no passengers " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle no passengers " + (t2 - t1));
 
     // CLOSE button of train Management
     t1 = t2 = System.currentTimeMillis();
@@ -2161,7 +2167,8 @@ public final class MainFrame extends JFrame {
     area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle train management " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle train management " + (t2 - t1));
 
     xx = (_scanner.getGameWidth() - 277) / 2;
 
@@ -2170,7 +2177,8 @@ public final class MainFrame extends JFrame {
     area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getTopLeft().y + 184, 200, 80);
     found = findAndClick("sync.bmp", area, 84, 256, true, true);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle sync " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle sync " + (t2 - t1));
 
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
@@ -2186,7 +2194,8 @@ public final class MainFrame extends JFrame {
     area = new Rectangle(_scanner.getTopLeft().x + xx + 227, _scanner.getBottomRight().y - 105, 100, 44);
     found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 7, true, true);
     t2 = System.currentTimeMillis();
-    if (debug) LOGGER.info("> handle cancel " + (t2 - t1));
+    if (debug)
+      LOGGER.info("> handle cancel " + (t2 - t1));
     if (found) {
       try {
         Thread.sleep(500);
@@ -2252,7 +2261,7 @@ public final class MainFrame extends JFrame {
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
-      moved = false; //BUGGY moveIfNecessary();
+      moved = false; // BUGGY moveIfNecessary();
       Rectangle leftArea = new Rectangle(_scanner.getPackagesArea().x, _scanner.getPackagesArea().y, 36, _scanner.getPackagesArea().height);
       p = _scanner.getPointerDownR().findImage(leftArea);
       if (p == null) {
@@ -2268,6 +2277,20 @@ public final class MainFrame extends JFrame {
       }
     } while (!done && curr - start <= timeGiven && !_stopThread);
 
+    if (_settings.getBoolean("packages.clickBlind", true)) {
+      p = _scanner.getPointerLeft().findImage();
+      if (p != null) {
+        int step = _settings.getInt("packages.step", 14);
+        int width = _scanner.getGameWidth() - 40 - step / 2;
+        int y = _scanner.getBottomRight().y - _settings.getInt("packages.y", 234);
+        int turns = width / step;
+        int x = _scanner.getTopLeft().x + step / 2;
+        for (int i = 0; i < turns; i++) {
+          _mouse.click(x + i * step, y);
+          _mouse.checkUserMovement();
+        }
+      }
+    }
     _mouse.delay(200);
 
     if (moved) {
@@ -2496,7 +2519,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void loadTrains() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
-    _mouse.delay(300);
+    _mouse.delay(_settings.getInt("locations.delayBeforeLoad", 1000));
     loadTrainsFast();
     goHomeIfNeeded();
   }
