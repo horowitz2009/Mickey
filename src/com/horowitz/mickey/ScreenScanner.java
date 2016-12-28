@@ -220,7 +220,7 @@ public class ScreenScanner {
     int yy = (getGameHeight() - 585) / 2;
     Rectangle area = new Rectangle(_tl.x + xx + 53, _tl.y + yy + 22, 171, 24);
     _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -53, 32);//was -46
-    _sixMinutes = new ImageData("sixMinutes2.bmp", null, _comparator, 0, 0);
+    _sixMinutes = new ImageData("sixMinutes3.bmp", null, _comparator, 0, 0);
     _maglevDest = new ImageData("maglevDest.bmp", null, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
     //_topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
