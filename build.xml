@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project Mickey2">
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+	<!--<taskdef resource="net/sf/antcontrib/antcontrib.properties" />-->
 
-	<property name="versionNumber" value="975" />
+	<property name="versionNumber" value="976a" />
 
 	<property name="jarname" value="Mickey${versionNumber}.jar" description="" />
 	<property name="dropboxjarname" value="DropboxRemote${versionNumber}.jar" description="" />
@@ -18,16 +18,16 @@
 			</manifest>
 			<fileset dir="bin" />
 		</jar>
-
-    <property name="subfolder" value="lib" />
-		<property name="home_subfolder" value="home" />
-		<property name="home_subfolder2" value="home2" />
-		<property name="office_subfolder" value="office" />
+		
 		<property name="office2_subfolder" value="office2" />
-		<property name="programs_subfolder" value="programs" />
 
-		<foreach list="${office_subfolder},${office2_subfolder}" param="subfolder" target="copy" />
-		<!-- from list => ,${office_subfolder},${programs_subfolder} -->
+		<mkdir dir="${dropbox}/${office2_subfolder}" />
+		<copy todir="${dropbox}/${office2_subfolder}" file="${jarname}" />
+		
+		<mkdir dir="${dropbox}/${office2_subfolder}/lib" />
+		<copy todir="${dropbox}/${office2_subfolder}/lib">
+			<fileset dir="lib" includes="**" />
+		</copy>
 
 	</target>
 
@@ -46,14 +46,19 @@
 			</fileset>
 		</jar>
 
-		<property name="home_subfolder" value="home" />
-		<property name="home_subfolder2" value="home2" />
-		<property name="office_subfolder" value="office" />
 		<property name="office2_subfolder" value="office2" />
-		<property name="programs_subfolder" value="programs" />
 
-		<foreach list="${office_subfolder},${office2_subfolder}" param="subfolder" target="copyDropboxRemote" />
-		<!-- from list => ,${office_subfolder},${programs_subfolder} -->
+		<mkdir dir="${dropbox}/${office2_subfolder}" />
+		<copy todir="${dropbox}/${office2_subfolder}" file="${jarname}" />
+		
+		<mkdir dir="${dropbox}/${office2_subfolder}/lib" />
+		<copy todir="${dropbox}/${office2_subfolder}/lib">
+			<fileset dir="lib" includes="**" />
+		</copy>
+
+		
+		
+		
 
 	</target>
 
@@ -69,7 +74,6 @@
 		
 		<copy todir="${dropbox}/${subfolder}/lib">
 			<fileset dir="lib" includes="**" />
-			
 		</copy>
 
 	</target>

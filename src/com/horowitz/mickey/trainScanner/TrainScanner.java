@@ -470,11 +470,11 @@ public class TrainScanner {
       }
 
       // click send and choose 4h way
-      _mouse.mouseMove(tl.x + 350, tl.y + 417);
+      _mouse.mouseMove(tl.x + 350, tl.y + 421);
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
-      _mouse.click(tl.x + 355, tl.y + 414);
+      _mouse.click(tl.x + 355, tl.y + 421);
       _mouse.delay(2000);
 
       // not used
@@ -537,7 +537,7 @@ public class TrainScanner {
       // _mouse.delay(400);
 
       Rectangle slotArea = new Rectangle(xt, yt + (slot) * 85, 685, 82);
-      Rectangle onRoadArea = new Rectangle(slotArea.x + 25, slotArea.y + 49, 75, 20);
+      Rectangle onRoadArea = new Rectangle(slotArea.x + 14, slotArea.y + 49, 75, 20);
       ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
       boolean isIdle = onRoadData.findImage(onRoadArea) == null;
       Train train;
