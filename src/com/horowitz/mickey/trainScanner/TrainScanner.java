@@ -34,13 +34,14 @@ public class TrainScanner {
   private int             _takeABreak;
   private Settings        _settings;
 
-  public TrainScanner(ScreenScanner scanner, Logger logger, int takeABreak) {
+  public TrainScanner(ScreenScanner scanner, Logger logger, Settings settings) {
     super();
     _scanner = scanner;
     _comparator = new SimilarityImageComparator(0.04, 2000);
     // _comparator.setPrecision(5000);
     // _comparator.setErrors(25);
-    _takeABreak = takeABreak;
+    _settings = settings;
+    _takeABreak = _settings.getInt("IntTrains.takeABreakAfter", 3);
     try {
       _mouse = new MouseRobot();
     } catch (AWTException e) {
@@ -456,6 +457,9 @@ public class TrainScanner {
           _mouse.mouseMove(tl.x + 20, tl.y + 20);
           _mouse.click();
           _mouse.delay(350);
+        } else if (defaultContractor.toLowerCase().startsWith("swap")) {
+          String group = defaultContractor.substring(4).trim();
+          sendToGroup(group, carea, tl);
         } else {
           if (train == null) {
             sendToContractor(defaultContractor, carea, tl);
@@ -485,6 +489,22 @@ public class TrainScanner {
       // train.setSentTime(System.currentTimeMillis());
     }
     return false;
+  }
+  
+  private void sendToGroup(String group, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
+    //group can be bronze, silver or gold
+    int xGroup = tl.x + 615;
+    int yGroup = tl.y + 48;
+    if (group.equalsIgnoreCase("silver")) 
+      xGroup += 30;
+    else if (group.equalsIgnoreCase("gold"))
+      xGroup += 60;
+    _mouse.click(xGroup, yGroup);
+    _mouse.delay(333);
+    for (int i = 0; i < 8; i++) {
+      _mouse.click(tl.x + 465, tl.y + 75);
+      _mouse.delay(250);
+    }
   }
 
   private void sendToContractor(String contractorName, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
@@ -740,10 +760,6 @@ public class TrainScanner {
 
   public void setLocoOnly(boolean locoOnly) {
     _locoOnly = locoOnly;
-  }
-
-  public void setSettings(Settings settings) {
-    _settings = settings;
   }
 
 }

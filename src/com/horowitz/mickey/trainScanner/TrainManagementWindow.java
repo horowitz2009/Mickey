@@ -34,6 +34,7 @@ import javax.swing.event.ChangeListener;
 import com.horowitz.mickey.DateUtils;
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.JCanvas;
+import com.horowitz.mickey.Settings;
 import com.horowitz.mickey.common.Scheduler;
 import com.horowitz.mickey.data.DataStore;
 
@@ -60,21 +61,24 @@ public class TrainManagementWindow extends JFrame {
   private List<TrainView> _trainViews;
 
   TrainScanner            _tscanner;
+  Settings                _settings;
 
-  private JCheckBox       _locoOnly;
+  //private JCheckBox       _locoOnly;
+  private JTextField      _defaultContractorTF;
 
   private int             _numberTrains;
 
-  public TrainManagementWindow(List<Train> trains, TrainScanner tscanner) {
+  public TrainManagementWindow(List<Train> trains, TrainScanner tscanner, Settings settings) {
     super();
     _trains = trains;
     _tscanner = tscanner;
+    _settings = settings;
     _tscanner.setLocoOnly(true);
 
     setDefaultCloseOperation(HIDE_ON_CLOSE);
     setTitle("Int. Train Manager");
     init();
-    setSize(740, 550);
+    setSize(820, 550);
     setLocationRelativeTo(null);
   }
 
@@ -279,7 +283,7 @@ public class TrainManagementWindow extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          scan(true, false, _locoOnly.isSelected());
+          scan(true, false, true);
         }
       });
 
@@ -296,21 +300,20 @@ public class TrainManagementWindow extends JFrame {
 //
 //      toolbar.add(button);
 //    }
+//    {
+//      JButton button = new JButton(new AbstractAction("ADD Idle") {
+//
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//          scan(false, false, true);
+//        }
+//      });
+//
+//      toolbar.add(button);
+//    }
     {
-      JButton button = new JButton(new AbstractAction("ADD Idle") {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          scan(false, false, _locoOnly.isSelected());
-        }
-      });
-
-      toolbar.add(button);
-    }
-    {
-      _locoOnly = new JCheckBox("only locos");
-      _locoOnly.setSelected(true);
-      toolbar.add(_locoOnly);
+      _defaultContractorTF = new JTextField(15);
+      toolbar.add(_defaultContractorTF);
     }
     {
       JButton button = new JButton(new AbstractAction("Remove all") {
@@ -360,7 +363,7 @@ public class TrainManagementWindow extends JFrame {
     _timeTF = new JTextField(8);
     _timeTF.setMaximumSize(new Dimension(50, 20));
     _timeTF.setMinimumSize(new Dimension(50, 20));
-    _timeLabel = new JLabel("   no schedule at the moment");
+    _timeLabel = new JLabel(" no schedule at the moment");
 
     toolbar.add(_timeTF);
     toolbar.add(_timeLabel);
@@ -384,6 +387,7 @@ public class TrainManagementWindow extends JFrame {
   public void reloadNow() {
     _trains = new ArrayList<>();
     try {
+      _defaultContractorTF.setText(_settings.getProperty("IntTrains.defaultContractor", ""));
       Train[] trains = new DataStore().readTrains();
       if (trains != null)
         for (Train train : trains) {
@@ -450,6 +454,9 @@ public class TrainManagementWindow extends JFrame {
     if (_trains != null)
       try {
         updateTrainStatus();
+        _settings.setProperty("IntTrains.defaultContractor", _defaultContractorTF.getText());
+        _settings.saveSettingsSorted();
+
         new DataStore().writeTrains(_trains.toArray(new Train[0]));
         deleteUnUsedImages();
         // new Thread(new Runnable() {

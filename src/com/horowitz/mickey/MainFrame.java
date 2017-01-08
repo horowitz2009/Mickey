@@ -1017,9 +1017,8 @@ public final class MainFrame extends JFrame {
 
   private void reload() {
     if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings.getInt("IntTrains.takeABreakAfter", 3));
-      tscanner.setSettings(_settings);
-      _trainManagementWindow = new TrainManagementWindow(null, tscanner);
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings);
+      _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
     } else
       _trainManagementWindow.reload();
   }
@@ -2989,9 +2988,8 @@ public final class MainFrame extends JFrame {
       stopMagic();
     }
     if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings.getInt("IntTrains.takeABreakAfter", 3));
-      _trainManagementWindow = new TrainManagementWindow(null, tscanner);
-      tscanner.setSettings(_settings);
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings);
+      _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
     }
     _trainManagementWindow.setVisible(true);
   }
@@ -3000,7 +2998,7 @@ public final class MainFrame extends JFrame {
 
     public boolean dispatchKeyEvent(KeyEvent e) {
       if (!e.isConsumed()) {
-        if (e.getKeyCode() == 119 || e.getKeyCode() == 65) {// F8 or a
+        if (e.getKeyCode() == 119) {// F8 or a
 
           if (!isRunning("HMM")) {
             Thread t = new Thread(new Runnable() {
