@@ -1,8 +1,14 @@
 package com.horowitz.mickey.common;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import javax.imageio.IIOException;
@@ -67,5 +73,37 @@ public class MyImageIO {
       output.flush();
     }
     return true;
+  }
+  
+  public static void writeAreaTS(Rectangle rect, String filenamePrefix) {
+    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd  HH-mm-ss-SSS");
+    String date = sdf.format(Calendar.getInstance().getTime());
+    String filename2 = filenamePrefix + " " + date + ".png";
+
+    writeArea(rect, filename2);
+  }
+  
+  public static void writeArea(Rectangle rect, String filename) {
+    try {
+      writeImage(new Robot().createScreenCapture(rect), filename);
+    } catch (AWTException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public static void writeImage(BufferedImage image, String filename) {
+
+    try {
+      int ind = filename.lastIndexOf("/");
+      if (ind > 0) {
+        String path = filename.substring(0, ind);
+        File f = new File(path);
+        f.mkdirs();
+      }
+      File file = new File(filename);
+      write(image, filename.substring(filename.length() - 3).toUpperCase(), file);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

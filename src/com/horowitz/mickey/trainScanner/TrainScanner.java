@@ -6,7 +6,9 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,6 +24,7 @@ import com.horowitz.mickey.RobotInterruptedException;
 import com.horowitz.mickey.ScreenScanner;
 import com.horowitz.mickey.Settings;
 import com.horowitz.mickey.SimilarityImageComparator;
+import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.DataStore;
 
 public class TrainScanner {
@@ -478,6 +481,10 @@ public class TrainScanner {
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
+      if (_settings.getBoolean("IntTrains.captureSent", true)) {
+        Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
+        MyImageIO.writeAreaTS(rect, "train sent ");
+      }
       _mouse.click(tl.x + 355, tl.y + 421);
       _mouse.delay(2000);
 
@@ -501,7 +508,7 @@ public class TrainScanner {
       xGroup += 60;
     _mouse.click(xGroup, yGroup);
     _mouse.delay(333);
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 10; i++) {
       _mouse.click(tl.x + 465, tl.y + 75);
       _mouse.delay(250);
     }
