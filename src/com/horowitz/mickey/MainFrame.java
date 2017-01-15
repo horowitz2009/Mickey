@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.978";
+  private static final String   APP_TITLE           = "v0.979";
 
   private boolean               _devMode            = false;
 
@@ -2537,6 +2537,12 @@ public final class MainFrame extends JFrame {
       _mouse.checkUserMovement();
     }
 
+    xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations3", 65); // safe zone
+    for (int i = 0; i < rails.length; i++) {
+      _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
+      _mouse.checkUserMovement();
+    }
+    
     _mouse.delay(300);
     scanAndClick(_scanner.getNoButton(), null);
 
