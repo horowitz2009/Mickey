@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.979";
+  private static final String   APP_TITLE           = "v0.981";
 
   private boolean               _devMode            = false;
 
@@ -1426,6 +1426,10 @@ public final class MainFrame extends JFrame {
     if (scanAndClick(_scanner.getPromoX(), null))
       _mouse.delay(wait);
 
+    // PROMO
+    if (scanAndClick(_scanner.getPromoX2(), null))
+      _mouse.delay(wait);
+    
     // SHOP X
     if (scanAndClick(_scanner.getShopX(), null))
       _mouse.delay(wait);
@@ -2150,6 +2154,11 @@ public final class MainFrame extends JFrame {
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle promoX " + (t2 - t1));
+
+    found = found || scanAndClick(_scanner.getPromoX2(), null);
+    t2 = System.currentTimeMillis();
+    if (debug)
+      LOGGER.info("> handle promoX2 " + (t2 - t1));
 
     // CLOSE - no passengers
     t1 = t2 = System.currentTimeMillis();

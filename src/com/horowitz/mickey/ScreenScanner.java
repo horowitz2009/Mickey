@@ -100,6 +100,7 @@ public class ScreenScanner {
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
   private ImageData            _promoX                        = null;
+  private ImageData            _promoX2                       = null;
   private ImageData            _hooray                        = null;
   private ImageData            _noButton                      = null;
   private ImageData            _share                         = null;
@@ -171,6 +172,7 @@ public class ScreenScanner {
 
       area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height / 2 - 88);
       _promoX = new ImageData(CLOSE_X, area, _comparator, 14, 14);
+      _promoX2 = new ImageData("closeX2.bmp", area, _comparator, 14, 14);
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
@@ -247,6 +249,9 @@ public class ScreenScanner {
     xx = (getGameWidth() - 747) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, 70, 180);
     _promoX = new ImageData(CLOSE_X, area, _comparator, 7, 7);
+    xx = (getGameWidth() - 520) / 2;
+    area = new Rectangle(_br.x - xx - 60, _tl.y + 24, xx - 40, 240);
+    _promoX2 = new ImageData("closeX2.bmp", area, _comparator, 7, 7);
     
 
     _street1Y = _settings.getInt("street1Y", 204);
@@ -763,6 +768,10 @@ public class ScreenScanner {
 
   public ImageData getPromoX() {
     return _promoX;
+  }
+  
+  public ImageData getPromoX2() {
+    return _promoX2;
   }
 
   public ImageData getHooray() {
