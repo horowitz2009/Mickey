@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Mickey2 with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/prj/repos/Mickey2/TrainCounter.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.horowitz.mickey.TrainCounter"/>
+                <attribute name="Class-Path" value=". lib/commons-lang-2.1.jar lib/json-simple-1.1.1.jar lib/gson-2.3.jar TrainCounter_lib/commons-io-2.4.jar TrainCounter_lib/Catalano.Core.jar TrainCounter_lib/Catalano.Image.jar TrainCounter_lib/Catalano.Math.jar TrainCounter_lib/Catalano.Statistics.jar TrainCounter_lib/commons-io-2.4.jar TrainCounter_lib/commons-lang-2.1.jar TrainCounter_lib/commons-net-3.3.jar TrainCounter_lib/gson-2.3.jar TrainCounter_lib/Catalano.Core.jar TrainCounter_lib/Catalano.Image.jar TrainCounter_lib/Catalano.Math.jar TrainCounter_lib/Catalano.Statistics.jar"/>
+            </manifest>
+            <fileset dir="C:/prj/repos/Mickey2/bin"/>
+            <fileset dir="C:/prj/repos/R2D2/bin"/>
+        </jar>
+        <delete dir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <mkdir dir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/commons-lang-2.1.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/json-simple-1.1.1.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/gson-2.3.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/commons-io-2.4.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/Catalano.Core.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/Catalano.Image.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/Catalano.Math.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/Mickey2/lib/Catalano.Statistics.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/commons-io-2.4.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/commons-lang-2.1.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/commons-net-3.3.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/gson-2.3.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/Catalano.Core.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/Catalano.Image.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/Catalano.Math.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+        <copy file="C:/prj/repos/R2D2/lib/Catalano.Statistics.jar" todir="C:/prj/repos/Mickey2/TrainCounter_lib"/>
+    </target>
+</project>
