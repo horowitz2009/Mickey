@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.981";
+  private static final String   APP_TITLE           = "v0.982";
 
   private boolean               _devMode            = false;
 
@@ -1560,6 +1560,11 @@ public final class MainFrame extends JFrame {
           } else {
             // lookForPackages();
           }
+          
+          //if (turn == 2 || turn == 5)
+            clickSecondStation();
+          
+          
           int whistles = _settings.getInt("clickWhistles", 2);
           if (whistles > 0) {
             for (int i = 0; i < whistles; i++) {
@@ -2316,6 +2321,52 @@ public final class MainFrame extends JFrame {
   private Thread  _tmThread            = null;
   private boolean _trainManagementOpen = false;
   private boolean _clickingDone        = false;
+  
+  private void clickSecondStation() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
+
+    goHomeIfNeeded();
+    //click second station
+    int x = _scanner.getTopLeft().x + 459;//s2
+    int y = _scanner.getTopLeft().y + 54;
+    _mouse.click(x, y);
+    _mouse.delay(2000);
+    
+    int turn = 1;
+    Pixel p;
+    do {
+      LOGGER.info("second station " + turn++);
+      _mouse.saveCurrentPosition();
+      int xOff = _settings.getInt("xOff", 150);
+
+      p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
+
+      int[] rails = _scanner.getRailsHome();
+
+      int xold = p.x;
+      int xoff2 = _settings.getInt("xOff2", 4);
+      p.x += (rails.length + 1) * xoff2;
+      for (int i = rails.length - 1; i >= 0; i--) {
+        p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        p.x = p.x - xoff2;
+        clickCareful(p, false, false);
+        _mouse.checkUserMovement();
+      }
+      p.x = xold;
+      for (int i = 0; i < rails.length; i++) {
+        p.y = _scanner.getBottomRight().y - rails[i] - 4;
+        p.x = p.x + xoff2;
+        clickCareful(p, false, false);
+        _mouse.checkUserMovement();
+      }
+      _mouse.saveCurrentPosition();// ???
+    } while (turn < 3);
+
+    //go back to station 1
+    x -= 35;
+    _mouse.click(x, y);
+    _mouse.delay(2000);
+    
+  }
 
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
