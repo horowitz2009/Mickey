@@ -54,6 +54,7 @@ public class TrainManagementWindow extends JFrame {
   private Thread          _scheduleThread;
   private JLabel          _timeLabel;
   private long            _timeLeft;
+  private long            _coins;
   private JTextField      _timeTF;
 
   private List<Train>     _trains;
@@ -65,6 +66,8 @@ public class TrainManagementWindow extends JFrame {
 
   //private JCheckBox       _locoOnly;
   private JTextField      _defaultContractorTF;
+  private JTextField      _limitCoinsTF;
+  private JTextField      _limitTrainsTF;
 
   private int             _numberTrains;
 
@@ -267,17 +270,17 @@ public class TrainManagementWindow extends JFrame {
 
       toolbar.add(button);
     }
-    {
-      JButton button = new JButton(new AbstractAction("Put default to all") {
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          putDefaultToAll();
-        }
-      });
-      
-      toolbar.add(button);
-    }
+//    {
+//      JButton button = new JButton(new AbstractAction("Put default to all") {
+//        
+//        @Override
+//        public void actionPerformed(ActionEvent e) {
+//          putDefaultToAll();
+//        }
+//      });
+//      
+//      toolbar.add(button);
+//    }
     {
       JButton button = new JButton(new AbstractAction("Rescan ALL") {
 
@@ -314,6 +317,14 @@ public class TrainManagementWindow extends JFrame {
     {
       _defaultContractorTF = new JTextField(15);
       toolbar.add(_defaultContractorTF);
+    }
+    {
+      _limitCoinsTF = new JTextField(12);
+      toolbar.add(_limitCoinsTF);
+    }
+    {
+      _limitTrainsTF = new JTextField(5);
+      toolbar.add(_limitTrainsTF);
     }
     {
       JButton button = new JButton(new AbstractAction("Remove all") {
@@ -388,6 +399,9 @@ public class TrainManagementWindow extends JFrame {
     _trains = new ArrayList<>();
     try {
       _defaultContractorTF.setText(_settings.getProperty("IntTrains.defaultContractor", ""));
+      _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
+      _limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
+      
       Train[] trains = new DataStore().readTrains();
       if (trains != null)
         for (Train train : trains) {
@@ -420,6 +434,10 @@ public class TrainManagementWindow extends JFrame {
       }
     save();
     updateView();
+  }
+  
+  public void resetCoins() {
+    _coins = 0;
   }
   
   public void reload() {
@@ -455,6 +473,8 @@ public class TrainManagementWindow extends JFrame {
       try {
         updateTrainStatus();
         _settings.setProperty("IntTrains.defaultContractor", _defaultContractorTF.getText());
+        _settings.setProperty("IntTrains.limitCoins", _limitCoinsTF.getText());
+        _settings.setProperty("IntTrains.limitTrains", _limitTrainsTF.getText());
         _settings.saveSettingsSorted();
 
         new DataStore().writeTrains(_trains.toArray(new Train[0]));
@@ -664,4 +684,13 @@ public class TrainManagementWindow extends JFrame {
     setTimeLeft(time + System.currentTimeMillis());
     _tscanner.LOGGER.info("Scheduling sending for " + DateUtils.fancyTime2(time));
   }
+  
+  public void reset() {
+    _tscanner.reset();
+  }
+  
+  public Stats getStats() {
+    return _tscanner.getStats();
+  }
+  
 }

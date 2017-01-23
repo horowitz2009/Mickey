@@ -24,6 +24,7 @@ import com.horowitz.mickey.RobotInterruptedException;
 import com.horowitz.mickey.ScreenScanner;
 import com.horowitz.mickey.Settings;
 import com.horowitz.mickey.SimilarityImageComparator;
+import com.horowitz.mickey.TrainCounter;
 import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.DataStore;
 
@@ -36,8 +37,10 @@ public class TrainScanner {
   Logger                  LOGGER;
   private int             _takeABreak;
   private Settings        _settings;
+  private TrainCounter    _trainCounter;
+  private Stats           _stats;
 
-  public TrainScanner(ScreenScanner scanner, Logger logger, Settings settings) {
+  public TrainScanner(ScreenScanner scanner, Logger logger, Settings settings, TrainCounter trainCounter) {
     super();
     _scanner = scanner;
     _comparator = new SimilarityImageComparator(0.04, 2000);
@@ -50,6 +53,9 @@ public class TrainScanner {
     } catch (AWTException e) {
     }
     LOGGER = logger;
+    
+    _trainCounter = trainCounter;
+    _stats = new Stats();
   }
 
   public List<Train> analyzeIntTrains(boolean all) {
@@ -481,10 +487,37 @@ public class TrainScanner {
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
+      
+      if (defaultContractor.toLowerCase().startsWith("swap")) {
+        //do this only if swapping
+        if (_trainCounter != null) {
+          Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
+          String coins = _trainCounter.scanCoins(coinsRect);
+          try {
+            Long coinsNumber = Long.parseLong(coins);
+            
+            //LIMITS CHECK
+            boolean pass = false;
+            
+            _stats.registerTrain(coinsNumber, 0l);
+            LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+            
+          } catch (NumberFormatException e) {
+            LOGGER.info("FAILED TO CONVERT TO NUMBER: " + coins);
+          }
+        }
+        
+        
+      }
+      
+      
       if (_settings.getBoolean("IntTrains.captureSent", true)) {
         Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
         MyImageIO.writeAreaTS(rect, "train sent ");
       }
+      
+      
+      //the send button
       _mouse.click(tl.x + 355, tl.y + 421);
       _mouse.delay(2000);
 
@@ -496,6 +529,10 @@ public class TrainScanner {
       // train.setSentTime(System.currentTimeMillis());
     }
     return false;
+  }
+  
+  public void reset() {
+    _stats.reset();
   }
   
   private void sendToGroup(String group, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
@@ -768,5 +805,11 @@ public class TrainScanner {
   public void setLocoOnly(boolean locoOnly) {
     _locoOnly = locoOnly;
   }
+  
+  public Stats getStats() {
+    return _stats;
+  }
+
+
 
 }

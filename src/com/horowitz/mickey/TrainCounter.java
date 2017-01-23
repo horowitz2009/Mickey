@@ -1,5 +1,8 @@
 package com.horowitz.mickey;
 
+import java.awt.AWTException;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -37,6 +40,18 @@ public class TrainCounter {
     return ocrc.scanImage(image);
   }
 
+  public String scanCoins(Rectangle rect) throws AWTException {
+    Rectangle coinsRect = new Rectangle(rect.x + 308, rect.y + 308, 122, 17);
+    BufferedImage image = new Robot().createScreenCapture(coinsRect);
+    return ocrc.scanImage(image);
+  }
+
+  public String scanPassengers(Rectangle rect) throws AWTException {
+    Rectangle passRect = new Rectangle(rect.x + 495, rect.y + 143, 113, 17);
+    BufferedImage image = new Robot().createScreenCapture(passRect);
+    return ocrp.scanImage(image);
+  }
+
   public String scanPassengers(String filename) throws IOException {
     BufferedImage image = ImageIO.read(new File(filename));
     image = image.getSubimage(495, 143, 113, 17);
@@ -46,7 +61,7 @@ public class TrainCounter {
   public void doReport() throws IOException {
     List<String> result = scanAll(folder);
     File file = new File(outputFile);
-    
+
     FileUtils.writeLines(file, result);
   }
 

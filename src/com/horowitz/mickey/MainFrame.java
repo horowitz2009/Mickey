@@ -70,7 +70,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.982";
+  private static final String   APP_TITLE           = "v0.983";
 
   private boolean               _devMode            = false;
 
@@ -85,9 +85,9 @@ public final class MainFrame extends JFrame {
   private JLabel                _expressTrainsNumberLabel;
   private JLabel                _expressTrainsNumberLabelA;
   private JLabel                _refreshNumberLabel;
-  private JLabel                _refreshMNumberLabel;
-  private JLabel                _refreshTNumberLabel;
-  private JLabel                _refreshSNumberLabel;
+  private JLabel                _itTrainsLabel;
+  private JLabel                _coinsLabel;
+  private JLabel                _passengersLabel;
   private JLabel                _refreshNumberLabelA;
   private JLabel                _lastActivityLabel;
   private JLabel                _startedLabel;
@@ -139,6 +139,8 @@ public final class MainFrame extends JFrame {
   private OCRB                  _ocrb;
 
   private JToggleButton         _maglevClick;
+
+  private TrainCounter          _trainCounter;
 
   public MainFrame() throws HeadlessException {
     super();
@@ -345,15 +347,15 @@ public final class MainFrame extends JFrame {
     refreshNumberLabel.setForeground(Color.GRAY);
     refreshNumberLabel.setFont(refreshNumberLabel.getFont().deriveFont(14.0f));
     _refreshNumberLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
-    _refreshMNumberLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
-    _refreshTNumberLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
-    _refreshSNumberLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
+    _itTrainsLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
+    _coinsLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
+    _passengersLabel = new JLabel("" + (_autoRefreshClick.isSelected() ? "88" : "off"));
     _refreshNumberLabelA = new JLabel("88");
     _refreshNumberLabelA.setForeground(Color.GRAY);
     _refreshNumberLabel.setFont(_refreshNumberLabel.getFont().deriveFont(14.0f));
-    _refreshMNumberLabel.setFont(_refreshMNumberLabel.getFont().deriveFont(14.0f));
-    _refreshTNumberLabel.setFont(_refreshTNumberLabel.getFont().deriveFont(14.0f));
-    _refreshSNumberLabel.setFont(_refreshSNumberLabel.getFont().deriveFont(14.0f));
+    _itTrainsLabel.setFont(_itTrainsLabel.getFont().deriveFont(14.0f));
+    _coinsLabel.setFont(_coinsLabel.getFont().deriveFont(14.0f));
+    _passengersLabel.setFont(_passengersLabel.getFont().deriveFont(14.0f));
     _refreshNumberLabelA.setFont(_refreshNumberLabelA.getFont().deriveFont(10.0f));
 
     JLabel lastActivityLabel = new JLabel("L:");
@@ -457,11 +459,11 @@ public final class MainFrame extends JFrame {
     gbc.gridx = 0;
     gbc.insets = new Insets(0, 4, 0, 0);
     gbc.weightx = 0.0;
-    labelsBox.add(new JLabel("M:"), gbc);
+    labelsBox.add(new JLabel("IT:"), gbc);
 
     gbc.insets = new Insets(0, 0, 0, 0);
     gbc.gridx++;
-    labelsBox.add(_refreshMNumberLabel, gbc);
+    labelsBox.add(_itTrainsLabel, gbc);
 
     gbc.insets = new Insets(0, 3, 0, 0);
     gbc.gridx++;
@@ -469,22 +471,22 @@ public final class MainFrame extends JFrame {
 
     gbc.insets = new Insets(0, 7, 0, 0);
     gbc.gridx++;
-    labelsBox.add(new JLabel("T:"), gbc);
+    labelsBox.add(new JLabel("C:"), gbc);
 
     gbc.insets = new Insets(0, 0, 0, 0);
     gbc.gridx++;
     gbc.gridwidth = 2;
-    labelsBox.add(_refreshTNumberLabel, gbc);
+    labelsBox.add(_coinsLabel, gbc);
 
     gbc.insets = new Insets(0, 7, 0, 0);
     gbc.gridx += 2;
     gbc.gridwidth = 1;
-    labelsBox.add(new JLabel("S:"), gbc);
+    labelsBox.add(new JLabel("P:"), gbc);
 
     gbc.insets = new Insets(0, 0, 0, 0);
     gbc.gridx++;
     gbc.gridwidth = 2;
-    labelsBox.add(_refreshSNumberLabel, gbc);
+    labelsBox.add(_passengersLabel, gbc);
 
     // //////////////////////////
 
@@ -580,17 +582,16 @@ public final class MainFrame extends JFrame {
     }
     // CAPTURE CONTRACTS 1
     {
-      JButton b1 = new JButton(new AbstractAction("C1") {
+      JButton b1 = new JButton(new AbstractAction("RS") {
         public void actionPerformed(ActionEvent e) {
           Thread myThread = new Thread(new Runnable() {
 
             @Override
             public void run() {
               try {
-                resetContractors();
-                if (!isRunning("MAGIC")) {
-                  runMagic();
-                }
+                if (_trainManagementWindow != null)
+                  _trainManagementWindow.reset();
+                
               } catch (Exception e1) {
                 LOGGER.log(Level.WARNING, e1.getMessage());
                 e1.printStackTrace();
@@ -991,6 +992,10 @@ public final class MainFrame extends JFrame {
       } else if (r.startsWith("reload")) {
         service.inProgress(r);
         reload(r);
+      } else if (r.startsWith("resetCoins")) {
+        service.inProgress(r);
+        _trainManagementWindow.reset();
+        updateLabels();
       } else if (r.startsWith("reset")) {
         service.inProgress(r);
         _stats.reset();
@@ -1017,10 +1022,21 @@ public final class MainFrame extends JFrame {
 
   private void reload() {
     if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings);
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings, getTrainCounter());
       _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
     } else
       _trainManagementWindow.reload();
+  }
+
+  private TrainCounter getTrainCounter() {
+    try {
+      if (_trainCounter == null)
+        _trainCounter = new TrainCounter("./", "./");
+      return _trainCounter;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   private void processClick(String r) {
@@ -1235,9 +1251,11 @@ public final class MainFrame extends JFrame {
     _freightTrainsNumberLabel.setText("" + _stats.getFreightTrainCount());
     _expressTrainsNumberLabel.setText("" + _stats.getExpressTrainCount());
     _refreshNumberLabel.setText("" + _stats.getRefreshCount());
-    _refreshMNumberLabel.setText("" + _stats.getRefreshMandatoryCount());
-    _refreshTNumberLabel.setText("" + _stats.getRefreshTimeoutCount());
-    _refreshSNumberLabel.setText("" + _stats.getRefreshStuckCount());
+    if (_trainManagementWindow != null) {
+      _itTrainsLabel.setText("" + _trainManagementWindow.getStats().getTrains());
+      _coinsLabel.setText("" + _trainManagementWindow.getStats().getCoins());
+      _passengersLabel.setText("" + _trainManagementWindow.getStats().getPassengers());
+    }
     _lastActivityLabel.setText("" + _stats.getLastActivityTimeAsString());
     _startedLabel.setText("" + _stats.getStartedTimeAsString());
 
@@ -1429,7 +1447,7 @@ public final class MainFrame extends JFrame {
     // PROMO
     if (scanAndClick(_scanner.getPromoX2(), null))
       _mouse.delay(wait);
-    
+
     // SHOP X
     if (scanAndClick(_scanner.getShopX(), null))
       _mouse.delay(wait);
@@ -1476,7 +1494,8 @@ public final class MainFrame extends JFrame {
       try {
         if (_autoPassClick.isSelected()) {
           try {
-            scanPassengers();
+            if (scanPassengers())
+              updateTimes();
           } catch (Throwable t) {
             LOGGER.info("DAMN IT! " + t.getMessage());
             LOGGER.info(t.toString());
@@ -1560,11 +1579,10 @@ public final class MainFrame extends JFrame {
           } else {
             // lookForPackages();
           }
-          
-          //if (turn == 2 || turn == 5)
-            clickSecondStation();
-          
-          
+
+          // if (turn == 2 || turn == 5)
+          clickSecondStation();
+
           int whistles = _settings.getInt("clickWhistles", 2);
           if (whistles > 0) {
             for (int i = 0; i < whistles; i++) {
@@ -1635,7 +1653,42 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private void scanPassengers() throws AWTException, IOException {
+  private void updateTimes() {
+    int min = _commands.getInt("autoPassengers.min", 1000000);
+    int max = _commands.getInt("autoPassengers.max", 4000000);
+    int normal = _commands.getInt("express.default", 30);
+    int expressMin = _commands.getInt("express.min", 10);
+    int expressMax = _commands.getInt("express.max", 60);
+    LOGGER.info("passengers: " + _passengers);
+    LOGGER.info("min: " + min + "  max: " + max);
+    if (_passengers < min) {
+      // slow down trains
+      if (_expressTime.getTime() != expressMax) {
+        LOGGER.info("Passengers get under " + min);
+        LOGGER.info("Slowing down express trains to " + expressMax);
+        reapplyTimes(expressMax, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+      }
+    } else {
+      if (_passengers > max) {
+        // speed up trains
+        if (_expressTime.getTime() != expressMin) {
+          LOGGER.info("Passengers get over " + max);
+          LOGGER.info("Speeding up express trains to " + expressMin);
+          reapplyTimes(expressMin, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+        }
+      } else {
+        // it is in the middle
+        if (_expressTime.getTime() != normal) {
+          LOGGER.info("Passengers between " + min + " and " + max);
+          LOGGER.info("Setting trains to " + normal);
+          reapplyTimes(normal, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+        }
+      }
+    }
+
+  }
+
+  private boolean scanPassengers() throws AWTException, IOException {
     Rectangle area = _scanner.getPassengersArea();
     Robot robot = new Robot();
     BufferedImage screen = robot.createScreenCapture(area);
@@ -1646,39 +1699,15 @@ public final class MainFrame extends JFrame {
     // }
     String pass = _ocrb.scanImage(screen);
     if (pass != null && pass.length() > 0) {
-      Long passNumber = Long.parseLong(pass);
-      int min = _commands.getInt("autoPassengers.min", 1000000);
-      int max = _commands.getInt("autoPassengers.max", 4000000);
-      int normal = _commands.getInt("express.default", 30);
-      int expressMin = _commands.getInt("express.min", 10);
-      int expressMax = _commands.getInt("express.max", 60);
-      LOGGER.info("passengers: " + pass);
-      LOGGER.info("min: " + min + "  max: " + max);
-      if (passNumber < min) {
-        // slow down trains
-        if (_expressTime.getTime() != expressMax) {
-          LOGGER.info("Passengers get under " + min);
-          LOGGER.info("Slowing down express trains to " + expressMax);
-          reapplyTimes(expressMax, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-        }
-      } else {
-        if (passNumber > max) {
-          // speed up trains
-          if (_expressTime.getTime() != expressMin) {
-            LOGGER.info("Passengers get over " + max);
-            LOGGER.info("Speeding up express trains to " + expressMin);
-            reapplyTimes(expressMin, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-          }
-        } else {
-          // it is in the middle
-          if (_expressTime.getTime() != normal) {
-            LOGGER.info("Passengers between " + min + " and " + max);
-            LOGGER.info("Setting trains to " + normal);
-            reapplyTimes(normal, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-          }
-        }
+      try {
+        _passengers = Long.parseLong(pass);
+        return true;
+      } catch (NumberFormatException e) {
+        // in case of invalid number. just skip it
       }
+
     }
+    return false;
   }
 
   private void checkIsStuck() throws GameStuckException {
@@ -1798,8 +1827,8 @@ public final class MainFrame extends JFrame {
 
   private void captureScreen(String filename) {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-        filename + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height), filename + DateUtils.formatDateForFile2(System.currentTimeMillis())
+        + ".png");
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -1849,14 +1878,19 @@ public final class MainFrame extends JFrame {
     long timeLeft = _trainManagementWindow != null ? _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() : 10000000;
     LOGGER.info("INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
     if (_trainManagementWindow != null && timeLeft <= 0) {
-      handlePopups();
-
-      _trainManagementWindow.reloadNow();
-      boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
-      if (atLeastOneSent)
-        _trainManagementWindow.reschedule(_settings.getInt("IntTrains.rescheduleAgain", 30) * 1000);// 30 sec
-      else
-        _trainManagementWindow.reschedule(_settings.getInt("IntTrains.reschedule", 2 * 60) * 1000);
+      scanPassengers();
+      if (_passengers > _settings.getInt("IntTrains.requiredPassengers", 7000000)) {
+        handlePopups();
+        _trainManagementWindow.reloadNow();
+        boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
+        if (atLeastOneSent)
+          _trainManagementWindow.reschedule(_settings.getInt("IntTrains.rescheduleAgain", 30) * 1000);// 30 sec
+        else
+          _trainManagementWindow.reschedule(_settings.getInt("IntTrains.reschedule", 2 * 60) * 1000);
+      } else {
+        LOGGER.info(_passengers + " passengers not enough for IT. Skipping...");
+        captureScreen("PASSENGERS");
+      }
     }
   }
 
@@ -2022,13 +2056,13 @@ public final class MainFrame extends JFrame {
     return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click)
-      throws AWTException, IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
+      RobotInterruptedException {
     return findAndClick(imageName, area, xOff, yOff, click, false);
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture)
-      throws AWTException, IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture) throws AWTException,
+      IOException, RobotInterruptedException {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
@@ -2225,8 +2259,8 @@ public final class MainFrame extends JFrame {
     LOGGER.info("POPUPS " + (t2 - t11));
   }
 
-  private boolean scanOtherLocations(int number)
-      throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
+  private boolean scanOtherLocations(int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
+      DragFailureException {
     LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 85, 148, 28);
     if (findAndClick(ScreenScanner.POINTER_LOADING_IMAGE, area, 10, 10, true)) {
@@ -2292,18 +2326,18 @@ public final class MainFrame extends JFrame {
     } while (!done && curr - start <= timeGiven && !_stopThread);
 
     if (_settings.getBoolean("packages.clickBlind", true)) {
-//      p = _scanner.getPointerLeft().findImage();
-//      if (p != null) {
-        int step = _settings.getInt("packages.step", 14);
-        int width = _scanner.getGameWidth() - 40 - step / 2;
-        int y = _scanner.getBottomRight().y - _settings.getInt("packages.y", 234);
-        int turns = width / step;
-        int x = _scanner.getTopLeft().x + step / 2;
-        for (int i = 0; i < turns; i++) {
-          _mouse.click(x + i * step, y);
-          _mouse.checkUserMovement();
-        }
-//      }
+      // p = _scanner.getPointerLeft().findImage();
+      // if (p != null) {
+      int step = _settings.getInt("packages.step", 14);
+      int width = _scanner.getGameWidth() - 40 - step / 2;
+      int y = _scanner.getBottomRight().y - _settings.getInt("packages.y", 234);
+      int turns = width / step;
+      int x = _scanner.getTopLeft().x + step / 2;
+      for (int i = 0; i < turns; i++) {
+        _mouse.click(x + i * step, y);
+        _mouse.checkUserMovement();
+      }
+      // }
     }
     _mouse.delay(200);
 
@@ -2321,16 +2355,16 @@ public final class MainFrame extends JFrame {
   private Thread  _tmThread            = null;
   private boolean _trainManagementOpen = false;
   private boolean _clickingDone        = false;
-  
+
   private void clickSecondStation() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
 
     goHomeIfNeeded();
-    //click second station
-    int x = _scanner.getTopLeft().x + 459;//s2
+    // click second station
+    int x = _scanner.getTopLeft().x + 459;// s2
     int y = _scanner.getTopLeft().y + 54;
     _mouse.click(x, y);
     _mouse.delay(2000);
-    
+
     int turn = 1;
     Pixel p;
     do {
@@ -2361,11 +2395,11 @@ public final class MainFrame extends JFrame {
       _mouse.saveCurrentPosition();// ???
     } while (turn < 3);
 
-    //go back to station 1
+    // go back to station 1
     x -= 35;
     _mouse.click(x, y);
     _mouse.delay(2000);
-    
+
   }
 
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
@@ -2514,6 +2548,8 @@ public final class MainFrame extends JFrame {
 
   private List<BlobInfo> _blobs = new ArrayList<MainFrame.BlobInfo>();
 
+  private Long           _passengers;
+
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
   }
@@ -2602,7 +2638,7 @@ public final class MainFrame extends JFrame {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
       _mouse.checkUserMovement();
     }
-    
+
     _mouse.delay(300);
     scanAndClick(_scanner.getNoButton(), null);
 
@@ -3054,7 +3090,7 @@ public final class MainFrame extends JFrame {
       stopMagic();
     }
     if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings);
+      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings, getTrainCounter());
       _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
     }
     _trainManagementWindow.setVisible(true);
