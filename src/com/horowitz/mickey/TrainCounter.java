@@ -41,14 +41,12 @@ public class TrainCounter {
   }
 
   public String scanCoins(Rectangle rect) throws AWTException {
-    Rectangle coinsRect = new Rectangle(rect.x + 308, rect.y + 308, 122, 17);
-    BufferedImage image = new Robot().createScreenCapture(coinsRect);
+    BufferedImage image = new Robot().createScreenCapture(rect);
     return ocrc.scanImage(image);
   }
 
   public String scanPassengers(Rectangle rect) throws AWTException {
-    Rectangle passRect = new Rectangle(rect.x + 495, rect.y + 143, 113, 17);
-    BufferedImage image = new Robot().createScreenCapture(passRect);
+    BufferedImage image = new Robot().createScreenCapture(rect);
     return ocrp.scanImage(image);
   }
 

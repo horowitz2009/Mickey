@@ -54,7 +54,6 @@ public class TrainManagementWindow extends JFrame {
   private Thread          _scheduleThread;
   private JLabel          _timeLabel;
   private long            _timeLeft;
-  private long            _coins;
   private JTextField      _timeTF;
 
   private List<Train>     _trains;
@@ -434,10 +433,6 @@ public class TrainManagementWindow extends JFrame {
       }
     save();
     updateView();
-  }
-  
-  public void resetCoins() {
-    _coins = 0;
   }
   
   public void reload() {

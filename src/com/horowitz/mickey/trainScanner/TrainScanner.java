@@ -487,23 +487,43 @@ public class TrainScanner {
       _mouse.delay(300);
       _mouse.click();
       _mouse.delay(700);
-      
+      boolean pass = true;
       if (defaultContractor.toLowerCase().startsWith("swap")) {
         //do this only if swapping
         if (_trainCounter != null) {
           Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
+          Rectangle passRect = new Rectangle(tl.x + 495, tl.y + 143, 113, 17);
           String coins = _trainCounter.scanCoins(coinsRect);
+          String passengers = _trainCounter.scanPassengers(passRect);
           try {
-            Long coinsNumber = Long.parseLong(coins);
+            int coinsNumber = Integer.parseInt(coins);
+            int passengersNumber = Integer.parseInt(passengers);
             
             //LIMITS CHECK
-            boolean pass = false;
+            //      _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
+            //_limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
+            int limitCoins = _settings.getInt("IntTrains.limitCoins", 0);
+            int limitTrains = _settings.getInt("IntTrains.limitTrains", 0);
+            LOGGER.info("LIMITS: " + limitCoins + ", " + limitTrains);
             
-            _stats.registerTrain(coinsNumber, 0l);
-            LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+            //limit 1. coins
+            if (limitCoins > 0 && _stats.getCoins() + coinsNumber > limitCoins) {
+              LOGGER.info("Coins " + (_stats.getCoins() + coinsNumber) + " exceeds " + limitCoins);
+              pass = false;
+            }
+            //limit 2. trains count
+            if (pass && limitTrains > 0 && _stats.getTrains() + 1 > limitTrains) {
+              LOGGER.info("Train number " + (_stats.getTrains() + 1) + " exceeds " + limitTrains);
+              pass = false;
+            }
+            if (pass) {
+              _stats.registerTrain(coinsNumber, passengersNumber);
+              LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+            }
             
           } catch (NumberFormatException e) {
-            LOGGER.info("FAILED TO CONVERT TO NUMBER: " + coins);
+            LOGGER.info("FAILED TO CONVERT TO NUMBER: " + e.getMessage());
+            //e.printStackTrace();
           }
         }
         
@@ -516,10 +536,18 @@ public class TrainScanner {
         MyImageIO.writeAreaTS(rect, "train sent ");
       }
       
-      
-      //the send button
-      _mouse.click(tl.x + 355, tl.y + 421);
-      _mouse.delay(2000);
+      if (pass) {
+        // the send button
+        _mouse.click(tl.x + 355, tl.y + 421);
+        _mouse.delay(2000);
+      } else {
+        //close one windows
+        _mouse.click(tl.x + 724, tl.y - 72);
+        _mouse.delay(1500);
+        //_mouse.click(tl.x + 724, tl.y - 72);
+        //_mouse.delay(1500);
+        return false;
+      }
 
       // not used
       // ////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
