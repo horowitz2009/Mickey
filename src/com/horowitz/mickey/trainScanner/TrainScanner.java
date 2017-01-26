@@ -4,6 +4,8 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -39,6 +41,7 @@ public class TrainScanner {
   private Settings        _settings;
   private TrainCounter    _trainCounter;
   private Stats           _stats;
+  private PropertyChangeSupport _support;
 
   public TrainScanner(ScreenScanner scanner, Logger logger, Settings settings, TrainCounter trainCounter) {
     super();
@@ -56,6 +59,7 @@ public class TrainScanner {
     
     _trainCounter = trainCounter;
     _stats = new Stats();
+    _support = new PropertyChangeSupport(this);
   }
 
   public List<Train> analyzeIntTrains(boolean all) {
@@ -519,6 +523,7 @@ public class TrainScanner {
             if (pass) {
               _stats.registerTrain(coinsNumber, passengersNumber);
               LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+              _support.firePropertyChange("ITRAIN", 0, 1);
             }
             
           } catch (NumberFormatException e) {
@@ -837,7 +842,14 @@ public class TrainScanner {
   public Stats getStats() {
     return _stats;
   }
+  
+  public void addPropertyChangeListener(PropertyChangeListener arg0) {
+    _support.addPropertyChangeListener(arg0);
+  }
 
+  public void addPropertyChangeListener(String arg0, PropertyChangeListener arg1) {
+    _support.addPropertyChangeListener(arg0, arg1);
+  }
 
 
 }

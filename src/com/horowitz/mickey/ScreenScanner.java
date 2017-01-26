@@ -119,6 +119,7 @@ public class ScreenScanner {
   private ImageData            _pointerRight                  = null;
 
   private ImageData            _sessionTimeOut                = null;
+  private ImageData            _syncError                     = null;
 
   private ImageData            _contracts                     = null;
 
@@ -233,6 +234,10 @@ public class ScreenScanner {
     yy = (getGameHeight() - 281) / 2;
     area = new Rectangle(_tl.x + xx + 80, _tl.y + yy + 80, 120, 50);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
+    area = new Rectangle(area);
+    area.x += 100;
+    _syncError = new ImageData("syncError.bmp", area, _comparator, 0, 0);
+    
 
     // NO BUTTON
     xx = (getGameWidth() - 144) / 2;
@@ -703,6 +708,10 @@ public class ScreenScanner {
 
   public ImageData getSessionTimeOut() {
     return _sessionTimeOut;
+  }
+  
+  public ImageData getSyncError() {
+    return _syncError;
   }
 
   public void addHandler(Handler handler) {

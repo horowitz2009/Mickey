@@ -23,8 +23,11 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.983";
+  private static final String   APP_TITLE           = "v0.984";
 
   private boolean               _devMode            = false;
 
@@ -155,6 +158,7 @@ public final class MainFrame extends JFrame {
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
 
     runSettingsListener();
+    numberFormat = NumberFormat.getNumberInstance();
   }
 
   private void setupLogger() {
@@ -591,7 +595,7 @@ public final class MainFrame extends JFrame {
               try {
                 if (_trainManagementWindow != null)
                   _trainManagementWindow.reset();
-                
+
               } catch (Exception e1) {
                 LOGGER.log(Level.WARNING, e1.getMessage());
                 e1.printStackTrace();
@@ -1023,6 +1027,12 @@ public final class MainFrame extends JFrame {
   private void reload() {
     if (_trainManagementWindow == null) {
       TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings, getTrainCounter());
+      tscanner.addPropertyChangeListener(new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent arg0) {
+          updateLabels();
+        }
+      });
       _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
     } else
       _trainManagementWindow.reload();
@@ -1247,14 +1257,14 @@ public final class MainFrame extends JFrame {
 
   private void updateLabels() {
     _stats.updateTime();
-    _trainsNumberLabel.setText("" + _stats.getTotalTrainCount());
-    _freightTrainsNumberLabel.setText("" + _stats.getFreightTrainCount());
-    _expressTrainsNumberLabel.setText("" + _stats.getExpressTrainCount());
+    _trainsNumberLabel.setText(formatNumber(_stats.getTotalTrainCount()));
+    _freightTrainsNumberLabel.setText(formatNumber(_stats.getFreightTrainCount()));
+    _expressTrainsNumberLabel.setText(formatNumber(_stats.getExpressTrainCount()));
     _refreshNumberLabel.setText("" + _stats.getRefreshCount());
     if (_trainManagementWindow != null) {
-      _itTrainsLabel.setText("" + _trainManagementWindow.getStats().getTrains());
-      _coinsLabel.setText("" + _trainManagementWindow.getStats().getCoins());
-      _passengersLabel.setText("" + _trainManagementWindow.getStats().getPassengers());
+      _itTrainsLabel.setText(formatNumber(_trainManagementWindow.getStats().getTrains()));
+      _coinsLabel.setText(formatNumber(_trainManagementWindow.getStats().getCoins()));
+      _passengersLabel.setText(formatNumber(_trainManagementWindow.getStats().getPassengers()));
     }
     _lastActivityLabel.setText("" + _stats.getLastActivityTimeAsString());
     _startedLabel.setText("" + _stats.getStartedTimeAsString());
@@ -1263,6 +1273,10 @@ public final class MainFrame extends JFrame {
     _freightTrainsNumberLabelA.setText(_stats.getAverageFreightTimeAsString());
     _expressTrainsNumberLabelA.setText(_stats.getAverageExpressTimeAsString());
     _refreshNumberLabelA.setText(_stats.getAverageRefreshTimeAsString());
+  }
+  
+  private String formatNumber(long number) {
+    return numberFormat.format(number);
   }
 
   protected void runMagic() {
@@ -1520,9 +1534,10 @@ public final class MainFrame extends JFrame {
         captureContracts();
 
         if (_captureContractors.size() == 0) {
-          if (_sendInternational.isSelected())
+          if (_sendInternational.isSelected()) {
             sendInternational();
-
+            //updateLabels();
+          }
           // scanOtherLocations(true, 2);
 
           if (_pingClick.isSelected()) {
@@ -1580,8 +1595,10 @@ public final class MainFrame extends JFrame {
             // lookForPackages();
           }
 
-          // if (turn == 2 || turn == 5)
-          clickSecondStation();
+          //SECOND STATION
+          List<Integer> turns = getSecondStationTurns();
+          if (turns.contains(turn))
+            clickSecondStation();
 
           int whistles = _settings.getInt("clickWhistles", 2);
           if (whistles > 0) {
@@ -1651,6 +1668,19 @@ public final class MainFrame extends JFrame {
     if (_stopThread) {
       LOGGER.info("Mickey has being stopped");
     }
+  }
+
+  private List<Integer> getSecondStationTurns() {
+    List<Integer> res = new ArrayList<>();
+    String s = _settings.getProperty("secondStationTurns", "");
+    String[] ss = s.split(",");
+    for (String t : ss) {
+      try {
+        res.add(Integer.parseInt(t.trim()));
+      } catch (NumberFormatException e) {
+      }
+    }
+    return res;
   }
 
   private void updateTimes() {
@@ -2549,6 +2579,8 @@ public final class MainFrame extends JFrame {
   private List<BlobInfo> _blobs = new ArrayList<MainFrame.BlobInfo>();
 
   private Long           _passengers;
+
+  private NumberFormat numberFormat;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
