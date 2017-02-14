@@ -73,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.984";
+  private static final String   APP_TITLE           = "v0.985";
 
   private boolean               _devMode            = false;
 
@@ -3033,6 +3033,10 @@ public final class MainFrame extends JFrame {
       // MAGLEV FIRST
       if (_commands.getBoolean("maglev15", true)) {
         Pixel maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372, tm.y + 433, 34, 29));
+        if (maglevDestOK == null) {
+          //try next slot
+          maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372 + 178, tm.y + 433, 34, 29));
+        }
         if (maglevDestOK != null) {
           _mouse.mouseMove(maglevDestOK.x + 63, maglevDestOK.y + 16);
           _mouse.delay(150);
