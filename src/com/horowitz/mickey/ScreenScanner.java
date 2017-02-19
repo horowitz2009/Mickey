@@ -234,9 +234,7 @@ public class ScreenScanner {
     yy = (getGameHeight() - 281) / 2;
     area = new Rectangle(_tl.x + xx + 80, _tl.y + yy + 80, 120, 50);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
-    area = new Rectangle(area);
-    area.x += 100;
-    _syncError = new ImageData("syncError.bmp", area, _comparator, 0, 0);
+    _syncError = new ImageData("sync.bmp", area, _comparator, 0, 0);
     
 
     // NO BUTTON

@@ -73,7 +73,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.985";
+  private static final String   APP_TITLE           = "v0.988";
 
   private boolean               _devMode            = false;
 
@@ -1919,6 +1919,7 @@ public final class MainFrame extends JFrame {
           _trainManagementWindow.reschedule(_settings.getInt("IntTrains.reschedule", 2 * 60) * 1000);
       } else {
         LOGGER.info(_passengers + " passengers not enough for IT. Skipping...");
+        deleteOlder("PASSENGERS", 10);
         captureScreen("PASSENGERS");
       }
     }
@@ -2252,17 +2253,18 @@ public final class MainFrame extends JFrame {
 
     // now check other popups that need to refresh the game
     t1 = t2 = System.currentTimeMillis();
-    area = new Rectangle(_scanner.getTopLeft().x + xx, _scanner.getTopLeft().y + 184, 200, 80);
-    found = findAndClick("sync.bmp", area, 84, 256, true, true);
+    
+    Pixel p = _scanner.getSyncError().findImage();
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle sync " + (t2 - t1));
 
+    found = (p != null);
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game out of sync! Refreshing...");
-      // refresh(false);
       _stats.registerRefresh();
+      refresh(false);
       updateLabels();
     }
 
