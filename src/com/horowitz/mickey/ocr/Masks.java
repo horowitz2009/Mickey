@@ -11,7 +11,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.horowitz.mickey.Pixel;
+import com.horowitz.commons.Pixel;
+import com.horowitz.ocr.Mask;
 
 public class Masks {
 

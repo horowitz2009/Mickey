@@ -13,9 +13,10 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.commons.Pixel;
 import com.horowitz.mickey.ImageManager;
-import com.horowitz.mickey.Pixel;
 import com.horowitz.mickey.common.MyImageIO;
+import com.horowitz.ocr.Mask;
 
 public class OCR {
   private Color               _foreground;

@@ -31,10 +31,10 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.horowitz.commons.Settings;
 import com.horowitz.mickey.DateUtils;
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.JCanvas;
-import com.horowitz.mickey.Settings;
 import com.horowitz.mickey.common.Scheduler;
 import com.horowitz.mickey.data.DataStore;
 

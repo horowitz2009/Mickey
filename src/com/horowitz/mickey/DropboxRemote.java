@@ -20,6 +20,8 @@ import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
+import com.horowitz.commons.MouseRobot;
+import com.horowitz.commons.RobotInterruptedException;
 import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.service.Service;
 

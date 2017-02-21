@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.horowitz.commons.MouseRobot;
 import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.service.Service;
 

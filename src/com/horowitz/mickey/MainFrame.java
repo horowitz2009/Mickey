@@ -56,14 +56,22 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Catalano.Core.IntPoint;
+import Catalano.Imaging.Tools.Blob;
+
+import com.horowitz.commons.BaseScreenScanner;
+import com.horowitz.commons.ImageComparator;
+import com.horowitz.commons.ImageData;
+import com.horowitz.commons.MouseRobot;
+import com.horowitz.commons.Pixel;
+import com.horowitz.commons.RobotInterruptedException;
+import com.horowitz.commons.Settings;
+import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
-
-import Catalano.Core.IntPoint;
-import Catalano.Imaging.Tools.Blob;
 
 /**
  * @author zhristov
@@ -73,11 +81,12 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.988";
+  private static final String   APP_TITLE           = "v0.990";
 
   private boolean               _devMode            = false;
 
   private ScreenScanner         _scanner;
+  private BaseScreenScanner     _bscanner;
   private MouseRobot            _mouse;
   private boolean               _stopThread         = false;
   private Statistics            _stats;
@@ -151,7 +160,15 @@ public final class MainFrame extends JFrame {
     _commands = Settings.createSettings("mickey.commands");
     _stats = new Statistics();
 
-    setupLogger();
+    try {
+      setupLogger();
+      _scanner = new ScreenScanner(_settings);
+      _bscanner = new BaseScreenScanner(_settings);
+      _mouse = new MouseRobot();
+    } catch (AWTException e2) {
+      LOGGER.log(Level.SEVERE, e2.getMessage());
+      System.exit(ERROR);
+    }
 
     init();
 
@@ -163,19 +180,12 @@ public final class MainFrame extends JFrame {
 
   private void setupLogger() {
     try {
-      try {
-        MyLogger.setup();
-      } catch (IOException e) {
-        e.printStackTrace();
-        throw new RuntimeException("Problems with creating the log files");
-      }
-
-      _scanner = new ScreenScanner(_settings);
-      _mouse = new MouseRobot();
-    } catch (AWTException e2) {
-      LOGGER.log(Level.SEVERE, e2.getMessage());
-      System.exit(ERROR);
+      MyLogger.setup();
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new RuntimeException("Problems with creating the log files");
     }
+
   }
 
   class MyCanvas extends JPanel {
@@ -1274,7 +1284,7 @@ public final class MainFrame extends JFrame {
     _expressTrainsNumberLabelA.setText(_stats.getAverageExpressTimeAsString());
     _refreshNumberLabelA.setText(_stats.getAverageRefreshTimeAsString());
   }
-  
+
   private String formatNumber(long number) {
     return numberFormat.format(number);
   }
@@ -1316,12 +1326,12 @@ public final class MainFrame extends JFrame {
       } else {
         LOGGER.info("CAN'T FIND THE GAME!");
       }
-    } catch (Exception e1) {
-      LOGGER.log(Level.WARNING, e1.getMessage());
-      e1.printStackTrace();
     } catch (RobotInterruptedException e) {
       LOGGER.log(Level.SEVERE, "Interrupted by user", e);
       e.printStackTrace();
+    } catch (Exception e1) {
+      LOGGER.log(Level.WARNING, e1.getMessage());
+      e1.printStackTrace();
     }
 
   }
@@ -1347,7 +1357,8 @@ public final class MainFrame extends JFrame {
       } else {
         try {
           p = _scanner.generateImageData("tsFaviconFB2.bmp", 7, 7).findImage(new Rectangle(0, 30, 400, 200));
-          _mouse.click(p.x, p.y);
+          if (p != null)
+            _mouse.click(p.x, p.y);
         } catch (IOException e) {
         }
       }
@@ -1536,7 +1547,7 @@ public final class MainFrame extends JFrame {
         if (_captureContractors.size() == 0) {
           if (_sendInternational.isSelected()) {
             sendInternational();
-            //updateLabels();
+            // updateLabels();
           }
           // scanOtherLocations(true, 2);
 
@@ -1595,7 +1606,7 @@ public final class MainFrame extends JFrame {
             // lookForPackages();
           }
 
-          //SECOND STATION
+          // SECOND STATION
           List<Integer> turns = getSecondStationTurns();
           if (turns.contains(turn))
             clickSecondStation();
@@ -2134,7 +2145,7 @@ public final class MainFrame extends JFrame {
     long t11 = System.currentTimeMillis();
     long t1 = System.currentTimeMillis();
     long t2;
-    boolean debug = false;
+    boolean debug = true;
     if (debug)
       LOGGER.info("Scanning for popups...");
 
@@ -2218,9 +2229,20 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle shop " + (t2 - t1));
 
-    // PROMO
+    // PROMO and various popups with close X
     t1 = t2 = System.currentTimeMillis();
-    found = found || scanAndClick(_scanner.getPromoX(), null);
+    int x = _scanner.getTopLeft().x;
+    x += _scanner.getGameWidth() / 2;
+    int y = _scanner.getTopLeft().y;
+    area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
+    _scanner.writeImage(area, "C:/work/Damn.png");
+    Pixel pp = _bscanner.scanOneFast("journey.bmp", area, Color.RED, true);
+
+    found = pp != null;
+    if (found) {
+      _mouse.click(pp.x + 5, pp.y + 5);
+      _mouse.delay(400);
+    }
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle promoX " + (t2 - t1));
@@ -2253,7 +2275,7 @@ public final class MainFrame extends JFrame {
 
     // now check other popups that need to refresh the game
     t1 = t2 = System.currentTimeMillis();
-    
+
     Pixel p = _scanner.getSyncError().findImage();
     t2 = System.currentTimeMillis();
     if (debug)
@@ -2578,11 +2600,11 @@ public final class MainFrame extends JFrame {
 
   }
 
-  private List<BlobInfo> _blobs = new ArrayList<MainFrame.BlobInfo>();
+  private List<BlobInfo> _blobs      = new ArrayList<MainFrame.BlobInfo>();
 
-  private Long           _passengers;
+  private Long           _passengers = 0L;
 
-  private NumberFormat numberFormat;
+  private NumberFormat   numberFormat;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
@@ -3036,7 +3058,7 @@ public final class MainFrame extends JFrame {
       if (_commands.getBoolean("maglev15", true)) {
         Pixel maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372, tm.y + 433, 34, 29));
         if (maglevDestOK == null) {
-          //try next slot
+          // try next slot
           maglevDestOK = _scanner.getMaglevDest().findImage(new Rectangle(tm.x + 372 + 178, tm.y + 433, 34, 29));
         }
         if (maglevDestOK != null) {

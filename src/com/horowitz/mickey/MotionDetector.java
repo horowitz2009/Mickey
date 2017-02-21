@@ -14,6 +14,10 @@ import Catalano.Imaging.Filters.Threshold;
 import Catalano.Imaging.Tools.Blob;
 import Catalano.Imaging.Tools.BlobDetection;
 
+import com.horowitz.commons.ImageComparator;
+import com.horowitz.commons.Settings;
+import com.horowitz.commons.SimilarityImageComparator;
+
 public class MotionDetector {
 
   private final static Logger  LOGGER = Logger.getLogger(MotionDetector.class.getName());

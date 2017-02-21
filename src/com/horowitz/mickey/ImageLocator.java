@@ -14,6 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.horowitz.commons.MouseRobot;
+import com.horowitz.commons.Pixel;
+import com.horowitz.commons.RobotInterruptedException;
+import com.horowitz.commons.Settings;
+
 public class ImageLocator extends JPanel {
 
   private Settings      _settings;

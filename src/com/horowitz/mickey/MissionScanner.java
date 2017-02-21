@@ -9,6 +9,11 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.commons.ImageComparator;
+import com.horowitz.commons.ImageData;
+import com.horowitz.commons.Pixel;
+import com.horowitz.commons.Settings;
+import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.common.MyImageIO;
 import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.data.Mission;

@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.commons.ImageData;
+import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.data.Material;
 import com.horowitz.mickey.ocr.OCRB;
 
