@@ -1440,7 +1440,7 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private void handleRarePopups(boolean fast) throws InterruptedException, RobotInterruptedException {
+  private void handleRarePopups(boolean fast) throws InterruptedException, RobotInterruptedException, IOException, AWTException {
     LOGGER.info("Checking for FB login and daily rewards...");
     _mouse.savePosition();
     _mouse.mouseMove(0, 0);
@@ -1465,9 +1465,19 @@ public final class MainFrame extends JFrame {
     if (scanAndClick(_scanner.getDailyRewards(), null))
       _mouse.delay(wait);
 
-    // PROMO
-    if (scanAndClick(_scanner.getPromoX(), null))
-      _mouse.delay(wait);
+    // PROMO and various popups with close X
+    int x = _scanner.getTopLeft().x;
+    x += _scanner.getGameWidth() / 2;
+    int y = _scanner.getTopLeft().y;
+    Rectangle area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
+    //_scanner.writeImage(area, "C:/work/Damn.png");
+    Pixel pp = _bscanner.scanOneFast("journey.bmp", area, Color.RED, true);
+
+    boolean found = pp != null;
+    if (found) {
+      _mouse.click(pp.x + 5, pp.y + 5);
+      _mouse.delay(400);
+    }
 
     // PROMO
     if (scanAndClick(_scanner.getPromoX2(), null))
@@ -1773,6 +1783,10 @@ public final class MainFrame extends JFrame {
             putNewImage(howMuch);
           } catch (InterruptedException e) {
           } catch (RobotInterruptedException e) {
+          } catch (IOException e) {
+            e.printStackTrace();
+          } catch (AWTException e) {
+            e.printStackTrace();
           }
         }
 
@@ -1869,7 +1883,7 @@ public final class MainFrame extends JFrame {
   private void captureScreen(String filename) {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height), filename + DateUtils.formatDateForFile2(System.currentTimeMillis())
-        + ".png");
+        + ".jpg");
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -2145,7 +2159,7 @@ public final class MainFrame extends JFrame {
     long t11 = System.currentTimeMillis();
     long t1 = System.currentTimeMillis();
     long t2;
-    boolean debug = true;
+    boolean debug = false;
     if (debug)
       LOGGER.info("Scanning for popups...");
 
@@ -2235,7 +2249,7 @@ public final class MainFrame extends JFrame {
     x += _scanner.getGameWidth() / 2;
     int y = _scanner.getTopLeft().y;
     area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
-    _scanner.writeImage(area, "C:/work/Damn.png");
+    //_scanner.writeImage(area, "C:/work/Damn.png");
     Pixel pp = _bscanner.scanOneFast("journey.bmp", area, Color.RED, true);
 
     found = pp != null;
