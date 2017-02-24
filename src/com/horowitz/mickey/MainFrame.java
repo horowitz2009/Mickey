@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.990";
+  private static final String   APP_TITLE           = "v0.991";
 
   private boolean               _devMode            = false;
 
@@ -108,8 +108,8 @@ public final class MainFrame extends JFrame {
   private JButton               _resetAction;
   private JButton               _doMagicAction;
 
-  private Location              _freeTime           = Locations.LOC_6MIN;
-  private Location              _xpTime             = Locations.LOC_6MIN;
+  private Location              _freeTime           = Locations.LOC_5MIN;
+  private Location              _xpTime             = Locations.LOC_5MIN;
   private Location              _freightTime        = Locations.LOC_10MIN;
   private Location              _expressTime        = Locations.LOC_30MIN;
 
