@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.991";
+  private static final String   APP_TITLE           = "v0.993";
 
   private boolean               _devMode            = false;
 
@@ -1471,12 +1471,20 @@ public final class MainFrame extends JFrame {
     int y = _scanner.getTopLeft().y;
     Rectangle area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
     //_scanner.writeImage(area, "C:/work/Damn.png");
-    Pixel pp = _bscanner.scanOneFast("journey.bmp", area, Color.RED, true);
+    Pixel pp = _bscanner.scanOneFast("journey2.bmp", area, Color.RED, true);
 
     boolean found = pp != null;
     if (found) {
       _mouse.click(pp.x + 5, pp.y + 5);
       _mouse.delay(400);
+    } else {
+      pp = _bscanner.scanOneFast("journey2.bmp", area, null, false);
+
+      found = pp != null;
+      if (found) {
+        _mouse.click(pp.x + 5, pp.y + 5);
+        _mouse.delay(400);
+      }
     }
 
     // PROMO
@@ -1553,10 +1561,10 @@ public final class MainFrame extends JFrame {
         boolean flag = scanOtherLocations(1);
 
         captureContracts();
-
+        boolean atLeastOneSent = false;
         if (_captureContractors.size() == 0) {
           if (_sendInternational.isSelected()) {
-            sendInternational();
+            atLeastOneSent = sendInternational();
             // updateLabels();
           }
           // scanOtherLocations(true, 2);
@@ -1582,7 +1590,8 @@ public final class MainFrame extends JFrame {
 
             if (mandatoryRefresh > 0 && now - fstart >= mandatoryRefresh) {
               lookForPackages2();
-              LOGGER.info("Mandatory refresh");
+              LOGGER.info("Mandatory refresh in 20secs");
+              Thread.sleep(20*1000);
               refresh(false);
               _stats.registerMandatoryRefresh();
               updateLabels();
@@ -1929,15 +1938,16 @@ public final class MainFrame extends JFrame {
     }
   }
 
-  private void sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
+  private boolean sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     long timeLeft = _trainManagementWindow != null ? _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() : 10000000;
     LOGGER.info("INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
+    boolean atLeastOneSent = false;
     if (_trainManagementWindow != null && timeLeft <= 0) {
       scanPassengers();
       if (_passengers > _settings.getInt("IntTrains.requiredPassengers", 7000000)) {
         handlePopups();
         _trainManagementWindow.reloadNow();
-        boolean atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
+        atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
         if (atLeastOneSent)
           _trainManagementWindow.reschedule(_settings.getInt("IntTrains.rescheduleAgain", 30) * 1000);// 30 sec
         else
@@ -1948,6 +1958,7 @@ public final class MainFrame extends JFrame {
         captureScreen("PASSENGERS");
       }
     }
+    return atLeastOneSent;
   }
 
   private void captureContracts() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
@@ -2256,7 +2267,16 @@ public final class MainFrame extends JFrame {
     if (found) {
       _mouse.click(pp.x + 5, pp.y + 5);
       _mouse.delay(400);
+    } else {
+      pp = _bscanner.scanOneFast("journey2.bmp", area, null, false);
+
+      found = pp != null;
+      if (found) {
+        _mouse.click(pp.x + 5, pp.y + 5);
+        _mouse.delay(400);
+      }
     }
+
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle promoX " + (t2 - t1));
@@ -2299,6 +2319,8 @@ public final class MainFrame extends JFrame {
     // found = found || findAndClick(ScreenScanner.POINTER_CLOSE4_IMAGE, area, 23, 10, true, true);
     if (found) {
       LOGGER.info("Game out of sync! Refreshing...");
+      captureScreen("CRASH ");
+      deleteOlder("CRASH", 30);
       _stats.registerRefresh();
       refresh(false);
       updateLabels();
@@ -2393,7 +2415,7 @@ public final class MainFrame extends JFrame {
       }
     } while (!done && curr - start <= timeGiven && !_stopThread);
 
-    if (_settings.getBoolean("packages.clickBlind", true)) {
+    if (!done && _settings.getBoolean("packages.clickBlind", true)) {
       // p = _scanner.getPointerLeft().findImage();
       // if (p != null) {
       int step = _settings.getInt("packages.step", 14);
@@ -2416,7 +2438,6 @@ public final class MainFrame extends JFrame {
         _mouse.delay(1000);
         goHomeIfNeeded();
       }
-      ;
     }
   }
 
@@ -3104,6 +3125,8 @@ public final class MainFrame extends JFrame {
       _mouse.savePosition(); // stopping the magic.
 
       if (!_devMode) {
+        if (time.getTime() == 8)
+          _mouse.delay(1000);
         clickTrain(isExpress);
       }
       return true;
