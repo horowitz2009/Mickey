@@ -541,7 +541,8 @@ public class TrainScanner {
       
       if (pass) {
         // the send button
-        _mouse.click(tl.x + 355, tl.y + 421);
+        //OLD _mouse.click(tl.x + 355, tl.y + 421);
+        _mouse.click(tl.x + 355 + 60, tl.y + 421);
         _mouse.delay(2000);
       } else {
         //close one windows
