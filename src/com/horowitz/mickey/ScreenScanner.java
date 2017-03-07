@@ -18,10 +18,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Handler;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.commons.BaseScreenScanner;
 import com.horowitz.commons.ImageComparator;
 import com.horowitz.commons.ImageData;
 import com.horowitz.commons.MouseRobot;
@@ -31,13 +31,11 @@ import com.horowitz.commons.Settings;
 import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.common.MyImageIO;
 
-public class ScreenScanner {
+public class ScreenScanner extends BaseScreenScanner {
 
-  private final static Logger  LOGGER                         = Logger.getLogger(ScreenScanner.class.getName());
-  private static final boolean DEBUG                          = false;
-
-  public static final String   DAILY_PUBLISH                  = "Sure.bmp";
-
+  public static final String SHOP_X = "shopX.bmp";
+  public static final String   CLOSE_X2                       = "closeX2.bmp";
+  
   private static final String  LOGIN_FB                       = "loginFB.bmp";
   private static final String  LOGIN_WITH_FB                  = "loginWithFB3.bmp";
   private static final String  INT_TRAINS                     = "int/Trains.bmp";
@@ -55,8 +53,6 @@ public class ScreenScanner {
   private static final String  EXPRESS_TRAIN                  = "expressTrain3.bmp";
   private static final String  FREE_TRAIN                     = "free2.bmp";
   private static final String  XP_TRAIN                       = "xpTrain2.bmp";
-  public static final String   SHOP_X                         = "shopX.bmp";
-  private static final String  NO_BUTTON                      = "noButton.bmp";
   private static final String  SESSION                        = "session2.bmp";
 
   public static final String   POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
@@ -64,8 +60,6 @@ public class ScreenScanner {
   public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
   public static final String   ANCHOR_IMAGE                   = "anchorInvite2.bmp";
-  public static final String   ANCHOR_TOPLEFT_IMAGE1          = "anchorTopLeftTSLOGO.bmp";
-  public static final String   ANCHOR_TOPLEFT_IMAGE2          = "anchorTopLeftNEW.bmp";
 
   public static final String   POINTER_CLOSE_IMAGE            = "Close.bmp";
   public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
@@ -75,12 +69,6 @@ public class ScreenScanner {
   public static final String   POINTER_CANCEL_IMAGE           = "cancel.bmp";
   public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
   public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "dispa.bmp";
-
-  private ImageComparator      _comparator;
-
-  private Pixel                _br                            = null;
-  private Pixel                _tl                            = null;
-  private boolean              _fullyOptimized                = false;
 
   private ImageData            _home                          = null;
   private ImageData            _close1                        = null;
@@ -107,9 +95,6 @@ public class ScreenScanner {
   private ImageData            _nightX                        = null;
   private ImageData            _daylightY                     = null;
   private ImageData            _promoX                        = null;
-  private ImageData            _promoX2                       = null;
-  private ImageData            _hooray                        = null;
-  private ImageData            _noButton                      = null;
   private ImageData            _share                         = null;
 
   private ImageData            _trainManagementAnchor         = null;
@@ -140,13 +125,9 @@ public class ScreenScanner {
 
   private ImageData            _invite;
   private ImageData            _dailyRewards;
-  private ImageData            _fbShare;
-
-  private ImageData            _shopX;
 
   private Pixel                _topPlayersPixel;
 
-  private Settings             _settings;
 
   private ImageData            _expressTrain;
   private ImageData            _freeTrain;
@@ -157,8 +138,7 @@ public class ScreenScanner {
   private Pixel _whistlesPoint;
 
   public ScreenScanner(Settings settings) {
-    _settings = settings;
-    _comparator = new SimilarityImageComparator(0.04, 2000);
+    super(settings);
 
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     Rectangle area = new Rectangle(20, 340, screenSize.width - 20 - 404, screenSize.height - 340 - 110);
@@ -167,20 +147,20 @@ public class ScreenScanner {
       _loginFB = new ImageData(LOGIN_FB, area, _comparator, 29, 6);
 
       area = new Rectangle(187, 233, screenSize.width - 187 - 187, screenSize.height - 233 - 17);
-      _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
+      
+      getImageData("Sure.bmp", area, 15, 5);
       
       area = new Rectangle(100, 122, screenSize.width - 200, 500);
       _invite = new ImageData("Invite.bmp", area, _comparator, 583, 5);
       
       area = new Rectangle(450, 270, screenSize.width - 450, screenSize.height - 270);
-      _fbShare = new ImageData("FBShare.bmp", area, _comparator, 15, 5);
+      getImageData("FBShare.bmp", area, 15, 5);
 
       area = new Rectangle(screenSize.width / 2, 10, screenSize.width / 2 - 120, screenSize.height / 2 - 121);
-      _shopX = new ImageData(SHOP_X, area, _comparator, 9, 9);
-
+      getImageData(ScreenScanner.SHOP_X, area, 9, 9);
       area = new Rectangle(576, 88, screenSize.width - 576 - 250, screenSize.height / 2 - 88);
-      _promoX = new ImageData(CLOSE_X, area, _comparator, 14, 14);
-      _promoX2 = new ImageData("closeX2.bmp", area, _comparator, 14, 14);
+      getImageData(CLOSE_X, area, 14, 14);
+      getImageData(CLOSE_X2, area, 14, 14);
 
       _tl = new Pixel(0, 0);
       _br = new Pixel(screenSize.width - 3, screenSize.height - 3);
@@ -189,7 +169,6 @@ public class ScreenScanner {
       _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
       
       area = new Rectangle(_tl.x + 72, _tl.y + 423, screenSize.width - 72, screenSize.height - 423);
-      _noButton = new ImageData(NO_BUTTON, area, _comparator, 0, 0);
       
     } catch (IOException e) {
       e.printStackTrace();
@@ -224,7 +203,7 @@ public class ScreenScanner {
     // _nightX = new ImageData("nightX.bmp", null, _comparator, 8, 8);
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
-    _fullyOptimized = true;
+    _optimized = true;
     
     int xx = (getGameWidth() - 780) / 2;
     int yy = (getGameHeight() - 585) / 2;
@@ -244,25 +223,18 @@ public class ScreenScanner {
     _syncError = new ImageData("sync.bmp", area, _comparator, 0, 0);
     
 
-    // NO BUTTON
-    xx = (getGameWidth() - 144) / 2;
-    area = new Rectangle(_tl.x + xx, _tl.y + 423, 39, 25); // TODO to be widen if not working
-    _noButton = new ImageData(NO_BUTTON, area, _comparator, 0, 0);
-    
-
     // SHOP X
     xx = (getGameWidth() - 780) / 2;
     area = new Rectangle(_br.x - xx - 42, _tl.y + 24, xx + 42, 42);
-    _shopX = new ImageData(SHOP_X, area, _comparator, 9, 9);
-
+    getImageData(ScreenScanner.SHOP_X, area, 9, 9);
     // PROMO
     xx = (getGameWidth() - 747) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, 70, 180);
-    _promoX = new ImageData(CLOSE_X, area, _comparator, 7, 7);
+    getImageData(CLOSE_X, area, 7, 7);
+    
     xx = (getGameWidth() - 520) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, xx - 40, 240);
-    _promoX2 = new ImageData("closeX2.bmp", area, _comparator, 7, 7);
-    
+    getImageData(CLOSE_X2, area, 7, 7);
 
     _street1Y = _settings.getInt("street1Y", 204);
 
@@ -321,8 +293,7 @@ public class ScreenScanner {
     yy += _tl.y;
     area = new Rectangle(xx + 194, yy + 397, 192, 39);
     
-    _hooray = new ImageData("Hooray.bmp", area, _comparator, 23, 6);
-
+    getImageData("Hooray.bmp", area, 23, 6);
     
     // SHARE
     xx = (getGameWidth() - 60) / 2;
@@ -342,7 +313,7 @@ public class ScreenScanner {
     yy += _tl.y;
 
     area = new Rectangle(xx + 187, yy + 233, 150, 30);
-    _dailyRewards = new ImageData(DAILY_PUBLISH, area, _comparator, 15, 5);
+    getImageData("Sure.bmp", area, 15, 5);
 
     //xx = (getGameWidth() + 250 - 595) / 2;
     //yy = 290 + _tl.y;
@@ -358,6 +329,7 @@ public class ScreenScanner {
   }
 
   public boolean locateGameArea() throws AWTException, IOException, RobotInterruptedException {
+    //TS still needs a special way of locating game and passengers area
     LOGGER.fine("Locating game area ... ");
 
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -386,33 +358,35 @@ public class ScreenScanner {
     // scroll a bit up
     boolean done = false;
     int turns = 0;
+    Pixel tl = null;
+    Pixel br = null;
     do {
       turns++;
-      Pixel tslogo = locateImageCoords(ANCHOR_TOPLEFT_IMAGE1, areaTL, -20, 46);
+      Pixel tslogo = locateImageCoords("anchorTopLeftTSLOGO.bmp", areaTL, -20, 46);
       if (tslogo != null) {
         if (tslogo.x < 0) tslogo.x = 0;
-        _tl = locateImageCoords(ANCHOR_TOPLEFT_IMAGE2, new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
+        tl = locateImageCoords("anchorTopLeftNEW.bmp", new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
         
-        if (_tl != null) {
-          _passengersArea = new Rectangle(_tl.x + 13, _tl.y + 11, 104, 14);
-          if (Math.abs(tslogo.x - _tl.x) > 20) {
-            _tl.x = tslogo.x;
+        if (tl != null) {
+          _passengersArea = new Rectangle(tl.x + 13, tl.y + 11, 104, 14);
+          if (Math.abs(tslogo.x - tl.x) > 20) {
+            tl.x = tslogo.x;
           } else {
-            _tl.x -= 21;
+            tl.x -= 21;
           }
-          if (_tl.x < 0) _tl.x = 0;
+          if (tl.x < 0) tl.x = 0;
           Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
-              new Rectangle(_tl.x + 684, _tl.y + 543, 300, 100), new Rectangle(_tl.x + 684, _tl.y + 543, screenSize.width - 270 - 684, 100),
+              new Rectangle(tl.x + 684, tl.y + 543, 300, 100), new Rectangle(tl.x + 684, tl.y + 543, screenSize.width - 270 - 684, 100),
               new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
           LOGGER.info("Found top left corner...");
           // good, we're still in the game
-          _br = locateImageCoords(ANCHOR_IMAGE, areaBR, 61, 46);
-          if (_br != null) {
+          br = locateImageCoords("anchorInvite2.bmp", areaBR, 61, 46);
+          if (br != null) {
             LOGGER.info("Found bottom right corner...");
             done = true;
           } else {
             LOGGER.info("Move a bit and try again...");
-            Pixel p = new Pixel(_tl.x, _tl.y - 2);
+            Pixel p = new Pixel(tl.x, tl.y - 2);
             MouseRobot mouse = new MouseRobot();
             mouse.mouseMove(p.x, p.y);
             mouse.saveCurrentPosition();
@@ -427,14 +401,18 @@ public class ScreenScanner {
       }
     } while (!done && turns < 3);
 
-    if (_br != null && _tl != null) {
+    if (br != null && tl != null) {
+      _tl = tl;
+      _br = br;
       LOGGER.info("Top left    : " + _tl);
       LOGGER.info("Bottom Right: " + _br);
       setKeyAreas();
       return done;
     } else {
-      _tl = new Pixel(0, 0);
-      _br = new Pixel(1600, 1000);
+      //keep original coordinates
+      //_tl = new Pixel(0, 0);
+      //_br = new Pixel(1600, 1000);
+      //setKeyAreas();
     }
     return false;
   }
@@ -487,50 +465,29 @@ public class ScreenScanner {
   }
 
   public Pixel locateImageCoords(String imageName, Rectangle[] area, int xOff, int yOff) throws AWTException, IOException, RobotInterruptedException {
+    Pixel p = null;
 
-    final Robot robot = new Robot();
-    final BufferedImage image = ImageIO.read(ImageManager.getImageURL(imageName));
-    Pixel[] mask = new ImageMask(imageName).getMask();
-    BufferedImage screen;
     int turn = 0;
-    Pixel resultPixel = null;
-    // MouseRobot mouse = new MouseRobot();
-    // mouse.saveCurrentPosition();
     while (turn < area.length) {
-
-      screen = robot.createScreenCapture(area[turn]);
-      Map<Integer, Color[]> map = null;
-      if (imageName.equals("pointerLeft.bmp")) {
-        map = new Hashtable<Integer, Color[]>(3);
-        map.put(1, new Color[] { new Color(243, 253, 254) });
-        map.put(2, new Color[] { new Color(45, 143, 25) });
-        map.put(3, new Color[] { new Color(255, 180, 61) });
-      }
-
-      List<Pixel> foundEdges = findEdge(image, screen, _comparator, map, mask);
-      if (foundEdges.size() >= 1) {
-        // found
-        // AppConsole.print("found it! ");
-        int y = area[turn].y;
-        int x = area[turn].x;
-        resultPixel = new Pixel(foundEdges.get(0).x + x + xOff, foundEdges.get(0).y + y + yOff);
-        // System.err.println("AREA: [" + turn + "] " + area[turn]);
+      p = scanOneFast(imageName, area[turn], false);
+      if (p != null) {
+        p.x += xOff;
+        p.y += yOff;
         break;
       }
       turn++;
     }
-    // mouse.checkUserMovement();
-    // AppConsole.println();
-    return resultPixel;
+    
+    return p;
   }
 
   public boolean isOptimized() {
-    return _fullyOptimized && _br != null && _tl != null;
+    return _optimized && _br != null && _tl != null;
   }
 
   private List<Pixel> findEdge(final BufferedImage targetImage, final BufferedImage area, ImageComparator comparator, Map<Integer, Color[]> colors,
       Pixel[] indices) {
-    if (DEBUG)
+    if (_debugMode)
       try {
         MyImageIO.write(area, "PNG", new File("C:/area.png"));
       } catch (IOException e) {
@@ -540,7 +497,7 @@ public class ScreenScanner {
     for (int i = 0; i < (area.getWidth() - targetImage.getWidth()); i++) {
       for (int j = 0; j < (area.getHeight() - targetImage.getHeight()); j++) {
         final BufferedImage subimage = area.getSubimage(i, j, targetImage.getWidth(), targetImage.getHeight());
-        if (DEBUG)
+        if (_debugMode)
           try {
             MyImageIO.write(subimage, "PNG", new File("C:/subimage.png"));
           } catch (IOException e) {
@@ -563,7 +520,7 @@ public class ScreenScanner {
       Robot robot = new Robot();
 
       BufferedImage screenshot = robot.createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
-      if (DEBUG)
+      if (_debugMode)
         MyImageIO.write(screenshot, "PNG", new File("screenshot.png"));
     } catch (HeadlessException | AWTException | IOException e) {
 
@@ -584,7 +541,7 @@ public class ScreenScanner {
   }
 
   public List<Pixel> compareImages(final BufferedImage image1, final BufferedImage image2, ImageComparator comparator, Pixel[] indices) {
-    if (DEBUG)
+    if (_debugMode)
       try {
         ImageIO.write(image2, "PNG", new File("area.png"));
       } catch (IOException e) {
@@ -594,7 +551,7 @@ public class ScreenScanner {
     for (int i = 0; i <= (image2.getWidth() - image1.getWidth()); i++) {
       for (int j = 0; j <= (image2.getHeight() - image1.getHeight()); j++) {
         final BufferedImage subimage = image2.getSubimage(i, j, image1.getWidth(), image1.getHeight());
-        if (DEBUG)
+        if (_debugMode)
           try {
             MyImageIO.write(subimage, "PNG", new File("subimage.png"));
           } catch (IOException e) {
@@ -707,10 +664,6 @@ public class ScreenScanner {
     return _dailyRewards;
   }
   
-  public ImageData getFBShare() {
-    return _fbShare;
-  }
-
   public ImageData getSessionTimeOut() {
     return _sessionTimeOut;
   }
@@ -784,24 +737,8 @@ public class ScreenScanner {
     return _promoX;
   }
   
-  public ImageData getPromoX2() {
-    return _promoX2;
-  }
-
-  public ImageData getHooray() {
-    return _hooray;
-  }
-
-  public ImageData getNoButton() {
-    return _noButton;
-  }
-
   public ImageData getShare() {
     return _share;
-  }
-
-  public ImageData getShopX() {
-    return _shopX;
   }
 
   public ImageData getContracts() {

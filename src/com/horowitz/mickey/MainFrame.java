@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.993";
+  private static final String   APP_TITLE           = "v0.994";
 
   private boolean               _devMode            = false;
 
@@ -1348,7 +1348,7 @@ public final class MainFrame extends JFrame {
           p.y += 2;
           p.x -= 2;
         } else {
-          p = new Pixel(0, 110);
+          p = new Pixel(0, 110);//buggy
         }
         _mouse.click(p.x, p.y);
         Robot robot = new Robot();
@@ -1447,23 +1447,23 @@ public final class MainFrame extends JFrame {
     int wait = 100;
     if (!fast) {
       wait = 1000;
-      // FB LOGIN
-      if (scanAndClick(_scanner.getLoginWIthFB(), null))
-        _mouse.delay(2000);
-
-      if (scanAndClick(_scanner.getLoginFB(), null))
-        _mouse.delay(5000);
-      else
-        _mouse.delay(3000);
+//      // FB LOGIN
+//      if (scanAndClick(_scanner.getLoginWIthFB(), null))
+//        _mouse.delay(2000);
+//
+//      if (scanAndClick(_scanner.getLoginFB(), null))
+//        _mouse.delay(5000);
+//      else
+//        _mouse.delay(3000);
     }
 
-    // INVITE
-    if (scanAndClick(_scanner.getInvite(), null))
-      _mouse.delay(wait);
+//    // INVITE
+//    if (scanAndClick(_scanner.getInvite(), null))
+//      _mouse.delay(wait);
 
-    // DAILY
-    if (scanAndClick(_scanner.getDailyRewards(), null))
-      _mouse.delay(wait);
+//    // DAILY
+//    if (scanAndClick(_scanner.getDailyRewards(), null))
+//      _mouse.delay(wait);
 
     // PROMO and various popups with close X
     int x = _scanner.getTopLeft().x;
@@ -1487,26 +1487,24 @@ public final class MainFrame extends JFrame {
       }
     }
 
-    // PROMO
-    if (scanAndClick(_scanner.getPromoX2(), null))
-      _mouse.delay(wait);
-
-    // SHOP X
-    if (scanAndClick(_scanner.getShopX(), null))
-      _mouse.delay(wait);
+//    // PROMO
+//    if (scanAndClick(_scanner.getPromoX2(), null))
+//      _mouse.delay(wait);
+//
+//    // SHOP X
+//    if (scanAndClick(_scanner.getShopX(), null))
+//      _mouse.delay(wait);
 
     _mouse.restorePosition();
   }
 
-  private boolean scanAndClick(ImageData imageData, Rectangle area) {
-    Pixel p = imageData.findImage(area);
-    if (p != null) {
-      _mouse.mouseMove(p);
-      _mouse.click();
-      LOGGER.info(imageData.getName() + " clicked.");
-      return true;
-    }
-    return false;
+  private boolean scanAndClick(String filename, Rectangle area) throws AWTException, RobotInterruptedException, IOException {
+    Pixel p;
+    if (area != null)
+      p = _scanner.scanOneFast(filename, area, true);
+    else
+      p = _scanner.scanOneFast(filename, true);
+    return p != null;
   }
 
   private String getNow() {
@@ -1932,7 +1930,7 @@ public final class MainFrame extends JFrame {
       }
 
       // click close
-      scanAndClick(_scanner.getShopX(), null);
+      scanAndClick(ScreenScanner.SHOP_X, null);
       _mouse.delay(200);
       _captureHome = false;
     }
@@ -1945,7 +1943,7 @@ public final class MainFrame extends JFrame {
     if (_trainManagementWindow != null && timeLeft <= 0) {
       scanPassengers();
       if (_passengers > _settings.getInt("IntTrains.requiredPassengers", 7000000)) {
-        handlePopups();
+        _scanner.scanOneFast(ScreenScanner.SHOP_X, true);
         _trainManagementWindow.reloadNow();
         atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
         if (atLeastOneSent)
@@ -1993,7 +1991,7 @@ public final class MainFrame extends JFrame {
         area = new Rectangle(p.x, p.y + 31, 100, 484);
         String cname = contractorName + ".bmp";
         boolean found = false;
-        if (findAndClick(cname, area, 15, 7, true, false)) {
+        if (findAndClick(cname, area, 15, 7, true)) {
           found = true;
         } else {
           _mouse.mouseMove(scrollerTop);
@@ -2001,7 +1999,7 @@ public final class MainFrame extends JFrame {
           _mouse.delay(300);
         }
 
-        if (findAndClick(cname, area, 15, 7, true, false)) {
+        if (findAndClick(cname, area, 15, 7, true)) {
           found = true;
         } else {
           _mouse.mouseMove(scrollerTop);
@@ -2014,7 +2012,7 @@ public final class MainFrame extends JFrame {
           do {
             LOGGER.info("drag from " + drag + " to " + (drag + 75));
             _mouse.drag(scrollerTop.x, scrollerTop.y + drag, scrollerTop.x, scrollerTop.y + drag + 45);
-            found = findAndClick(cname, area, 15, 7, true, false);
+            found = findAndClick(cname, area, 15, 7, true);
             drag += 50;
           } while (!found && drag < track);
         }
@@ -2076,12 +2074,12 @@ public final class MainFrame extends JFrame {
             }
 
             // click close
-            scanAndClick(_scanner.getShopX(), null);
+            _scanner.scanOneFast(ScreenScanner.SHOP_X, true);
             _mouse.delay(200);
 
             goHomeIfNeeded();
             _mouse.delay(300);
-            handlePopups();
+            _scanner.scanOneFast(ScreenScanner.SHOP_X, true);
           }
         } else {
           LOGGER.info("Couldn't find " + contractorName);
@@ -2123,29 +2121,15 @@ public final class MainFrame extends JFrame {
     return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
-      RobotInterruptedException {
-    return findAndClick(imageName, area, xOff, yOff, click, false);
-  }
-
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click, boolean capture) throws AWTException,
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException,
       IOException, RobotInterruptedException {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
-    Pixel p = _scanner.locateImageCoords(imageName, new Rectangle[] { area }, xOff, yOff);
+    ImageData id = _scanner.getImageData(imageName, area, xOff, yOff);
+    Pixel p = _scanner.scanOneFast(id, area, click);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
       LOGGER.fine("Found pointer " + imageName);
-      _mouse.mouseMove(p);
-      _mouse.delay(100);
-      if (capture) {
-        _scanner.captureGame();
-        deleteOlder("popup", 5);
-      }
-      if (click) {
-        _mouse.click();
-        _mouse.delay(100);
-      }
       return true;
     }
     return false;
@@ -2165,7 +2149,7 @@ public final class MainFrame extends JFrame {
      * _mouse.drag(x1, y, x1 - diff, y);
      */
   }
-
+  
   private void handlePopups() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
     long t11 = System.currentTimeMillis();
     long t1 = System.currentTimeMillis();
@@ -2178,39 +2162,32 @@ public final class MainFrame extends JFrame {
 
     // first scan popups that need to be closed
     Rectangle area;
+    boolean found = false;
 
-    // NO BUTTON
-    boolean found = scanAndClick(_scanner.getNoButton(), null);
+    // SHOP
+    t1 = t2 = System.currentTimeMillis();
+    found = found || scanAndClick(ScreenScanner.SHOP_X, null);
     t2 = System.currentTimeMillis();
     if (debug)
-      LOGGER.info("> handle No: " + (t2 - t1));
-
+      LOGGER.info("> handle shop " + (t2 - t1));
+    
+    // SESSION OK
     t1 = t2 = System.currentTimeMillis();
-    // SESSION
     checkSession();
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle Session: " + (t2 - t1));
 
-    // // INVITE
-    // t1 = t2 = System.currentTimeMillis();
-    // found = scanAndClick(_scanner.getInvite(), null);
-    // t2 = System.currentTimeMillis();
-    // if (debug) LOGGER.info("> handle invite " + (t2 - t1));
-    // if (found) {
-    // LOGGER.info("found Invite popup...");
-    // }
-
     // DAILY REWARDS
     t1 = t2 = System.currentTimeMillis();
-    found = scanAndClick(_scanner.getDailyRewards(), null);
+    found = scanAndClick("Sure.bmp", null);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle daily rewards " + (t2 - t1));
 
-    // HOORRAY!!
+    // HOORAY hmm!
     t1 = t2 = System.currentTimeMillis();
-    found = scanAndClick(_scanner.getHooray(), null);
+    found = scanAndClick("Hooray.bmp", null);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle hooray " + (t2 - t1));
@@ -2222,7 +2199,7 @@ public final class MainFrame extends JFrame {
         Thread.sleep(8000);
       } catch (InterruptedException e) {
       }
-      found = scanAndClick(_scanner.getFBShare(), null);
+      found = scanAndClick("FBShare.bmp", null);
       if (found) {
         try {
           LOGGER.info("Wait 1sec and relocate the game...");
@@ -2233,26 +2210,6 @@ public final class MainFrame extends JFrame {
       }
     }
 
-    // // FB SHARE
-    // t1 = t2 = System.currentTimeMillis();
-    // found = scanAndClick(_scanner.getFBShare(), null);
-    // t2 = System.currentTimeMillis();
-    // if (debug) LOGGER.info("> handle FBshare " + (t2 - t1));
-    // if (found) {
-    // try {
-    // LOGGER.info("Wait 1sec and relocate the game...");
-    // Thread.sleep(1000);
-    // } catch (InterruptedException e) {
-    // }
-    // _scanner.locateGameArea();
-    // }
-
-    // SHOP
-    t1 = t2 = System.currentTimeMillis();
-    found = found || scanAndClick(_scanner.getShopX(), null);
-    t2 = System.currentTimeMillis();
-    if (debug)
-      LOGGER.info("> handle shop " + (t2 - t1));
 
     // PROMO and various popups with close X
     t1 = t2 = System.currentTimeMillis();
@@ -2261,7 +2218,7 @@ public final class MainFrame extends JFrame {
     int y = _scanner.getTopLeft().y;
     area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
     //_scanner.writeImage(area, "C:/work/Damn.png");
-    Pixel pp = _bscanner.scanOneFast("journey.bmp", area, Color.RED, true);
+    Pixel pp = _scanner.scanOneFast("journey.bmp", area, Color.RED, true);
 
     found = pp != null;
     if (found) {
@@ -2281,7 +2238,7 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle promoX " + (t2 - t1));
 
-    found = found || scanAndClick(_scanner.getPromoX2(), null);
+    found = found || scanAndClick(ScreenScanner.CLOSE_X2, null);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle promoX2 " + (t2 - t1));
@@ -2291,7 +2248,7 @@ public final class MainFrame extends JFrame {
     int xx = (_scanner.getGameWidth() - 262) / 2;
     int yy = (_scanner.getGameHeight() - 280) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 85, _scanner.getTopLeft().y + yy + 225, 90, 32);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle no passengers " + (t2 - t1));
@@ -2300,7 +2257,7 @@ public final class MainFrame extends JFrame {
     t1 = t2 = System.currentTimeMillis();
     xx = (_scanner.getGameWidth() - 760) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
-    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle train management " + (t2 - t1));
@@ -2330,7 +2287,7 @@ public final class MainFrame extends JFrame {
     t1 = t2 = System.currentTimeMillis();
     xx = (_scanner.getGameWidth() - 782) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 227, _scanner.getBottomRight().y - 105, 100, 44);
-    found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 7, true, true);
+    found = found || findAndClick(ScreenScanner.POINTER_CANCEL_IMAGE, area, 25, 7, true);
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle cancel " + (t2 - t1));
@@ -2342,7 +2299,7 @@ public final class MainFrame extends JFrame {
       // CLOSE button of train Management
       xx = (_scanner.getGameWidth() - 760) / 2;
       area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
-      found = findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true, true);
+      found = findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true);
     }
 
     t2 = System.currentTimeMillis();
@@ -2449,7 +2406,9 @@ public final class MainFrame extends JFrame {
 
     goHomeIfNeeded();
     // click second station
-    int x = _scanner.getTopLeft().x + 459;// s2
+    int xx = _scanner.getGameWidth() / 2;
+    xx += _scanner.getTopLeft().x;
+    int x = xx - 35;// s2
     int y = _scanner.getTopLeft().y + 54;
     _mouse.click(x, y);
     _mouse.delay(2000);
@@ -2575,7 +2534,7 @@ public final class MainFrame extends JFrame {
 
       // SHOP POPUP CHECK
       if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
-        scanAndClick(_scanner.getShopX(), null);
+        scanAndClick(ScreenScanner.SHOP_X, null);
 
     } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns);
 
@@ -2731,8 +2690,6 @@ public final class MainFrame extends JFrame {
     }
 
     _mouse.delay(300);
-    scanAndClick(_scanner.getNoButton(), null);
-
     // int diff = 30;
     // int x1 = _scanner.getBottomRight().x - 57;
     // int y = _scanner.getBottomRight().y - 160;
