@@ -114,8 +114,10 @@ public class Locations {
   public static Location[]         LOC_PAGE_F2     = new Location[] { LOC_3HOURS, LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, LOC_1DAY };
   public static Location[]         LOC_PAGE_E1     = new Location[] { LOC_0MIN, LOC_5MIN, LOC_8MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS };
   public static Location[]         LOC_PAGE_E2     = new Location[] { LOC_3HOURS, LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, LOC_1DAY };
+  public static Location[]         LOC_PAGE_X1     = new Location[] { LOC_0MIN, LOC_5MIN, LOC_8MIN, LOC_10MIN, LOC_15MIN, LOC_30MIN, LOC_1HOUR,  };
+  public static Location[]         LOC_PAGE_X2     = new Location[] { LOC_2HOURS, LOC_3HOURS, LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_1DAY };
 
-  public static Location[]         ALL             = new Location[] { LOC_0MIN, LOC_5MIN, LOC_8MIN, LOC_10MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS, LOC_3HOURS,
+  public static Location[]         ALL             = new Location[] { LOC_0MIN, LOC_5MIN, LOC_8MIN, LOC_10MIN, LOC_15MIN, LOC_30MIN, LOC_1HOUR, LOC_2HOURS, LOC_3HOURS,
       LOC_4HOURS, LOC_6HOURS, LOC_8HOURS, LOC_10HOURS, LOC_12HOURS, LOC_18HOURS, LOC_1DAY };
 
   public static MaterialLocation   MAT_1_1         = new MaterialLocation("Gold", "Wood",    new Rectangle( 46, 140, 156, 28), 1);

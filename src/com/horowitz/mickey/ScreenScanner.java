@@ -33,109 +33,108 @@ import com.horowitz.mickey.common.MyImageIO;
 
 public class ScreenScanner extends BaseScreenScanner {
 
-  public static final String SHOP_X = "shopX.bmp";
-  public static final String   CLOSE_X2                       = "closeX2.bmp";
-  
-  private static final String  LOGIN_FB                       = "loginFB.bmp";
-  private static final String  LOGIN_WITH_FB                  = "loginWithFB3.bmp";
-  private static final String  INT_TRAINS                     = "int/Trains.bmp";
-  private static final String  SHARE                          = "share.bmp";
-  private static final String  MATERIALS                      = "materials.bmp";
-  private static final String  CONTRACTS                      = "contracts.bmp";
-  private static final String  POINTER_RIGHT_BLUE             = "pointerRightBlue.bmp";
-  private static final String  POINTER_LEFT_BLUE              = "pointerLeftBlue.bmp";
-  public static final String   CLOSE_X                        = "closeX.bmp";
-  //private static final String  LETTERS_WHITE2                 = "letters/white8x5.bmp";
-  //private static final String  LETTERS_PINK                   = "letters/pink8x5.bmp";
-  private static final String  LETTERS_BROWN                  = "letters/brown8x5.bmp";
-  private static final String  LETTERS_WHITE                  = "letters/white8x5.bmp";
-  private static final String  LETTERS_RED                    = "letters/red8x5.bmp";
-  private static final String  EXPRESS_TRAIN                  = "expressTrain3.bmp";
-  private static final String  FREE_TRAIN                     = "free2.bmp";
-  private static final String  XP_TRAIN                       = "xpTrain2.bmp";
-  private static final String  SESSION                        = "session2.bmp";
+  public static final String  SHOP_X                         = "shopX.bmp";
+  public static final String  CLOSE_X2                       = "closeX2.bmp";
 
-  public static final String   POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
-  public static final String   POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
-  public static final String   POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
+  private static final String LOGIN_FB                       = "loginFB.bmp";
+  private static final String LOGIN_WITH_FB                  = "loginWithFB3.bmp";
+  private static final String INT_TRAINS                     = "int/Trains.bmp";
+  private static final String SHARE                          = "share.bmp";
+  private static final String MATERIALS                      = "materials.bmp";
+  private static final String CONTRACTS                      = "contracts.bmp";
+  private static final String POINTER_RIGHT_BLUE             = "pointerRightBlue.bmp";
+  private static final String POINTER_LEFT_BLUE              = "pointerLeftBlue.bmp";
+  public static final String  CLOSE_X                        = "closeX.bmp";
+  // private static final String LETTERS_WHITE2 = "letters/white8x5.bmp";
+  // private static final String LETTERS_PINK = "letters/pink8x5.bmp";
+  private static final String LETTERS_BROWN                  = "letters/brown8x5.bmp";
+  private static final String LETTERS_WHITE                  = "letters/white8x5.bmp";
+  private static final String LETTERS_RED                    = "letters/red8x5.bmp";
+  private static final String EXPRESS_TRAIN                  = "expressTrain3.bmp";
+  private static final String FREE_TRAIN                     = "free2.bmp";
+  private static final String XP_TRAIN                       = "xpTrain2.bmp";
+  private static final String SESSION                        = "session2.bmp";
 
-  public static final String   ANCHOR_IMAGE                   = "anchorInvite2.bmp";
+  public static final String  POINTER_DOWN_IMAGE             = "pointerDownBlue.bmp";
+  public static final String  POINTER_DOWN_IMAGE_LEFT        = "pointerDownBlueL.bmp";
+  public static final String  POINTER_DOWN_IMAGE_RIGHT       = "pointerDownBlueR.bmp";
 
-  public static final String   POINTER_CLOSE_IMAGE            = "Close.bmp";
-  public static final String   POINTER_CLOSE1_IMAGE           = "close1.png";
-  public static final String   POINTER_CLOSE2_IMAGE           = "close2.png";
-  public static final String   POINTER_CLOSE3_IMAGE           = "close3.bmp";
-  public static final String   POINTER_CLOSE4_IMAGE           = "close4.bmp";
-  public static final String   POINTER_CANCEL_IMAGE           = "cancel.bmp";
-  public static final String   POINTER_LOADING_IMAGE          = "loading.bmp";
-  public static final String   POINTER_TRAIN_MANAGEMENT_IMAGE = "dispa.bmp";
+  public static final String  ANCHOR_IMAGE                   = "anchorInvite2.bmp";
 
-  private ImageData            _home                          = null;
-  private ImageData            _close1                        = null;
-  private ImageData            _close3                        = null;
-  private ImageData            _close4                        = null;
-  private ImageData            _pointerDown                   = null;
+  public static final String  POINTER_CLOSE_IMAGE            = "Close.bmp";
+  public static final String  POINTER_CLOSE1_IMAGE           = "close1.png";
+  public static final String  POINTER_CLOSE2_IMAGE           = "close2.png";
+  public static final String  POINTER_CLOSE3_IMAGE           = "close3.bmp";
+  public static final String  POINTER_CLOSE4_IMAGE           = "close4.bmp";
+  public static final String  POINTER_CANCEL_IMAGE           = "cancel.bmp";
+  public static final String  POINTER_LOADING_IMAGE          = "loading.bmp";
+  public static final String  POINTER_TRAIN_MANAGEMENT_IMAGE = "dispa.bmp";
 
-  public ImageData             _letterRed                     = null;
-  public ImageData             _letterWhite                   = null;
-  public ImageData             _letterBrown                   = null;
-  public ImageData             _letterRed2                    = null;
-  public ImageData             _letterWhite2                  = null;
-  public ImageData             _letterBrown2                  = null;
-  public ImageData             _letterRed3                    = null;
-  public ImageData             _letterWhite3                  = null;
-  public ImageData             _letterWhite4                  = null;
-  public ImageData             _letterBrown3                  = null;
-  public ImageData             _letterPink3                   = null;
-  public ImageData             _package1                      = null;
-  public ImageData             _package2                      = null;
+  private ImageData           _home                          = null;
+  private ImageData           _close1                        = null;
+  private ImageData           _close3                        = null;
+  private ImageData           _close4                        = null;
+  private ImageData           _pointerDown                   = null;
 
-  private ImageData            _pointerDownL                  = null;
-  private ImageData            _pointerDownR                  = null;
-  private ImageData            _nightX                        = null;
-  private ImageData            _daylightY                     = null;
-  private ImageData            _promoX                        = null;
-  private ImageData            _share                         = null;
+  public ImageData            _letterRed                     = null;
+  public ImageData            _letterWhite                   = null;
+  public ImageData            _letterBrown                   = null;
+  public ImageData            _letterRed2                    = null;
+  public ImageData            _letterWhite2                  = null;
+  public ImageData            _letterBrown2                  = null;
+  public ImageData            _letterRed3                    = null;
+  public ImageData            _letterWhite3                  = null;
+  public ImageData            _letterWhite4                  = null;
+  public ImageData            _letterBrown3                  = null;
+  public ImageData            _letterPink3                   = null;
+  public ImageData            _package1                      = null;
+  public ImageData            _package2                      = null;
 
-  private ImageData            _trainManagementAnchor         = null;
-  private ImageData            _sixMinutes                    = null;
-  private ImageData            _maglevDest                    = null;
-  private ImageData            _trainsAnchor                  = null;
-  private ImageData            _materials                     = null;
-  private ImageData            _materialsButton               = null;
-  private ImageData            _goldIcon                      = null;
+  private ImageData           _pointerDownL                  = null;
+  private ImageData           _pointerDownR                  = null;
+  private ImageData           _nightX                        = null;
+  private ImageData           _daylightY                     = null;
+  private ImageData           _promoX                        = null;
+  private ImageData           _share                         = null;
 
-  //private ImageData            _topLeftImage                  = null;
+  private ImageData           _trainManagementAnchor         = null;
+  private ImageData           _sixMinutes                    = null;
+  private ImageData           _maglevDest                    = null;
+  private ImageData           _trainsAnchor                  = null;
+  private ImageData           _materials                     = null;
+  private ImageData           _materialsButton               = null;
+  private ImageData           _goldIcon                      = null;
 
-  private ImageData            _pointerLeft                   = null;
-  private ImageData            _pointerRight                  = null;
+  // private ImageData _topLeftImage = null;
 
-  private ImageData            _sessionTimeOut                = null;
-  private ImageData            _syncError                     = null;
+  private ImageData           _pointerLeft                   = null;
+  private ImageData           _pointerRight                  = null;
 
-  private ImageData            _contracts                     = null;
+  private ImageData           _sessionTimeOut                = null;
+  private ImageData           _syncError                     = null;
 
-  private Rectangle            _homeArea                      = null;
-  private Rectangle            _trainArea                     = null;
-  private Rectangle            _letterArea                    = null;
-  private Rectangle            _packagesArea                  = null;
+  private ImageData           _contracts                     = null;
 
-  private ImageData            _loginWithFB;
-  private ImageData            _loginFB;
+  private Rectangle           _homeArea                      = null;
+  private Rectangle           _trainArea                     = null;
+  private Rectangle           _letterArea                    = null;
+  private Rectangle           _packagesArea                  = null;
 
-  private ImageData            _invite;
-  private ImageData            _dailyRewards;
+  private ImageData           _loginWithFB;
+  private ImageData           _loginFB;
 
-  private Pixel                _topPlayersPixel;
+  private ImageData           _invite;
+  private ImageData           _dailyRewards;
 
+  private Pixel               _topPlayersPixel;
 
-  private ImageData            _expressTrain;
-  private ImageData            _freeTrain;
-  private ImageData            _xpTrain;
-  private Rectangle            _passengersArea;
+  private ImageData           _expressTrain;
+  private ImageData           _freeTrain;
+  private ImageData           _xpTrain;
+  private Rectangle           _passengersArea;
 
-  private int                  _street1Y                      = 170;
-  private Pixel _whistlesPoint;
+  private int                 _street1Y                      = 170;
+  private Pixel               _whistlesPoint;
 
   public ScreenScanner(Settings settings) {
     super(settings);
@@ -147,12 +146,12 @@ public class ScreenScanner extends BaseScreenScanner {
       _loginFB = new ImageData(LOGIN_FB, area, _comparator, 29, 6);
 
       area = new Rectangle(187, 233, screenSize.width - 187 - 187, screenSize.height - 233 - 17);
-      
+
       getImageData("Sure.bmp", area, 15, 5);
-      
+
       area = new Rectangle(100, 122, screenSize.width - 200, 500);
       _invite = new ImageData("Invite.bmp", area, _comparator, 583, 5);
-      
+
       area = new Rectangle(450, 270, screenSize.width - 450, screenSize.height - 270);
       getImageData("FBShare.bmp", area, 15, 5);
 
@@ -167,9 +166,9 @@ public class ScreenScanner extends BaseScreenScanner {
 
       area = new Rectangle(0, 0, 250, 87);
       _contracts = new ImageData(CONTRACTS, area, _comparator, 1, 0);
-      
+
       area = new Rectangle(_tl.x + 72, _tl.y + 423, screenSize.width - 72, screenSize.height - 423);
-      
+
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -190,8 +189,8 @@ public class ScreenScanner extends BaseScreenScanner {
     _letterRed3 = new ImageData(LETTERS_RED, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
     _letterWhite3 = new ImageData(LETTERS_WHITE, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
     _letterBrown3 = new ImageData(LETTERS_BROWN, null, new SimilarityImageComparator(0.04, 2000), 4, 2);
-    //_letterPink3 = new ImageData(LETTERS_PINK, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
-    //_letterWhite4 = new ImageData(LETTERS_WHITE2, null, new SimilarityImageComparator(0.04, 3000), 4, 3);
+    // _letterPink3 = new ImageData(LETTERS_PINK, null, new SimilarityImageComparator(0.04, 3000), 5, 3);
+    // _letterWhite4 = new ImageData(LETTERS_WHITE2, null, new SimilarityImageComparator(0.04, 3000), 4, 3);
 
     _pointerDownL = new ImageData(POINTER_DOWN_IMAGE_LEFT, null, _comparator, 13, 19);
     _pointerDownR = new ImageData(POINTER_DOWN_IMAGE_RIGHT, null, _comparator, 1, 19);
@@ -204,16 +203,15 @@ public class ScreenScanner extends BaseScreenScanner {
     // _daylightY = new ImageData("daylightX.bmp", null, _comparator, 8, 8);
 
     _optimized = true;
-    
+
     int xx = (getGameWidth() - 780) / 2;
     int yy = (getGameHeight() - 585) / 2;
     Rectangle area = new Rectangle(_tl.x + xx + 53, _tl.y + yy + 22, 171, 24);
-    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -53, 32);//was -46
+    _trainManagementAnchor = new ImageData(POINTER_TRAIN_MANAGEMENT_IMAGE, area, _comparator, -53, 32);// was -46
     _sixMinutes = new ImageData("sixMinutes3.bmp", null, _comparator, 0, 0);
     _maglevDest = new ImageData("maglevDest.bmp", null, _comparator, 0, 0);
     // top left image is used to determine whether the train is express
-    //_topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
-
+    // _topLeftImage = new ImageData(ANCHOR_TOPLEFT_IMAGE1, null, _comparator, -24, 46);
 
     // SESSION
     xx = (getGameWidth() - 523) / 2;
@@ -221,7 +219,6 @@ public class ScreenScanner extends BaseScreenScanner {
     area = new Rectangle(_tl.x + xx + 80, _tl.y + yy + 80, 120, 50);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
     _syncError = new ImageData("sync.bmp", area, _comparator, 0, 0);
-    
 
     // SHOP X
     xx = (getGameWidth() - 780) / 2;
@@ -231,7 +228,7 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 747) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, 70, 180);
     getImageData(CLOSE_X, area, 7, 7);
-    
+
     xx = (getGameWidth() - 520) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, xx - 40, 240);
     getImageData(CLOSE_X2, area, 7, 7);
@@ -278,23 +275,23 @@ public class ScreenScanner extends BaseScreenScanner {
     xx += _tl.x;
     yy += _tl.y;
 
-    area = new Rectangle(xx+17, yy+17, 237, 37);
+    area = new Rectangle(xx + 17, yy + 17, 237, 37);
     _materials = new ImageData(MATERIALS, area, _comparator, 0, 0);
     area = new Rectangle(_br.x - 181, _tl.y, 181, 66);
     _materialsButton = new ImageData("Materials2.bmp", area, _comparator, 9, 6);
     xx = (getGameWidth() - 104) / 2;
     area = new Rectangle(_br.x - xx, _tl.y, xx, 36);
     _goldIcon = new ImageData("goldIcon.bmp", area, _comparator, 16, -1);
-    
-    //HOORAY
+
+    // HOORAY
     xx = (getGameWidth() - 580) / 2;
     yy = (getGameHeight() - 453) / 2;
     xx += _tl.x;
     yy += _tl.y;
     area = new Rectangle(xx + 194, yy + 397, 192, 39);
-    
+
     getImageData("Hooray.bmp", area, 23, 6);
-    
+
     // SHARE
     xx = (getGameWidth() - 60) / 2;
     area = new Rectangle(_tl.x + xx, _br.y - 135, 60, 22);
@@ -315,12 +312,12 @@ public class ScreenScanner extends BaseScreenScanner {
     area = new Rectangle(xx + 187, yy + 233, 150, 30);
     getImageData("Sure.bmp", area, 15, 5);
 
-    //xx = (getGameWidth() + 250 - 595) / 2;
-    //yy = 290 + _tl.y;
-    //final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    //area = new Rectangle(0, yy, screenSize.width, screenSize.height - yy - 20);
-    //_fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
-    
+    // xx = (getGameWidth() + 250 - 595) / 2;
+    // yy = 290 + _tl.y;
+    // final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    // area = new Rectangle(0, yy, screenSize.width, screenSize.height - yy - 20);
+    // _fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
+
     _whistlesPoint = new Pixel(_tl.x + 36, _tl.y + 310);
   }
 
@@ -329,7 +326,7 @@ public class ScreenScanner extends BaseScreenScanner {
   }
 
   public boolean locateGameArea() throws AWTException, IOException, RobotInterruptedException {
-    //TS still needs a special way of locating game and passengers area
+    // TS still needs a special way of locating game and passengers area
     LOGGER.fine("Locating game area ... ");
 
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -364,9 +361,10 @@ public class ScreenScanner extends BaseScreenScanner {
       turns++;
       Pixel tslogo = locateImageCoords("anchorTopLeftTSLOGO.bmp", areaTL, -20, 46);
       if (tslogo != null) {
-        if (tslogo.x < 0) tslogo.x = 0;
+        if (tslogo.x < 0)
+          tslogo.x = 0;
         tl = locateImageCoords("anchorTopLeftNEW.bmp", new Rectangle[] { new Rectangle(tslogo.x, tslogo.y, 260, 40) }, 0, -11);
-        
+
         if (tl != null) {
           _passengersArea = new Rectangle(tl.x + 13, tl.y + 11, 104, 14);
           if (Math.abs(tslogo.x - tl.x) > 20) {
@@ -374,7 +372,8 @@ public class ScreenScanner extends BaseScreenScanner {
           } else {
             tl.x -= 21;
           }
-          if (tl.x < 0) tl.x = 0;
+          if (tl.x < 0)
+            tl.x = 0;
           Rectangle[] areaBR = new Rectangle[] { new Rectangle(screenSize.width - 379, screenSize.height - 270, 113, 100),
               new Rectangle(tl.x + 684, tl.y + 543, 300, 100), new Rectangle(tl.x + 684, tl.y + 543, screenSize.width - 270 - 684, 100),
               new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
@@ -393,7 +392,7 @@ public class ScreenScanner extends BaseScreenScanner {
             mouse.click();
             mouse.delay(200);
             Robot robot = new Robot();
-  
+
             robot.keyPress(40);// arrow down
             mouse.delay(1000);
           }
@@ -409,10 +408,10 @@ public class ScreenScanner extends BaseScreenScanner {
       setKeyAreas();
       return done;
     } else {
-      //keep original coordinates
-      //_tl = new Pixel(0, 0);
-      //_br = new Pixel(1600, 1000);
-      //setKeyAreas();
+      // keep original coordinates
+      // _tl = new Pixel(0, 0);
+      // _br = new Pixel(1600, 1000);
+      // setKeyAreas();
     }
     return false;
   }
@@ -436,7 +435,7 @@ public class ScreenScanner extends BaseScreenScanner {
       e.printStackTrace();
     }
   }
-  
+
   public void writeImage(BufferedImage image, String filename) {
 
     try {
@@ -477,7 +476,7 @@ public class ScreenScanner extends BaseScreenScanner {
       }
       turn++;
     }
-    
+
     return p;
   }
 
@@ -588,7 +587,7 @@ public class ScreenScanner extends BaseScreenScanner {
 
   public int[] getRailsHome() {
     return _settings.getArray("railsHome");
-    //return _railsHome;
+    // return _railsHome;
   }
 
   public Pixel getBottomRight() {
@@ -663,11 +662,11 @@ public class ScreenScanner extends BaseScreenScanner {
   public ImageData getDailyRewards() {
     return _dailyRewards;
   }
-  
+
   public ImageData getSessionTimeOut() {
     return _sessionTimeOut;
   }
-  
+
   public ImageData getSyncError() {
     return _syncError;
   }
@@ -676,14 +675,14 @@ public class ScreenScanner extends BaseScreenScanner {
     LOGGER.addHandler(handler);
   }
 
-//  public ImageData getTopLeftImage() {
-//    return _topLeftImage;
-//  }
+  // public ImageData getTopLeftImage() {
+  // return _topLeftImage;
+  // }
 
   public ImageData getTrainManagementAnchor() {
     return _trainManagementAnchor;
   }
-  
+
   public ImageData getSixMinutes() {
     return _sixMinutes;
   }
@@ -736,7 +735,7 @@ public class ScreenScanner extends BaseScreenScanner {
   public ImageData getPromoX() {
     return _promoX;
   }
-  
+
   public ImageData getShare() {
     return _share;
   }
@@ -748,7 +747,7 @@ public class ScreenScanner extends BaseScreenScanner {
   public ImageData getMaterials() {
     return _materials;
   }
-  
+
   public ImageData getMaterialsButton() {
     return _materialsButton;
   }
@@ -780,7 +779,7 @@ public class ScreenScanner extends BaseScreenScanner {
   public Rectangle getPassengersArea() {
     return _passengersArea;
   }
-  
+
   public ImageData generateLetterImageData(int index) throws IOException {
     return new ImageData("letters/letter" + index + ".bmp", null, new SimilarityImageComparator(0.04, 2000), 4, 2);
   }
@@ -791,6 +790,22 @@ public class ScreenScanner extends BaseScreenScanner {
 
   public Pixel getWhistlesPoint() {
     return _whistlesPoint;
+  }
+
+  public boolean isHyperloop(Pixel tm) throws AWTException, RobotInterruptedException, IOException {
+    Rectangle area = new Rectangle(tm.x, tm.y + 288, 30, 102);
+    Pixel p = scanOneFast("mat1.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat2.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat3.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat4.bmp", area, false);
+
+    return p != null;
   }
 
 }
