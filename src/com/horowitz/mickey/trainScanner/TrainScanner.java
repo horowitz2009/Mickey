@@ -355,16 +355,26 @@ public class TrainScanner {
       atLeastOneSent = false;
 
       if (trains.isEmpty()) {
-        for (int i = 0; i < _takeABreak; i++) {
-          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
+        for (int i = 0; i < 5; i++) {
+          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(i).isIdle()) {
             LOGGER.info("Sending to default contractor: " + defaultContractor);
-            if (sendTrain(null, xt, yt)) {
+            if (sendTrainNew(newTrains.get(i), i, xt, yt)) {
               atLeastOneSent = true;
               numberSent++;
             }
-            break;
           }
         }
+        
+//        for (int i = 0; i < _takeABreak; i++) {
+//          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
+//            LOGGER.info("Sending to default contractor: " + defaultContractor);
+//            if (sendTrain(null, xt, yt)) {
+//              atLeastOneSent = true;
+//              numberSent++;
+//            }
+//            break;
+//          }
+//        }
       } else {
 
         for (int i = newTrains.size() - 1; i >= 0 && !atLeastOneSent; --i) {
@@ -418,6 +428,107 @@ public class TrainScanner {
     return _settings.getProperty("IntTrains.defaultContractor", null);
   }
 
+  private boolean sendTrainNew(Train train, int slot, int xt, int yt) throws RobotInterruptedException, IOException, AWTException {
+    int xs = xt + 58;
+    int ys = yt + 27 + (85 * slot);
+    if (train.isIdle()) {
+      _mouse.click(xs, ys);
+      _mouse.delay(650);
+    }
+    // it is expected a SendDialiog been opened
+    int xx = (_scanner.getGameWidth() - 781) / 2;
+    int yy = (_scanner.getGameHeight() - 587) / 2;
+    xx += _scanner.getTopLeft().x;
+    yy += _scanner.getTopLeft().y;
+    
+    ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
+    Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 175, 75));
+    if (p != null) {
+      String defaultContractor = getDefaultContractor();
+      if (defaultContractor == null)
+        defaultContractor = "";
+      
+      Pixel tl = new Pixel(p.x - 2, p.y + 62);
+      
+      // click send and choose 4h way
+//      _mouse.mouseMove(tl.x + 350, tl.y + 421);
+//      _mouse.delay(300);
+//      _mouse.click();
+//      _mouse.delay(700);
+      boolean pass = true;
+      if (defaultContractor.toLowerCase().startsWith("swap")) {
+        //do this only if swapping
+        if (_trainCounter != null) {
+          Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
+          Rectangle passRect = new Rectangle(tl.x + 495, tl.y + 143, 113, 17);
+          String coins = _trainCounter.scanCoins(coinsRect);
+          String passengers = _trainCounter.scanPassengers(passRect);
+          try {
+            int coinsNumber = Integer.parseInt(coins);
+            int passengersNumber = Integer.parseInt(passengers);
+            
+            //LIMITS CHECK
+            //      _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
+            //_limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
+            int limitCoins = _settings.getInt("IntTrains.limitCoins", 0);
+            int limitTrains = _settings.getInt("IntTrains.limitTrains", 0);
+            LOGGER.info("LIMITS: " + limitCoins + ", " + limitTrains);
+            
+            //limit 1. coins
+            if (limitCoins > 0 && _stats.getCoins() + coinsNumber > limitCoins) {
+              LOGGER.info("Coins " + (_stats.getCoins() + coinsNumber) + " exceeds " + limitCoins);
+              pass = false;
+            }
+            //limit 2. trains count
+            if (pass && limitTrains > 0 && _stats.getTrains() + 1 > limitTrains) {
+              LOGGER.info("Train number " + (_stats.getTrains() + 1) + " exceeds " + limitTrains);
+              pass = false;
+            }
+            if (pass) {
+              _stats.registerTrain(coinsNumber, passengersNumber);
+              LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+              _support.firePropertyChange("ITRAIN", 0, 1);
+            }
+            
+          } catch (NumberFormatException e) {
+            LOGGER.info("FAILED TO CONVERT TO NUMBER: " + e.getMessage());
+            //e.printStackTrace();
+          }
+        }
+        
+        
+      }
+      
+      
+      if (_settings.getBoolean("IntTrains.captureSent", true)) {
+        Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
+        MyImageIO.writeAreaTS(rect, "train sent ");
+      }
+      
+      if (pass) {
+        // the send button
+        //OLD _mouse.click(tl.x + 355, tl.y + 421);
+        _mouse.click(tl.x + 355 + 60, tl.y + 421);
+        _mouse.delay(1000);
+      } else {
+        //close one windows
+        _mouse.click(tl.x + 724, tl.y - 72);
+        _mouse.delay(1500);
+        //_mouse.click(tl.x + 724, tl.y - 72);
+        //_mouse.delay(1500);
+        return false;
+      }
+      
+      // not used
+      // ////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
+      
+      return true;
+      // at the end
+      // train.setSentTime(System.currentTimeMillis());
+    }
+    return false;
+  }
+  
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 64, y + 60);
     _mouse.delay(250);

@@ -56,9 +56,6 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import Catalano.Core.IntPoint;
-import Catalano.Imaging.Tools.Blob;
-
 import com.horowitz.commons.BaseScreenScanner;
 import com.horowitz.commons.ImageComparator;
 import com.horowitz.commons.ImageData;
@@ -72,6 +69,9 @@ import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
+
+import Catalano.Core.IntPoint;
+import Catalano.Imaging.Tools.Blob;
 
 /**
  * @author zhristov
@@ -1970,7 +1970,7 @@ public final class MainFrame extends JFrame {
     boolean atLeastOneSent = false;
     if (_trainManagementWindow != null && timeLeft <= 0) {
       scanPassengers();
-      if (_passengers > _settings.getInt("IntTrains.requiredPassengers", 7000000)) {
+      if (_passengers > _settings.getInt("IntTrains.requiredPassengers", 9000000)) {
         _scanner.scanOneFast(ScreenScanner.SHOP_X, true);
         _trainManagementWindow.reloadNow();
         atLeastOneSent = _trainManagementWindow.sendTrainsNow();// in this thread please
@@ -2338,7 +2338,7 @@ public final class MainFrame extends JFrame {
     // LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 85, 148, 28);
 
-    int maxtTurns = 4;
+    int maxtTurns = 5;
     int turn = 1;
     boolean atLeastOne = false;
     do {
@@ -2351,7 +2351,7 @@ public final class MainFrame extends JFrame {
         break;
       }
       turn++;
-    } while (turn < maxtTurns);
+    } while (turn <= maxtTurns);
 
     if (atLeastOne) {
       goHomeIfNeeded();
@@ -2537,12 +2537,37 @@ public final class MainFrame extends JFrame {
 
       // RESEND
       if (resendP != null) {
-        int clicks = 4;
+        int clicks = 12;
         for (int i = 0; i < clicks; i++) {
           _mouse.click(resendP);
-          _mouse.delay(50);
+          _mouse.delay(100);
         }
-        _mouse.delay(350);
+        _mouse.delay(550);
+        
+        hadOtherLocations = scanOtherLocations(11);
+        if (hadOtherLocations) {
+          //DAMN
+          _mouse.delay(1000);
+          // _scanner.writeArea(area, "polearea.bmp");
+          Pixel pp = _scanner.scanOne("pole.bmp", area, null);
+          if (pp == null) {
+            int y = _scanner._br.y - 104;
+            int x1 = _scanner._br.x - 15;
+            int x2 = _scanner._br.x - 15 - 105;
+            offset = 80;
+            _mouse.drag4(x1, y, x2, y, false, false);
+            _mouse.delay(250);
+            pp = _scanner.scanOne("pole.bmp", area, null);
+            LOGGER.info("POLE FOUND...");
+          }
+          if (pp != null) {
+            offset = _scanner._br.x - pp.x;
+            resendP = new Pixel(pp.x + 28, pp.y - 42);
+          }
+          
+          //
+        }
+          
       }
 
       // OLD SCHOOL
