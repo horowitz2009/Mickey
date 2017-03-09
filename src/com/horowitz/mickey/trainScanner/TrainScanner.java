@@ -30,15 +30,15 @@ import com.horowitz.mickey.data.DataStore;
 
 public class TrainScanner {
 
-  private boolean         _locoOnly;
-  private ScreenScanner   _scanner;
-  private ImageComparator _comparator;
-  private MouseRobot      _mouse;
-  Logger                  LOGGER;
-  private int             _takeABreak;
-  private Settings        _settings;
-  private TrainCounter    _trainCounter;
-  private Stats           _stats;
+  private boolean               _locoOnly;
+  private ScreenScanner         _scanner;
+  private ImageComparator       _comparator;
+  private MouseRobot            _mouse;
+  Logger                        LOGGER;
+  private int                   _takeABreak;
+  private Settings              _settings;
+  private TrainCounter          _trainCounter;
+  private Stats                 _stats;
   private PropertyChangeSupport _support;
 
   public TrainScanner(ScreenScanner scanner, Logger logger, Settings settings, TrainCounter trainCounter) {
@@ -54,7 +54,7 @@ public class TrainScanner {
     } catch (AWTException e) {
     }
     LOGGER = logger;
-    
+
     _trainCounter = trainCounter;
     _stats = new Stats();
     _support = new PropertyChangeSupport(this);
@@ -343,84 +343,45 @@ public class TrainScanner {
 
   private boolean sendIntTrains(List<Train> trains, int x, int y, int xt, int yt) throws RobotInterruptedException, IOException, AWTException {
 
-    int numberSent = 0;
     _mouse.mouseMove(x + 737, y + 111 + 21 + 5);
     _mouse.click();
     _mouse.delay(1000);
-    int locoOnlyLength = 110;
     boolean atLeastOneSent = false;
     String defaultContractor = getDefaultContractor();
-    do {
-      List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
-      atLeastOneSent = false;
 
-      if (trains.isEmpty()) {
-        for (int i = 0; i < 5; i++) {
-          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(i).isIdle()) {
-            LOGGER.info("Sending to default contractor: " + defaultContractor);
-            if (sendTrainNew(newTrains.get(i), i, xt, yt)) {
-              atLeastOneSent = true;
-              numberSent++;
-            }
+    boolean resend = _settings.getBoolean("resendIT", false);
+    if (resend) {
+      // RESENDING
+      List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
+      for (int i = 0; i < newTrains.size(); i++) {
+        if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(i).isIdle()) {
+          LOGGER.info("Sending to default contractor: " + defaultContractor);
+          if (sendTrainNew(newTrains.get(i), i, xt, yt)) {
+            atLeastOneSent = true;
           }
         }
-        
-//        for (int i = 0; i < _takeABreak; i++) {
-//          if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(0).isIdle()) {
-//            LOGGER.info("Sending to default contractor: " + defaultContractor);
-//            if (sendTrain(null, xt, yt)) {
-//              atLeastOneSent = true;
-//              numberSent++;
-//            }
-//            break;
-//          }
-//        }
-      } else {
-
-        for (int i = newTrains.size() - 1; i >= 0 && !atLeastOneSent; --i) {
-          Train t = newTrains.get(i);
-          if (t.isIdle()) {
-            boolean found = false;
-            for (Train train : trains) {
-
-              Pixel p = _comparator.findImage(t.getScanImage(), train.getScanImage());
-              if (p == null && isLocoOnly()) {
-                BufferedImage i1 = t.getScanImage();
-                BufferedImage i2 = train.getScanImage();
-                p = _comparator.findImage(i1.getSubimage(i1.getWidth() - locoOnlyLength, 0, locoOnlyLength, i1.getHeight()),
-                    i2.getSubimage(i2.getWidth() - locoOnlyLength, 0, locoOnlyLength, i2.getHeight()));
-                // System.err.println("locoOnly " + p);
-              }
-              if (p != null) {
-                found = true;
-                if (!train.getContractors().isEmpty()) {
-                  if (sendTrain(train, xt, yt + (i) * 85 + p.y)) {
-                    atLeastOneSent = true;
-                    numberSent++;
-                  }
-                } else {
-                  LOGGER.info("Found match, but contractor not set");
-                }
-                break;
-              }
-
-            } // inner for
-
-            if (!found && defaultContractor != null) {
-              LOGGER.info("Can't find a match. Sending to default: " + defaultContractor);
-              if (sendTrain(null, xt, yt + (i) * 85)) {
-                atLeastOneSent = true;
-                numberSent++;
-              }
-            }
-
-          } else {
-            LOGGER.info("Train " + (i + 1) + " is not idle");
-          }
-        } // for newTrains
       }
-      //System.err.println("...");
-    } while (atLeastOneSent && numberSent < _takeABreak);
+
+    } else {
+      // SEND TO NEW GUYS
+      for (int i = 0; i < _takeABreak; i++) {
+        if (defaultContractor != null) {
+          // scan first slot
+          Rectangle onRoadArea = new Rectangle(xt + 14, yt + 49, 75, 20);
+          // ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
+          ImageData onRoadData = _scanner.getImageData("int/dispatched.bmp", onRoadArea, 0, 0);
+          boolean isIdle = onRoadData.findImage(onRoadArea) == null;
+          if (isIdle) {
+            LOGGER.info("Sending to default contractor: " + defaultContractor);
+            if (sendTrainNew(null, 0, xt, yt)) {
+              atLeastOneSent = true;
+            }
+          } else
+            break;
+        }
+      }
+    }
+
     return atLeastOneSent;
   }
 
@@ -428,107 +389,206 @@ public class TrainScanner {
     return _settings.getProperty("IntTrains.defaultContractor", null);
   }
 
-  private boolean sendTrainNew(Train train, int slot, int xt, int yt) throws RobotInterruptedException, IOException, AWTException {
-    int xs = xt + 58;
-    int ys = yt + 27 + (85 * slot);
-    if (train.isIdle()) {
-      _mouse.click(xs, ys);
-      _mouse.delay(650);
-    }
+  public void scanTrainOnly() throws IOException, AWTException {
     // it is expected a SendDialiog been opened
     int xx = (_scanner.getGameWidth() - 781) / 2;
     int yy = (_scanner.getGameHeight() - 587) / 2;
     xx += _scanner.getTopLeft().x;
     yy += _scanner.getTopLeft().y;
-    
+
     ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
     Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 175, 75));
+
     if (p != null) {
+      Pixel tl = new Pixel(p.x - 2, p.y + 62);
+      ocrTrain(tl);
+
+      Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
+      MyImageIO.writeAreaTS(rect, "train sent MAN ");
+      LOGGER.info("train captured!");
+    }
+  }
+
+  private boolean sendTrainNew(Train train, int slot, int xt, int yt) throws RobotInterruptedException, IOException, AWTException {
+    boolean resend = _settings.getBoolean("resendIT", false);
+    int xs = xt + 58;
+    int ys = yt + 27 + (85 * slot);
+    if (!resend)
+      ys += 35;
+    if (train == null || train.isIdle()) {
+      _mouse.click(xs, ys);
+      _mouse.delay(650);
+    }
+
+    // it is expected a SendDialiog been opened
+    int xx = (_scanner.getGameWidth() - 781) / 2;
+    int yy = (_scanner.getGameHeight() - 587) / 2;
+    xx += _scanner.getTopLeft().x;
+    yy += _scanner.getTopLeft().y;
+
+    ImageData selectAnchor = _scanner.generateImageData("int/Select.bmp");
+    Pixel p = selectAnchor.findImage(new Rectangle(xx, yy, 175, 75));
+
+    if (p != null) {
+      Pixel tl = new Pixel(p.x - 2, p.y + 62);
+
+      if (!resend) {
+        // it is expected a SendDialiog been opened
+        String defaultContractor = getDefaultContractor();
+        if (defaultContractor == null)
+          defaultContractor = "";
+
+        try {
+          // find and select contractors
+          Rectangle carea = new Rectangle(tl.x, tl.y, 147, 260);
+          // String lastContractor = train == null ? defaultContractor : train.getContractors().get(train.getContractors().size() - 1);
+          String lastContractor = defaultContractor;
+          if (lastContractor.equals("XP")) {
+            // scroll to top
+            _mouse.mouseMove(tl.x + 347, tl.y + 30);
+            _mouse.click();
+            _mouse.delay(400);
+
+            // do it fast
+            _mouse.mouseMove(tl.x + 20, tl.y + 20);
+            for (int i = 0; i < 8; i++) {
+              _mouse.click();
+              _mouse.delay(350);
+            }
+          } else if (lastContractor.equals("Special")) {
+            // scroll to top
+            _mouse.mouseMove(tl.x + 347, tl.y + 30);
+            _mouse.click();
+            _mouse.delay(400);
+
+            _mouse.mouseMove(tl.x + 20, tl.y + 20);
+            _mouse.click();
+            _mouse.delay(350);
+          } else if (defaultContractor.toLowerCase().startsWith("swap")) {
+            String group = defaultContractor.substring(4).trim();
+            sendToGroup(group, carea, tl);
+          } else {
+            if (train != null)
+              for (String cname : train.getContractors()) {
+                sendToContractor(cname, carea, tl);
+              }
+          }
+        } catch (Exception e) {
+          // no matter what try to send the bloody train
+        }
+
+        // click send and choose 4h way
+        _mouse.mouseMove(tl.x + 350, tl.y + 421);
+        _mouse.delay(300);
+        _mouse.click();
+        _mouse.delay(700);
+      }
+
       String defaultContractor = getDefaultContractor();
       if (defaultContractor == null)
         defaultContractor = "";
-      
-      Pixel tl = new Pixel(p.x - 2, p.y + 62);
-      
+
       // click send and choose 4h way
-//      _mouse.mouseMove(tl.x + 350, tl.y + 421);
-//      _mouse.delay(300);
-//      _mouse.click();
-//      _mouse.delay(700);
+      // _mouse.mouseMove(tl.x + 350, tl.y + 421);
+      // _mouse.delay(300);
+      // _mouse.click();
+      // _mouse.delay(700);
       boolean pass = true;
       if (defaultContractor.toLowerCase().startsWith("swap")) {
-        //do this only if swapping
+        // do this only if swapping
         if (_trainCounter != null) {
-          Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
-          Rectangle passRect = new Rectangle(tl.x + 495, tl.y + 143, 113, 17);
-          String coins = _trainCounter.scanCoins(coinsRect);
-          String passengers = _trainCounter.scanPassengers(passRect);
-          try {
-            int coinsNumber = Integer.parseInt(coins);
-            int passengersNumber = Integer.parseInt(passengers);
-            
-            //LIMITS CHECK
-            //      _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
-            //_limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
-            int limitCoins = _settings.getInt("IntTrains.limitCoins", 0);
-            int limitTrains = _settings.getInt("IntTrains.limitTrains", 0);
-            LOGGER.info("LIMITS: " + limitCoins + ", " + limitTrains);
-            
-            //limit 1. coins
-            if (limitCoins > 0 && _stats.getCoins() + coinsNumber > limitCoins) {
-              LOGGER.info("Coins " + (_stats.getCoins() + coinsNumber) + " exceeds " + limitCoins);
-              pass = false;
-            }
-            //limit 2. trains count
-            if (pass && limitTrains > 0 && _stats.getTrains() + 1 > limitTrains) {
-              LOGGER.info("Train number " + (_stats.getTrains() + 1) + " exceeds " + limitTrains);
-              pass = false;
-            }
-            if (pass) {
-              _stats.registerTrain(coinsNumber, passengersNumber);
-              LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
-              _support.firePropertyChange("ITRAIN", 0, 1);
-            }
-            
-          } catch (NumberFormatException e) {
-            LOGGER.info("FAILED TO CONVERT TO NUMBER: " + e.getMessage());
-            //e.printStackTrace();
-          }
+          pass = ocrTrain(tl);
         }
-        
-        
+
       }
-      
-      
+
       if (_settings.getBoolean("IntTrains.captureSent", true)) {
         Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
         MyImageIO.writeAreaTS(rect, "train sent ");
       }
-      
+
       if (pass) {
         // the send button
-        //OLD _mouse.click(tl.x + 355, tl.y + 421);
+        // OLD _mouse.click(tl.x + 355, tl.y + 421);
         _mouse.click(tl.x + 355 + 60, tl.y + 421);
         _mouse.delay(1000);
+        return true;
       } else {
-        //close one windows
+        // close one windows
         _mouse.click(tl.x + 724, tl.y - 72);
         _mouse.delay(1500);
-        //_mouse.click(tl.x + 724, tl.y - 72);
-        //_mouse.delay(1500);
+        // _mouse.click(tl.x + 724, tl.y - 72);
+        // _mouse.delay(1500);
         return false;
       }
-      
+
       // not used
       // ////train.setTimeToSendNext(4 * 60 * 60000 + 60000 + System.currentTimeMillis()); // 4h 1m in the future
-      
-      return true;
+
+      // return true;
       // at the end
       // train.setSentTime(System.currentTimeMillis());
+
     }
+
     return false;
   }
-  
+
+  private boolean ocrTrain(Pixel tl) throws AWTException {
+    boolean pass = true;
+    Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
+    Rectangle passRect = new Rectangle(tl.x + 495, tl.y + 143, 113, 17);
+    String coins = _trainCounter.scanCoins(coinsRect);
+    String passengers = _trainCounter.scanPassengers(passRect);
+    try {
+      int coinsNumber = 0;
+      int passengersNumber = 0;
+      try {
+        coinsNumber = Integer.parseInt(coins);
+      } catch (Exception e) {
+        // wait and try again
+        try {
+          Thread.sleep(1500);
+        } catch (InterruptedException e1) {
+        }
+        coins = _trainCounter.scanCoins(coinsRect);
+        coinsNumber = Integer.parseInt(coins);
+        try {
+          passengersNumber = Integer.parseInt(passengers);
+          passengers = _trainCounter.scanPassengers(passRect);
+        } catch (Exception ee) {
+        }
+      }
+      // LIMITS CHECK
+      // _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
+      // _limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
+      int limitCoins = _settings.getInt("IntTrains.limitCoins", 0);
+      int limitTrains = _settings.getInt("IntTrains.limitTrains", 0);
+      LOGGER.info("LIMITS: " + limitCoins + ", " + limitTrains);
+
+      // limit 1. coins
+      if (limitCoins > 0 && _stats.getCoins() + coinsNumber > limitCoins) {
+        LOGGER.info("Coins " + (_stats.getCoins() + coinsNumber) + " exceeds " + limitCoins);
+        pass = false;
+      }
+      // limit 2. trains count
+      if (pass && limitTrains > 0 && _stats.getTrains() + 1 > limitTrains) {
+        LOGGER.info("Train number " + (_stats.getTrains() + 1) + " exceeds " + limitTrains);
+        pass = false;
+      }
+      if (pass) {
+        _stats.registerTrain(coinsNumber, passengersNumber);
+        LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
+        _support.firePropertyChange("ITRAIN", 0, 1);
+      }
+
+    } catch (NumberFormatException e) {
+      LOGGER.info("FAILED TO CONVERT TO NUMBER: " + e.getMessage());
+      // e.printStackTrace();
+    }
+    return pass;
+  }
+
   private boolean sendTrain(Train train, int x, int y) throws RobotInterruptedException, IOException, AWTException {
     _mouse.mouseMove(x + 64, y + 60);
     _mouse.delay(250);
@@ -602,7 +662,7 @@ public class TrainScanner {
       _mouse.delay(700);
       boolean pass = true;
       if (defaultContractor.toLowerCase().startsWith("swap")) {
-        //do this only if swapping
+        // do this only if swapping
         if (_trainCounter != null) {
           Rectangle coinsRect = new Rectangle(tl.x + 308, tl.y + 308, 122, 17);
           Rectangle passRect = new Rectangle(tl.x + 495, tl.y + 143, 113, 17);
@@ -611,20 +671,20 @@ public class TrainScanner {
           try {
             int coinsNumber = Integer.parseInt(coins);
             int passengersNumber = Integer.parseInt(passengers);
-            
-            //LIMITS CHECK
-            //      _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
-            //_limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
+
+            // LIMITS CHECK
+            // _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
+            // _limitTrainsTF.setText(_settings.getProperty("IntTrains.limitTrains", ""));
             int limitCoins = _settings.getInt("IntTrains.limitCoins", 0);
             int limitTrains = _settings.getInt("IntTrains.limitTrains", 0);
             LOGGER.info("LIMITS: " + limitCoins + ", " + limitTrains);
-            
-            //limit 1. coins
+
+            // limit 1. coins
             if (limitCoins > 0 && _stats.getCoins() + coinsNumber > limitCoins) {
               LOGGER.info("Coins " + (_stats.getCoins() + coinsNumber) + " exceeds " + limitCoins);
               pass = false;
             }
-            //limit 2. trains count
+            // limit 2. trains count
             if (pass && limitTrains > 0 && _stats.getTrains() + 1 > limitTrains) {
               LOGGER.info("Train number " + (_stats.getTrains() + 1) + " exceeds " + limitTrains);
               pass = false;
@@ -634,33 +694,31 @@ public class TrainScanner {
               LOGGER.info(_stats.getTrains() + " trains, " + _stats.getCoins() + " coins");
               _support.firePropertyChange("ITRAIN", 0, 1);
             }
-            
+
           } catch (NumberFormatException e) {
             LOGGER.info("FAILED TO CONVERT TO NUMBER: " + e.getMessage());
-            //e.printStackTrace();
+            // e.printStackTrace();
           }
         }
-        
-        
+
       }
-      
-      
+
       if (_settings.getBoolean("IntTrains.captureSent", true)) {
         Rectangle rect = new Rectangle(tl.x, tl.y, 700, 338);
         MyImageIO.writeAreaTS(rect, "train sent ");
       }
-      
+
       if (pass) {
         // the send button
-        //OLD _mouse.click(tl.x + 355, tl.y + 421);
+        // OLD _mouse.click(tl.x + 355, tl.y + 421);
         _mouse.click(tl.x + 355 + 60, tl.y + 421);
         _mouse.delay(2000);
       } else {
-        //close one windows
+        // close one windows
         _mouse.click(tl.x + 724, tl.y - 72);
         _mouse.delay(1500);
-        //_mouse.click(tl.x + 724, tl.y - 72);
-        //_mouse.delay(1500);
+        // _mouse.click(tl.x + 724, tl.y - 72);
+        // _mouse.delay(1500);
         return false;
       }
 
@@ -673,16 +731,16 @@ public class TrainScanner {
     }
     return false;
   }
-  
+
   public void reset() {
     _stats.reset();
   }
-  
+
   private void sendToGroup(String group, Rectangle carea, Pixel tl) throws AWTException, IOException, RobotInterruptedException {
-    //group can be bronze, silver or gold
+    // group can be bronze, silver or gold
     int xGroup = tl.x + 615;
     int yGroup = tl.y + 48;
-    if (group.equalsIgnoreCase("silver")) 
+    if (group.equalsIgnoreCase("silver"))
       xGroup += 30;
     else if (group.equalsIgnoreCase("gold"))
       xGroup += 60;
@@ -948,11 +1006,11 @@ public class TrainScanner {
   public void setLocoOnly(boolean locoOnly) {
     _locoOnly = locoOnly;
   }
-  
+
   public Stats getStats() {
     return _stats;
   }
-  
+
   public void addPropertyChangeListener(PropertyChangeListener arg0) {
     _support.addPropertyChangeListener(arg0);
   }
@@ -960,6 +1018,5 @@ public class TrainScanner {
   public void addPropertyChangeListener(String arg0, PropertyChangeListener arg1) {
     _support.addPropertyChangeListener(arg0, arg1);
   }
-
 
 }

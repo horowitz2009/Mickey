@@ -1,5 +1,6 @@
 package com.horowitz.mickey.trainScanner;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -687,6 +688,10 @@ public class TrainManagementWindow extends JFrame {
   
   public Stats getStats() {
     return _tscanner.getStats();
+  }
+
+  public void scanTrainOnly() throws IOException, AWTException {
+    _tscanner.scanTrainOnly();
   }
   
 }

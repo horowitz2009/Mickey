@@ -81,7 +81,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.994";
+  private static final String   APP_TITLE           = "v0.995";
 
   private boolean               _devMode            = false;
 
@@ -153,6 +153,7 @@ public final class MainFrame extends JFrame {
 
   private JToggleButton         _maglevClick;
   private JToggleButton         _resendClick;
+  private JToggleButton         _resendITClick;
 
   private TrainCounter          _trainCounter;
 
@@ -318,7 +319,7 @@ public final class MainFrame extends JFrame {
     _exToolbar2.setFloatable(false);
     _xpToolbar1.setFloatable(false);
     _xpToolbar2.setFloatable(false);
-    
+
     _frToolbar1.setBackground(new Color(201, 177, 133));
     _frToolbar2.setBackground(new Color(201, 177, 133));
     _freeToolbar1.setBackground(new Color(201, 177, 183));// TODO
@@ -628,6 +629,31 @@ public final class MainFrame extends JFrame {
       mainToolbar1.add(b1);
     }
 
+    // reset it trains
+    {
+      JButton b1 = new JButton(new AbstractAction("SIT") {
+        public void actionPerformed(ActionEvent e) {
+          Thread myThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+              try {
+                if (_trainManagementWindow != null)
+                  _trainManagementWindow.scanTrainOnly();
+
+              } catch (Exception e1) {
+                LOGGER.log(Level.WARNING, e1.getMessage());
+                e1.printStackTrace();
+              }
+            }
+
+          });
+          myThread.start();
+        }
+      });
+      mainToolbar1.add(b1);
+    }
+
     // // CAPTURE CONTRACTS 2
     // {
     // JButton b1 = new JButton(new AbstractAction("C2") {
@@ -771,6 +797,19 @@ public final class MainFrame extends JFrame {
         }
       });
       mainToolbar2.add(_resendClick);
+    }
+    {
+      _resendITClick = new JToggleButton("RIT");
+      _resendITClick.setSelected(_settings.getBoolean("resendIT", false));
+      _resendITClick.addChangeListener(new ChangeListener() {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _settings.setProperty("resendIT", "" + _resendITClick.isSelected());
+          _settings.saveSettingsSorted();
+        }
+      });
+      mainToolbar2.add(_resendITClick);
     }
 
     // freight
@@ -938,6 +977,7 @@ public final class MainFrame extends JFrame {
     boolean letters = "true".equalsIgnoreCase(_commands.getProperty("huntLetters"));
     boolean maglev15 = "true".equalsIgnoreCase(_commands.getProperty("maglev15"));
     boolean resend = "true".equalsIgnoreCase(_commands.getProperty("resend"));
+    boolean resendIT = "true".equalsIgnoreCase(_settings.getProperty("resendIT"));
 
     if (ping != _pingClick.isSelected()) {
       _pingClick.setSelected(ping);
@@ -958,9 +998,13 @@ public final class MainFrame extends JFrame {
     if (maglev15 != _maglevClick.isSelected()) {
       _maglevClick.setSelected(maglev15);
     }
-    
+
     if (resend != _resendClick.isSelected()) {
       _resendClick.setSelected(resend);
+    }
+
+    if (resendIT != _resendITClick.isSelected()) {
+      _resendITClick.setSelected(resendIT);
     }
 
     if (sendInternational != _sendInternational.isSelected()) {
@@ -2495,6 +2539,7 @@ public final class MainFrame extends JFrame {
     int offset = 0;
 
     Rectangle area = new Rectangle(_scanner.getBottomRight().x - 170, _scanner.getBottomRight().y - 136, 170, 24);
+    Rectangle resendArea = new Rectangle(_scanner.getBottomRight().x - 140, _scanner.getBottomRight().y - 204, 140, 55);
     if (_commands.getBoolean("resend", true)) {
       _mouse.delay(500);
       // _scanner.writeArea(area, "polearea.bmp");
@@ -2512,11 +2557,14 @@ public final class MainFrame extends JFrame {
       if (pp != null) {
         offset = _scanner._br.x - pp.x;
         resendP = new Pixel(pp.x + 28, pp.y - 42);
+        resendArea = new Rectangle(pp.x, _scanner.getBottomRight().y - 204, _scanner._br.x - pp.x, 55);
+        //_scanner.writeArea(resendArea, "resendArea.bmp");
       }
     } else {
       Pixel pp = _scanner.scanOne("pole.bmp", area, null);
-      if (pp != null)
+      if (pp != null) {
         offset = _scanner._br.x - pp.x;
+      }
     }
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
@@ -2537,16 +2585,28 @@ public final class MainFrame extends JFrame {
 
       // RESEND
       if (resendP != null) {
-        int clicks = 12;
-        for (int i = 0; i < clicks; i++) {
-          _mouse.click(resendP);
-          _mouse.delay(100);
+        int clicks = 4;
+        int turns = 8;
+
+        for (int t = 0; t < turns; t++) {
+          for (int i = 0; i < clicks; i++) {
+            _mouse.click(resendP);
+            _mouse.delay(100);
+          }
+          _mouse.mouseMove(_scanner.getBottomRight());
+          _mouse.delay(550);
+          _mouse.checkUserMovement();
+          //_scanner.writeArea(resendArea, "resendArea2.bmp");
+          Pixel pr = _scanner.scanOneFast("resend.bmp", resendArea, false);
+          LOGGER.info("resend: " + (pr != null));
+          if (pr == null)
+            break;
         }
-        _mouse.delay(550);
-        
+        trainHasBeenSent = true;
+
         hadOtherLocations = scanOtherLocations(11);
         if (hadOtherLocations) {
-          //DAMN
+          // DAMN
           _mouse.delay(1000);
           // _scanner.writeArea(area, "polearea.bmp");
           Pixel pp = _scanner.scanOne("pole.bmp", area, null);
@@ -2563,11 +2623,26 @@ public final class MainFrame extends JFrame {
           if (pp != null) {
             offset = _scanner._br.x - pp.x;
             resendP = new Pixel(pp.x + 28, pp.y - 42);
+            
+            _mouse.mouseMove(_scanner.getBottomRight());
+            _mouse.delay(200);
+            _mouse.checkUserMovement();
+            //_scanner.writeArea(resendArea, "resendArea3.bmp");
+            Pixel pr = _scanner.scanOneFast("resend.bmp", resendArea, false);
+            LOGGER.info("resend2: " + (pr != null));
+            if (pr != null) {
+              for (int i = 0; i < clicks; i++) {
+                _mouse.click(resendP);
+                _mouse.delay(100);
+              }
+              _mouse.delay(550);
+              return true;//skip the old school /hmm
+            }
           }
-          
+
           //
         }
-          
+
       }
 
       // OLD SCHOOL
@@ -2580,23 +2655,23 @@ public final class MainFrame extends JFrame {
       _trainManagementOpen = false;
       _clickingDone = false;
 
-      // if (_tmThread == null || !_tmThread.isAlive()) {
-      // _tmThread = new Thread(new Runnable() {
-      // public void run() {
-      // int i = 0;
-      // for (; !_trainManagementOpen && !_clickingDone; i++) {//
-      // try {
-      // _mouse.delay(25, false);
-      // } catch (RobotInterruptedException e) {
-      // }
-      // Pixel tm = _scanner.getTrainManagementAnchor().findImage();
-      // _trainManagementOpen = tm != null;
-      // }
-      // LOGGER.fine("Checked TM " + i + " times: " + _trainManagementOpen + " " + _clickingDone);
-      // }
-      // }, "TRAIN_MAN");
-      // _tmThread.start();
-      // }
+      if (_tmThread == null || !_tmThread.isAlive()) {
+        _tmThread = new Thread(new Runnable() {
+          public void run() {
+            int i = 0;
+            for (; !_trainManagementOpen && !_clickingDone; i++) {//
+              try {
+                _mouse.delay(25, false);
+              } catch (RobotInterruptedException e) {
+              }
+              Pixel tm = _scanner.getTrainManagementAnchor().findImage();
+              _trainManagementOpen = tm != null;
+            }
+            LOGGER.fine("Checked TM " + i + " times: " + _trainManagementOpen + " " + _clickingDone);
+          }
+        }, "TRAIN_MAN");
+        _tmThread.start();
+      }
       int xold = p.x;
       int xoff2 = _settings.getInt("xOff2", 4);
       p.x += (rails.length + 1) * xoff2;
@@ -3271,7 +3346,7 @@ public final class MainFrame extends JFrame {
 
       if (!_devMode) {
         if (time.getTime() == 8)
-          _mouse.delay(1000);
+          _mouse.delay(_settings.getInt("delay7min", 600));
         clickTrain(isExpress);
       }
       return true;
