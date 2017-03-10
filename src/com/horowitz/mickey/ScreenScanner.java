@@ -135,6 +135,9 @@ public class ScreenScanner extends BaseScreenScanner {
 
   private int                 _street1Y                      = 170;
   private Pixel               _whistlesPoint;
+  public int _offset;
+  public Pixel _resendP;
+  private Rectangle _resendArea;
 
   public ScreenScanner(Settings settings) {
     super(settings);
@@ -806,6 +809,60 @@ public class ScreenScanner extends BaseScreenScanner {
     p = scanOneFast("mat4.bmp", area, false);
 
     return p != null;
+  }
+  
+  public void adjustHome(boolean resend) throws AWTException, RobotInterruptedException, IOException {
+    _resendP = null;
+    _offset = 0;
+
+    Rectangle area = new Rectangle(_br.x - 170, _br.y - 136, 170, 24);
+    _resendArea = new Rectangle(_br.x - 140, _br.y - 204, 140, 55);
+    int y = _br.y - 104;
+    int x1 = _br.x - 15;
+    int x2 = _br.x - 15 - _settings.getInt("resendOffset", 105);
+
+    if (resend) {
+      _mouse.delay(500);
+      // _scanner.writeArea(area, "polearea.bmp");
+      Pixel pp = scanOneFast("pole.bmp", area, false);
+      if (pp == null) {
+        _offset = 80;
+        _mouse.drag4(x1, y, x2, y, false, false);
+        _mouse.delay(250);
+        pp = scanOneFast("pole.bmp", area, false);
+        LOGGER.info("pole found again:  " + (pp != null));
+        //offset = getOffset(offset, area);
+      } else {
+        //it found but let's see is it far enough from edge
+        if (_br.x - pp.x < 50) {
+          _offset = 80;
+          _mouse.drag4(x1, y, x2, y, false, false);
+          _mouse.delay(250);
+          pp = scanOneFast("pole.bmp", area, false);
+          LOGGER.info("pole found again2:  " + (pp != null));
+        }
+      }
+      if (pp != null) {
+        _offset = _br.x - pp.x;
+        _resendP = new Pixel(pp.x + 28, pp.y - 42);
+        if (_resendP.x > _br.x) {
+          LOGGER.info("resend still outside...");
+          _resendP.x = _br.x - 2;
+        }
+        _resendArea = new Rectangle(pp.x, _br.y - 204, _br.x - pp.x, 55);
+        //_scanner.writeArea(resendArea, "resendArea.bmp");
+      }
+    } else {
+      Pixel pp = scanOneFast("pole.bmp", area, false);
+      if (pp != null) {
+        _offset = _br.x - pp.x;
+      }
+    }
+
+  }
+  
+  public Pixel scanResend() throws AWTException, RobotInterruptedException, IOException {
+    return scanOneFast("resend.bmp", _resendArea, false);
   }
 
 }

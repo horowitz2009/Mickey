@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -81,7 +82,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.995";
+  private static final String   APP_TITLE           = "v0.996";
 
   private boolean               _devMode            = false;
 
@@ -108,10 +109,10 @@ public final class MainFrame extends JFrame {
   private JButton               _resetAction;
   private JButton               _doMagicAction;
 
-  private Location              _freeTime           = Locations.LOC_5MIN;
-  private Location              _xpTime             = Locations.LOC_5MIN;
+  private Location              _freeTime           = Locations.LOC_10MIN;
+  private Location              _xpTime             = Locations.LOC_10MIN;
   private Location              _freightTime        = Locations.LOC_10MIN;
-  private Location              _expressTime        = Locations.LOC_30MIN;
+  private Location              _expressTime        = Locations.LOC_10MIN;
 
   private Settings              _settings;
   private Settings              _commands;
@@ -179,6 +180,16 @@ public final class MainFrame extends JFrame {
 
     runSettingsListener();
     numberFormat = NumberFormat.getNumberInstance();
+
+    TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings, getTrainCounter());
+    tscanner.addPropertyChangeListener(new PropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent arg0) {
+        updateLabels();
+      }
+    });
+    _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
+
   }
 
   private void setupLogger() {
@@ -1107,17 +1118,7 @@ public final class MainFrame extends JFrame {
   }
 
   private void reload() {
-    if (_trainManagementWindow == null) {
-      TrainScanner tscanner = new TrainScanner(_scanner, LOGGER, _settings, getTrainCounter());
-      tscanner.addPropertyChangeListener(new PropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent arg0) {
-          updateLabels();
-        }
-      });
-      _trainManagementWindow = new TrainManagementWindow(null, tscanner, _settings);
-    } else
-      _trainManagementWindow.reload();
+    _trainManagementWindow.reload();
   }
 
   private TrainCounter getTrainCounter() {
@@ -1602,7 +1603,7 @@ public final class MainFrame extends JFrame {
       turn *= 2;
       if (turn > 8)
         turn = 1;
-      LOGGER.fine("T: " + turn);
+      LOGGER.info("T: " + turn);
 
       try {
         if (_autoPassClick.isSelected()) {
@@ -1617,7 +1618,7 @@ public final class MainFrame extends JFrame {
           }
         }
 
-        int timeForRefresh = (getShortestTime() * 60000 / 2);
+        int timeForRefresh = (getShortestTime() * 60000);
         int mandatoryRefresh = _settings.getInt("mandatoryRefresh.time", 45) * 60000;
 
         updateLabels();
@@ -1628,7 +1629,12 @@ public final class MainFrame extends JFrame {
         checkIsStuck();
 
         // OTHER LOCATIONS
-        boolean flag = scanOtherLocations(1);
+        boolean flag = false;
+        if (_commands.getBoolean("resend", true)) {
+          flag = clickHomeRESEND();
+        } else {
+          flag = scanOtherLocations(1);
+        }
 
         captureContracts();
         boolean atLeastOneSent = false;
@@ -1695,34 +1701,37 @@ public final class MainFrame extends JFrame {
             // lookForPackages();
           }
 
-          // SECOND STATION
-          List<Integer> turns = getSecondStationTurns();
-          if (turns.contains(turn))
-            clickSecondStation();
+          if (!_sendInternational.isSelected() || (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() > 1000)) {
+            // SECOND STATION
+            List<Integer> turns = getSecondStationTurns();
+            if (turns.contains(turn))
+              clickSecondStation();
 
-          int whistles = _settings.getInt("clickWhistles", 2);
-          if (whistles > 0) {
-            for (int i = 0; i < whistles; i++) {
-              _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
-              _mouse.delay(20);
+            int whistles = _settings.getInt("clickWhistles", 2);
+            if (whistles > 0) {
+              for (int i = 0; i < whistles; i++) {
+                _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
+                _mouse.delay(20);
+              }
             }
+
+            // LETTERS
+            // int h = _settings.getInt("huntLetters", 2);
+            if (_lettersClick.isSelected())
+              huntLetters();
+
+            // PACKAGES
+            int hp = _settings.getInt("huntPackages", 1);
+            int n = 16;
+            for (int i = 0; i < hp; i++) {
+              n = n / 2;
+            }
+
+            if (turn % n == 0)
+              lookForPackages2();
+          } else {
+            LOGGER.info("time for IT...");
           }
-
-          // LETTERS
-          // int h = _settings.getInt("huntLetters", 2);
-          if (_lettersClick.isSelected())
-            huntLetters();
-
-          // PACKAGES
-          int hp = _settings.getInt("huntPackages", 1);
-          int n = 16;
-          for (int i = 0; i < hp; i++) {
-            n = n / 2;
-          }
-
-          if (turn % n == 0)
-            lookForPackages2();
-
           _mouse.delay(200);
         } // _captureContractors == 0
       } catch (AWTException | IOException e) {
@@ -2009,7 +2018,7 @@ public final class MainFrame extends JFrame {
   }
 
   private boolean sendInternational() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException {
-    long timeLeft = _trainManagementWindow != null ? _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() : 10000000;
+    long timeLeft = _trainManagementWindow.getTimeLeft() - System.currentTimeMillis();
     LOGGER.info("INTERNATIONAL " + DateUtils.fancyTime2(timeLeft));
     boolean atLeastOneSent = false;
     if (_trainManagementWindow != null && timeLeft <= 0) {
@@ -2190,7 +2199,9 @@ public final class MainFrame extends JFrame {
   }
 
   private int getShortestTime() {
-    return _freightTime.getTime() < _expressTime.getTime() ? _freightTime.getTime() : _expressTime.getTime();
+    int[] times = new int[] {_freightTime.getTime(),_freeTime.getTime(),_expressTime.getTime(),_xpTime.getTime()};
+    Arrays.sort(times);
+    return times[0];
   }
 
   private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
@@ -2535,37 +2546,6 @@ public final class MainFrame extends JFrame {
   }
 
   private boolean clickHomeRESEND() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
-    Pixel resendP = null;
-    int offset = 0;
-
-    Rectangle area = new Rectangle(_scanner.getBottomRight().x - 170, _scanner.getBottomRight().y - 136, 170, 24);
-    Rectangle resendArea = new Rectangle(_scanner.getBottomRight().x - 140, _scanner.getBottomRight().y - 204, 140, 55);
-    if (_commands.getBoolean("resend", true)) {
-      _mouse.delay(500);
-      // _scanner.writeArea(area, "polearea.bmp");
-      Pixel pp = _scanner.scanOne("pole.bmp", area, null);
-      if (pp == null) {
-        int y = _scanner._br.y - 104;
-        int x1 = _scanner._br.x - 15;
-        int x2 = _scanner._br.x - 15 - 105;
-        offset = 80;
-        _mouse.drag4(x1, y, x2, y, false, false);
-        _mouse.delay(250);
-        pp = _scanner.scanOne("pole.bmp", area, null);
-        LOGGER.info("POLE FOUND...");
-      }
-      if (pp != null) {
-        offset = _scanner._br.x - pp.x;
-        resendP = new Pixel(pp.x + 28, pp.y - 42);
-        resendArea = new Rectangle(pp.x, _scanner.getBottomRight().y - 204, _scanner._br.x - pp.x, 55);
-        //_scanner.writeArea(resendArea, "resendArea.bmp");
-      }
-    } else {
-      Pixel pp = _scanner.scanOne("pole.bmp", area, null);
-      if (pp != null) {
-        offset = _scanner._br.x - pp.x;
-      }
-    }
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
     int timeGiven = _settings.getInt("clickHomeFaster.time", 4000);
@@ -2576,78 +2556,50 @@ public final class MainFrame extends JFrame {
 
     int maxTurns = _settings.getInt("clickHomeFaster.turns", 4) + 1;
     int turn = 1;
-    int nn = (int) Math.pow(2, maxTurns + 1);
-    int n = nn;
+
     do {
+      scanAndClick(ScreenScanner.SHOP_X, null);
       LOGGER.info("turn " + turn++);
+      boolean resend = _commands.getBoolean("resend", true);
+      _scanner.adjustHome(resend);
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
       // RESEND
-      if (resendP != null) {
-        int clicks = 4;
-        int turns = 8;
+      if (_scanner._resendP != null) {
+        LOGGER.info("resendP != null...");
+        int clicks = 5;
+        int turns = 10;
 
         for (int t = 0; t < turns; t++) {
           for (int i = 0; i < clicks; i++) {
-            _mouse.click(resendP);
+            _mouse.click(_scanner._resendP);
             _mouse.delay(100);
           }
           _mouse.mouseMove(_scanner.getBottomRight());
           _mouse.delay(550);
           _mouse.checkUserMovement();
-          //_scanner.writeArea(resendArea, "resendArea2.bmp");
-          Pixel pr = _scanner.scanOneFast("resend.bmp", resendArea, false);
+          // _scanner.writeArea(resendArea, "resendArea2.bmp");
+          Pixel pr = _scanner.scanResend();
           LOGGER.info("resend: " + (pr != null));
-          if (pr == null)
+          if (pr == null && t > 1)
             break;
         }
         trainHasBeenSent = true;
-
+        if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+          return true;
         hadOtherLocations = scanOtherLocations(11);
-        if (hadOtherLocations) {
-          // DAMN
-          _mouse.delay(1000);
-          // _scanner.writeArea(area, "polearea.bmp");
-          Pixel pp = _scanner.scanOne("pole.bmp", area, null);
-          if (pp == null) {
-            int y = _scanner._br.y - 104;
-            int x1 = _scanner._br.x - 15;
-            int x2 = _scanner._br.x - 15 - 105;
-            offset = 80;
-            _mouse.drag4(x1, y, x2, y, false, false);
-            _mouse.delay(250);
-            pp = _scanner.scanOne("pole.bmp", area, null);
-            LOGGER.info("POLE FOUND...");
-          }
-          if (pp != null) {
-            offset = _scanner._br.x - pp.x;
-            resendP = new Pixel(pp.x + 28, pp.y - 42);
-            
-            _mouse.mouseMove(_scanner.getBottomRight());
-            _mouse.delay(200);
-            _mouse.checkUserMovement();
-            //_scanner.writeArea(resendArea, "resendArea3.bmp");
-            Pixel pr = _scanner.scanOneFast("resend.bmp", resendArea, false);
-            LOGGER.info("resend2: " + (pr != null));
-            if (pr != null) {
-              for (int i = 0; i < clicks; i++) {
-                _mouse.click(resendP);
-                _mouse.delay(100);
-              }
-              _mouse.delay(550);
-              return true;//skip the old school /hmm
-            }
-          }
-
-          //
-        }
+        if (hadOtherLocations && _sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+            return true;
 
       }
-
+      
+      scanAndClick(ScreenScanner.SHOP_X, null);
+      
       // OLD SCHOOL
       int xOff = _settings.getInt("xOff", 150);
-      xOff += offset;
+      if (!hadOtherLocations)
+        xOff += _scanner._offset;
 
       p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
 
@@ -2698,7 +2650,10 @@ public final class MainFrame extends JFrame {
 
       if (trainHasBeenSent) {
         // _mouse.delay(250);
-        start = System.currentTimeMillis();
+        if (curr - start > timeGiven * 2) {
+          LOGGER.info("give chance to other things...");
+        } else
+          start = System.currentTimeMillis();
       }
 
       // // LOCATIONS
@@ -2706,8 +2661,8 @@ public final class MainFrame extends JFrame {
       // hadOtherLocations = scanOtherLocations(11);
 
       // SHOP POPUP CHECK
-      if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
-        scanAndClick(ScreenScanner.SHOP_X, null);
+      //if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
+      //scanAndClick(ScreenScanner.SHOP_X, null);
 
     } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns);
 

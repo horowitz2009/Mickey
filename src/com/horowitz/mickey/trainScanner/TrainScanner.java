@@ -553,11 +553,17 @@ public class TrainScanner {
         }
         coins = _trainCounter.scanCoins(coinsRect);
         coinsNumber = Integer.parseInt(coins);
+      }
+      try {
+        passengersNumber = Integer.parseInt(passengers);
+      } catch (Exception ee) {
+        // wait and try again
         try {
-          passengersNumber = Integer.parseInt(passengers);
-          passengers = _trainCounter.scanPassengers(passRect);
-        } catch (Exception ee) {
+          Thread.sleep(1500);
+        } catch (InterruptedException e1) {
         }
+        passengers = _trainCounter.scanPassengers(passRect);
+        passengersNumber = Integer.parseInt(passengers);
       }
       // LIMITS CHECK
       // _limitCoinsTF.setText(_settings.getProperty("IntTrains.limitCoins", ""));
