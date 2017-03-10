@@ -830,7 +830,7 @@ public class ScreenScanner extends BaseScreenScanner {
         _mouse.drag4(x1, y, x2, y, false, false);
         _mouse.delay(250);
         pp = scanOneFast("pole.bmp", area, false);
-        LOGGER.info("pole found again:  " + (pp != null));
+        LOGGER.fine("pole found again:  " + (pp != null));
         //offset = getOffset(offset, area);
       } else {
         //it found but let's see is it far enough from edge
@@ -839,7 +839,7 @@ public class ScreenScanner extends BaseScreenScanner {
           _mouse.drag4(x1, y, x2, y, false, false);
           _mouse.delay(250);
           pp = scanOneFast("pole.bmp", area, false);
-          LOGGER.info("pole found again2:  " + (pp != null));
+          LOGGER.fine("pole found again2:  " + (pp != null));
         }
       }
       if (pp != null) {

@@ -2567,7 +2567,7 @@ public final class MainFrame extends JFrame {
 
       // RESEND
       if (_scanner._resendP != null) {
-        LOGGER.info("resendP != null...");
+        LOGGER.fine("resendP != null...");
         int clicks = 5;
         int turns = 10;
 
