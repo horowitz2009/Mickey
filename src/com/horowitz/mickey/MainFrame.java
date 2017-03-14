@@ -1598,9 +1598,9 @@ public final class MainFrame extends JFrame {
     long start = System.currentTimeMillis();
     long fstart = System.currentTimeMillis();
 
-    int turn = 1;
+    int turn = 0;
     while (!_stopThread) {
-      turn *= 2;
+      turn++;
       if (turn > 8)
         turn = 1;
       LOGGER.info("T: " + turn);
@@ -1702,14 +1702,17 @@ public final class MainFrame extends JFrame {
           }
 
           if (!_sendInternational.isSelected() || (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() > 1000)) {
+            
             // SECOND STATION
             List<Integer> turns = getSecondStationTurns();
             if (turns.contains(turn))
               clickSecondStation();
 
-            int whistles = _settings.getInt("clickWhistles", 2);
-            if (whistles > 0) {
-              for (int i = 0; i < whistles; i++) {
+            //WHISTLES
+            String[] whistlesTurns = _settings.getProperty("whistles.turns", "4").split(",");
+            int whistlesClicks = _settings.getInt("whistles.clicks", 1);
+            if (Arrays.binarySearch(whistlesTurns, "" + turn) >= 0) {
+              for (int i = 0; i < whistlesClicks; i++) {
                 _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
                 _mouse.delay(20);
               }
@@ -1721,13 +1724,8 @@ public final class MainFrame extends JFrame {
               huntLetters();
 
             // PACKAGES
-            int hp = _settings.getInt("huntPackages", 1);
-            int n = 16;
-            for (int i = 0; i < hp; i++) {
-              n = n / 2;
-            }
-
-            if (turn % n == 0)
+            String[] packagesTurns = _settings.getProperty("packages.turns", "4").split(",");
+            if (Arrays.binarySearch(packagesTurns, "" + turn) >= 0)
               lookForPackages2();
           } else {
             LOGGER.info("time for IT...");
@@ -2581,7 +2579,7 @@ public final class MainFrame extends JFrame {
           _mouse.checkUserMovement();
           // _scanner.writeArea(resendArea, "resendArea2.bmp");
           Pixel pr = _scanner.scanResend();
-          LOGGER.info("resend: " + (pr != null));
+          LOGGER.fine("resend: " + (pr != null));
           if (pr == null && t > 1)
             break;
         }
