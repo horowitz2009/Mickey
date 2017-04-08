@@ -82,7 +82,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.996";
+  private static final String   APP_TITLE           = "v0.997";
 
   private boolean               _devMode            = false;
 
@@ -2546,6 +2546,7 @@ public final class MainFrame extends JFrame {
   private boolean clickHomeRESEND() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
     boolean trainHasBeenSent = false;
     boolean hadOtherLocations = false;
+    boolean trainResent = false;
     int timeGiven = _settings.getInt("clickHomeFaster.time", 4000);
     long start = System.currentTimeMillis();
 
@@ -2565,43 +2566,41 @@ public final class MainFrame extends JFrame {
 
       // RESEND
       if (_scanner._resendP != null) {
-        LOGGER.fine("resendP != null...");
-        int clicks = 5;
-        int turns = 10;
-
-        for (int t = 0; t < turns; t++) {
-          for (int i = 0; i < clicks; i++) {
-            _mouse.click(_scanner._resendP);
-            _mouse.delay(100);
-          }
-          _mouse.mouseMove(_scanner.getBottomRight());
-          _mouse.delay(550);
-          _mouse.checkUserMovement();
-          // _scanner.writeArea(resendArea, "resendArea2.bmp");
-          Pixel pr = _scanner.scanResend();
-          LOGGER.fine("resend: " + (pr != null));
-          if (pr == null && t > 1)
-            break;
-        }
-        trainHasBeenSent = true;
-        if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
-          return true;
+        clickResend(10);
+//        if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+//          return true;
         hadOtherLocations = scanOtherLocations(11);
-        if (hadOtherLocations && _sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
-            return true;
+        if (hadOtherLocations) {
+          _mouse.delay(200);
+          clickResend(2);
+        }
+//        if (hadOtherLocations && _sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+//            return true;
 
+        trainResent = true;
       }
       
       scanAndClick(ScreenScanner.SHOP_X, null);
       
+      Pixel[] slots = new Pixel[9];
+      slots[0] = new Pixel(_scanner._br.x - _scanner._offset - 19, _scanner._br.y - 209);
+      slots[1] = new Pixel(_scanner._br.x - _scanner._offset - 39, _scanner._br.y - 191);
+      slots[2] = new Pixel(_scanner._br.x - _scanner._offset - 52, _scanner._br.y - 184);
+      slots[3] = new Pixel(_scanner._br.x - _scanner._offset - 67, _scanner._br.y - 177);
+      slots[4] = new Pixel(_scanner._br.x - _scanner._offset - 77, _scanner._br.y - 165);
+      slots[5] = new Pixel(_scanner._br.x - _scanner._offset - 90, _scanner._br.y - 160);
+      slots[6] = new Pixel(_scanner._br.x - _scanner._offset -103, _scanner._br.y - 155);
+      slots[7] = new Pixel(_scanner._br.x - _scanner._offset -116, _scanner._br.y - 150);
+      slots[8] = new Pixel(_scanner._br.x - _scanner._offset -129, _scanner._br.y - 145);
+      
       // OLD SCHOOL
-      int xOff = _settings.getInt("xOff", 150);
-      if (!hadOtherLocations)
-        xOff += _scanner._offset;
+      //int xOff = _settings.getInt("xOff", 150);
+      //if (!hadOtherLocations)
+      //  xOff += _scanner._offset;
 
-      p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
+      //p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
 
-      int[] rails = _scanner.getRailsHome();
+      //int[] rails = _scanner.getRailsHome();
       _trainManagementOpen = false;
       _clickingDone = false;
 
@@ -2622,22 +2621,20 @@ public final class MainFrame extends JFrame {
         }, "TRAIN_MAN");
         _tmThread.start();
       }
-      int xold = p.x;
-      int xoff2 = _settings.getInt("xOff2", 4);
-      p.x += (rails.length + 1) * xoff2;
-      for (int i = rails.length - 1; !_trainManagementOpen && i >= 0; i--) {
-        p.y = _scanner.getBottomRight().y - rails[i] - 4;
-        p.x = p.x - xoff2;
-        clickCareful(p, false, false);
+      for (int i = 0; !_trainManagementOpen && i < slots.length; i++) {
+        clickCareful(slots[i], false, false);
+        if (i ==0) {
+          _mouse.delay(60);
+          clickCareful(slots[i], false, false);
+        }
         _mouse.checkUserMovement();
       }
-      p.x = xold;
-      for (int i = 0; !_trainManagementOpen && i < rails.length; i++) {
-        p.y = _scanner.getBottomRight().y - rails[i] - 4;
-        p.x = p.x + xoff2;
-        clickCareful(p, false, false);
-        _mouse.checkUserMovement();
-      }
+//      for (int i = slots.length - 1; !_trainManagementOpen && i >= 0; i--) {
+//        clickCareful(slots[i], false, false);
+//        _mouse.delay(40);
+//        clickCareful(slots[i], false, false);
+//        _mouse.checkUserMovement();
+//      }
       _clickingDone = true;
       _mouse.saveCurrentPosition();// ???
 
@@ -2654,9 +2651,9 @@ public final class MainFrame extends JFrame {
           start = System.currentTimeMillis();
       }
 
-      // // LOCATIONS
-      // if (turn % _settings.getInt("checkLocations", 2) == 0)
-      // hadOtherLocations = scanOtherLocations(11);
+      // LOCATIONS
+      if (turn % _settings.getInt("checkLocations", 2) == 0)
+        hadOtherLocations = scanOtherLocations(11);
 
       // SHOP POPUP CHECK
       //if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
@@ -2664,8 +2661,27 @@ public final class MainFrame extends JFrame {
 
     } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns);
 
-    return trainHasBeenSent || hadOtherLocations;
+    return trainResent|| hadOtherLocations || trainHasBeenSent;
 
+  }
+
+  private void clickResend(int turns) throws RobotInterruptedException, AWTException, IOException {
+    LOGGER.fine("resendP != null...");
+    int clicks = 4;
+    for (int t = 0; t < turns; t++) {
+      for (int i = 0; i < clicks; i++) {
+        _mouse.click(_scanner._resendP);
+        _mouse.delay(100);
+      }
+      _mouse.mouseMove(_scanner.getBottomRight());
+      _mouse.delay(550);
+      _mouse.checkUserMovement();
+      // _scanner.writeArea(resendArea, "resendArea2.bmp");
+      Pixel pr = _scanner.scanResend();
+      LOGGER.fine("resend: " + (pr != null));
+      if (pr == null && t > 1)
+        break;
+    }
   }
 
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {

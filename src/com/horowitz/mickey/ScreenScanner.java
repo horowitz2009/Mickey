@@ -813,7 +813,7 @@ public class ScreenScanner extends BaseScreenScanner {
   
   public void adjustHome(boolean resend) throws AWTException, RobotInterruptedException, IOException {
     _resendP = null;
-    _offset = 0;
+    _offset = 112;
 
     Rectangle area = new Rectangle(_br.x - 170, _br.y - 136, 170, 24);
     _resendArea = new Rectangle(_br.x - 140, _br.y - 204, 140, 55);
