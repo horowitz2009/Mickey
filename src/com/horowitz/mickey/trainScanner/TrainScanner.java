@@ -349,36 +349,20 @@ public class TrainScanner {
     boolean atLeastOneSent = false;
     String defaultContractor = getDefaultContractor();
 
-    boolean resend = _settings.getBoolean("resendIT", false);
-    if (resend) {
-      // RESENDING
-      List<Train> newTrains = scanSlotsForCompare(xt, yt, 1);
-      for (int i = 0; i < newTrains.size(); i++) {
-        if (defaultContractor != null && !newTrains.isEmpty() && newTrains.get(i).isIdle()) {
+    for (int i = 0; i < _takeABreak; i++) {
+      if (defaultContractor != null) {
+        // scan first slot
+        Rectangle onRoadArea = new Rectangle(xt + 14, yt + 49, 75, 20);
+        // ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
+        ImageData onRoadData = _scanner.getImageData("int/dispatched.bmp", onRoadArea, 0, 0);
+        boolean isIdle = onRoadData.findImage(onRoadArea) == null;
+        if (isIdle) {
           LOGGER.info("Sending to default contractor: " + defaultContractor);
-          if (sendTrainNew(newTrains.get(i), i, xt, yt)) {
+          if (sendTrainNew(null, 0, xt, yt)) {
             atLeastOneSent = true;
           }
-        }
-      }
-
-    } else {
-      // SEND TO NEW GUYS
-      for (int i = 0; i < _takeABreak; i++) {
-        if (defaultContractor != null) {
-          // scan first slot
-          Rectangle onRoadArea = new Rectangle(xt + 14, yt + 49, 75, 20);
-          // ImageData onRoadData = _scanner.generateImageData("int/dispatched.bmp");
-          ImageData onRoadData = _scanner.getImageData("int/dispatched.bmp", onRoadArea, 0, 0);
-          boolean isIdle = onRoadData.findImage(onRoadArea) == null;
-          if (isIdle) {
-            LOGGER.info("Sending to default contractor: " + defaultContractor);
-            if (sendTrainNew(null, 0, xt, yt)) {
-              atLeastOneSent = true;
-            }
-          } else
-            break;
-        }
+        } else
+          break;
       }
     }
 
@@ -801,10 +785,11 @@ public class TrainScanner {
     }
   }
 
-  private List<Train> scanSlotsForCompare(final int xt, final int yt, final int page) throws AWTException, IOException, RobotInterruptedException {
+  private List<Train> scanSlotsForCompare(final int xt, final int yt, final int page, final int slots) throws AWTException, IOException,
+      RobotInterruptedException {
 
     List<Train> trains = new ArrayList<>();
-    for (int slot = 0; slot < 5; slot++) {
+    for (int slot = 0; slot < slots; slot++) {
       // _mouse.delay(400);
 
       Rectangle slotArea = new Rectangle(xt, yt + (slot) * 85, 685, 82);

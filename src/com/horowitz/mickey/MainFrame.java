@@ -82,7 +82,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.997";
+  private static final String   APP_TITLE           = "v0.998";
 
   private boolean               _devMode            = false;
 
@@ -1025,6 +1025,7 @@ public final class MainFrame extends JFrame {
     if (autoRefresh != _autoRefreshClick.isSelected()) {
       _autoRefreshClick.setSelected(autoRefresh);
     }
+    
   }
 
   private void reapplyTimes(int time, Component[] components1, Component[] components2) {
@@ -1604,6 +1605,16 @@ public final class MainFrame extends JFrame {
       if (turn > 8)
         turn = 1;
       LOGGER.info("T: " + turn);
+      
+      String sx = _settings.getProperty("railsHome.x", "24,  44,  57,  72,  82,  95, 108, 121, 134");
+      String sy = _settings.getProperty("railsHome.y", "209, 191, 184, 177, 165, 160, 155, 150, 145");
+      int[] xarr = getIntArray(sx); 
+      int[] yarr = getIntArray(sy); 
+      
+      slots = new Pixel[xarr.length];
+      for (int i = 0; i < slots.length; i++) {
+        slots[i] = new Pixel(_scanner._br.x - _scanner._offset - xarr[i], _scanner._br.y - yarr[i]);
+      }
 
       try {
         if (_autoPassClick.isSelected()) {
@@ -2582,17 +2593,6 @@ public final class MainFrame extends JFrame {
       
       scanAndClick(ScreenScanner.SHOP_X, null);
       
-      Pixel[] slots = new Pixel[9];
-      slots[0] = new Pixel(_scanner._br.x - _scanner._offset - 19, _scanner._br.y - 209);
-      slots[1] = new Pixel(_scanner._br.x - _scanner._offset - 39, _scanner._br.y - 191);
-      slots[2] = new Pixel(_scanner._br.x - _scanner._offset - 52, _scanner._br.y - 184);
-      slots[3] = new Pixel(_scanner._br.x - _scanner._offset - 67, _scanner._br.y - 177);
-      slots[4] = new Pixel(_scanner._br.x - _scanner._offset - 77, _scanner._br.y - 165);
-      slots[5] = new Pixel(_scanner._br.x - _scanner._offset - 90, _scanner._br.y - 160);
-      slots[6] = new Pixel(_scanner._br.x - _scanner._offset -103, _scanner._br.y - 155);
-      slots[7] = new Pixel(_scanner._br.x - _scanner._offset -116, _scanner._br.y - 150);
-      slots[8] = new Pixel(_scanner._br.x - _scanner._offset -129, _scanner._br.y - 145);
-      
       // OLD SCHOOL
       //int xOff = _settings.getInt("xOff", 150);
       //if (!hadOtherLocations)
@@ -2623,10 +2623,6 @@ public final class MainFrame extends JFrame {
       }
       for (int i = 0; !_trainManagementOpen && i < slots.length; i++) {
         clickCareful(slots[i], false, false);
-        if (i ==0) {
-          _mouse.delay(60);
-          clickCareful(slots[i], false, false);
-        }
         _mouse.checkUserMovement();
       }
 //      for (int i = slots.length - 1; !_trainManagementOpen && i >= 0; i--) {
@@ -2682,6 +2678,15 @@ public final class MainFrame extends JFrame {
       if (pr == null && t > 1)
         break;
     }
+  }
+  
+  private int[] getIntArray(String s) {
+    String[] ss = s.split(",");
+    int[] res = new int[ss.length];
+    for (int i = 0; i < ss.length; i++) {
+      res[i] = Integer.parseInt(ss[i].trim());
+    }
+    return res;
   }
 
   private boolean clickHomeFaster() throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
@@ -2833,6 +2838,8 @@ public final class MainFrame extends JFrame {
   private Long           _passengers = 0L;
 
   private NumberFormat   numberFormat;
+
+  private Pixel[] slots;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
