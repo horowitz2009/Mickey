@@ -869,7 +869,7 @@ public class ScreenScanner extends BaseScreenScanner {
     Pixel p = scanOneFast("resend.bmp", _resendArea, false);
     if (p != null) {
       _resendP = new Pixel(p.x + 17, p.y + 14);
-      _offset = _br.x - p.y - 9;
+      _offset = _br.x - p.x + 9;
     }
     return p;
   }
