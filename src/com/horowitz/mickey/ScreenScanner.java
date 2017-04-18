@@ -135,7 +135,7 @@ public class ScreenScanner extends BaseScreenScanner {
 
   private int                 _street1Y                      = 170;
   private Pixel               _whistlesPoint;
-  public int _offset;
+  public int _offset = 113;
   public Pixel _resendP;
   private Rectangle _resendArea;
 
@@ -322,6 +322,8 @@ public class ScreenScanner extends BaseScreenScanner {
     // _fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
 
     _whistlesPoint = new Pixel(_tl.x + 36, _tl.y + 310);
+    
+    _resendP = new Pixel(_br.x - 85, _br.y - 178);
   }
 
   public Pixel getTopPlayersPixel() {
@@ -824,6 +826,7 @@ public class ScreenScanner extends BaseScreenScanner {
     if (resend) {
       _mouse.delay(500);
       // _scanner.writeArea(area, "polearea.bmp");
+      //DEPRECATE THIS
       Pixel pp = scanOneFast("pole.bmp", area, false);
       if (pp == null) {
         _offset = 80;
@@ -862,7 +865,13 @@ public class ScreenScanner extends BaseScreenScanner {
   }
   
   public Pixel scanResend() throws AWTException, RobotInterruptedException, IOException {
-    return scanOneFast("resend.bmp", _resendArea, false);
+    _resendArea = new Rectangle(_br.x - 140, _br.y - 204, 140, 55);
+    Pixel p = scanOneFast("resend.bmp", _resendArea, false);
+    if (p != null) {
+      _resendP = new Pixel(p.x + 17, p.y + 14);
+      _offset = _br.x - p.y - 9;
+    }
+    return p;
   }
 
 }

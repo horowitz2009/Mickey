@@ -82,7 +82,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.998";
+  private static final String   APP_TITLE           = "v0.998rc2";
 
   private boolean               _devMode            = false;
 
@@ -2571,12 +2571,12 @@ public final class MainFrame extends JFrame {
       scanAndClick(ScreenScanner.SHOP_X, null);
       LOGGER.info("turn " + turn++);
       boolean resend = _commands.getBoolean("resend", true);
-      _scanner.adjustHome(resend);
+      //_scanner.adjustHome(resend);
       curr = System.currentTimeMillis();
       _mouse.saveCurrentPosition();
 
       // RESEND
-      if (_scanner._resendP != null) {
+      if (resend) {
         clickResend(10);
 //        if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
 //          return true;
@@ -2590,7 +2590,7 @@ public final class MainFrame extends JFrame {
 
         trainResent = true;
       }
-      
+      LOGGER.info("offset now is: " + _scanner._offset);
       scanAndClick(ScreenScanner.SHOP_X, null);
       
       // OLD SCHOOL
@@ -2674,7 +2674,7 @@ public final class MainFrame extends JFrame {
       _mouse.checkUserMovement();
       // _scanner.writeArea(resendArea, "resendArea2.bmp");
       Pixel pr = _scanner.scanResend();
-      LOGGER.fine("resend: " + (pr != null));
+      LOGGER.info("resend: " + (pr != null));
       if (pr == null && t > 1)
         break;
     }
