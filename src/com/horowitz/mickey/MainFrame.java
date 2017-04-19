@@ -2919,20 +2919,20 @@ public final class MainFrame extends JFrame {
       _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
       _mouse.checkUserMovement();
     }
-    xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations2", 75); // safe zone
-    if (xx > 0)
+    if (_settings.getInt("xOffLocations2", 75) > 0) {
+      xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations2", 75); // safe zone
       for (int i = 0; i < rails.length; i++) {
         _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
         _mouse.checkUserMovement();
       }
-
-    xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations3", 65); // safe zone
-    if (xx > 0)
+    }
+    if (_settings.getInt("xOffLocations3", 65) > 0) {
+      xx = _scanner.getBottomRight().x - _settings.getInt("xOffLocations3", 65); // safe zone
       for (int i = 0; i < rails.length; i++) {
         _mouse.click(xx, _scanner.getBottomRight().y - rails[i] - 4);
         _mouse.checkUserMovement();
       }
-
+    }
     _mouse.delay(300);
     // int diff = 30;
     // int x1 = _scanner.getBottomRight().x - 57;
