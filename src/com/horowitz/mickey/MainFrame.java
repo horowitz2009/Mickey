@@ -82,7 +82,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.998rc6";
+  private static final String   APP_TITLE           = "v0.998rc7";
 
   private boolean               _devMode            = false;
 
@@ -1641,11 +1641,11 @@ public final class MainFrame extends JFrame {
 
         // OTHER LOCATIONS
         boolean flag = false;
-        if (_commands.getBoolean("resend", true)) {
-          flag = clickHomeRESEND();
-        } else {
-          flag = scanOtherLocations(1);
-        }
+//        if (_commands.getBoolean("resend", true)) {
+//          flag = clickHomeRESEND();
+//        } else {
+          flag = scanOtherLocations(2);
+//        }
 
         captureContracts();
         boolean atLeastOneSent = false;
@@ -2354,6 +2354,7 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle train management " + (t2 - t1));
 
+    found = checkJourneyFinished();
     xx = (_scanner.getGameWidth() - 277) / 2;
 
     // now check other popups that need to refresh the game
@@ -2396,6 +2397,34 @@ public final class MainFrame extends JFrame {
 
     t2 = System.currentTimeMillis();
     LOGGER.info("POPUPS " + (t2 - t11));
+  }
+
+  private boolean checkJourneyFinished() throws AWTException, IOException, RobotInterruptedException {
+    // OKAY button of Journey finished
+    long t1, t2;
+    t1 = t2 = System.currentTimeMillis();
+    int xx = (_scanner.getGameWidth() - 520) / 2;
+    Rectangle area = new Rectangle(_scanner.getTopLeft().x + xx + 186, _scanner.getBottomRight().y - 220, 150, 50);
+    boolean found = findAndClick("okay.bmp", area, 16, 4, true);
+    
+    //Adhoc solutiun
+    
+    int minutes = 10;
+    
+    _commands.setProperty("free", "" + minutes);
+    _commands.setProperty("freight", "" + minutes);
+    _commands.setProperty("express", "" + minutes);
+    _commands.setProperty("xp", "" + minutes);
+    _commands.setProperty("maglev15", "true");
+    _commands.saveSettingsSorted();
+    
+    reapplySettings();
+    //
+    
+    t2 = System.currentTimeMillis();
+    LOGGER.info("> handle journey finished " + (t2 - t1));
+
+    return found;
   }
 
   private boolean scanOtherLocations(int number)
