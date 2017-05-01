@@ -874,4 +874,16 @@ public class ScreenScanner extends BaseScreenScanner {
     return p;
   }
 
+  public boolean isJourney(Pixel p) throws AWTException, RobotInterruptedException, IOException {
+    Rectangle area;
+    if (p != null) {
+      area = new Rectangle(p.x - 482, p.y + 72, 156, 42);
+    } else {
+      int xx = (getGameWidth() - 520) / 2;
+      area = new Rectangle(_tl.x + xx, _tl.y + 215, 235, 75);
+    }
+    Pixel pp = scanOneFast("journeyUnlocked.bmp", area, false);
+    return pp != null;
+  }
+
 }

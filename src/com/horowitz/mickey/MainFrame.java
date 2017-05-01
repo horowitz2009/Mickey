@@ -21,6 +21,9 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -52,12 +55,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Catalano.Core.IntPoint;
+import Catalano.Imaging.Tools.Blob;
+
 import com.horowitz.commons.BaseScreenScanner;
+import com.horowitz.commons.DateUtils;
 import com.horowitz.commons.ImageComparator;
 import com.horowitz.commons.ImageData;
 import com.horowitz.commons.MouseRobot;
@@ -66,13 +74,12 @@ import com.horowitz.commons.RobotInterruptedException;
 import com.horowitz.commons.Settings;
 import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.data.DataStore;
+import com.horowitz.mickey.model.Protocol;
+import com.horowitz.mickey.model.ProtocolManager;
 import com.horowitz.mickey.ocr.OCRB;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
-
-import Catalano.Core.IntPoint;
-import Catalano.Imaging.Tools.Blob;
 
 /**
  * @author zhristov
@@ -82,7 +89,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.998rc7";
+  private static final String   APP_TITLE           = "v0.998rc97";
 
   private boolean               _devMode            = false;
 
@@ -118,6 +125,7 @@ public final class MainFrame extends JFrame {
   private Settings              _commands;
 
   private JToggleButton         _autoRefreshClick;
+  private JToggleButton         _autoJourneyClick;
 
   private JToggleButton         _pingClick;
   private long                  _lastPingTime;
@@ -158,6 +166,14 @@ public final class MainFrame extends JFrame {
 
   private TrainCounter          _trainCounter;
 
+  private ProtocolManager       protocolManager;
+
+  private boolean               journeyAvailable;
+
+  protected long                _scheduleJourney    = -1l;
+
+  protected boolean             _dontChangeSchedule = false;
+
   public MainFrame() throws HeadlessException {
     super();
     _settings = Settings.createSettings("mickey.properties");
@@ -174,7 +190,45 @@ public final class MainFrame extends JFrame {
       System.exit(ERROR);
     }
 
+    protocolManager = new ProtocolManager();
+    protocolManager.loadProtocols();
     init();
+    protocolManager.setAutoJourney(_autoJourneyClick.isSelected());
+    protocolManager.addPropertyChangeListener("PROTOCOL_CHANGED", new PropertyChangeListener() {
+
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        Protocol p = protocolManager.getCurrentProtocol();
+        if (p != null) {
+          applyProtocol(p);
+          LOGGER.info("Switching to " + p.getName());
+          invalidate();
+          repaint();
+          if (_autoJourneyClick.isSelected()) {
+            captureScreen("protocol ");
+            if (p.getName().equals("PostJ")) {
+              _scheduleJourney = System.currentTimeMillis() + 8 * 60 * 60000;
+              _scheduleTF.setText(DateUtils.fancyTime2(8 * 60 * 60000));
+            } else {
+              _scheduleJourney = 0;
+              _scheduleTF.setText("");
+            }
+          }
+        }
+      }
+    });
+
+    protocolManager.addPropertyChangeListener("TIME_ELAPSED", new PropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        long time = (Long) evt.getNewValue();
+        // LOGGER.info("time elapsed:" + DateUtils.fancyTime2(time));
+        String fancyTime2 = time > 0 ? DateUtils.fancyTime2(time) : "  ";
+        _timeElapsedLabel.setText("  " + fancyTime2 + "  ");
+        invalidate();
+        repaint();
+      }
+    });
 
     KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new MyKeyEventDispatcher());
 
@@ -272,12 +326,13 @@ public final class MainFrame extends JFrame {
       @Override
       public void stateChanged(ChangeEvent e) {
         _commands.setProperty("autoRefresh", "" + _autoRefreshClick.isSelected());
-        _commands.saveSettingsSorted();
+        // _commands.saveSettingsSorted();
       }
     });
 
     JToolBar mainToolbar1 = new JToolBar();
     JToolBar mainToolbar2 = new JToolBar();
+    _mainToolbar3 = new JToolBar();
 
     _frToolbar1 = new JToolBar();
     _freeToolbar1 = new JToolBar();
@@ -317,11 +372,13 @@ public final class MainFrame extends JFrame {
     exLabel2.setMaximumSize(d);
     xpLabel.setMaximumSize(d);
 
-    JPanel toolbars = new JPanel(new GridLayout(10, 1));
+    JPanel toolbars = new JPanel(new GridLayout(11, 1));
     toolbars.add(mainToolbar1);
     toolbars.add(mainToolbar2);
+    toolbars.add(_mainToolbar3);
     mainToolbar1.setFloatable(false);
     mainToolbar2.setFloatable(false);
+    _mainToolbar3.setFloatable(false);
     _frToolbar1.setFloatable(false);
     _frToolbar2.setFloatable(false);
     _freeToolbar1.setFloatable(false);
@@ -724,7 +781,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("ping", "" + _pingClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
     }
@@ -738,7 +795,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("sendInternational", "" + _sendInternational.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
     }
@@ -751,7 +808,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("resume", "" + _resumeClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       mainToolbar2.add(_resumeClick);
@@ -764,7 +821,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("autoPassengers", "" + _autoPassClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       mainToolbar2.add(_autoPassClick);
@@ -777,7 +834,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("huntLetters", "" + _lettersClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       // mainToolbar2.add(_lettersClick);
@@ -791,7 +848,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("maglev15", "" + _maglevClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       mainToolbar2.add(_maglevClick);
@@ -804,7 +861,7 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _commands.setProperty("resend", "" + _resendClick.isSelected());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       mainToolbar2.add(_resendClick);
@@ -817,11 +874,62 @@ public final class MainFrame extends JFrame {
         @Override
         public void stateChanged(ChangeEvent e) {
           _settings.setProperty("resendIT", "" + _resendITClick.isSelected());
-          _settings.saveSettingsSorted();
+          // _settings.saveSettingsSorted();
         }
       });
       mainToolbar2.add(_resendITClick);
     }
+
+    // toolabr 3
+    _autoJourneyClick = new JToggleButton("AJ");
+    _autoJourneyClick.setSelected(Boolean.parseBoolean(_commands.getProperty("autoJourney", "false")));
+    _autoJourneyClick.addChangeListener(new ChangeListener() {
+
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        _commands.setProperty("autoJourney", "" + _autoJourneyClick.isSelected());
+        protocolManager.setAutoJourney(_autoJourneyClick.isSelected());
+        // _commands.saveSettingsSorted();
+      }
+    });
+
+    _mainToolbar3.add(_autoJourneyClick);
+    Protocol[] protocols = protocolManager.getProtocols();
+    ButtonGroup bgProtocols = new ButtonGroup();
+    for (Protocol protocol : protocols) {
+      JToggleButton button = new JToggleButton(protocol.getName());
+      bgProtocols.add(button);
+      button.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          protocolManager.setCurrentProtocol(e.getActionCommand());
+        }
+      });
+      _mainToolbar3.add(button);
+    }
+    _scheduleTF = new JTextField(5);
+    _mainToolbar3.add(_scheduleTF);
+    _scheduleTF.addFocusListener(new FocusListener() {
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        _dontChangeSchedule = false;
+        long newTime = DateUtils.parse(_scheduleTF.getText());
+        if (newTime > 0)
+          _scheduleJourney = System.currentTimeMillis() + newTime;
+      }
+
+      @Override
+      public void focusGained(FocusEvent e) {
+        // _dontChangeSchedule = true;
+
+      }
+    });
+
+    _timeElapsedLabel = new JLabel("      ");
+    _mainToolbar3.add(_timeElapsedLabel);
+    //
 
     // freight
     ButtonGroup bgFr = new ButtonGroup();
@@ -908,46 +1016,65 @@ public final class MainFrame extends JFrame {
   private void runSettingsListener() {
     Thread settingsThread = new Thread(new Runnable() {
       public void run() {
-        new Service().purgeAll();
+        // new Service().purgeAll();
         boolean stop = false;
         do {
-          _settings.loadSettings();
-          _commands.loadSettings();
-          if ("close".equals(_commands.getProperty("command"))) {
-            LOGGER.info("stop everything");
-            stop = true;
-          } else {
-            // if (!isRunning("MAGIC") && _scanner.isOptimized()) {
-            // try {
-            // checkIsStuck();
-            // } catch (GameStuckException e1) {
-            // try {
-            // refresh();
-            // runMagic();
-            // } catch (RobotInterruptedException e) {
-            // }
-            // }
-            // }
-            try {
-              reapplySettings();
-              // processCommands();
-              processRequests();
-            } catch (Throwable t) {
-              // hmm
-            }
-            // if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
-            // final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-            // _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-            // "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
-            // }
+          try {
+            _settings.loadSettings();
+            _commands.loadSettings();
+            protocolManager.loadProtocols();
+            if ("close".equals(_commands.getProperty("command"))) {
+              LOGGER.info("stop everything");
+              stop = true;
+            } else {
+              // if (!isRunning("MAGIC") && _scanner.isOptimized()) {
+              // try {
+              // checkIsStuck();
+              // } catch (GameStuckException e1) {
+              // try {
+              // refresh();
+              // runMagic();
+              // } catch (RobotInterruptedException e) {
+              // }
+              // }
+              // }
+              try {
+                reapplySettings();
+                // processCommands();
+                processRequests();
+              } catch (Throwable t) {
+                // hmm
+              }
+              // if (System.currentTimeMillis() - _lastTime > 60 * 1000) {
+              // final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+              // _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
+              // "screenshot_" + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".png");
+              // }
 
-            try {
-              Thread.sleep(20000);
-            } catch (InterruptedException e) {
-              e.printStackTrace();
+              try {
+                for (int i = 0; i < 10; i++) {
+                  Thread.sleep(1000);
+                  if (i > 2) {// wait at least 3 sec
+                    if (_commands.isDirty()) {
+                      _commands.saveIfDirty();
+                      LOGGER.info("commands saved");
+                      i = 0;
+                    }
+                    if (_settings.isDirty()) {
+                      _settings.saveIfDirty();
+                      LOGGER.info("settings saved");
+                      i = 0;
+                    }
+                  }
+                }
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+              // deleteOlder("screenshot", 5);
             }
-            deleteOlder("screenshot", 5);
-
+          } catch (Throwable t) {
+            LOGGER.info("error: " + t.getMessage());
+            System.err.println(t);
           }
         } while (!stop);
       }
@@ -955,6 +1082,49 @@ public final class MainFrame extends JFrame {
 
     settingsThread.start();
 
+  }
+
+  private void applyProtocol(Protocol protocol) {
+    if (protocol != null) {
+      _commands.setProperty("protocol", "" + protocol.getName());
+      _commands.saveSettingsSorted();
+      LOGGER.info("protocol " + protocol.getName() + "saved");
+      selectProtocol(protocol.getName());
+      int dest = protocol.getDestination();
+      reapplyTimes(dest, _freeToolbar1.getComponents(), _freeToolbar2.getComponents());
+      reapplyTimes(dest, _frToolbar1.getComponents(), _frToolbar2.getComponents());
+      reapplyTimes(dest, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+      reapplyTimes(dest, _xpToolbar1.getComponents(), null);
+
+      if (protocol.isMaglev15() != _maglevClick.isSelected()) {
+        _maglevClick.setSelected(protocol.isMaglev15());
+      }
+
+      if (protocol.isResend() != _resendClick.isSelected()) {
+        _resendClick.setSelected(protocol.isResend());
+      }
+
+      if (protocol.isInternational() != _sendInternational.isSelected()) {
+        _sendInternational.setSelected(protocol.isInternational());
+      }
+    }
+  }
+
+  public void selectProtocol(String protocolName) {
+    Component[] components1 = _mainToolbar3.getComponents();
+    boolean found = false;
+    for (int i = 0; i < components1.length && !found; i++) {
+      if (components1[i] instanceof JToggleButton) {
+        JToggleButton b = (JToggleButton) components1[i];
+        if (b.getActionCommand().equals(protocolName)) {
+          if (!b.isSelected()) {
+            b.doClick();
+            b.invalidate();
+          }
+          found = true;
+        }
+      }
+    }
   }
 
   private void reapplySettings() {
@@ -985,6 +1155,7 @@ public final class MainFrame extends JFrame {
     boolean autoPassengers = "true".equalsIgnoreCase(_commands.getProperty("autoPassengers"));
     boolean sendInternational = "true".equalsIgnoreCase(_commands.getProperty("sendInternational"));
     boolean autoRefresh = "true".equalsIgnoreCase(_commands.getProperty("autoRefresh"));
+    boolean autoJourney = "true".equalsIgnoreCase(_commands.getProperty("autoJourney"));
     boolean letters = "true".equalsIgnoreCase(_commands.getProperty("huntLetters"));
     boolean maglev15 = "true".equalsIgnoreCase(_commands.getProperty("maglev15"));
     boolean resend = "true".equalsIgnoreCase(_commands.getProperty("resend"));
@@ -1024,6 +1195,27 @@ public final class MainFrame extends JFrame {
 
     if (autoRefresh != _autoRefreshClick.isSelected()) {
       _autoRefreshClick.setSelected(autoRefresh);
+      protocolManager.setAutoJourney(_autoJourneyClick.isSelected());
+    }
+
+    if (autoJourney != _autoJourneyClick.isSelected()) {
+      _autoJourneyClick.setSelected(autoJourney);
+    }
+
+    // // HMM
+    // String sts = _commands.getProperty("protocol.start", "-1");
+    // Long start = Long.parseLong(sts);
+    // // protocolManager.setStart(start);
+    //
+//    String ppp = _commands.getProperty("protocol", "Default");
+//    protocolManager.setCurrentProtocol(ppp);
+
+    if (_autoJourneyClick.isSelected()) {
+      if (_scheduleJourney - System.currentTimeMillis() >= 0) {
+        _scheduleTF.setText(DateUtils.fancyTime2(_scheduleJourney - System.currentTimeMillis()));
+      } else {
+        _scheduleTF.setText("");
+      }
     }
 
   }
@@ -1098,6 +1290,9 @@ public final class MainFrame extends JFrame {
         service.inProgress(r);
         _stats.reset();
         updateLabels();
+      } else if (r.startsWith("pre")) {
+        service.inProgress(r);
+        protocolManager.setCurrentProtocol("PreJ");
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
@@ -1316,7 +1511,7 @@ public final class MainFrame extends JFrame {
           }
           LOGGER.info("selected " + type + ": " + l.getName());
           _commands.setProperty(type, "" + l.getTime());
-          _commands.saveSettingsSorted();
+          // _commands.saveSettingsSorted();
         }
       });
       bg.add(button);
@@ -1617,6 +1812,19 @@ public final class MainFrame extends JFrame {
       }
 
       try {
+
+        if (_autoJourneyClick.isSelected()) {
+          if (_scheduleJourney != 0 && _scheduleJourney - System.currentTimeMillis() <= 0) {
+            // the time has come
+            if (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().getName().equals(ProtocolManager.DEFAULT)) {
+              _scheduleJourney = 0;
+              _scheduleTF.setText("");
+              protocolManager.setCurrentProtocol("PreJ");
+              _mouse.delay(1000);
+            }
+          }
+        }
+
         if (_autoPassClick.isSelected()) {
           try {
             if (scanPassengers())
@@ -1641,11 +1849,11 @@ public final class MainFrame extends JFrame {
 
         // OTHER LOCATIONS
         boolean flag = false;
-//        if (_commands.getBoolean("resend", true)) {
-//          flag = clickHomeRESEND();
-//        } else {
-          flag = scanOtherLocations(2);
-//        }
+        // if (_commands.getBoolean("resend", true)) {
+        // flag = clickHomeRESEND();
+        // } else {
+        flag = scanOtherLocations(2);
+        // }
 
         captureContracts();
         boolean atLeastOneSent = false;
@@ -1721,24 +1929,28 @@ public final class MainFrame extends JFrame {
               clickSecondStation();
 
             // WHISTLES
-            String[] whistlesTurns = _settings.getProperty("whistles.turns", "4").split(",");
-            int whistlesClicks = _settings.getInt("whistles.clicks", 1);
-            if (Arrays.binarySearch(whistlesTurns, "" + turn) >= 0) {
-              for (int i = 0; i < whistlesClicks; i++) {
-                _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
-                _mouse.delay(20);
+            if (protocolManager.getCurrentProtocol().isWhistles()) {
+              String[] whistlesTurns = _settings.getProperty("whistles.turns", "4").split(",");
+              int whistlesClicks = _settings.getInt("whistles.clicks", 1);
+              if (Arrays.binarySearch(whistlesTurns, "" + turn) >= 0) {
+                for (int i = 0; i < whistlesClicks; i++) {
+                  _mouse.click(_scanner.getWhistlesPoint().x, _scanner.getWhistlesPoint().y);
+                  _mouse.delay(20);
+                }
               }
             }
 
-            // LETTERS
-            // int h = _settings.getInt("huntLetters", 2);
-            if (_lettersClick.isSelected())
-              huntLetters();
+            // // LETTERS
+            // // int h = _settings.getInt("huntLetters", 2);
+            // if (_lettersClick.isSelected())
+            // huntLetters();
 
-            // PACKAGES
-            String[] packagesTurns = _settings.getProperty("packages.turns", "4").split(",");
-            if (Arrays.binarySearch(packagesTurns, "" + turn) >= 0)
-              lookForPackages2();
+            if (protocolManager.getCurrentProtocol().isPackages()) {
+              // PACKAGES
+              String[] packagesTurns = _settings.getProperty("packages.turns", "4").split(",");
+              if (Arrays.binarySearch(packagesTurns, "" + turn) >= 0)
+                lookForPackages2();
+            }
           } else {
             LOGGER.info("time for IT...");
           }
@@ -1980,8 +2192,8 @@ public final class MainFrame extends JFrame {
 
   private void captureScreen(String filename) {
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height),
-        filename + DateUtils.formatDateForFile2(System.currentTimeMillis()) + ".jpg");
+    _scanner.writeImage(new Rectangle(0, 0, screenSize.width, screenSize.height), filename + DateUtils.formatDateForFile2(System.currentTimeMillis())
+        + ".jpg");
   }
 
   private void captureHome() throws RobotInterruptedException, AWTException, IOException, SessionTimeOutException {
@@ -2071,7 +2283,7 @@ public final class MainFrame extends JFrame {
       if (p != null) {
         // we're on the right track
         _commands.setProperty("contractor.scan", "running");
-        _commands.saveSettingsSorted();
+        // _commands.saveSettingsSorted();
 
         Pixel scrollerTop = new Pixel(p.x + 106, p.y + 40);
         // _mouse.mouseMove(scrollerTop);
@@ -2214,8 +2426,8 @@ public final class MainFrame extends JFrame {
     return times[0];
   }
 
-  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click)
-      throws AWTException, IOException, RobotInterruptedException {
+  private boolean findAndClick(String imageName, Rectangle area, int xOff, int yOff, boolean click) throws AWTException, IOException,
+      RobotInterruptedException {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     ImageData id = _scanner.getImageData(imageName, area, xOff, yOff);
@@ -2303,6 +2515,8 @@ public final class MainFrame extends JFrame {
       }
     }
 
+    boolean journey = false;
+
     // PROMO and various popups with close X
     t1 = t2 = System.currentTimeMillis();
     int x = _scanner.getTopLeft().x;
@@ -2311,9 +2525,9 @@ public final class MainFrame extends JFrame {
     area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
     // _scanner.writeImage(area, "C:/work/Damn.png");
     Pixel pp = _scanner.scanOneFast("journey.bmp", area, Color.RED, true);
-
     found = pp != null;
     if (found) {
+      journey = _scanner.isJourney(pp);
       _mouse.click(pp.x + 5, pp.y + 5);
       _mouse.delay(400);
     } else {
@@ -2321,10 +2535,12 @@ public final class MainFrame extends JFrame {
 
       found = pp != null;
       if (found) {
+        journey = _scanner.isJourney(pp);
         _mouse.click(pp.x + 5, pp.y + 5);
         _mouse.delay(400);
       }
     }
+    journeyAvailable = journey;
 
     t2 = System.currentTimeMillis();
     if (debug)
@@ -2406,29 +2622,17 @@ public final class MainFrame extends JFrame {
     int xx = (_scanner.getGameWidth() - 520) / 2;
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + xx + 186, _scanner.getBottomRight().y - 220, 150, 50);
     boolean found = findAndClick("okay.bmp", area, 16, 4, true);
-    
-    //Adhoc solutiun
-    
-    int minutes = 10;
-    
-    _commands.setProperty("free", "" + minutes);
-    _commands.setProperty("freight", "" + minutes);
-    _commands.setProperty("express", "" + minutes);
-    _commands.setProperty("xp", "" + minutes);
-    _commands.setProperty("maglev15", "true");
-    _commands.saveSettingsSorted();
-    
-    reapplySettings();
-    //
-    
+
     t2 = System.currentTimeMillis();
-    LOGGER.info("> handle journey finished " + (t2 - t1));
+    LOGGER.info("> handle journey finished " + found + " " + (t2 - t1));
+    if (found)
+      protocolManager.setCurrentProtocol("PostJ");
 
     return found;
   }
 
-  private boolean scanOtherLocations(int number)
-      throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException, DragFailureException {
+  private boolean scanOtherLocations(int number) throws AWTException, IOException, RobotInterruptedException, SessionTimeOutException,
+      DragFailureException {
     // LOGGER.info("Locations... ");// + number
     Rectangle area = new Rectangle(_scanner.getTopLeft().x + 1, _scanner.getTopLeft().y + 85, 148, 28);
 
@@ -2600,91 +2804,99 @@ public final class MainFrame extends JFrame {
     do {
       scanAndClick(ScreenScanner.SHOP_X, null);
       LOGGER.info("turn " + turn++);
-      boolean resend = _commands.getBoolean("resend", true);
-      // _scanner.adjustHome(resend);
-      curr = System.currentTimeMillis();
-      _mouse.saveCurrentPosition();
 
-      // RESEND
-      if (resend) {
-        clickResend(10);
-        // if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
-        // return true;
-        hadOtherLocations = scanOtherLocations(11);
-        if (hadOtherLocations) {
-          _mouse.delay(200);
-          clickResend(2);
-        }
-        // if (hadOtherLocations && _sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
-        // return true;
+      boolean stallTrains = _freightTime.getTime() == 0;
+      if (stallTrains) {
+        hadOtherLocations = scanOtherLocations(6);
+        _mouse.delay(250);
+        curr = System.currentTimeMillis();
+      } else {
 
-        trainResent = true;
-      }
-      LOGGER.info("offset now is: " + _scanner._offset);
-      scanAndClick(ScreenScanner.SHOP_X, null);
+        boolean resend = _commands.getBoolean("resend", true);
+        // _scanner.adjustHome(resend);
+        curr = System.currentTimeMillis();
+        _mouse.saveCurrentPosition();
 
-      // OLD SCHOOL
-      // int xOff = _settings.getInt("xOff", 150);
-      // if (!hadOtherLocations)
-      // xOff += _scanner._offset;
-
-      // p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
-
-      // int[] rails = _scanner.getRailsHome();
-      _trainManagementOpen = false;
-      _clickingDone = false;
-
-      if (_tmThread == null || !_tmThread.isAlive()) {
-        _tmThread = new Thread(new Runnable() {
-          public void run() {
-            int i = 0;
-            for (; !_trainManagementOpen && !_clickingDone; i++) {//
-              try {
-                _mouse.delay(25, false);
-              } catch (RobotInterruptedException e) {
-              }
-              Pixel tm = _scanner.getTrainManagementAnchor().findImage();
-              _trainManagementOpen = tm != null;
-            }
-            LOGGER.fine("Checked TM " + i + " times: " + _trainManagementOpen + " " + _clickingDone);
+        // RESEND
+        if (resend) {
+          clickResend(10);
+          // if (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+          // return true;
+          hadOtherLocations = scanOtherLocations(11);
+          if (hadOtherLocations) {
+            _mouse.delay(200);
+            clickResend(2);
           }
-        }, "TRAIN_MAN");
-        _tmThread.start();
+          // if (hadOtherLocations && _sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() < 0)
+          // return true;
+
+          trainResent = true;
+        }
+        LOGGER.info("offset now is: " + _scanner._offset);
+        scanAndClick(ScreenScanner.SHOP_X, null);
+
+        // OLD SCHOOL
+        // int xOff = _settings.getInt("xOff", 150);
+        // if (!hadOtherLocations)
+        // xOff += _scanner._offset;
+
+        // p = new Pixel(_scanner.getBottomRight().x - xOff, _scanner.getBottomRight().y - 100);
+
+        // int[] rails = _scanner.getRailsHome();
+        _trainManagementOpen = false;
+        _clickingDone = false;
+
+        if (_tmThread == null || !_tmThread.isAlive()) {
+          _tmThread = new Thread(new Runnable() {
+            public void run() {
+              int i = 0;
+              for (; !_trainManagementOpen && !_clickingDone; i++) {//
+                try {
+                  _mouse.delay(25, false);
+                } catch (RobotInterruptedException e) {
+                }
+                Pixel tm = _scanner.getTrainManagementAnchor().findImage();
+                _trainManagementOpen = tm != null;
+              }
+              LOGGER.fine("Checked TM " + i + " times: " + _trainManagementOpen + " " + _clickingDone);
+            }
+          }, "TRAIN_MAN");
+          _tmThread.start();
+        }
+        for (int i = 0; !_trainManagementOpen && i < slots.length; i++) {
+          clickCareful(slots[i], false, false);
+          _mouse.checkUserMovement();
+        }
+        // for (int i = slots.length - 1; !_trainManagementOpen && i >= 0; i--) {
+        // clickCareful(slots[i], false, false);
+        // _mouse.delay(40);
+        // clickCareful(slots[i], false, false);
+        // _mouse.checkUserMovement();
+        // }
+        _clickingDone = true;
+        _mouse.saveCurrentPosition();// ???
+
+        if (!_trainManagementOpen)
+          _mouse.delay(150);
+
+        trainHasBeenSent = checkTrainManagement();
+
+        if (trainHasBeenSent) {
+          // _mouse.delay(250);
+          if (curr - start > timeGiven * 2) {
+            LOGGER.info("give chance to other things...");
+          } else
+            start = System.currentTimeMillis();
+        }
+
+        // LOCATIONS
+        if (turn % _settings.getInt("checkLocations", 2) == 0)
+          hadOtherLocations = scanOtherLocations(6);
+
+        // SHOP POPUP CHECK
+        // if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
+        // scanAndClick(ScreenScanner.SHOP_X, null);
       }
-      for (int i = 0; !_trainManagementOpen && i < slots.length; i++) {
-        clickCareful(slots[i], false, false);
-        _mouse.checkUserMovement();
-      }
-      // for (int i = slots.length - 1; !_trainManagementOpen && i >= 0; i--) {
-      // clickCareful(slots[i], false, false);
-      // _mouse.delay(40);
-      // clickCareful(slots[i], false, false);
-      // _mouse.checkUserMovement();
-      // }
-      _clickingDone = true;
-      _mouse.saveCurrentPosition();// ???
-
-      if (!_trainManagementOpen)
-        _mouse.delay(150);
-
-      trainHasBeenSent = checkTrainManagement();
-
-      if (trainHasBeenSent) {
-        // _mouse.delay(250);
-        if (curr - start > timeGiven * 2) {
-          LOGGER.info("give chance to other things...");
-        } else
-          start = System.currentTimeMillis();
-      }
-
-      // LOCATIONS
-      if (turn % _settings.getInt("checkLocations", 2) == 0)
-        hadOtherLocations = scanOtherLocations(11);
-
-      // SHOP POPUP CHECK
-      // if ((turn + 1) % _settings.getInt("checkShop", 2) == 0)
-      // scanAndClick(ScreenScanner.SHOP_X, null);
-
     } while (curr - start <= timeGiven && !_stopThread && turn < maxTurns);
 
     return trainResent || hadOtherLocations || trainHasBeenSent;
@@ -2870,6 +3082,11 @@ public final class MainFrame extends JFrame {
   private NumberFormat   numberFormat;
 
   private Pixel[]        slots;
+
+  private JToolBar       _mainToolbar3;
+
+  private JTextField     _scheduleTF;
+  private JLabel         _timeElapsedLabel;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
@@ -3425,7 +3642,7 @@ public final class MainFrame extends JFrame {
 
     public boolean dispatchKeyEvent(KeyEvent e) {
       if (!e.isConsumed()) {
-        if (e.getKeyCode() == 119) {// F8 or a
+        if (e.getKeyCode() == 119) {// F8
 
           if (!isRunning("HMM")) {
             Thread t = new Thread(new Runnable() {
@@ -3444,7 +3661,7 @@ public final class MainFrame extends JFrame {
       try {
         do {
           _mouse.click();
-          _mouse.delay(100);
+          _mouse.delay(80);
         } while (true);
       } catch (RobotInterruptedException e1) {
       }

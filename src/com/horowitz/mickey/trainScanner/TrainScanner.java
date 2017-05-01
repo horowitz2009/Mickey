@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import com.horowitz.commons.DateUtils;
 import com.horowitz.commons.ImageComparator;
 import com.horowitz.commons.ImageData;
 import com.horowitz.commons.MouseRobot;
@@ -21,7 +22,6 @@ import com.horowitz.commons.Pixel;
 import com.horowitz.commons.RobotInterruptedException;
 import com.horowitz.commons.Settings;
 import com.horowitz.commons.SimilarityImageComparator;
-import com.horowitz.mickey.DateUtils;
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.ScreenScanner;
 import com.horowitz.mickey.TrainCounter;

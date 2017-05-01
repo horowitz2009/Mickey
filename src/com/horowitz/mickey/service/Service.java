@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.horowitz.mickey.DateUtils;
+import com.horowitz.commons.DateUtils;
 
 public class Service {
 

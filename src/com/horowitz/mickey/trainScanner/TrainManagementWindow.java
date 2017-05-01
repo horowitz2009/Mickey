@@ -32,8 +32,8 @@ import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.horowitz.commons.DateUtils;
 import com.horowitz.commons.Settings;
-import com.horowitz.mickey.DateUtils;
 import com.horowitz.mickey.ImageManager;
 import com.horowitz.mickey.JCanvas;
 import com.horowitz.mickey.common.Scheduler;
@@ -673,7 +673,7 @@ public class TrainManagementWindow extends JFrame {
   }
 
   protected void schedule() {
-    long timeLeft = Scheduler.parse(_timeTF.getText());
+    long timeLeft = DateUtils.parse(_timeTF.getText());
     reschedule(timeLeft);
   }
 
