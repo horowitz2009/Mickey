@@ -89,7 +89,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.998rc97";
+  private static final String   APP_TITLE           = "v0.998";
 
   private boolean               _devMode            = false;
 
@@ -209,9 +209,6 @@ public final class MainFrame extends JFrame {
             if (p.getName().equals("PostJ")) {
               _scheduleJourney = System.currentTimeMillis() + 8 * 60 * 60000;
               _scheduleTF.setText(DateUtils.fancyTime2(8 * 60 * 60000));
-            } else {
-              _scheduleJourney = 0;
-              _scheduleTF.setText("");
             }
           }
         }
