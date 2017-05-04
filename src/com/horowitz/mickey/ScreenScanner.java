@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Handler;
@@ -33,6 +32,7 @@ import com.horowitz.mickey.common.MyImageIO;
 
 public class ScreenScanner extends BaseScreenScanner {
 
+  public static final String SELL_X = "sellX.bmp";
   public static final String  SHOP_X                         = "shopX.bmp";
   public static final String  CLOSE_X2                       = "closeX2.bmp";
 
@@ -235,6 +235,10 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 520) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, xx - 40, 240);
     getImageData(CLOSE_X2, area, 7, 7);
+    
+    xx = (getGameWidth() - 563) / 2;
+    area = new Rectangle(_tl.x + xx +522, _tl.y + 210, 50, 50);
+    getImageData(SELL_X, area, 7, 7);
 
     _street1Y = _settings.getInt("street1Y", 204);
 

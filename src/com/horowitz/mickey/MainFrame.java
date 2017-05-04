@@ -195,7 +195,7 @@ public final class MainFrame extends JFrame {
     init();
     protocolManager.setAutoJourney(_autoJourneyClick.isSelected());
     protocolManager.addPropertyChangeListener("PROTOCOL_CHANGED", new PropertyChangeListener() {
-
+      
       @Override
       public void propertyChange(PropertyChangeEvent evt) {
         Protocol p = protocolManager.getCurrentProtocol();
@@ -211,6 +211,19 @@ public final class MainFrame extends JFrame {
               _scheduleTF.setText(DateUtils.fancyTime2(8 * 60 * 60000));
             }
           }
+        }
+      }
+    });
+    protocolManager.addPropertyChangeListener("PROTOCOL_REFRESHED", new PropertyChangeListener() {
+
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        Protocol p = protocolManager.getCurrentProtocol();
+        if (p != null) {
+          applyProtocol(p);
+          LOGGER.info("Current Protocol changed");
+          invalidate();
+          repaint();
         }
       }
     });
@@ -1085,7 +1098,7 @@ public final class MainFrame extends JFrame {
     if (protocol != null) {
       _commands.setProperty("protocol", "" + protocol.getName());
       _commands.saveSettingsSorted();
-      LOGGER.info("protocol " + protocol.getName() + "saved");
+      LOGGER.info("protocol " + protocol.getName() + " saved");
       selectProtocol(protocol.getName());
       int dest = protocol.getDestination();
       reapplyTimes(dest, _freeToolbar1.getComponents(), _freeToolbar2.getComponents());
@@ -1211,7 +1224,7 @@ public final class MainFrame extends JFrame {
       if (_scheduleJourney - System.currentTimeMillis() >= 0) {
         _scheduleTF.setText(DateUtils.fancyTime2(_scheduleJourney - System.currentTimeMillis()));
       } else {
-        _scheduleTF.setText("");
+        //_scheduleTF.setText("");
       }
     }
 
@@ -1287,9 +1300,31 @@ public final class MainFrame extends JFrame {
         service.inProgress(r);
         _stats.reset();
         updateLabels();
-      } else if (r.startsWith("pre")) {
+        
+      } else if (r.startsWith("schedule")) {
         service.inProgress(r);
-        protocolManager.setCurrentProtocol("PreJ");
+        String[] ss = r.split("[_-]");
+        String newTime = "8h";
+        if (ss.length > 1) {
+          newTime="";
+          for(int i = 1; i < ss.length; i++) {
+            newTime += ss[i] + " ";
+          }
+        }
+        long time = DateUtils.parse(newTime.trim());
+        if (time != 0) {
+          _scheduleJourney = time;
+          reapplySettings();
+        }
+        
+      } else if (r.startsWith("pro")) {
+        service.inProgress(r);
+        String[] ss = r.split("[_-]");
+        String newProtocol = "PreJ";
+        if (ss.length > 1)
+          newProtocol = ss[1];
+        protocolManager.setCurrentProtocol(newProtocol);
+        
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
@@ -1926,7 +1961,8 @@ public final class MainFrame extends JFrame {
               clickSecondStation();
 
             // WHISTLES
-            if (protocolManager.getCurrentProtocol().isWhistles()) {
+            if (protocolManager.getCurrentProtocol() == null
+                || (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().isWhistles())) {
               String[] whistlesTurns = _settings.getProperty("whistles.turns", "4").split(",");
               int whistlesClicks = _settings.getInt("whistles.clicks", 1);
               if (Arrays.binarySearch(whistlesTurns, "" + turn) >= 0) {
@@ -1942,7 +1978,8 @@ public final class MainFrame extends JFrame {
             // if (_lettersClick.isSelected())
             // huntLetters();
 
-            if (protocolManager.getCurrentProtocol().isPackages()) {
+            if (protocolManager.getCurrentProtocol() == null
+                || (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().isPackages())) {
               // PACKAGES
               String[] packagesTurns = _settings.getProperty("packages.turns", "4").split(",");
               if (Arrays.binarySearch(packagesTurns, "" + turn) >= 0)
@@ -2792,13 +2829,14 @@ public final class MainFrame extends JFrame {
     int timeGiven = _settings.getInt("clickHomeFaster.time", 4000);
     long start = System.currentTimeMillis();
 
-    Pixel p = null;
     long curr = start;
 
     int maxTurns = _settings.getInt("clickHomeFaster.turns", 4) + 1;
     int turn = 1;
 
     do {
+      if (scanAndClick(ScreenScanner.SELL_X, null))
+        _mouse.delay(250);
       scanAndClick(ScreenScanner.SHOP_X, null);
       LOGGER.info("turn " + turn++);
 

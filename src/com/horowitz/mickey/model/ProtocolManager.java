@@ -102,6 +102,12 @@ public class ProtocolManager {
   public void loadProtocols() {
     try {
       protocols = readProtocols();
+      if (currentProtocol != null) {
+        Protocol oldProtocol = currentProtocol;
+        Protocol newProtocol = getProtocol(currentProtocol.getName()); 
+        currentProtocol = newProtocol;
+        support.firePropertyChange("PROTOCOL_REFRESHED", oldProtocol, newProtocol);
+      }
       // if (currentProtocol == null)
       // setCurrentProtocol(DEFAULT);
       // else {
