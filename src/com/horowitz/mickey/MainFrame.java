@@ -1313,8 +1313,9 @@ public final class MainFrame extends JFrame {
         }
         long time = DateUtils.parse(newTime.trim());
         if (time != 0) {
-          _scheduleJourney = time;
+          _scheduleJourney = System.currentTimeMillis() + time;
           reapplySettings();
+          protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
         }
         
       } else if (r.startsWith("pro")) {
@@ -1323,6 +1324,8 @@ public final class MainFrame extends JFrame {
         String newProtocol = "PreJ";
         if (ss.length > 1)
           newProtocol = ss[1];
+        if (!newProtocol.equals(ProtocolManager.DEFAULT))
+          _scheduleJourney = 0;
         protocolManager.setCurrentProtocol(newProtocol);
         
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
