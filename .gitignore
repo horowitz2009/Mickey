@@ -38,3 +38,4 @@ Icon
 bin/
 /*.jar
 /TrainCounter_lib
+/ocrTemp

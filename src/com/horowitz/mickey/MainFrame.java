@@ -47,12 +47,14 @@ import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -89,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.998";
+  private static final String   APP_TITLE           = "v0.999";
 
   private boolean               _devMode            = false;
 
@@ -170,7 +172,7 @@ public final class MainFrame extends JFrame {
 
   private boolean               journeyAvailable;
 
-  protected long                _scheduleJourney    = -1l;
+  protected Long                _scheduleJourney    = null;
 
   protected boolean             _dontChangeSchedule = false;
 
@@ -195,7 +197,7 @@ public final class MainFrame extends JFrame {
     init();
     protocolManager.setAutoJourney(_autoJourneyClick.isSelected());
     protocolManager.addPropertyChangeListener("PROTOCOL_CHANGED", new PropertyChangeListener() {
-      
+
       @Override
       public void propertyChange(PropertyChangeEvent evt) {
         Protocol p = protocolManager.getCurrentProtocol();
@@ -225,18 +227,6 @@ public final class MainFrame extends JFrame {
           invalidate();
           repaint();
         }
-      }
-    });
-
-    protocolManager.addPropertyChangeListener("TIME_ELAPSED", new PropertyChangeListener() {
-      @Override
-      public void propertyChange(PropertyChangeEvent evt) {
-        long time = (Long) evt.getNewValue();
-        // LOGGER.info("time elapsed:" + DateUtils.fancyTime2(time));
-        String fancyTime2 = time > 0 ? DateUtils.fancyTime2(time) : "  ";
-        _timeElapsedLabel.setText("  " + fancyTime2 + "  ");
-        invalidate();
-        repaint();
       }
     });
 
@@ -340,10 +330,6 @@ public final class MainFrame extends JFrame {
       }
     });
 
-    JToolBar mainToolbar1 = new JToolBar();
-    JToolBar mainToolbar2 = new JToolBar();
-    _mainToolbar3 = new JToolBar();
-
     _frToolbar1 = new JToolBar();
     _freeToolbar1 = new JToolBar();
     _freeToolbar2 = new JToolBar();
@@ -382,13 +368,30 @@ public final class MainFrame extends JFrame {
     exLabel2.setMaximumSize(d);
     xpLabel.setMaximumSize(d);
 
-    JPanel toolbars = new JPanel(new GridLayout(11, 1));
+    JPanel toolbars = new JPanel(new GridLayout(3, 1));
+
+    JToolBar mainToolbar1 = new JToolBar();
+    JToolBar mainToolbar2 = new JToolBar();
+    _mainToolbar3 = new JToolBar();
+    JToolBar mainToolbar4 = new JToolBar();
+    mainToolbar4.setFloatable(false);
+
     toolbars.add(mainToolbar1);
     toolbars.add(mainToolbar2);
     toolbars.add(_mainToolbar3);
     mainToolbar1.setFloatable(false);
     mainToolbar2.setFloatable(false);
     _mainToolbar3.setFloatable(false);
+
+    initToolbar1(mainToolbar1);
+    initToolbar2(mainToolbar2);
+    initToolbar3(_mainToolbar3);
+    initToolbar4(mainToolbar4);
+
+    Box north = Box.createVerticalBox();
+    north.add(toolbars);
+    north.add(mainToolbar4);
+    JPanel toolbars2 = new JPanel(new GridLayout(8, 1));
     _frToolbar1.setFloatable(false);
     _frToolbar2.setFloatable(false);
     _freeToolbar1.setFloatable(false);
@@ -406,16 +409,14 @@ public final class MainFrame extends JFrame {
     _exToolbar2.setBackground(new Color(153, 173, 209));
     _xpToolbar1.setBackground(new Color(233, 193, 189));
     _xpToolbar2.setBackground(new Color(233, 193, 189));
-    toolbars.add(_frToolbar1);
-    toolbars.add(_frToolbar2);
-    toolbars.add(_freeToolbar1);
-    toolbars.add(_freeToolbar2);
-    toolbars.add(_exToolbar1);
-    toolbars.add(_exToolbar2);
-    toolbars.add(_xpToolbar1);
-    toolbars.add(_xpToolbar2);
-    Box north = Box.createVerticalBox();
-    north.add(toolbars);
+    toolbars2.add(_frToolbar1);
+    toolbars2.add(_frToolbar2);
+    toolbars2.add(_freeToolbar1);
+    toolbars2.add(_freeToolbar2);
+    toolbars2.add(_exToolbar1);
+    toolbars2.add(_exToolbar2);
+    toolbars2.add(_xpToolbar1);
+    toolbars2.add(_xpToolbar2);
 
     JLabel trainsNumberLabel = new JLabel("T:");
     trainsNumberLabel.setForeground(Color.GRAY);
@@ -591,9 +592,98 @@ public final class MainFrame extends JFrame {
 
     // //////////////////////////
 
+    north.add(toolbars2);
+
     north.add(labelsBox);
     rootPanel.add(north, BorderLayout.NORTH);
 
+    // OL PLACE HERE
+
+    //
+
+    // freight
+    ButtonGroup bgFr = new ButtonGroup();
+    createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
+    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE_F2, "freight");
+
+    // free
+    ButtonGroup bgFree = new ButtonGroup();
+    createButtons(_freeToolbar1, bgFree, Locations.LOC_PAGE_F1, "free");
+    createButtons(_freeToolbar2, bgFree, Locations.LOC_PAGE_F2, "free");
+
+    // express
+    ButtonGroup bgEx = new ButtonGroup();
+    createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE_E1, "express");
+    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE_E2, "express");
+    // createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
+
+    // XP
+    ButtonGroup bgXP = new ButtonGroup();
+    createButtons(_xpToolbar1, bgXP, Locations.LOC_PAGE_X1, "xp");
+    createButtons(_xpToolbar2, bgXP, Locations.LOC_PAGE_X2, "xp");
+
+    ((JToggleButton) _frToolbar1.getComponent(3)).setSelected(true);
+    ((JToggleButton) _freeToolbar1.getComponent(2)).setSelected(true);
+    ((JToggleButton) _exToolbar1.getComponent(4)).setSelected(true);
+    ((JToggleButton) _xpToolbar1.getComponent(2)).setSelected(true);
+
+    /*
+     * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6MIN; _expressTime = Locations.LOC_6MIN; } }); bg.add(timeButton1);
+     * toolbar2.add(timeButton1);
+     * 
+     * JToggleButton timeButton2 = new JToggleButton(new AbstractAction(" 10m ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10MIN; _expressTime = Locations.LOC_10MIN;
+     * 
+     * } }); bg.add(timeButton2); toolbar2.add(timeButton2);
+     * 
+     * JToggleButton timeButton3 = new JToggleButton(new AbstractAction(" 30m ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_30MIN; _expressTime = Locations.LOC_30MIN;
+     * 
+     * } }); bg.add(timeButton3); toolbar2.add(timeButton3);
+     * 
+     * JToggleButton timeButton4 = new JToggleButton(new AbstractAction(" 1h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1HOUR; _expressTime = Locations.LOC_1HOUR;
+     * 
+     * } }); bg.add(timeButton4); toolbar2.add(timeButton4);
+     * 
+     * JToggleButton timeButton5 = new JToggleButton(new AbstractAction(" 2h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_2HOURS; _expressTime = Locations.LOC_2HOURS; } });
+     * bg.add(timeButton5); toolbar2.add(timeButton5);
+     * 
+     * { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 3h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_3HOURS; _expressTime = Locations.LOC_3HOURS; } });
+     * bg.add(timeButton6); toolbar2.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 4h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_4HOURS; _expressTime = Locations.LOC_4HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 6h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6HOURS; _expressTime = Locations.LOC_6HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 8h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_8HOURS; _expressTime = Locations.LOC_8HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 10h ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10HOURS; _expressTime = Locations.LOC_10HOURS; } });
+     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 1d ") {
+     * 
+     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1DAY; _expressTime = Locations.LOC_1DAY; } }); bg.add(timeButton6);
+     * toolbar3.add(timeButton6); }
+     */
+    // timeButton2.setSelected(true);
+
+    LOGGER.info("mandatory refresh time set to " + _settings.getInt("mandatoryRefresh.time", 45) + " minutes.");
+    LOGGER.info("ping time set to " + _settings.getInt("ping.time", 2) + " minutes.");
+
+  }
+
+  private void initToolbar1(JToolBar mainToolbar1) {
     // SCAN
     AbstractAction scanAction = new AbstractAction("Scan") {
       public void actionPerformed(ActionEvent e) {
@@ -758,6 +848,9 @@ public final class MainFrame extends JFrame {
     // });
     // mainToolbar1.add(b1);
     // }
+  }
+
+  private void initToolbar2(JToolBar mainToolbar2) {
     // RESET
     {
       _resetAction = new JButton(new AbstractAction("Reset") {
@@ -890,7 +983,10 @@ public final class MainFrame extends JFrame {
       mainToolbar2.add(_resendITClick);
     }
 
-    // toolabr 3
+  }
+
+  private void initToolbar3(JToolBar _mainToolbar3) {
+    // toolbar 3
     _autoJourneyClick = new JToggleButton("AJ");
     _autoJourneyClick.setSelected(Boolean.parseBoolean(_commands.getProperty("autoJourney", "false")));
     _autoJourneyClick.addChangeListener(new ChangeListener() {
@@ -906,9 +1002,14 @@ public final class MainFrame extends JFrame {
     _mainToolbar3.add(_autoJourneyClick);
     Protocol[] protocols = protocolManager.getProtocols();
     ButtonGroup bgProtocols = new ButtonGroup();
+    final String ppp = _commands.getProperty("protocol", "Default");
+    // selectProtocol(ppp);
+
     for (Protocol protocol : protocols) {
       JToggleButton button = new JToggleButton(protocol.getName());
       bgProtocols.add(button);
+      // if (protocol.getName().equals(ppp))
+      // button.setSelected(true);
       button.addActionListener(new ActionListener() {
 
         @Override
@@ -921,105 +1022,59 @@ public final class MainFrame extends JFrame {
     _scheduleTF = new JTextField(5);
     _mainToolbar3.add(_scheduleTF);
     _scheduleTF.addFocusListener(new FocusListener() {
+      private String textValue = "";
 
       @Override
       public void focusLost(FocusEvent e) {
         _dontChangeSchedule = false;
         long newTime = DateUtils.parse(_scheduleTF.getText());
-        if (newTime > 0)
+        if (newTime > 0 && !textValue.trim().equals(_scheduleTF.getText().trim()))
           _scheduleJourney = System.currentTimeMillis() + newTime;
       }
 
       @Override
       public void focusGained(FocusEvent e) {
-        // _dontChangeSchedule = true;
-
+        _dontChangeSchedule = true;
+        textValue = _scheduleTF.getText();
       }
     });
 
-    _timeElapsedLabel = new JLabel("      ");
-    _mainToolbar3.add(_timeElapsedLabel);
-    //
+  }
 
-    // freight
-    ButtonGroup bgFr = new ButtonGroup();
-    createButtons(_frToolbar1, bgFr, Locations.LOC_PAGE_F1, "freight");
-    createButtons(_frToolbar2, bgFr, Locations.LOC_PAGE_F2, "freight");
+  private void initToolbar4(JToolBar mainToolbar4) {
+    final JProgressBar progressBar = new JProgressBar();
+    progressBar.setMinimum(0);
+    progressBar.setMaximum(60);
+    progressBar.setValue(0);
+    progressBar.setStringPainted(true);
+    // progressBar.setValue(30);
+    // progressBar.setString("jeff is here");
+    // //progressBar.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+    progressBar.setBorder(BorderFactory.createEmptyBorder());
+    progressBar.setFont(progressBar.getFont().deriveFont(20f));
+    // progressBar.setOpaque(true);
+    mainToolbar4.add(progressBar);
+    mainToolbar4.setBorder(BorderFactory.createEmptyBorder());
 
-    // free
-    ButtonGroup bgFree = new ButtonGroup();
-    createButtons(_freeToolbar1, bgFree, Locations.LOC_PAGE_F1, "free");
-    createButtons(_freeToolbar2, bgFree, Locations.LOC_PAGE_F2, "free");
-
-    // express
-    ButtonGroup bgEx = new ButtonGroup();
-    createButtons(_exToolbar1, bgEx, Locations.LOC_PAGE_E1, "express");
-    createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE_E2, "express");
-    // createButtons(_exToolbar2, bgEx, Locations.LOC_PAGE3, false);
-
-    // XP
-    ButtonGroup bgXP = new ButtonGroup();
-    createButtons(_xpToolbar1, bgXP, Locations.LOC_PAGE_X1, "xp");
-    createButtons(_xpToolbar2, bgXP, Locations.LOC_PAGE_X2, "xp");
-
-    ((JToggleButton) _frToolbar1.getComponent(3)).setSelected(true);
-    ((JToggleButton) _freeToolbar1.getComponent(2)).setSelected(true);
-    ((JToggleButton) _exToolbar1.getComponent(4)).setSelected(true);
-    ((JToggleButton) _xpToolbar1.getComponent(2)).setSelected(true);
-
-    /*
-     * JToggleButton timeButton1 = new JToggleButton(new AbstractAction(" 6m ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6MIN; _expressTime = Locations.LOC_6MIN; } }); bg.add(timeButton1);
-     * toolbar2.add(timeButton1);
-     * 
-     * JToggleButton timeButton2 = new JToggleButton(new AbstractAction(" 10m ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10MIN; _expressTime = Locations.LOC_10MIN;
-     * 
-     * } }); bg.add(timeButton2); toolbar2.add(timeButton2);
-     * 
-     * JToggleButton timeButton3 = new JToggleButton(new AbstractAction(" 30m ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_30MIN; _expressTime = Locations.LOC_30MIN;
-     * 
-     * } }); bg.add(timeButton3); toolbar2.add(timeButton3);
-     * 
-     * JToggleButton timeButton4 = new JToggleButton(new AbstractAction(" 1h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1HOUR; _expressTime = Locations.LOC_1HOUR;
-     * 
-     * } }); bg.add(timeButton4); toolbar2.add(timeButton4);
-     * 
-     * JToggleButton timeButton5 = new JToggleButton(new AbstractAction(" 2h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_2HOURS; _expressTime = Locations.LOC_2HOURS; } });
-     * bg.add(timeButton5); toolbar2.add(timeButton5);
-     * 
-     * { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 3h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_3HOURS; _expressTime = Locations.LOC_3HOURS; } });
-     * bg.add(timeButton6); toolbar2.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 4h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_4HOURS; _expressTime = Locations.LOC_4HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 6h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_6HOURS; _expressTime = Locations.LOC_6HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 8h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_8HOURS; _expressTime = Locations.LOC_8HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 10h ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_10HOURS; _expressTime = Locations.LOC_10HOURS; } });
-     * bg.add(timeButton6); toolbar3.add(timeButton6); } { JToggleButton timeButton6 = new JToggleButton(new AbstractAction(" 1d ") {
-     * 
-     * public void actionPerformed(ActionEvent e) { _freightTime = Locations.LOC_1DAY; _expressTime = Locations.LOC_1DAY; } }); bg.add(timeButton6);
-     * toolbar3.add(timeButton6); }
-     */
-    // timeButton2.setSelected(true);
-
-    LOGGER.info("mandatory refresh time set to " + _settings.getInt("mandatoryRefresh.time", 45) + " minutes.");
-    LOGGER.info("ping time set to " + _settings.getInt("ping.time", 2) + " minutes.");
+    protocolManager.addPropertyChangeListener("TIME_ELAPSED", new PropertyChangeListener() {
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+        int duration = protocolManager.getCurrentProtocol().getDuration() * 60000;// in mseconds
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(duration/1000);
+        long timeElapsed = (Long) evt.getNewValue();
+        if (timeElapsed >= 0 && duration > 0) {
+          progressBar.setValue((int) timeElapsed/1000);
+          progressBar.setString("" + DateUtils.fancyTime2(timeElapsed, false) + " / " + DateUtils.fancyTime2(duration, false));
+        } else {
+          progressBar.setValue(0);
+          progressBar.setString("-");
+        }
+        // LOGGER.info("time elapsed:" + DateUtils.fancyTime2(time));
+        invalidate();
+        repaint();
+      }
+    });
 
   }
 
@@ -1217,17 +1272,28 @@ public final class MainFrame extends JFrame {
     // Long start = Long.parseLong(sts);
     // // protocolManager.setStart(start);
     //
-//    String ppp = _commands.getProperty("protocol", "Default");
-//    protocolManager.setCurrentProtocol(ppp);
+    String ppp = _commands.getProperty("protocol", "Default");
+    // selectProtocol(ppp);
+    protocolManager.setCurrentProtocol(ppp);
 
-    if (_autoJourneyClick.isSelected()) {
-      if (_scheduleJourney - System.currentTimeMillis() >= 0) {
-        _scheduleTF.setText(DateUtils.fancyTime2(_scheduleJourney - System.currentTimeMillis()));
-      } else {
-        //_scheduleTF.setText("");
-      }
+    if (!_dontChangeSchedule && _scheduleJourney != null) {
+      long time = _scheduleJourney - System.currentTimeMillis();
+      if (time >= -20000)
+        _scheduleTF.setText(DateUtils.fancyTime2(time));
+      else
+        _scheduleTF.setText("");
     }
 
+    if (_autoJourneyClick.isSelected()) {
+      if (_scheduleJourney != null && _scheduleJourney - System.currentTimeMillis() <= 0) {
+        // the time has come
+        if (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().getName().equals(ProtocolManager.DEFAULT)) {
+          _scheduleJourney = null;
+          _scheduleTF.setText("");
+          protocolManager.setCurrentProtocol("PreJ");
+        }
+      }
+    }
   }
 
   private void reapplyTimes(int time, Component[] components1, Component[] components2) {
@@ -1265,8 +1331,16 @@ public final class MainFrame extends JFrame {
 
     String[] requests = service.getActiveRequests();
     for (String r : requests) {
-
-      if (r.startsWith("capture")) {
+      if (r.startsWith("aj")) {
+        service.inProgress(r);
+        String[] ss = r.split("[_-]");
+        boolean flag = true;
+        if (ss.length > 1) {
+          if (ss[1].equals("false"))
+            flag = false;
+        }
+        _autoJourneyClick.setSelected(flag);
+      } else if (r.startsWith("capture")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
         if (ss.length > 2) {
@@ -1300,24 +1374,24 @@ public final class MainFrame extends JFrame {
         service.inProgress(r);
         _stats.reset();
         updateLabels();
-        
+
       } else if (r.startsWith("schedule")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
-        String newTime = "8h";
+        long time = DateUtils.parse("8h");
         if (ss.length > 1) {
-          newTime="";
-          for(int i = 1; i < ss.length; i++) {
-            newTime += ss[i] + " ";
+          time = 0;
+          for (int i = 1; i < ss.length; i++) {
+            time += DateUtils.parse(ss[i].trim());
           }
         }
-        long time = DateUtils.parse(newTime.trim());
+
         if (time != 0) {
-          _scheduleJourney = System.currentTimeMillis() + time;
+          _scheduleJourney = System.currentTimeMillis() + time - 1000; // minus 1sec
           reapplySettings();
           protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
         }
-        
+
       } else if (r.startsWith("pro")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
@@ -1325,9 +1399,9 @@ public final class MainFrame extends JFrame {
         if (ss.length > 1)
           newProtocol = ss[1];
         if (!newProtocol.equals(ProtocolManager.DEFAULT))
-          _scheduleJourney = 0;
+          _scheduleJourney = null;
         protocolManager.setCurrentProtocol(newProtocol);
-        
+
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
         service.inProgress(r);
         String[] ss = r.split("[_-]");
@@ -1847,18 +1921,6 @@ public final class MainFrame extends JFrame {
       }
 
       try {
-
-        if (_autoJourneyClick.isSelected()) {
-          if (_scheduleJourney != 0 && _scheduleJourney - System.currentTimeMillis() <= 0) {
-            // the time has come
-            if (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().getName().equals(ProtocolManager.DEFAULT)) {
-              _scheduleJourney = 0;
-              _scheduleTF.setText("");
-              protocolManager.setCurrentProtocol("PreJ");
-              _mouse.delay(1000);
-            }
-          }
-        }
 
         if (_autoPassClick.isSelected()) {
           try {
@@ -3124,7 +3186,6 @@ public final class MainFrame extends JFrame {
   private JToolBar       _mainToolbar3;
 
   private JTextField     _scheduleTF;
-  private JLabel         _timeElapsedLabel;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
