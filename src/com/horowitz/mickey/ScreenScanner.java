@@ -29,14 +29,15 @@ import com.horowitz.commons.RobotInterruptedException;
 import com.horowitz.commons.Settings;
 import com.horowitz.commons.SimilarityImageComparator;
 import com.horowitz.mickey.common.MyImageIO;
+import com.horowitz.mickey.scanner.KeyboardRobot;
 
 public class ScreenScanner extends BaseScreenScanner {
 
-  public static final String SELL_X = "sellX.bmp";
+  public static final String  SELL_X                         = "sellX.bmp";
   public static final String  SHOP_X                         = "shopX.bmp";
   public static final String  CLOSE_X2                       = "closeX2.bmp";
 
-  public static final String LOGIN_WITH_FB                  = "FBLogin.bmp";
+  public static final String  LOGIN_WITH_FB                  = "FBLogin.bmp";
   private static final String INT_TRAINS                     = "int/Trains.bmp";
   private static final String SHARE                          = "share.bmp";
   private static final String MATERIALS                      = "materials.bmp";
@@ -133,9 +134,9 @@ public class ScreenScanner extends BaseScreenScanner {
 
   private int                 _street1Y                      = 170;
   private Pixel               _whistlesPoint;
-  public int _offset = 113;
-  public Pixel _resendP;
-  private Rectangle _resendArea;
+  public int                  _offset                        = 113;
+  public Pixel                _resendP;
+  private Rectangle           _resendArea;
 
   public ScreenScanner(Settings settings) {
     super(settings);
@@ -232,9 +233,9 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 520) / 2;
     area = new Rectangle(_br.x - xx - 60, _tl.y + 24, xx - 40, 240);
     getImageData(CLOSE_X2, area, 7, 7);
-    
+
     xx = (getGameWidth() - 563) / 2;
-    area = new Rectangle(_tl.x + xx +522, _tl.y + 210, 50, 50);
+    area = new Rectangle(_tl.x + xx + 522, _tl.y + 210, 50, 50);
     getImageData(SELL_X, area, 7, 7);
 
     _street1Y = _settings.getInt("street1Y", 204);
@@ -323,7 +324,7 @@ public class ScreenScanner extends BaseScreenScanner {
     // _fbShare = new ImageData("FBShare.bmp", area, _comparator, 19, 5);
 
     _whistlesPoint = new Pixel(_tl.x + 36, _tl.y + 310);
-    
+
     _resendP = new Pixel(_br.x - 85, _br.y - 178);
   }
 
@@ -809,7 +810,7 @@ public class ScreenScanner extends BaseScreenScanner {
 
     return p != null;
   }
-  
+
   public void adjustHome(boolean resend) throws AWTException, RobotInterruptedException, IOException {
     _resendP = null;
     _offset = 112;
@@ -823,7 +824,7 @@ public class ScreenScanner extends BaseScreenScanner {
     if (resend) {
       _mouse.delay(500);
       // _scanner.writeArea(area, "polearea.bmp");
-      //DEPRECATE THIS
+      // DEPRECATE THIS
       Pixel pp = scanOneFast("pole.bmp", area, false);
       if (pp == null) {
         _offset = 80;
@@ -831,9 +832,9 @@ public class ScreenScanner extends BaseScreenScanner {
         _mouse.delay(250);
         pp = scanOneFast("pole.bmp", area, false);
         LOGGER.fine("pole found again:  " + (pp != null));
-        //offset = getOffset(offset, area);
+        // offset = getOffset(offset, area);
       } else {
-        //it found but let's see is it far enough from edge
+        // it found but let's see is it far enough from edge
         if (_br.x - pp.x < 50) {
           _offset = 80;
           _mouse.drag4(x1, y, x2, y, false, false);
@@ -850,7 +851,7 @@ public class ScreenScanner extends BaseScreenScanner {
           _resendP.x = _br.x - 2;
         }
         _resendArea = new Rectangle(pp.x, _br.y - 204, _br.x - pp.x, 55);
-        //_scanner.writeArea(resendArea, "resendArea.bmp");
+        // _scanner.writeArea(resendArea, "resendArea.bmp");
       }
     } else {
       Pixel pp = scanOneFast("pole.bmp", area, false);
@@ -860,7 +861,7 @@ public class ScreenScanner extends BaseScreenScanner {
     }
 
   }
-  
+
   public Pixel scanResend() throws AWTException, RobotInterruptedException, IOException {
     _resendArea = new Rectangle(_br.x - 140, _br.y - 204, 140, 55);
     Pixel p = scanOneFast("resend.bmp", _resendArea, false);
@@ -881,6 +882,100 @@ public class ScreenScanner extends BaseScreenScanner {
     }
     Pixel pp = scanOneFast("journeyUnlocked.bmp", area, false);
     return pp != null;
+  }
+
+  public boolean sellWAGR() throws AWTException, RobotInterruptedException, IOException {
+    boolean res = false;
+    Rectangle area = new Rectangle(_tl.x + 105, _br.y - 70, 70, 70);
+    Pixel p = scanOneFast("shopButton.bmp", area, false);
+    if (p != null) {
+      _mouse.click(p.x + 75, p.y);
+      _mouse.delay(1000);
+
+      area = new Rectangle(_br.x - 289, _tl.y + 93, 289, 78);
+      int turn = 0;
+      do {
+        p = scanOneFast("searchButton.bmp", area, true);
+        turn++;
+        if (p == null) {
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+          }
+        }
+      } while (p == null && turn < 3);
+      if (p != null) {
+        _mouse.mouseMove(p.x - 158, p.y - 14);
+        // 3. write wagr s
+        new KeyboardRobot().enterText("wagr s");
+        _mouse.delay(500);
+        // 4 looking for wagr s loco
+        area = new Rectangle(_tl.x + 40, _tl.y + 180, getGameWidth() - 80, 27);
+        p = scanOneFast("wagrSClass.bmp", area, true);
+        if (p != null) {
+          _mouse.delay(700);
+          _mouse.click(p.x + 44, p.y + 343);
+          _mouse.delay(700);
+          //TODO scrollbar eventurally
+          area = generateWindowedArea(560, 210);
+          _mouse.click(area.x + 469, area.y + 120);
+          _mouse.delay(700);
+          _mouse.click(area.x + 365, area.y + 178);
+          _mouse.delay(700);
+          res = true;
+        }
+      }
+
+    }
+    if (scanOneFast(ScreenScanner.SHOP_X, true) != null)
+      _mouse.delay(2000);
+    return res;
+  }
+
+  public boolean buyWAGR(int clicks) throws AWTException, RobotInterruptedException, IOException {
+    boolean res = false;
+    // 1. first ensure shop button is available. click it
+    Rectangle area = new Rectangle(_tl.x + 105, _br.y - 70, 70, 70);
+    if (scanOneFast("shopButton.bmp", area, true) != null) {
+      _mouse.delay(1000);
+      // 2. click on search button
+      Pixel p = null;
+      area = new Rectangle(_br.x - 289, _tl.y + 93, 289, 78);
+      int turn = 0;
+      do {
+        p = scanOneFast("searchButton.bmp", area, true);
+        turn++;
+        if (p == null) {
+          try {
+            Thread.sleep(2000);
+          } catch (InterruptedException e) {
+          }
+        }
+      } while (p == null && turn < 3);
+      
+      if (p != null) {
+        _mouse.mouseMove(p.x - 158, p.y - 14);
+        _mouse.delay(500);
+        // 3. write wagr s
+        new KeyboardRobot().enterText("wagr s");
+        _mouse.delay(500);
+        // 4 looking for wagr s loco
+        area = new Rectangle(_tl.x + 40, _tl.y + 180, getGameWidth() - 80, 27);
+        p = scanOneFast("wagrSClass.bmp", area, true);
+        if (p != null) {
+          _mouse.mouseMove(p.x + 45, p.y + 354);
+          for (int i = 0; i < clicks; i++) {
+            _mouse.click();
+            _mouse.delay(80);
+          }
+          res = true;
+        }
+      }
+    }
+
+    if (scanOneFast(ScreenScanner.SHOP_X, true) != null)
+      _mouse.delay(2000);
+    return res;
   }
 
 }

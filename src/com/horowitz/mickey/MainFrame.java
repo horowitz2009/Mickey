@@ -79,6 +79,7 @@ import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.model.Protocol;
 import com.horowitz.mickey.model.ProtocolManager;
 import com.horowitz.mickey.ocr.OCRB;
+import com.horowitz.mickey.scanner.KeyboardRobot;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
@@ -175,6 +176,7 @@ public final class MainFrame extends JFrame {
   protected Long                _scheduleJourney    = null;
 
   protected boolean             _dontChangeSchedule = false;
+  private int                   totalWagrsBought    = 0;
 
   public MainFrame() throws HeadlessException {
     super();
@@ -1061,10 +1063,10 @@ public final class MainFrame extends JFrame {
       public void propertyChange(PropertyChangeEvent evt) {
         int duration = protocolManager.getCurrentProtocol().getDuration() * 60000;// in mseconds
         progressBar.setMinimum(0);
-        progressBar.setMaximum(duration/1000);
+        progressBar.setMaximum(duration / 1000);
         long timeElapsed = (Long) evt.getNewValue();
         if (timeElapsed >= 0 && duration > 0) {
-          progressBar.setValue((int) timeElapsed/1000);
+          progressBar.setValue((int) timeElapsed / 1000);
           progressBar.setString("" + DateUtils.fancyTime2(timeElapsed, false) + " / " + DateUtils.fancyTime2(duration, false));
         } else {
           progressBar.setValue(0);
@@ -1825,14 +1827,14 @@ public final class MainFrame extends JFrame {
     int wait = 100;
     if (!fast) {
       wait = 1000;
-       // FB LOGIN
-       if (scanAndClick(ScreenScanner.LOGIN_WITH_FB, null))
-         _mouse.delay(5000);
-      
-//       if (scanAndClick(_scanner.getLoginFB(), null))
-//       _mouse.delay(5000);
-//       else
-//       _mouse.delay(3000);
+      // FB LOGIN
+      if (scanAndClick(ScreenScanner.LOGIN_WITH_FB, null))
+        _mouse.delay(5000);
+
+      // if (scanAndClick(_scanner.getLoginFB(), null))
+      // _mouse.delay(5000);
+      // else
+      // _mouse.delay(3000);
     }
 
     // // INVITE
@@ -2017,6 +2019,11 @@ public final class MainFrame extends JFrame {
             // lookForPackages();
           }
 
+          if (_settings.getBoolean("autoBuy", false) && protocolManager.getCurrentProtocol().getName().equals("BUY")) {
+            goHomeIfNeeded();
+            buyWagrs();
+          }
+
           if (!_sendInternational.isSelected()
               || (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() > 1000)) {
 
@@ -2097,6 +2104,31 @@ public final class MainFrame extends JFrame {
     } // while
     if (_stopThread) {
       LOGGER.info("Mickey has being stopped");
+    }
+  }
+
+  private void buyWagrs() throws AWTException, RobotInterruptedException, IOException {
+    if (totalWagrsBought ==  -1) {
+      // sell once
+      if (_scanner.sellWAGR()) {
+        LOGGER.info("Sold all wagrs...");
+        totalWagrsBought = 0;
+      }
+      _mouse.delay(1000);
+    }
+    boolean success = _scanner.buyWAGR(_settings.getInt("autoBuy.batch", 100));
+    if (success) {
+      totalWagrsBought += _settings.getInt("autoBuy.batch", 100);
+      LOGGER.info("Bought " + _settings.getInt("autoBuy.batch", 2000));
+    } else {
+      LOGGER.info("HMM! Can't buy wagrs!");
+      // TODO turn it off if too many errors
+      // TODO manage full storage case
+    }
+    if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
+      LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
+      totalWagrsBought = 0;
+      protocolManager.setCurrentProtocol("D");
     }
   }
 
@@ -3752,6 +3784,19 @@ public final class MainFrame extends JFrame {
             t.start();
           }
         }
+
+        if (e.getKeyCode() == 120) {// F8
+
+          if (!isRunning("HMM")) {
+            Thread t = new Thread(new Runnable() {
+              public void run() {
+                enterSomething();
+              }
+            }, "HMM");
+            t.start();
+          }
+        }
+
       }
       return false;
     }
@@ -3766,6 +3811,18 @@ public final class MainFrame extends JFrame {
       }
     }
 
-  }
+    private void enterSomething() {
+      try {
+        if (_scanner.buyWAGR(100)) {
+          LOGGER.info("Bought WAGRS...");
+          _mouse.delay(400);
+        } else {
+          LOGGER.info("FAILED BUYING WAGRS...");
+        }
 
+      } catch (RobotInterruptedException | AWTException | IOException e1) {
+      }
+    }
+
+  }
 }
