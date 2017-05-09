@@ -220,6 +220,9 @@ public class ScreenScanner extends BaseScreenScanner {
     area = new Rectangle(_tl.x + xx + 80, _tl.y + yy + 80, 120, 50);
     _sessionTimeOut = new ImageData(SESSION, area, _comparator, 0, 0);
     _syncError = new ImageData("sync.bmp", area, _comparator, 0, 0);
+    xx = (getGameWidth() - 125) / 2;
+    area = new Rectangle(_tl.x + xx, _tl.y + 162, 125, 50);
+    getImageData("levelup.bmp", area, 0, 0);
 
     // SHOP X
     xx = (getGameWidth() - 780) / 2;
@@ -977,5 +980,4 @@ public class ScreenScanner extends BaseScreenScanner {
       _mouse.delay(2000);
     return res;
   }
-
 }

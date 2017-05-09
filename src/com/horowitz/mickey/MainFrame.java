@@ -176,7 +176,7 @@ public final class MainFrame extends JFrame {
   protected Long                _scheduleJourney    = null;
 
   protected boolean             _dontChangeSchedule = false;
-  private int                   totalWagrsBought    = 0;
+  private int                   totalWagrsBought    = -1;
 
   public MainFrame() throws HeadlessException {
     super();
@@ -2125,9 +2125,16 @@ public final class MainFrame extends JFrame {
       // TODO turn it off if too many errors
       // TODO manage full storage case
     }
-    if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
+    Pixel p = _scanner.scanOneFast("levelup.bmp", false);      
+    if (p != null) {
+      _mouse.click(p.x + 22, p.y + 343);
+      _mouse.delay(500);
+      LOGGER.info("LEVELUP!!!");
+      totalWagrsBought = -1;
+      protocolManager.setCurrentProtocol("D");
+    } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
       LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
-      totalWagrsBought = 0;
+      totalWagrsBought = -1;
       protocolManager.setCurrentProtocol("D");
     }
   }
