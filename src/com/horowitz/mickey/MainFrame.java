@@ -1825,14 +1825,14 @@ public final class MainFrame extends JFrame {
     int wait = 100;
     if (!fast) {
       wait = 1000;
-      // // FB LOGIN
-      // if (scanAndClick(_scanner.getLoginWIthFB(), null))
-      // _mouse.delay(2000);
-      //
-      // if (scanAndClick(_scanner.getLoginFB(), null))
-      // _mouse.delay(5000);
-      // else
-      // _mouse.delay(3000);
+       // FB LOGIN
+       if (scanAndClick(ScreenScanner.LOGIN_WITH_FB, null))
+         _mouse.delay(5000);
+      
+//       if (scanAndClick(_scanner.getLoginFB(), null))
+//       _mouse.delay(5000);
+//       else
+//       _mouse.delay(3000);
     }
 
     // // INVITE

@@ -36,8 +36,7 @@ public class ScreenScanner extends BaseScreenScanner {
   public static final String  SHOP_X                         = "shopX.bmp";
   public static final String  CLOSE_X2                       = "closeX2.bmp";
 
-  private static final String LOGIN_FB                       = "loginFB.bmp";
-  private static final String LOGIN_WITH_FB                  = "loginWithFB3.bmp";
+  public static final String LOGIN_WITH_FB                  = "FBLogin.bmp";
   private static final String INT_TRAINS                     = "int/Trains.bmp";
   private static final String SHARE                          = "share.bmp";
   private static final String MATERIALS                      = "materials.bmp";
@@ -121,7 +120,6 @@ public class ScreenScanner extends BaseScreenScanner {
   private Rectangle           _packagesArea                  = null;
 
   private ImageData           _loginWithFB;
-  private ImageData           _loginFB;
 
   private ImageData           _invite;
   private ImageData           _dailyRewards;
@@ -143,10 +141,9 @@ public class ScreenScanner extends BaseScreenScanner {
     super(settings);
 
     final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    Rectangle area = new Rectangle(20, 340, screenSize.width - 20 - 404, screenSize.height - 340 - 110);
+    Rectangle area = new Rectangle(600, 200, screenSize.width - 20 - 600, 320);
     try {
       _loginWithFB = new ImageData(LOGIN_WITH_FB, area, _comparator, 8, 8);
-      _loginFB = new ImageData(LOGIN_FB, area, _comparator, 29, 6);
 
       area = new Rectangle(187, 233, screenSize.width - 187 - 187, screenSize.height - 233 - 17);
 
@@ -658,10 +655,6 @@ public class ScreenScanner extends BaseScreenScanner {
 
   public ImageData getLoginWIthFB() {
     return _loginWithFB;
-  }
-
-  public ImageData getLoginFB() {
-    return _loginFB;
   }
 
   public ImageData getInvite() {
