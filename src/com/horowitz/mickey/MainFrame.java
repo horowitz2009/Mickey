@@ -79,7 +79,6 @@ import com.horowitz.mickey.data.DataStore;
 import com.horowitz.mickey.model.Protocol;
 import com.horowitz.mickey.model.ProtocolManager;
 import com.horowitz.mickey.ocr.OCRB;
-import com.horowitz.mickey.scanner.KeyboardRobot;
 import com.horowitz.mickey.service.Service;
 import com.horowitz.mickey.trainScanner.TrainManagementWindow;
 import com.horowitz.mickey.trainScanner.TrainScanner;
@@ -92,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v0.999";
+  private static final String   APP_TITLE           = "v1.0";
 
   private boolean               _devMode            = false;
 
@@ -2127,11 +2126,12 @@ public final class MainFrame extends JFrame {
     }
     Pixel p = _scanner.scanOneFast("levelup.bmp", false);      
     if (p != null) {
+      _scanner.captureGameAreaDT("levelup ");
       _mouse.click(p.x + 22, p.y + 343);
       _mouse.delay(500);
       LOGGER.info("LEVELUP!!!");
       totalWagrsBought = -1;
-      protocolManager.setCurrentProtocol("D");
+      protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
     } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
       LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
       totalWagrsBought = -1;
@@ -2628,6 +2628,18 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle daily rewards " + (t2 - t1));
 
+    
+    Pixel p = _scanner.scanOneFast("levelup.bmp", false);      
+    if (p != null) {
+      _scanner.captureGameAreaDT("levelup ");
+      _mouse.click(p.x + 22, p.y + 343);
+      _mouse.delay(500);
+      LOGGER.info("LEVELUP!!!");
+      totalWagrsBought = -1;
+      if (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().getName().startsWith("B"))
+        protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
+    }
+    
     // HOORAY hmm!
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick("Hooray.bmp", null);
@@ -2714,7 +2726,7 @@ public final class MainFrame extends JFrame {
     // now check other popups that need to refresh the game
     t1 = t2 = System.currentTimeMillis();
 
-    Pixel p = _scanner.getSyncError().findImage();
+    p = _scanner.getSyncError().findImage();
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle sync " + (t2 - t1));
