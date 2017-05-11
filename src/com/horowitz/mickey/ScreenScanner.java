@@ -223,6 +223,10 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 125) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 162, 125, 50);
     getImageData("levelup.bmp", area, 0, 0);
+    
+    xx = (getGameWidth() - 523) / 2;
+    area = new Rectangle(_tl.x + xx + 205, _tl.y + 172, 136, 50);
+    getImageData("storageFull.bmp", area, 0, 0);
 
     // SHOP X
     xx = (getGameWidth() - 780) / 2;

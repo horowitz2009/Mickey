@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.0";
+  private static final String   APP_TITLE           = "v1.1";
 
   private boolean               _devMode            = false;
 
@@ -1399,8 +1399,10 @@ public final class MainFrame extends JFrame {
         String newProtocol = "PreJ";
         if (ss.length > 1)
           newProtocol = ss[1];
-        if (!newProtocol.equals(ProtocolManager.DEFAULT))
+        if (!newProtocol.equals(ProtocolManager.DEFAULT) && !newProtocol.startsWith("B")) {
           _scheduleJourney = null;
+          _scheduleTF.setText("");
+        }
         protocolManager.setCurrentProtocol(newProtocol);
 
       } else if (r.startsWith("refresh") || r.startsWith("r")) {
@@ -2107,24 +2109,38 @@ public final class MainFrame extends JFrame {
   }
 
   private void buyWagrs() throws AWTException, RobotInterruptedException, IOException {
-    if (totalWagrsBought ==  -1) {
-      // sell once
+    if (totalWagrsBought == -1 || totalWagrsBought >= _settings.getInt("autoBuy.sellWhen", 500)) {
+      LOGGER.info("Trying to sell wagrs...");
+      _mouse.delay(2000);
       if (_scanner.sellWAGR()) {
-        LOGGER.info("Sold all wagrs...");
+        LOGGER.info("Sold all wagrs!");
         totalWagrsBought = 0;
       }
       _mouse.delay(1000);
     }
+
     boolean success = _scanner.buyWAGR(_settings.getInt("autoBuy.batch", 100));
     if (success) {
       totalWagrsBought += _settings.getInt("autoBuy.batch", 100);
       LOGGER.info("Bought " + _settings.getInt("autoBuy.batch", 2000));
-    } else {
-      LOGGER.info("HMM! Can't buy wagrs!");
-      // TODO turn it off if too many errors
-      // TODO manage full storage case
     }
-    Pixel p = _scanner.scanOneFast("levelup.bmp", false);      
+    Pixel p = _scanner.scanOneFast("storageFull.bmp", false);
+    if (p != null) {
+      LOGGER.info("Storage full");
+      // close the alert
+      _mouse.click(p.x + 227, p.y + 6);
+      _mouse.delay(400);
+
+      // close the shop
+      scanAndClick(ScreenScanner.SHOP_X, null);
+
+      if (_scanner.sellWAGR()) {
+        LOGGER.info("Good! Sold wagrs...");
+      } else {
+        LOGGER.info("DAMN!!! CAN'T BUY, CAN'T SELL...");
+      }
+    }
+    p = _scanner.scanOneFast("levelup.bmp", false);
     if (p != null) {
       _scanner.captureGameAreaDT("levelup ");
       _mouse.click(p.x + 22, p.y + 343);
@@ -2132,10 +2148,10 @@ public final class MainFrame extends JFrame {
       LOGGER.info("LEVELUP!!!");
       totalWagrsBought = -1;
       protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
-    } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
-      LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
-      totalWagrsBought = -1;
-      protocolManager.setCurrentProtocol("D");
+//    } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
+//      LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
+//      totalWagrsBought = -1;
+//      protocolManager.setCurrentProtocol("D");
     }
   }
 
@@ -2628,8 +2644,7 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle daily rewards " + (t2 - t1));
 
-    
-    Pixel p = _scanner.scanOneFast("levelup.bmp", false);      
+    Pixel p = _scanner.scanOneFast("levelup.bmp", false);
     if (p != null) {
       _scanner.captureGameAreaDT("levelup ");
       _mouse.click(p.x + 22, p.y + 343);
@@ -2639,7 +2654,7 @@ public final class MainFrame extends JFrame {
       if (protocolManager.getCurrentProtocol() != null && protocolManager.getCurrentProtocol().getName().startsWith("B"))
         protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
     }
-    
+
     // HOORAY hmm!
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick("Hooray.bmp", null);
