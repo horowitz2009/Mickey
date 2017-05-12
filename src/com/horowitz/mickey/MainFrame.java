@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.3";
+  private static final String   APP_TITLE           = "v1.4";
 
   private boolean               _devMode            = false;
 
@@ -165,6 +165,7 @@ public final class MainFrame extends JFrame {
   private JToggleButton         _maglevClick;
   private JToggleButton         _resendClick;
   private JToggleButton         _resendITClick;
+  private JToggleButton         _buyBoxesClick;
 
   private TrainCounter          _trainCounter;
 
@@ -986,6 +987,19 @@ public final class MainFrame extends JFrame {
       });
       mainToolbar2.add(_resendITClick);
     }
+    {
+      _buyBoxesClick = new JToggleButton("BB");
+      _buyBoxesClick.setSelected(_settings.getBoolean("buyBoxes", false));
+      _buyBoxesClick.addChangeListener(new ChangeListener() {
+        
+        @Override
+        public void stateChanged(ChangeEvent e) {
+          _settings.setProperty("buyBoxes", "" + _buyBoxesClick.isSelected());
+          _settings.saveSettingsSorted();
+        }
+      });
+      mainToolbar2.add(_buyBoxesClick);
+    }
 
   }
 
@@ -1229,6 +1243,7 @@ public final class MainFrame extends JFrame {
     boolean maglev15 = "true".equalsIgnoreCase(_commands.getProperty("maglev15"));
     boolean resend = "true".equalsIgnoreCase(_commands.getProperty("resend"));
     boolean resendIT = "true".equalsIgnoreCase(_settings.getProperty("resendIT"));
+    boolean buyBoxes = "true".equalsIgnoreCase(_settings.getProperty("buyBoxes"));
 
     if (ping != _pingClick.isSelected()) {
       _pingClick.setSelected(ping);
@@ -1256,6 +1271,10 @@ public final class MainFrame extends JFrame {
 
     if (resendIT != _resendITClick.isSelected()) {
       _resendITClick.setSelected(resendIT);
+    }
+    
+    if (buyBoxes != _buyBoxesClick.isSelected()) {
+      _buyBoxesClick.setSelected(buyBoxes);
     }
 
     if (sendInternational != _sendInternational.isSelected()) {
@@ -2029,6 +2048,12 @@ public final class MainFrame extends JFrame {
             goHomeIfNeeded();
             buyWagrs();
           }
+          
+          if (_settings.getBoolean("buyBoxes", false) && protocolManager.getCurrentProtocol().getName().equals("D")) {
+            goHomeIfNeeded();
+            buyBoxes();
+          }
+          
 
           if (!_sendInternational.isSelected()
               || (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() > 1000)) {
@@ -2146,6 +2171,11 @@ public final class MainFrame extends JFrame {
 
       }
     }
+  }
+  
+  private void buyBoxes() throws AWTException, RobotInterruptedException, IOException {
+    int howMany = _settings.getInt("buyBoxes.howMany", 5);
+    boolean success = _scanner.buyBoxes(howMany);
   }
 
   private void buyWagrs() throws AWTException, RobotInterruptedException, IOException {

@@ -223,7 +223,7 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 125) / 2;
     area = new Rectangle(_tl.x + xx, _tl.y + 162, 125, 50);
     getImageData("levelup.bmp", area, 0, 0);
-    
+
     xx = (getGameWidth() - 523) / 2;
     area = new Rectangle(_tl.x + xx + 205, _tl.y + 172, 136, 50);
     getImageData("storageFull.bmp", area, 0, 0);
@@ -923,7 +923,7 @@ public class ScreenScanner extends BaseScreenScanner {
           _mouse.delay(700);
           _mouse.click(p.x + 44, p.y + 343);
           _mouse.delay(700);
-          //TODO scrollbar eventurally
+          // TODO scrollbar eventurally
           area = generateWindowedArea(560, 210);
           _mouse.click(area.x + 469, area.y + 120);
           _mouse.delay(700);
@@ -937,6 +937,63 @@ public class ScreenScanner extends BaseScreenScanner {
     if (scanOneFast(ScreenScanner.SHOP_X, true) != null)
       _mouse.delay(2000);
     return res;
+  }
+
+  public boolean buyBoxes(int howMany) throws AWTException, RobotInterruptedException, IOException {
+    boolean res = false;
+    // 1. first ensure shop button is available. click it
+    Rectangle area = new Rectangle(_tl.x + 105, _br.y - 70, 70, 70);
+    if (scanOneFast("shopButton.bmp", area, true) != null) {
+      _mouse.delay(1000);
+      // 2. looking for boxName
+      area = new Rectangle(_tl.x + 40, _tl.y + 180, getGameWidth() - 80, 27);
+      Pixel p = scanOneFast("boxName.bmp", area, true);
+      if (p == null) {
+        Rectangle area2 = new Rectangle(_tl.x, _tl.y + 93, 289, 78);
+        Pixel p2 = scanOneFast("specialOfferButton.bmp", area2, true);
+        if (p2 != null) {
+          _mouse.delay(500);
+          p = scanOneFast("boxName.bmp", area, true);
+        }
+      }
+      if (p != null) {
+        for (int i = 1; i <= howMany; i++) {
+          LOGGER.info("buy box " + i);
+          _mouse.click(p.x + 45, p.y + 354);
+          _mouse.delay(1000);
+          boolean done = false;
+          for (int j = 0; !done && j < 20; j++) {
+            try {
+              Pixel ppp = scanJourneyX();
+              if (ppp != null) {
+                _mouse.click(ppp);
+                done = true;
+              }
+              Thread.sleep(300);
+            } catch (RobotInterruptedException | IOException | AWTException | InterruptedException e) {
+            }
+          }
+
+        }
+        res = true;
+      }
+    }
+
+    if (scanOneFast(ScreenScanner.SHOP_X, true) != null)
+      _mouse.delay(1000);
+    return res;
+  }
+
+  private Pixel scanJourneyX() throws RobotInterruptedException, IOException, AWTException {
+    int x = getTopLeft().x;
+    x += getGameWidth() / 2;
+    int y = getTopLeft().y;
+    Rectangle area = new Rectangle(x, y, getGameWidth() / 2, getGameHeight() - 100);
+    Pixel pp = scanOneFast("journey.bmp", area, Color.RED, true);
+    if (pp == null)
+      pp = scanOneFast("journey2.bmp", area, null, false);
+
+    return pp;
   }
 
   public boolean buyWAGR(int clicks) throws AWTException, RobotInterruptedException, IOException {
@@ -959,7 +1016,7 @@ public class ScreenScanner extends BaseScreenScanner {
           }
         }
       } while (p == null && turn < 3);
-      
+
       if (p != null) {
         _mouse.mouseMove(p.x - 158, p.y - 14);
         _mouse.delay(500);
