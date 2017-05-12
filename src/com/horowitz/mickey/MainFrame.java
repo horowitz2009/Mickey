@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.1";
+  private static final String   APP_TITLE           = "v1.3";
 
   private boolean               _devMode            = false;
 
@@ -192,6 +192,8 @@ public final class MainFrame extends JFrame {
       LOGGER.log(Level.SEVERE, e2.getMessage());
       System.exit(ERROR);
     }
+
+    _passQueue = new LimitedQueue<>(2);
 
     protocolManager = new ProtocolManager();
     protocolManager.loadProtocols();
@@ -1927,8 +1929,10 @@ public final class MainFrame extends JFrame {
 
         if (_autoPassClick.isSelected()) {
           try {
-            if (scanPassengers())
+            if (scanPassengers()) {
               updateTimes();
+            }
+            checkToBuy();
           } catch (Throwable t) {
             LOGGER.info("DAMN IT! " + t.getMessage());
             LOGGER.info(t.toString());
@@ -2108,6 +2112,41 @@ public final class MainFrame extends JFrame {
     }
   }
 
+  private void checkToBuy() {
+    for (Long v : _passQueue) {
+      LOGGER.info(v+" ");
+    }
+    if (_autoJourneyClick.isSelected() && _settings.getBoolean("autoBuy", false)) {
+      boolean low = false;
+      if (_passQueue.size() == _passQueue.getLimit()) {
+        boolean atLeastOneIsBig = false;
+        for (Long v : _passQueue) {
+          if (v > _settings.getInt("autoBuy.passLimit", 11000000)) {
+            atLeastOneIsBig = true;
+            break;
+          }
+        }
+        low = !atLeastOneIsBig;
+      }
+      if (low && protocolManager.getCurrentProtocol().getName().equals(ProtocolManager.DEFAULT)) {
+        if (_scheduleJourney != null) {
+          long timeNeeded = protocolManager.getProtocol("BUY").getDuration() * 60000;
+          if (_scheduleJourney - System.currentTimeMillis() <= timeNeeded) {
+            //not enough time before Journey, so buy some time
+            _scheduleJourney = timeNeeded + System.currentTimeMillis() + 10000;//plus 10secs
+          }
+        }
+        //if no schedule => no need to reschedule
+        
+        //so we can move to BUY protocol
+        LOGGER.info("ATTENTION! passengers: " + _passengers);
+        LOGGER.info("RUNNING BUY PROCEDURE...");
+        protocolManager.setCurrentProtocol("BUY");
+
+      }
+    }
+  }
+
   private void buyWagrs() throws AWTException, RobotInterruptedException, IOException {
     if (totalWagrsBought == -1 || totalWagrsBought >= _settings.getInt("autoBuy.sellWhen", 500)) {
       LOGGER.info("Trying to sell wagrs...");
@@ -2148,10 +2187,10 @@ public final class MainFrame extends JFrame {
       LOGGER.info("LEVELUP!!!");
       totalWagrsBought = -1;
       protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
-//    } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
-//      LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
-//      totalWagrsBought = -1;
-//      protocolManager.setCurrentProtocol("D");
+      // } else if (totalWagrsBought >= _settings.getInt("autoBuy.total", 2000)) {
+      // LOGGER.info("Buying " + _settings.getInt("autoBuy.total", 2000) + " DONE!");
+      // totalWagrsBought = -1;
+      // protocolManager.setCurrentProtocol("D");
     }
   }
 
@@ -2169,38 +2208,48 @@ public final class MainFrame extends JFrame {
   }
 
   private void updateTimes() {
-    int min = _commands.getInt("autoPassengers.min", 1000000);
-    int max = _commands.getInt("autoPassengers.max", 4000000);
-    int normal = _commands.getInt("express.default", 30);
-    int expressMin = _commands.getInt("express.min", 10);
-    int expressMax = _commands.getInt("express.max", 60);
+    int limit1 = _commands.getInt("autoPassengers.limit1", 1000000);
+    int limit2 = _commands.getInt("autoPassengers.limit2", 40000000);
+    int expressBetween = _commands.getInt("express.between", 10);
+    int expressUnder1 = _commands.getInt("express.underlimit1", 0);
+    int expressBelow2 = _commands.getInt("express.belowlimit2", 10);
     LOGGER.info("passengers: " + _passengers);
-    LOGGER.info("min: " + min + "  max: " + max);
-    if (_passengers < min) {
-      // slow down trains
-      if (_expressTime.getTime() != expressMax) {
-        LOGGER.info("Passengers get under " + min);
-        LOGGER.info("Slowing down express trains to " + expressMax);
-        reapplyTimes(expressMax, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-      }
+    LOGGER.info("limit1: " + limit1 + "  limit2: " + limit2);
+    int currentTime = _expressTime.getTime();
+    int newTime = currentTime;
+    if (_passengers < limit1) {
+      // slow down trains or stop them
+      LOGGER.info("Passengers get under " + limit1);
+      LOGGER.info("Setting express to " + expressUnder1);
+      newTime = expressUnder1;
+    } else if (_passengers >= limit1 && _passengers < limit2) {
+      LOGGER.info("Passengers between " + limit1 + " and " + limit2);
+      LOGGER.info("Setting express to " + expressBetween);
+      newTime = expressBetween;
     } else {
-      if (_passengers > max) {
-        // speed up trains
-        if (_expressTime.getTime() != expressMin) {
-          LOGGER.info("Passengers get over " + max);
-          LOGGER.info("Speeding up express trains to " + expressMin);
-          reapplyTimes(expressMin, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-        }
-      } else {
-        // it is in the middle
-        if (_expressTime.getTime() != normal) {
-          LOGGER.info("Passengers between " + min + " and " + max);
-          LOGGER.info("Setting trains to " + normal);
-          reapplyTimes(normal, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-        }
-      }
+      LOGGER.info("Passengers below " + limit2);
+      LOGGER.info("Setting express to " + expressBetween);
+      newTime = expressBelow2;
     }
-
+    if (currentTime != newTime) {
+//      if (_resendClick.isSelected()) {
+//        _resendClick.setSelected(false);
+//        final String currentProtocol = protocolManager.getCurrentProtocol().getName();
+//        Thread switchBack = new Thread(new Runnable() {
+//          public void run() {
+//            try {
+//              Thread.sleep(20 * 60000);
+//            } catch (InterruptedException e) {
+//            }
+//            String currentProtocol2 = protocolManager.getCurrentProtocol().getName();
+//            if (currentProtocol.equals(currentProtocol2))
+//              _resendClick.setSelected(true);
+//          }
+//        },"SWITCH_BACK");
+//        switchBack.start();
+//      }
+      reapplyTimes(newTime, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+    }
   }
 
   private boolean scanPassengers() throws AWTException, IOException {
@@ -2216,6 +2265,7 @@ public final class MainFrame extends JFrame {
     if (pass != null && pass.length() > 0) {
       try {
         _passengers = Long.parseLong(pass);
+        _passQueue.add(_passengers);
         return true;
       } catch (NumberFormatException e) {
         // in case of invalid number. just skip it
@@ -2971,7 +3021,7 @@ public final class MainFrame extends JFrame {
       scanAndClick(ScreenScanner.SHOP_X, null);
       LOGGER.info("turn " + turn++);
 
-      boolean stallTrains = _freightTime.getTime() == 0;
+      boolean stallTrains = _freightTime.getTime() == 0 || _expressTime.getTime() == 0;
       if (stallTrains) {
         hadOtherLocations = scanOtherLocations(6);
         _mouse.delay(250);
@@ -3241,17 +3291,18 @@ public final class MainFrame extends JFrame {
 
   }
 
-  private List<BlobInfo> _blobs      = new ArrayList<MainFrame.BlobInfo>();
+  private List<BlobInfo>     _blobs      = new ArrayList<MainFrame.BlobInfo>();
 
-  private Long           _passengers = 0L;
+  private Long               _passengers = 0L;
+  private LimitedQueue<Long> _passQueue;
 
-  private NumberFormat   numberFormat;
+  private NumberFormat       numberFormat;
 
-  private Pixel[]        slots;
+  private Pixel[]            slots;
 
-  private JToolBar       _mainToolbar3;
+  private JToolBar           _mainToolbar3;
 
-  private JTextField     _scheduleTF;
+  private JTextField         _scheduleTF;
 
   private void registerBlob(Blob blob, BufferedImage image1, BufferedImage image2) {
     _blobs.add(new BlobInfo(blob, image1, image2));
