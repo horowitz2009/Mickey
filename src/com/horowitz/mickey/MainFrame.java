@@ -203,6 +203,7 @@ public final class MainFrame extends JFrame {
 
       @Override
       public void propertyChange(PropertyChangeEvent evt) {
+        Protocol oldP = (Protocol) evt.getOldValue();
         Protocol p = protocolManager.getCurrentProtocol();
         if (p != null) {
           applyProtocol(p);
@@ -210,7 +211,7 @@ public final class MainFrame extends JFrame {
           invalidate();
           repaint();
           if (_autoJourneyClick.isSelected()) {
-            captureScreen("protocol ");
+            captureScreen("protocol " + (oldP != null ? oldP.getName() : "--") + " " + p.getName() + " ");
             if (p.getName().equals("PostJ")) {
               _scheduleJourney = System.currentTimeMillis() + 8 * 60 * 60000;
               _scheduleTF.setText(DateUtils.fancyTime2(8 * 60 * 60000));
