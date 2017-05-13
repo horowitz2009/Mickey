@@ -2279,7 +2279,8 @@ public final class MainFrame extends JFrame {
 //        },"SWITCH_BACK");
 //        switchBack.start();
 //      }
-      reapplyTimes(newTime, _exToolbar1.getComponents(), _exToolbar2.getComponents());
+      if (protocolManager.getCurrentProtocol().equals(ProtocolManager.DEFAULT))
+        reapplyTimes(newTime, _exToolbar1.getComponents(), _exToolbar2.getComponents());
     }
   }
 
