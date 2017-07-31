@@ -244,6 +244,11 @@ public class ScreenScanner extends BaseScreenScanner {
     xx = (getGameWidth() - 563) / 2;
     area = new Rectangle(_tl.x + xx + 522, _tl.y + 210, 50, 50);
     getImageData(SELL_X, area, 7, 7);
+    
+    xx = (getGameWidth() - 585) / 2;
+    yy = (getGameHeight() - 343) / 2;
+    area = new Rectangle(_tl.x + xx + 184, _tl.y + yy + 243, 220, 67);
+    getImageData("collect.bmp", area, 2, 2);
 
     _street1Y = _settings.getInt("street1Y", 204);
 

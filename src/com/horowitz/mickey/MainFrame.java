@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.5";
+  private static final String   APP_TITLE           = "v1.6";
 
   private boolean               _devMode            = false;
 
@@ -2737,6 +2737,8 @@ public final class MainFrame extends JFrame {
         protocolManager.setCurrentProtocol(ProtocolManager.DEFAULT);
     }
 
+    scanAndClick("collect.bmp", null);
+    
     // HOORAY hmm!
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick("Hooray.bmp", null);
@@ -2971,8 +2973,10 @@ public final class MainFrame extends JFrame {
       }
       // }
     }
+    _mouse.delay(500);
+    
+    scanAndClick("collect.bmp", null);
     _mouse.delay(200);
-
     if (moved) {
       if (!scanOtherLocations(33)) {
         // go to somewhere and go back just to reposition the game
