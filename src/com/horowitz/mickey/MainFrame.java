@@ -2667,7 +2667,7 @@ public final class MainFrame extends JFrame {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     ImageData id = _scanner.getImageData(imageName, area, xOff, yOff);
-    Pixel p = _scanner.scanOneFast(id, area, click);
+    Pixel p = _scanner.scanOneFast(id, area, click, false);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
       LOGGER.fine("Found pointer " + imageName);
