@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.6";
+  private static final String   APP_TITLE           = "v1.7";
 
   private boolean               _devMode            = false;
 
@@ -1874,14 +1874,14 @@ public final class MainFrame extends JFrame {
     int y = _scanner.getTopLeft().y;
     Rectangle area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
     // _scanner.writeImage(area, "C:/work/Damn.png");
-    Pixel pp = _bscanner.scanOneFast("journey2.bmp", area, Color.RED, true);
+    Pixel pp = _bscanner.scanOneFast("journey2.bmp", area, false, Color.RED, true);
 
     boolean found = pp != null;
     if (found) {
       _mouse.click(pp.x + 5, pp.y + 5);
       _mouse.delay(400);
     } else {
-      pp = _bscanner.scanOneFast("journey2.bmp", area, null, false);
+      pp = _bscanner.scanOneFast("journey2.bmp", area, false, null, false);
 
       found = pp != null;
       if (found) {
@@ -2667,7 +2667,7 @@ public final class MainFrame extends JFrame {
 
     // FOR DEBUG ONLY _scanner.writeImage2(area, "area");
     ImageData id = _scanner.getImageData(imageName, area, xOff, yOff);
-    Pixel p = _scanner.scanOneFast(id, area, click, false);
+    Pixel p = _scanner.scanOneFast(id, area, click);
     if (p != null) {
       LOGGER.fine("Found pointer " + p);
       LOGGER.fine("Found pointer " + imageName);
@@ -2773,14 +2773,14 @@ public final class MainFrame extends JFrame {
     int y = _scanner.getTopLeft().y;
     area = new Rectangle(x, y, _scanner.getGameWidth() / 2, _scanner.getGameHeight() - 100);
     // _scanner.writeImage(area, "C:/work/Damn.png");
-    Pixel pp = _scanner.scanOneFast("journey.bmp", area, Color.RED, true);
+    Pixel pp = _scanner.scanOneFast("journey.bmp", area, false, Color.RED, true);
     found = pp != null;
     if (found) {
       journey = _scanner.isJourney(pp);
       _mouse.click(pp.x + 5, pp.y + 5);
       _mouse.delay(400);
     } else {
-      pp = _bscanner.scanOneFast("journey2.bmp", area, null, false);
+      pp = _bscanner.scanOneFast("journey2.bmp", area, false, null, false);
 
       found = pp != null;
       if (found) {

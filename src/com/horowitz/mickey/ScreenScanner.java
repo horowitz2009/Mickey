@@ -994,9 +994,9 @@ public class ScreenScanner extends BaseScreenScanner {
     x += getGameWidth() / 2;
     int y = getTopLeft().y;
     Rectangle area = new Rectangle(x, y, getGameWidth() / 2, getGameHeight() - 100);
-    Pixel pp = scanOneFast("journey.bmp", area, Color.RED, true);
+    Pixel pp = scanOneFast("journey.bmp", area, false, Color.RED, true);
     if (pp == null)
-      pp = scanOneFast("journey2.bmp", area, null, false);
+      pp = scanOneFast("journey2.bmp", area, false, null, false);
 
     return pp;
   }
