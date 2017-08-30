@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.7";
+  private static final String   APP_TITLE           = "v1.8";
 
   private boolean               _devMode            = false;
 
@@ -214,7 +214,7 @@ public final class MainFrame extends JFrame {
           if (_autoJourneyClick.isSelected()) {
             captureScreen("protocol " + (oldP != null ? oldP.getName() : "--") + " " + p.getName() + " ");
             if (p.getName().equals("PostJ")) {
-              _scheduleJourney = System.currentTimeMillis() + 8 * 60 * 60000;
+              _scheduleJourney = System.currentTimeMillis() + 8 * 60 * 60000 - (int) 4.5 * 60000;
               _scheduleTF.setText(DateUtils.fancyTime2(8 * 60 * 60000));
             }
           }
@@ -991,7 +991,7 @@ public final class MainFrame extends JFrame {
       _buyBoxesClick = new JToggleButton("BB");
       _buyBoxesClick.setSelected(_settings.getBoolean("buyBoxes", false));
       _buyBoxesClick.addChangeListener(new ChangeListener() {
-        
+
         @Override
         public void stateChanged(ChangeEvent e) {
           _settings.setProperty("buyBoxes", "" + _buyBoxesClick.isSelected());
@@ -1272,7 +1272,7 @@ public final class MainFrame extends JFrame {
     if (resendIT != _resendITClick.isSelected()) {
       _resendITClick.setSelected(resendIT);
     }
-    
+
     if (buyBoxes != _buyBoxesClick.isSelected()) {
       _buyBoxesClick.setSelected(buyBoxes);
     }
@@ -1907,6 +1907,8 @@ public final class MainFrame extends JFrame {
       p = _scanner.scanOneFast(filename, area, true);
     else
       p = _scanner.scanOneFast(filename, true);
+    if (p != null)
+      _mouse.delay(250);
     return p != null;
   }
 
@@ -2048,12 +2050,11 @@ public final class MainFrame extends JFrame {
             goHomeIfNeeded();
             buyWagrs();
           }
-          
+
           if (_settings.getBoolean("buyBoxes", false) && protocolManager.getCurrentProtocol().getName().equals("D")) {
             goHomeIfNeeded();
             buyBoxes();
           }
-          
 
           if (!_sendInternational.isSelected()
               || (_sendInternational.isSelected() && _trainManagementWindow.getTimeLeft() - System.currentTimeMillis() > 1000)) {
@@ -2140,7 +2141,7 @@ public final class MainFrame extends JFrame {
 
   private void checkToBuy() {
     for (Long v : _passQueue) {
-      LOGGER.info(v+" ");
+      LOGGER.info(v + " ");
     }
     if (_autoJourneyClick.isSelected() && _settings.getBoolean("autoBuy", false)) {
       boolean low = false;
@@ -2158,13 +2159,13 @@ public final class MainFrame extends JFrame {
         if (_scheduleJourney != null) {
           long timeNeeded = protocolManager.getProtocol("BUY").getDuration() * 60000;
           if (_scheduleJourney - System.currentTimeMillis() <= timeNeeded) {
-            //not enough time before Journey, so buy some time
-            _scheduleJourney = timeNeeded + System.currentTimeMillis() + 10000;//plus 10secs
+            // not enough time before Journey, so buy some time
+            _scheduleJourney = timeNeeded + System.currentTimeMillis() + 10000;// plus 10secs
           }
         }
-        //if no schedule => no need to reschedule
-        
-        //so we can move to BUY protocol
+        // if no schedule => no need to reschedule
+
+        // so we can move to BUY protocol
         LOGGER.info("ATTENTION! passengers: " + _passengers);
         LOGGER.info("RUNNING BUY PROCEDURE...");
         protocolManager.setCurrentProtocol("BUY");
@@ -2172,7 +2173,7 @@ public final class MainFrame extends JFrame {
       }
     }
   }
-  
+
   private void buyBoxes() throws AWTException, RobotInterruptedException, IOException {
     int howMany = _settings.getInt("buyBoxes.howMany", 5);
     boolean success = _scanner.buyBoxes(howMany);
@@ -2263,22 +2264,22 @@ public final class MainFrame extends JFrame {
       newTime = expressBelow2;
     }
     if (currentTime != newTime) {
-//      if (_resendClick.isSelected()) {
-//        _resendClick.setSelected(false);
-//        final String currentProtocol = protocolManager.getCurrentProtocol().getName();
-//        Thread switchBack = new Thread(new Runnable() {
-//          public void run() {
-//            try {
-//              Thread.sleep(20 * 60000);
-//            } catch (InterruptedException e) {
-//            }
-//            String currentProtocol2 = protocolManager.getCurrentProtocol().getName();
-//            if (currentProtocol.equals(currentProtocol2))
-//              _resendClick.setSelected(true);
-//          }
-//        },"SWITCH_BACK");
-//        switchBack.start();
-//      }
+      // if (_resendClick.isSelected()) {
+      // _resendClick.setSelected(false);
+      // final String currentProtocol = protocolManager.getCurrentProtocol().getName();
+      // Thread switchBack = new Thread(new Runnable() {
+      // public void run() {
+      // try {
+      // Thread.sleep(20 * 60000);
+      // } catch (InterruptedException e) {
+      // }
+      // String currentProtocol2 = protocolManager.getCurrentProtocol().getName();
+      // if (currentProtocol.equals(currentProtocol2))
+      // _resendClick.setSelected(true);
+      // }
+      // },"SWITCH_BACK");
+      // switchBack.start();
+      // }
       if (protocolManager.getCurrentProtocol().equals(ProtocolManager.DEFAULT) || protocolManager.getCurrentProtocol().equals("BUY"))
         reapplyTimes(newTime, _exToolbar1.getComponents(), _exToolbar2.getComponents());
     }
@@ -2470,7 +2471,7 @@ public final class MainFrame extends JFrame {
 
       // click close
       scanAndClick(ScreenScanner.SHOP_X, null);
-      _mouse.delay(200);
+      // _mouse.delay(200);
       _captureHome = false;
     }
   }
@@ -2738,7 +2739,7 @@ public final class MainFrame extends JFrame {
     }
 
     scanAndClick("collect.bmp", null);
-    
+
     // HOORAY hmm!
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick("Hooray.bmp", null);
@@ -2974,9 +2975,9 @@ public final class MainFrame extends JFrame {
       // }
     }
     _mouse.delay(500);
-    
+
     scanAndClick("collect.bmp", null);
-    _mouse.delay(200);
+    // _mouse.delay(200);
     if (moved) {
       if (!scanOtherLocations(33)) {
         // go to somewhere and go back just to reposition the game
