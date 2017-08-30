@@ -1990,13 +1990,14 @@ public final class MainFrame extends JFrame {
           }
           // scanOtherLocations(true, 2);
 
-          if (_pingClick.isSelected()) {
+          // PING
+          if (_pingClick.isSelected() && protocolManager.getCurrentProtocol().isPing()) {
             if (ping())
               scanOtherLocations(3);
           }
 
           // REFRESH
-          if (_autoRefreshClick.isSelected() && timeForRefresh > 3 * 60000) {
+          if (_autoRefreshClick.isSelected() && protocolManager.getCurrentProtocol().isRefresh() && timeForRefresh > 3 * 60000) {
             // if "0" chosen no refresh
             long now = System.currentTimeMillis();
             LOGGER.info("time: " + DateUtils.fancyTime2(now - start));
@@ -2709,6 +2710,8 @@ public final class MainFrame extends JFrame {
     // SHOP
     t1 = t2 = System.currentTimeMillis();
     found = found || scanAndClick(ScreenScanner.SHOP_X, null);
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle shop " + (t2 - t1));
@@ -2723,6 +2726,8 @@ public final class MainFrame extends JFrame {
     // DAILY REWARDS
     t1 = t2 = System.currentTimeMillis();
     found = scanAndClick("Sure.bmp", null);
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle daily rewards " + (t2 - t1));
@@ -2796,7 +2801,12 @@ public final class MainFrame extends JFrame {
     if (debug)
       LOGGER.info("> handle promoX " + (t2 - t1));
 
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     found = found || scanAndClick(ScreenScanner.CLOSE_X2, null);
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
+
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle promoX2 " + (t2 - t1));
@@ -2807,6 +2817,8 @@ public final class MainFrame extends JFrame {
     int yy = (_scanner.getGameHeight() - 280) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 85, _scanner.getTopLeft().y + yy + 225, 90, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true);
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle no passengers " + (t2 - t1));
@@ -2816,11 +2828,15 @@ public final class MainFrame extends JFrame {
     xx = (_scanner.getGameWidth() - 760) / 2;
     area = new Rectangle(_scanner.getTopLeft().x + xx + 100, _scanner.getBottomRight().y - 91, 78, 32);
     found = found || findAndClick(ScreenScanner.POINTER_CLOSE_IMAGE, area, 21, 6, true);
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     t2 = System.currentTimeMillis();
     if (debug)
       LOGGER.info("> handle train management " + (t2 - t1));
 
     found = checkJourneyFinished();
+    if (found)
+      _mouse.mouseMove(_scanner.getBottomRight());
     xx = (_scanner.getGameWidth() - 277) / 2;
 
     // now check other popups that need to refresh the game

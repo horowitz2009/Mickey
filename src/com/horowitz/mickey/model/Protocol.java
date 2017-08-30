@@ -11,6 +11,8 @@ public class Protocol {
   private int     duration;
   private boolean whistles;
   private boolean packages;
+  private boolean ping;
+  private boolean refresh;
 
   
   
@@ -97,10 +99,27 @@ public class Protocol {
     this.packages = packages;
   }
 
+  public boolean isPing() {
+    return ping;
+  }
+
+  public void setPing(boolean ping) {
+    this.ping = ping;
+  }
+
+  public boolean isRefresh() {
+    return refresh;
+  }
+
+  public void setRefresh(boolean refresh) {
+    this.refresh = refresh;
+  }
+
   @Override
   public String toString() {
     return "Protocol [name=" + name + ", nextProtocol=" + nextProtocol + ", resend=" + resend + ", maglev15=" + maglev15 + ", international="
-        + international + ", destination=" + destination + ", duration=" + duration + ", whistles=" + whistles + ", packages=" + packages + "]";
+        + international + ", destination=" + destination + ", duration=" + duration + ", whistles=" + whistles + ", packages=" + packages + ", ping="
+        + ping + ", refresh=" + refresh + "]";
   }
 
   @Override
@@ -114,6 +133,8 @@ public class Protocol {
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((nextProtocol == null) ? 0 : nextProtocol.hashCode());
     result = prime * result + (packages ? 1231 : 1237);
+    result = prime * result + (ping ? 1231 : 1237);
+    result = prime * result + (refresh ? 1231 : 1237);
     result = prime * result + (resend ? 1231 : 1237);
     result = prime * result + (whistles ? 1231 : 1237);
     return result;
@@ -147,6 +168,10 @@ public class Protocol {
     } else if (!nextProtocol.equals(other.nextProtocol))
       return false;
     if (packages != other.packages)
+      return false;
+    if (ping != other.ping)
+      return false;
+    if (refresh != other.refresh)
       return false;
     if (resend != other.resend)
       return false;
