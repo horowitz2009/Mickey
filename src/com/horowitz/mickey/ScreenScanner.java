@@ -176,7 +176,7 @@ public class ScreenScanner extends BaseScreenScanner {
 
   }
 
-  private void setKeyAreas() throws IOException {
+  protected void setKeyAreas() throws IOException {
 
     _topPlayersPixel = new Pixel(_br.x - 24, _br.y - 23);
 
