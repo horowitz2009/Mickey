@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.10";
+  private static final String   APP_TITLE           = "v1.11";
 
   private boolean               _devMode            = false;
 
@@ -1178,7 +1178,7 @@ public final class MainFrame extends JFrame {
       reapplyTimes(dest, _frToolbar1.getComponents(), _frToolbar2.getComponents());
       reapplyTimes(dest, _exToolbar1.getComponents(), _exToolbar2.getComponents());
       int hlDest = dest;
-      if (hlDest == 20)
+      if (hlDest == 30)
         hlDest = 15;
       reapplyTimes(hlDest, _xpToolbar1.getComponents(), null);
 
