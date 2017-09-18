@@ -91,7 +91,7 @@ public final class MainFrame extends JFrame {
 
   private final static Logger   LOGGER              = Logger.getLogger(MainFrame.class.getName());
 
-  private static final String   APP_TITLE           = "v1.8";
+  private static final String   APP_TITLE           = "v1.10";
 
   private boolean               _devMode            = false;
 
@@ -1177,7 +1177,10 @@ public final class MainFrame extends JFrame {
       reapplyTimes(dest, _freeToolbar1.getComponents(), _freeToolbar2.getComponents());
       reapplyTimes(dest, _frToolbar1.getComponents(), _frToolbar2.getComponents());
       reapplyTimes(dest, _exToolbar1.getComponents(), _exToolbar2.getComponents());
-      reapplyTimes(dest, _xpToolbar1.getComponents(), null);
+      int hlDest = dest;
+      if (hlDest == 20)
+        hlDest = 15;
+      reapplyTimes(hlDest, _xpToolbar1.getComponents(), null);
 
       if (protocol.isMaglev15() != _maglevClick.isSelected()) {
         _maglevClick.setSelected(protocol.isMaglev15());

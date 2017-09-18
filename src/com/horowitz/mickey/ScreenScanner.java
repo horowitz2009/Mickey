@@ -809,7 +809,19 @@ public class ScreenScanner extends BaseScreenScanner {
 
   public boolean isHyperloop(Pixel tm) throws AWTException, RobotInterruptedException, IOException {
     Rectangle area = new Rectangle(tm.x, tm.y + 288, 30, 102);
-    Pixel p = scanOneFast("mat1.bmp", area, false);
+    Pixel p = scanOneFast("mat5.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat6.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat7.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat8.bmp", area, false);
+    if (p != null)
+      return true;
+    p = scanOneFast("mat1.bmp", area, false);
     if (p != null)
       return true;
     p = scanOneFast("mat2.bmp", area, false);
