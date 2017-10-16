@@ -398,7 +398,7 @@ public class ScreenScanner extends BaseScreenScanner {
               new Rectangle(684, 607, screenSize.width - 270 - 684, screenSize.height - 607), new Rectangle(screenSize) };
           LOGGER.info("Found top left corner...");
           // good, we're still in the game
-          br = locateImageCoords("anchorInvite2.bmp", areaBR, 61, 46);
+          br = locateImageCoords("anchorInvite2.bmp", areaBR, 56, 46);
           if (br != null) {
             LOGGER.info("Found bottom right corner...");
             done = true;
